@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar';
 import {
-  ToolbarCombobox,
+  SimpleCombobox,
   SimpleToolbarButton,
   SimpleToolbarRadioButton,
   SimpleToolbarToggleButton,
@@ -16,7 +16,7 @@ import {
     Toolbar,
     ToolbarWidget,
     ToolbarWidgetGroup,
-    ToolbarCombobox,
+    SimpleCombobox,
     SimpleToolbarButton,
     SimpleToolbarRadioButton,
     SimpleToolbarToggleButton,

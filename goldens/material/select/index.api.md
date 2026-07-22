@@ -20,7 +20,6 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Field } from '@angular/forms/signals';
 import { FlexibleOverlayPopoverLocation } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -55,6 +54,7 @@ export const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
 
 // @public
 export class MatError {
+    constructor(...args: unknown[]);
     // (undocumented)
     id: string;
     // (undocumented)
@@ -65,7 +65,7 @@ export class MatError {
 
 // @public
 export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     _animateAndLockLabel(): void;
     // (undocumented)
     protected readonly _animationsDisabled: boolean;
@@ -170,7 +170,7 @@ export class MatLabel {
 
 // @public
 export class MatOptgroup {
-    constructor();
+    constructor(...args: unknown[]);
     disabled: boolean;
     _inert: boolean;
     label: string;
@@ -185,7 +185,7 @@ export class MatOptgroup {
 
 // @public
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;
@@ -239,7 +239,7 @@ export class MatPrefix {
 
 // @public (undocumented)
 export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, MatFormFieldControl_2<any> {
-    constructor();
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
     ariaLabel: string;
@@ -309,7 +309,7 @@ export class MatSelect implements AfterContentInit, OnChanges, OnDestroy, OnInit
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges<this>): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

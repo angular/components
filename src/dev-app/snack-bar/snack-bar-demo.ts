@@ -7,7 +7,14 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {Component, TemplateRef, ViewChild, ViewEncapsulation, inject} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+  inject,
+} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -26,6 +33,7 @@ import {
   styleUrl: 'snack-bar-demo.css',
   encapsulation: ViewEncapsulation.None,
   imports: [FormsModule, MatButtonModule, MatCheckboxModule, MatInputModule, MatSelectModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SnackBarDemo {
   snackBar = inject(MatSnackBar);

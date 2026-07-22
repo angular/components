@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service} from '@angular/core';
+import {Injectable} from '@angular/core';
 import type {LiveExample} from '@angular/components-examples';
 
 export interface AdditionalApiDoc {
@@ -599,7 +599,7 @@ interface DocsData {
   examples: Record<string, LiveExample>;
 }
 
-@Service()
+@Injectable({providedIn: 'root'})
 export class DocumentationItems {
   private _cachedData: DocsData | null = null;
 
@@ -624,26 +624,21 @@ export class DocumentationItems {
     if (!this._cachedData) {
       const examples = (await import('@angular/components-examples')).EXAMPLE_COMPONENTS;
       const exampleNames = Object.keys(examples);
-      const components = this._processDocs('material', exampleNames, DOCS[COMPONENTS], examples);
-      const cdk = this._processDocs('cdk', exampleNames, DOCS[CDK], examples);
+      const components = this._processDocs('material', exampleNames, DOCS[COMPONENTS]);
+      const cdk = this._processDocs('cdk', exampleNames, DOCS[CDK]);
+
       this._cachedData = {components, cdk, all: [...components, ...cdk], examples};
     }
 
     return this._cachedData;
   }
 
-  private _processDocs(
-    packageName: string,
-    exampleNames: string[],
-    docs: DocItem[],
-    examples: Record<string, LiveExample>,
-  ): DocItem[] {
+  private _processDocs(packageName: string, exampleNames: string[], docs: DocItem[]): DocItem[] {
     for (const doc of docs) {
       doc.packageName = packageName;
       doc.hasStyling ??= packageName === 'material';
       doc.examples = exampleNames.filter(
         key =>
-          examples[key].packagePath.startsWith(packageName) &&
           key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
           !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0),
       );

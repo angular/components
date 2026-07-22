@@ -29,7 +29,7 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     ariaDescribedby: string | null;
     ariaLabel: string | null;
     ariaLabelledby: string | null;
@@ -77,6 +77,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     ngOnInit(): void;
     _noopAnimations: boolean;
     _onInputInteraction(event: Event): void;
+    _onTouchTargetClick(event: Event): void;
     radioGroup: MatRadioGroup;
     get required(): boolean;
     set required(value: boolean);
@@ -108,6 +109,7 @@ export interface MatRadioDefaultOptions {
 
 // @public
 export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueAccessor {
+    constructor(...args: unknown[]);
     readonly change: EventEmitter<MatRadioChange>;
     // (undocumented)
     _checkSelectedRadioButton(): void;

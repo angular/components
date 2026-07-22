@@ -1,12 +1,4 @@
-import {
-  Component,
-  DebugElement,
-  Directive,
-  effect,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, DebugElement, Directive, effect, inject, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DeferredContent, DeferredContentAware} from './deferred-content';
 import {By} from '@angular/platform-browser';
@@ -26,7 +18,7 @@ describe('DeferredContent', () => {
     expect(collapsible.nativeElement.innerText).toBe('');
   });
 
-  it('creates the content when the container becomes visible.', async () => {
+  it('creates the content when visible.', async () => {
     collapsible.injector.get(Collapsible).contentVisible.set(true);
     await fixture.whenStable();
     expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
@@ -46,7 +38,7 @@ describe('DeferredContent', () => {
       expect(collapsible.nativeElement.innerText).toBe('');
     });
 
-    it('creates the content when first visible with preserveContent.', async () => {
+    it('creates the content when visible.', async () => {
       collapsible.injector.get(Collapsible).contentVisible.set(true);
       await fixture.whenStable();
       expect(collapsible.nativeElement.innerText).toBe('Lazy Content');
@@ -91,7 +83,6 @@ class CollapsibleContent {}
     </div>
     `,
   imports: [Collapsible, CollapsibleContent],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestComponent {
   preserveContent = signal(false);

@@ -65,7 +65,7 @@ export interface _MatInkBarPositioner {
 
 // @public
 export abstract class MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     _alignInkBarToSelectedTab(): void;
     // (undocumented)
     _animationsDisabled: boolean;
@@ -143,7 +143,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
 // @public (undocumented)
 export class MatTab implements OnInit, OnChanges, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     ariaLabel: string;
     ariaLabelledby: string;
     bodyClass: string | string[];
@@ -158,7 +158,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges<this>): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -177,7 +177,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
 
 // @public
 export class MatTabBody implements OnInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     readonly _afterLeavingCenter: EventEmitter<void>;
     animationDuration: string;
     readonly _beforeCentering: EventEmitter<boolean>;
@@ -208,6 +208,7 @@ export type MatTabBodyOriginState = 'left' | 'right';
 
 // @public
 export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestroy {
+    constructor(...args: unknown[]);
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -227,6 +228,7 @@ export class MatTabChangeEvent {
 
 // @public
 export class MatTabContent {
+    constructor(...args: unknown[]);
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
@@ -237,21 +239,19 @@ export class MatTabContent {
 
 // @public
 export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterContentChecked, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     alignTabs: string | null;
     _allTabs: QueryList<MatTab>;
     readonly animationDone: EventEmitter<void>;
-    get animationDuration(): MatTabGroupAnimationDuration;
-    set animationDuration(value: MatTabGroupAnimationDuration);
+    get animationDuration(): string;
+    set animationDuration(value: string | number);
+    // (undocumented)
+    protected _animationsDisabled(): boolean;
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
-    // (undocumented)
-    protected _bodyAnimationDuration: string;
-    // (undocumented)
-    protected _bodyAnimationsDisabled(): boolean;
     protected _bodyCentered(isCenter: boolean): void;
     color: ThemePalette;
     get contentTabIndex(): number | null;
@@ -271,8 +271,6 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     _getTabIndex(index: number): number;
     _getTabLabelId(tab: MatTab, index: number): string;
     _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
-    // (undocumented)
-    protected _headerAnimationDuration: string;
     headerPosition: MatTabHeaderPosition;
     protected _isServer: boolean;
     // (undocumented)
@@ -396,7 +394,7 @@ export class MatTabLabelWrapper extends InkBarItem {
 
 // @public
 export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, RippleTarget, FocusableOption {
-    constructor();
+    constructor(...args: unknown[]);
     get active(): boolean;
     set active(value: boolean);
     disabled: boolean;
@@ -445,8 +443,10 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
 
 // @public
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
-    constructor();
-    animationDuration: string;
+    constructor(...args: unknown[]);
+    // (undocumented)
+    get animationDuration(): string;
+    set animationDuration(value: string | number);
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     color: ThemePalette;
@@ -469,8 +469,6 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     protected _itemSelected(): void;
     // (undocumented)
     _nextPaginator: ElementRef<HTMLElement>;
-    // (undocumented)
-    static ngAcceptInputType_animationDuration: string | number;
     // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)

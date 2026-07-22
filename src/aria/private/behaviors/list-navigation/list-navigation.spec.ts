@@ -52,7 +52,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should wrap (#next)', () => {
+    it('should wrap', () => {
       const nav = getNavigation({wrap: signal(true)});
       nav.next(); // 0 -> 1
       nav.next(); // 1 -> 2
@@ -62,7 +62,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should not wrap (#next)', () => {
+    it('should not wrap', () => {
       const nav = getNavigation({wrap: signal(false)});
       nav.next(); // 0 -> 1
       nav.next(); // 1 -> 2
@@ -72,7 +72,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[4]);
     });
 
-    it('should skip disabled items (#next)', () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation({softDisabled: signal(false)});
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
@@ -80,7 +80,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[2]);
     });
 
-    it('should not skip disabled items (#next)', () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation({softDisabled: signal(true)});
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
@@ -88,7 +88,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[1]);
     });
 
-    it('should wrap and skip disabled items (#next)', () => {
+    it('should wrap and skip disabled items', () => {
       const nav = getNavigation({
         wrap: signal(true),
         softDisabled: signal(false),
@@ -104,7 +104,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should do nothing if other items are disabled (#next)', () => {
+    it('should do nothing if other items are disabled', () => {
       const nav = getNavigation({softDisabled: signal(false)});
       const items = nav.inputs.items() as TestItem[];
       items[1].disabled.set(true);
@@ -115,7 +115,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should do nothing if there are no other items to navigate to (#next)', () => {
+    it('should do nothing if there are no other items to navigate to', () => {
       const nav = getNavigation({numItems: 1});
       nav.next(); // 0 -> 0
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
@@ -137,19 +137,19 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[2]);
     });
 
-    it('should wrap (#prev)', () => {
+    it('should wrap', () => {
       const nav = getNavigation({wrap: signal(true)});
       nav.prev(); // 0 -> 4
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[4]);
     });
 
-    it('should not wrap (#prev)', () => {
+    it('should not wrap', () => {
       const nav = getNavigation({wrap: signal(false)});
       nav.prev(); // 0 -> 0
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should skip disabled items (#prev)', () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation({softDisabled: signal(false)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
@@ -158,7 +158,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should not skip disabled items (#prev)', () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation({softDisabled: signal(true)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
@@ -167,7 +167,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[1]);
     });
 
-    it('should wrap and skip disabled items (#prev)', () => {
+    it('should wrap and skip disabled items', () => {
       const nav = getNavigation({
         wrap: signal(true),
         softDisabled: signal(false),
@@ -180,7 +180,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[4]);
     });
 
-    it('should do nothing if other items are disabled (#prev)', () => {
+    it('should do nothing if other items are disabled', () => {
       const nav = getNavigation({
         softDisabled: signal(false),
       });
@@ -193,7 +193,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should do nothing if there are no other items to navigate to (#prev)', () => {
+    it('should do nothing if there are no other items to navigate to', () => {
       const nav = getNavigation({numItems: 1});
       nav.prev(); // 0 -> 0
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
@@ -208,7 +208,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[0]);
     });
 
-    it('should skip disabled items (#first)', () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation({softDisabled: signal(false)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
@@ -217,7 +217,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[1]);
     });
 
-    it('should not skip disabled items (#first)', () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation({softDisabled: signal(true)});
       nav.goto(nav.inputs.items()[2]);
       const items = nav.inputs.items() as TestItem[];
@@ -234,7 +234,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[4]);
     });
 
-    it('should skip disabled items (#last)', () => {
+    it('should skip disabled items', () => {
       const nav = getNavigation({
         softDisabled: signal(false),
       });
@@ -244,7 +244,7 @@ describe('List Navigation', () => {
       expect(nav.inputs.activeItem()).toBe(nav.inputs.items()[3]);
     });
 
-    it('should not skip disabled items (#last)', () => {
+    it('should not skip disabled items', () => {
       const nav = getNavigation({
         softDisabled: signal(true),
       });

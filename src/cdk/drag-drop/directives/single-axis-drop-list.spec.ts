@@ -1,3 +1,4 @@
+import {fakeAsync, flush} from '@angular/core/testing';
 import {dispatchMouseEvent} from '../../testing/private';
 import {_supportsShadowDom} from '../../platform';
 import {createComponent, startDraggingViaMouse} from './test-utils.spec';
@@ -26,7 +27,7 @@ describe('Single-axis drop list', () => {
     },
   });
 
-  it('should lay out the elements correctly, when swapping down with a taller element', async () => {
+  it('should lay out the elements correctly, when swapping down with a taller element', fakeAsync(() => {
     const fixture = createComponent(DraggableInDropZone);
     fixture.detectChanges();
 
@@ -52,10 +53,10 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
-  it('should lay out the elements correctly, when swapping up with a taller element', async () => {
+  it('should lay out the elements correctly, when swapping up with a taller element', fakeAsync(() => {
     const fixture = createComponent(DraggableInDropZone);
     fixture.detectChanges();
 
@@ -81,10 +82,10 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
-  it('should lay out elements correctly, when swapping an item with margin', async () => {
+  it('should lay out elements correctly, when swapping an item with margin', fakeAsync(() => {
     const fixture = createComponent(DraggableInDropZone);
     fixture.detectChanges();
 
@@ -110,10 +111,10 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
-  it('should lay out the elements correctly, when swapping to the right with a wider element', async () => {
+  it('should lay out the elements correctly, when swapping to the right with a wider element', fakeAsync(() => {
     const fixture = createComponent(DraggableInHorizontalDropZone);
     fixture.detectChanges();
 
@@ -138,10 +139,10 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
-  it('should lay out the elements correctly, when swapping left with a wider element', async () => {
+  it('should lay out the elements correctly, when swapping left with a wider element', fakeAsync(() => {
     const fixture = createComponent(DraggableInHorizontalDropZone);
     fixture.detectChanges();
 
@@ -166,10 +167,10 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
-  it('should clear the `transform` value from siblings when item is dropped', async () => {
+  it('should clear the `transform` value from siblings when item is dropped', fakeAsync(() => {
     const fixture = createComponent(DraggableInDropZone);
     fixture.detectChanges();
 
@@ -187,13 +188,13 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
+    flush();
     fixture.detectChanges();
 
     expect(thirdItem.style.transform).toBeFalsy();
-  });
+  }));
 
-  it('should lay out elements correctly, when horizontally swapping an item with margin', async () => {
+  it('should lay out elements correctly, when horizontally swapping an item with margin', fakeAsync(() => {
     const fixture = createComponent(DraggableInHorizontalDropZone);
     fixture.detectChanges();
 
@@ -218,10 +219,10 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
-  it('should preserve the original `transform` of items in the list', async () => {
+  it('should preserve the original `transform` of items in the list', fakeAsync(() => {
     const fixture = createComponent(DraggableInScrollableVerticalDropZone);
     fixture.detectChanges();
     const items = fixture.componentInstance.dragItems.map(item => item.element.nativeElement);
@@ -259,7 +260,7 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
+    flush();
     fixture.detectChanges();
     expect(items.every(hasInitialTransform))
       .withContext('Expected items to preserve transform when dragging stops.')
@@ -270,9 +271,9 @@ describe('Single-axis drop list', () => {
     expect(hasInitialTransform(placeholder))
       .withContext('Expected placeholder to preserve transform when dragging stops.')
       .toBe(true);
-  });
+  }));
 
-  it('should enter as last child if entering from top in reversed container', async () => {
+  it('should enter as last child if entering from top in reversed container', fakeAsync(() => {
     const fixture = createComponent(ConnectedDropZones);
 
     // Make sure there's only one item in the first list.
@@ -309,9 +310,9 @@ describe('Single-axis drop list', () => {
       .toBe(true);
 
     dispatchMouseEvent(document, 'mouseup');
-  });
+  }));
 
-  it('should lay out the elements correctly when scaled', async () => {
+  it('should lay out the elements correctly when scaled', fakeAsync(() => {
     const fixture = createComponent(DraggableInDropZone);
     fixture.componentInstance.scale = 0.5;
     fixture.detectChanges();
@@ -333,6 +334,6 @@ describe('Single-axis drop list', () => {
 
     dispatchMouseEvent(document, 'mouseup');
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 });

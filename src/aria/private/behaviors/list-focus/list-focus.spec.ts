@@ -100,10 +100,10 @@ describe('List Focus', () => {
       expect(focusManager.getActiveDescendant()).toBe(focusManager.inputs.items()[1].id());
     });
 
-    it('should NOT focus the list element when focusing an item', () => {
+    it('should focus the list element when focusing an item', () => {
       const focusSpy = spyOn(focusManager.inputs.element()!, 'focus');
       focusManager.focus(focusManager.inputs.items()[1]);
-      expect(focusSpy).not.toHaveBeenCalled();
+      expect(focusSpy).toHaveBeenCalled();
     });
   });
 

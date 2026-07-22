@@ -12,6 +12,7 @@ import {
   afterNextRender,
   ApplicationRef,
   booleanAttribute,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   DestroyRef,
@@ -76,6 +77,7 @@ export const CDK_VIRTUAL_SCROLL_VIEWPORT = new InjectionToken<CdkVirtualScrollVi
     '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation !== "horizontal"',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: CdkScrollable,
@@ -197,6 +199,8 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
   private _injector = inject(Injector);
 
   private _isDestroyed = false;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();

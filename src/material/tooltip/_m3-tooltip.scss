@@ -7,11 +7,10 @@
   $system: m3-utils.get-system($theme);
 
   @return (
-    base: (
-      tooltip-container-shape: map.get($system, corner-extra-small),
-    ),
+    base: (),
     color: (
       tooltip-container-color: map.get($system, inverse-surface),
+      tooltip-container-shape: map.get($system, corner-extra-small),
       tooltip-supporting-text-color: map.get($system, inverse-on-surface),
     ),
     typography: (

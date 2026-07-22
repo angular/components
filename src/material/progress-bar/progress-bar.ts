@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
   ElementRef,
@@ -103,6 +104,7 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
   },
   templateUrl: 'progress-bar.html',
   styleUrl: 'progress-bar.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatProgressBar implements AfterViewInit, OnDestroy {
@@ -111,6 +113,8 @@ export class MatProgressBar implements AfterViewInit, OnDestroy {
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _renderer = inject(Renderer2);
   private _cleanupTransitionEnd: (() => void) | undefined;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     const animationsState = _getAnimationsState();

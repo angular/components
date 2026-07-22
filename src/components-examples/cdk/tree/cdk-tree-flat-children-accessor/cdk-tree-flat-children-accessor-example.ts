@@ -1,6 +1,6 @@
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {CdkTree, CdkTreeModule} from '@angular/cdk/tree';
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {timer} from 'rxjs';
@@ -34,6 +34,7 @@ function flattenNodes(nodes: NestedFoodNode[]): NestedFoodNode[] {
   templateUrl: 'cdk-tree-flat-children-accessor-example.html',
   styleUrls: ['cdk-tree-flat-children-accessor-example.css'],
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeFlatChildrenAccessorExample {
   @ViewChild(CdkTree)

@@ -33,6 +33,9 @@ export interface CellDef {
 export class CdkCellDef implements CellDef {
   /** @docs-private */
   template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -45,6 +48,9 @@ export class CdkCellDef implements CellDef {
 export class CdkHeaderCellDef implements CellDef {
   /** @docs-private */
   template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -57,6 +63,9 @@ export class CdkHeaderCellDef implements CellDef {
 export class CdkFooterCellDef implements CellDef {
   /** @docs-private */
   template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -131,6 +140,9 @@ export class CdkColumnDef implements CanStick {
    */
   _columnCssClassName!: string[];
 
+  constructor(...args: unknown[]);
+  constructor() {}
+
   /** Whether the sticky state has changed. */
   hasStickyChanged(): boolean {
     const hasStickyChanged = this._hasStickyChanged;
@@ -187,6 +199,8 @@ export class BaseCdkCell {
   },
 })
 export class CdkHeaderCell extends BaseCdkCell {
+  constructor(...args: unknown[]);
+
   constructor() {
     super(inject(CdkColumnDef), inject(ElementRef));
   }
@@ -200,6 +214,8 @@ export class CdkHeaderCell extends BaseCdkCell {
   },
 })
 export class CdkFooterCell extends BaseCdkCell {
+  constructor(...args: unknown[]);
+
   constructor() {
     const columnDef = inject(CdkColumnDef);
     const elementRef = inject(ElementRef);
@@ -221,6 +237,8 @@ export class CdkFooterCell extends BaseCdkCell {
   },
 })
 export class CdkCell extends BaseCdkCell {
+  constructor(...args: unknown[]);
+
   constructor() {
     const columnDef = inject(CdkColumnDef);
     const elementRef = inject(ElementRef);

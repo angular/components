@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
@@ -34,6 +34,7 @@ import {MatTabsModule} from '@angular/material/tabs';
     ReactiveFormsModule,
   ],
   styleUrl: 'slider-demo.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderDemo {
   dialog = inject(MatDialog);
@@ -127,6 +128,7 @@ export class SliderDemo {
   </mat-dialog-content>
   `,
   imports: [MatSliderModule, MatDialogTitle, MatDialogContent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SliderDialogDemo {
   data = inject(MAT_DIALOG_DATA);

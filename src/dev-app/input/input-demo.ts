@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 import {FormControl, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -39,6 +39,7 @@ const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA
   selector: 'input-demo',
   templateUrl: 'input-demo.html',
   styleUrl: 'input-demo.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
     FormsModule,

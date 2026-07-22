@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 
 interface RoleCategory {
@@ -30,6 +30,7 @@ interface ColorGroup {
   templateUrl: 'system-demo.html',
   styleUrls: ['system-demo.css'],
   imports: [MatCardModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemDemo {
   /**

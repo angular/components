@@ -9,6 +9,7 @@
 import {
   AfterContentInit,
   booleanAttribute,
+  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
@@ -79,6 +80,7 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   },
   providers: [MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatChipListbox
   extends MatChipSet

@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   InjectionToken,
   Input,
@@ -63,6 +64,7 @@ const defaults: MatFabDefaultOptions = {
   },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatFabButton extends MatButtonBase {
   private _options = inject<MatFabDefaultOptions>(MAT_FAB_DEFAULT_OPTIONS, {optional: true});
@@ -70,6 +72,8 @@ export class MatFabButton extends MatButtonBase {
   override _isFab = true;
 
   @Input({transform: booleanAttribute}) extended: boolean = false;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();
@@ -92,11 +96,14 @@ export class MatFabButton extends MatButtonBase {
   },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatMiniFabButton extends MatButtonBase {
   private _options = inject<MatFabDefaultOptions>(MAT_FAB_DEFAULT_OPTIONS, {optional: true});
 
   override _isFab = true;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();

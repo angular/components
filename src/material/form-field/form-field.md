@@ -11,9 +11,7 @@ The following Angular Material components are designed to work inside a `<mat-fo
 - [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.dev/components/input/overview)
 - [`<select matNativeControl>`](https://material.angular.dev/components/select/overview)
 - [`<mat-select>`](https://material.angular.dev/components/select/overview)
-- [`<mat-chip-grid>`](https://material.angular.dev/components/chips/overview)
-
-Note: `<mat-form-field>` requires a child component that implements `MatFormFieldControl`. Among the chips components, only `<mat-chip-grid>` supports this integration.
+- [`<mat-chip-set>`](https://material.angular.dev/components/chips/overview)
 
 <!-- example(form-field-overview) -->
 
@@ -29,11 +27,11 @@ Out of the box, if you do not specify an `appearance` for the `<mat-form-field>`
 appearance for your app.
 
 ```ts
-bootstrapApplication(MyApp, {
+@NgModule({
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
   ]
-});
+})
 ```
 
 <!-- example(form-field-appearance) -->
@@ -56,15 +54,15 @@ field control, or to `auto` to restore the default behavior.
 <!-- example(form-field-label) -->
 
 The floating label behavior can be adjusted globally by providing a value for
-`MAT_FORM_FIELD_DEFAULT_OPTIONS` in your app config. Like the `floatLabel` input,
+`MAT_FORM_FIELD_DEFAULT_OPTIONS` in your application's root module. Like the `floatLabel` input,
 the option can be either set to `always` or `auto`.
 
 ```ts
-bootstrapApplication(MyApp, {
+@NgModule({
   providers: [
     {provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}}
   ]
-});
+})
 ```
 
 ### Hint labels

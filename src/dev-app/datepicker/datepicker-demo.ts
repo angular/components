@@ -7,10 +7,11 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
-  Service,
+  Injectable,
   OnDestroy,
   ViewChild,
   ViewEncapsulation,
@@ -38,7 +39,7 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 /** Range selection strategy that preserves the current range. */
-@Service({autoProvided: false})
+@Injectable()
 export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D> {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter<D>);
 
@@ -100,6 +101,7 @@ export class CustomRangeStrategy {}
   selector: 'custom-header',
   templateUrl: 'custom-header.html',
   styleUrl: 'custom-header.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatIconModule, MatButtonModule],
 })
 export class CustomHeader<D> implements OnDestroy {
@@ -150,6 +152,7 @@ export class CustomHeader<D> implements OnDestroy {
       </mat-calendar-header>
     `,
   imports: [MatDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomHeaderNgContent<D> {
   private _dateAdapter = inject<DateAdapter<D>>(DateAdapter);
@@ -170,6 +173,7 @@ export class CustomHeaderNgContent<D> {
   templateUrl: 'datepicker-demo.html',
   styleUrl: 'datepicker-demo.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     JsonPipe,
     FormsModule,

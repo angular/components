@@ -89,6 +89,9 @@ export class MatFormFieldFloatingLabel implements OnDestroy {
   /** The current resize event subscription. */
   private _resizeSubscription = new Subscription();
 
+  constructor(...args: unknown[]);
+  constructor() {}
+
   ngOnDestroy() {
     this._resizeSubscription.unsubscribe();
   }

@@ -1,5 +1,5 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -1080,7 +1080,6 @@ describe('MatRadioDefaultOverrides', () => {
   </mat-radio-group>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadiosInsideRadioGroup {
   labelPos!: 'before' | 'after';
@@ -1103,7 +1102,6 @@ class RadiosInsideRadioGroup {
   </mat-radio-group>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadiosInsidePreCheckedRadioGroup {}
 
@@ -1129,7 +1127,6 @@ class RadiosInsidePreCheckedRadioGroup {}
     <mat-radio-button id="nameless" value="no-name">No name</mat-radio-button>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneRadioButtons {
   ariaLabel: string | null = 'Banana';
@@ -1146,7 +1143,6 @@ class StandaloneRadioButtons {
   </mat-radio-group>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadioGroupWithNgModel {
   modelValue!: string;
@@ -1165,7 +1161,6 @@ class RadioGroupWithNgModel {
       [disabled]="disabled"
       [disabledInteractive]="disabledInteractive">One</mat-radio-button>`,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisableableRadioButton {
   disabled = false;
@@ -1182,7 +1177,6 @@ class DisableableRadioButton {
     </mat-radio-group>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadioGroupWithFormControl {
   @ViewChild(MatRadioGroup) group!: MatRadioGroup;
@@ -1192,7 +1186,6 @@ class RadioGroupWithFormControl {
 @Component({
   template: `<mat-radio-button [disabled]="disabled" [tabIndex]="tabIndex"></mat-radio-button>`,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusableRadioButton {
   tabIndex!: number;
@@ -1205,7 +1198,6 @@ class FocusableRadioButton {
     <div><ng-content></ng-content></div>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TranscludingWrapper {}
 
@@ -1220,7 +1212,6 @@ class TranscludingWrapper {}
   </mat-radio-group>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule, TranscludingWrapper],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InterleavedRadioGroup {
   modelValue = 'strawberry';
@@ -1234,21 +1225,18 @@ class InterleavedRadioGroup {
 @Component({
   template: `<mat-radio-button tabindex="5"></mat-radio-button>`,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadioButtonWithPredefinedTabindex {}
 
 @Component({
   template: `<mat-radio-button></mat-radio-button>`,
   imports: [MatRadioModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DefaultRadioButton {}
 
 @Component({
   template: `<mat-radio-button color="warn"></mat-radio-button>`,
   imports: [MatRadioModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadioButtonWithColorBinding {}
 
@@ -1259,7 +1247,6 @@ class RadioButtonWithColorBinding {}
       aria-describedby="something"
       aria-labelledby="something-else"></mat-radio-button>`,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RadioButtonWithPredefinedAriaAttributes {}
 
@@ -1280,7 +1267,6 @@ class RadioButtonWithPredefinedAriaAttributes {}
     </mat-radio-group>
   `,
   imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PreselectedRadioWithStaticValueAndNgIf {
   @ViewChild('preselectedGroup', {read: MatRadioGroup}) preselectedGroup!: MatRadioGroup;

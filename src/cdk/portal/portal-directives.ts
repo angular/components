@@ -34,6 +34,8 @@ import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} fr
   exportAs: 'cdkPortal',
 })
 export class CdkPortal extends TemplatePortal {
+  constructor(...args: unknown[]);
+
   constructor() {
     const templateRef = inject<TemplateRef<any>>(TemplateRef);
     const viewContainerRef = inject(ViewContainerRef);
@@ -68,6 +70,12 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
 
   /** Reference to the currently-attached component/view ref. */
   private _attachedRef: CdkPortalOutletAttachedRef = null;
+
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+  }
 
   /** Portal associated with the Portal outlet. */
   @Input('cdkPortalOutlet')
@@ -132,8 +140,6 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
       injector: portal.injector || viewContainerRef.injector,
       projectableNodes: portal.projectableNodes || undefined,
       ngModuleRef: this._moduleRef || undefined,
-      bindings: portal.bindings || undefined,
-      directives: portal.directives || undefined,
     });
 
     // If we're using a view container that's different from the injected one (e.g. when the portal

@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatBadgeModule} from '@angular/material/badge';
@@ -13,9 +13,9 @@ import {MatBadgeModule} from '@angular/material/badge';
   imports: [MatBadgeModule, MatButtonModule, MatIconModule],
 })
 export class BadgeOverviewExample {
-  hidden = signal(false);
+  hidden = false;
 
   toggleBadgeVisibility() {
-    this.hidden.update(hidden => !hidden);
+    this.hidden = !this.hidden;
   }
 }

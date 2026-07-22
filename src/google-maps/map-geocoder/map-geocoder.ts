@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, NgZone, inject} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {Observable} from 'rxjs';
 
 export interface MapGeocoderResponse {
@@ -18,10 +18,13 @@ export interface MapGeocoderResponse {
  * Angular service that wraps the Google Maps Geocoder from the Google Maps JavaScript API.
  * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class MapGeocoder {
   private readonly _ngZone = inject(NgZone);
   private _geocoder: google.maps.Geocoder | undefined;
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder.geocode
@@ -31,7 +34,7 @@ export class MapGeocoder {
       this._getGeocoder().then(geocoder => {
         geocoder.geocode(request, (results, status) => {
           this._ngZone.run(() => {
-            observer.next({results: results || [], status: status as google.maps.GeocoderStatus});
+            observer.next({results: results || [], status});
             observer.complete();
           });
         });

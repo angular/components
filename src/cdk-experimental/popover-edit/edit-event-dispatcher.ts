@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, NgZone, inject} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, pipe, Subject} from 'rxjs';
 import {
   audit,
@@ -48,7 +48,7 @@ export enum HoverContentState {
 /**
  * Service for sharing delegated events and state for triggering table edits.
  */
-@Service({autoProvided: false})
+@Injectable()
 export class EditEventDispatcher<R> {
   private readonly _ngZone = inject(NgZone);
 

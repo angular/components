@@ -20,7 +20,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  Service,
+  Injectable,
   Injector,
   Input,
   NgZone,
@@ -31,7 +31,6 @@ import {
   input,
   inject,
   Type,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {shareReplay, take, tap} from 'rxjs/operators';
@@ -41,7 +40,7 @@ import {DeprecatedFieldComponent} from './deprecated-tooltip';
 import {ModuleImportCopyButton} from './module-import-copy-button';
 import {AngularAriaBanner} from './angular-aria-banner/angular-aria-banner';
 
-@Service()
+@Injectable({providedIn: 'root'})
 class DocFetcher {
   private _http = inject(HttpClient);
 
@@ -67,7 +66,6 @@ class DocFetcher {
     }
   `,
   imports: [CdkPortalOutlet],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class DocViewer implements OnDestroy {
   private _appRef = inject(ApplicationRef);

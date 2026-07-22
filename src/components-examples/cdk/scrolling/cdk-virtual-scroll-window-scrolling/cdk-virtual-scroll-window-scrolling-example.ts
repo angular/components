@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Virtual scrolling window */
@@ -6,6 +6,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   selector: 'cdk-virtual-scroll-window-scrolling-example',
   styleUrl: 'cdk-virtual-scroll-window-scrolling-example.css',
   templateUrl: 'cdk-virtual-scroll-window-scrolling-example.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollWindowScrollingExample {

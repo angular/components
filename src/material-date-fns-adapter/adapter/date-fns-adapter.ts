@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, inject} from '@angular/core';
+import {Injectable, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
   Locale,
@@ -55,8 +55,10 @@ const DAY_OF_WEEK_FORMATS = {
 };
 
 /** Adds date-fns support to Angular Material. */
-@Service({autoProvided: false})
+@Injectable()
 export class DateFnsAdapter extends DateAdapter<Date, Locale> {
+  constructor(...args: unknown[]);
+
   constructor() {
     super();
     const matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});

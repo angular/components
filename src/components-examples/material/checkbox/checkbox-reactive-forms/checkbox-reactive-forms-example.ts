@@ -1,5 +1,5 @@
 import {JsonPipe} from '@angular/common';
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
@@ -9,6 +9,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   templateUrl: 'checkbox-reactive-forms-example.html',
   styleUrl: 'checkbox-reactive-forms-example.css',
   imports: [FormsModule, ReactiveFormsModule, MatCheckboxModule, JsonPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxReactiveFormsExample {
   private readonly _formBuilder = inject(FormBuilder);

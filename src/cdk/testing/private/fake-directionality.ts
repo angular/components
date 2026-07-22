@@ -7,15 +7,14 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {EventEmitter, OnDestroy, Service, signal, WritableSignal} from '@angular/core';
+import {EventEmitter, signal, WritableSignal} from '@angular/core';
 import {toObservable} from '@angular/core/rxjs-interop';
 import {skip} from 'rxjs/operators';
 
 // Note: ngOnDestroy not needed, but must include it to match the Directionality interface.
 // Implementing the interface ensures the fake stays in sync with the real API.
 // tslint:disable-next-line:no-undecorated-class-with-angular-features lifecycle-hook-interface
-@Service()
-class FakeDirectionality implements Directionality, OnDestroy {
+class FakeDirectionality implements Directionality {
   readonly change: EventEmitter<Direction>;
 
   get value(): Direction {

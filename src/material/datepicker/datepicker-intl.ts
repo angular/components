@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /** Datepicker data that requires internationalization. */
-@Service()
+@Injectable({providedIn: 'root'})
 export class MatDatepickerIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify

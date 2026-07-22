@@ -13,4 +13,7 @@ import {Directive, TemplateRef, inject} from '@angular/core';
 })
 export class CdkStepLabel {
   template = inject<TemplateRef<any>>(TemplateRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

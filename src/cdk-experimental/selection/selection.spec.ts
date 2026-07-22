@@ -1,14 +1,7 @@
 import {AsyncPipe} from '@angular/common';
 import {CdkTableModule} from '@angular/cdk/table';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  ViewChild,
-  inject,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ChangeDetectorRef, Component, ElementRef, ViewChild, inject} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {CdkSelection} from './selection';
 import {CdkSelectionModule} from './selection-module';
@@ -64,44 +57,44 @@ describe('CdkSelection', () => {
   });
 
   describe('cdkSelectAll', () => {
-    it('should select all items when not all selected', async () => {
+    it('should select all items when not all selected', fakeAsync(() => {
       expect(component.cdkSelection.isAllSelected()).toBeFalsy();
       expect(component.getSelectAll().textContent.trim()).toBe('unchecked');
 
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       expect(component.cdkSelection.isAllSelected()).toBeTruthy();
       expect(component.getSelectAll().textContent.trim()).toBe('checked');
-    });
+    }));
 
-    it('should de-select all items when all selected', async () => {
+    it('should de-select all items when all selected', fakeAsync(() => {
       // Select all items.
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       expect(component.cdkSelection.isAllSelected()).toBeTruthy();
       expect(component.getSelectAll().textContent.trim()).toBe('checked');
 
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       expect(component.cdkSelection.isAllSelected()).toBeFalsy();
       expect(component.getSelectAll().textContent.trim()).toBe('unchecked');
-    });
+    }));
 
-    it('should de-select all items when partially selected', async () => {
+    it('should de-select all items when partially selected', fakeAsync(() => {
       // make the 1st item selected.
       component.clickSelectionToggle(0);
 
       expect(component.cdkSelection.isPartialSelected()).toBeTruthy();
       expect(component.getSelectAll().textContent.trim()).toBe('indeterminate');
 
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       expect(component.cdkSelection.isAllSelected()).toBeFalsy();
       expect(component.cdkSelection.isPartialSelected()).toBeFalsy();
       expect(component.getSelectAll().textContent.trim()).toBe('unchecked');
-    });
+    }));
 
-    it('should respond to selection toggle clicks', () => {
+    it('should respond to selection toggle clicks', fakeAsync(() => {
       // Start with no selection.
       expect(component.cdkSelection.isAllSelected()).toBeFalsy();
       expect(component.getSelectAll().textContent.trim()).toBe('unchecked');
@@ -123,10 +116,10 @@ describe('CdkSelection', () => {
       expect(component.cdkSelection.isAllSelected()).toBeTruthy();
       expect(component.cdkSelection.isPartialSelected()).toBeFalsy();
       expect(component.getSelectAll().textContent.trim()).toBe('checked');
-    });
+    }));
 
-    it('should emit the correct selection change events', async () => {
-      await component.clickSelectAll();
+    it('should emit the correct selection change events', fakeAsync(() => {
+      component.clickSelectAll();
 
       expect(component.selectionChange!.before).toEqual([]);
       expect(component.selectionChange!.after).toEqual([
@@ -136,7 +129,7 @@ describe('CdkSelection', () => {
         {value: 'durian', index: 3},
       ]);
 
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       expect(component.selectionChange!.before).toEqual([
         {value: 'apple', index: 0},
@@ -145,18 +138,18 @@ describe('CdkSelection', () => {
         {value: 'durian', index: 3},
       ]);
       expect(component.selectionChange!.after).toEqual([]);
-    });
+    }));
   });
 
   describe('cdkSelectionToggle', () => {
-    it('should respond to select-all toggle click', async () => {
+    it('should respond to select-all toggle click', fakeAsync(() => {
       // All items not unchecked.
       expect(component.getSelectionToggle(0).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(1).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(2).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(3).textContent.trim()).toBe('unchecked');
 
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       // Everything selected.
       expect(component.getSelectionToggle(0).textContent.trim()).toBe('checked');
@@ -164,16 +157,16 @@ describe('CdkSelection', () => {
       expect(component.getSelectionToggle(2).textContent.trim()).toBe('checked');
       expect(component.getSelectionToggle(3).textContent.trim()).toBe('checked');
 
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       // Everything unselected.
       expect(component.getSelectionToggle(0).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(1).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(2).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(3).textContent.trim()).toBe('unchecked');
-    });
+    }));
 
-    it('should select unselected item when clicked', () => {
+    it('should select unselected item when clicked', fakeAsync(() => {
       expect(component.cdkSelection.isSelected('apple', 0)).toBeFalsy();
       expect(component.getSelectionToggle(0).textContent.trim()).toBe('unchecked');
 
@@ -189,11 +182,11 @@ describe('CdkSelection', () => {
       expect(component.getSelectionToggle(1).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(2).textContent.trim()).toBe('unchecked');
       expect(component.getSelectionToggle(3).textContent.trim()).toBe('unchecked');
-    });
+    }));
 
-    it('should de-selected selected item when clicked', async () => {
+    it('should de-selected selected item when clicked', fakeAsync(() => {
       // Make all items selected.
-      await component.clickSelectAll();
+      component.clickSelectAll();
 
       component.clickSelectionToggle(1);
 
@@ -207,9 +200,9 @@ describe('CdkSelection', () => {
       expect(component.getSelectionToggle(0).textContent.trim()).toBe('checked');
       expect(component.getSelectionToggle(2).textContent.trim()).toBe('checked');
       expect(component.getSelectionToggle(3).textContent.trim()).toBe('checked');
-    });
+    }));
 
-    it('should emit the correct selection change events', () => {
+    it('should emit the correct selection change events', fakeAsync(() => {
       component.clickSelectionToggle(1);
 
       expect(component.selectionChange!.before).toEqual([]);
@@ -230,7 +223,7 @@ describe('CdkSelection', () => {
         {value: 'cherry', index: 2},
       ]);
       expect(component.selectionChange!.after).toEqual([{value: 'banana', index: 1}]);
-    });
+    }));
   });
 });
 
@@ -244,7 +237,7 @@ describe('CdkSelection with multiple = false', () => {
     fixture.detectChanges();
   });
 
-  it('should uncheck the previous selection when selecting new item', () => {
+  it('should uncheck the previous selection when selecting new item', fakeAsync(() => {
     // Everything start as unchecked.
     expect(component.getSelectionToggle(0).textContent.trim()).toBe('unchecked');
     expect(component.getSelectionToggle(1).textContent.trim()).toBe('unchecked');
@@ -273,9 +266,9 @@ describe('CdkSelection with multiple = false', () => {
     expect(component.getSelectionToggle(1).textContent.trim()).toBe('unchecked');
     expect(component.getSelectionToggle(2).textContent.trim()).toBe('unchecked');
     expect(component.getSelectionToggle(3).textContent.trim()).toBe('unchecked');
-  });
+  }));
 
-  it('should emit the correct selection change events', () => {
+  it('should emit the correct selection change events', fakeAsync(() => {
     component.clickSelectionToggle(1);
 
     expect(component.selectionChange!.before).toEqual([]);
@@ -290,19 +283,19 @@ describe('CdkSelection with multiple = false', () => {
 
     expect(component.selectionChange!.before).toEqual([{value: 'cherry', index: 2}]);
     expect(component.selectionChange!.after).toEqual([]);
-  });
+  }));
 });
 
 describe('cdkSelectionColumn', () => {
   let fixture: ComponentFixture<MultiSelectTableWithSelectionColumn>;
   let component: MultiSelectTableWithSelectionColumn;
 
-  beforeEach(async () => {
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(MultiSelectTableWithSelectionColumn);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    await fixture.whenStable();
-  });
+    flush();
+  }));
 
   it('should show check boxes', () => {
     const checkboxes =
@@ -311,23 +304,23 @@ describe('cdkSelectionColumn', () => {
     expect(checkboxes.length).toBe(5);
   });
 
-  it('should allow select all', async () => {
+  it('should allow select all', fakeAsync(() => {
     expect(component.getSelectAll().checked).toBe(false);
     expect(component.getSelectionToggle(0).checked).toBe(false);
     expect(component.getSelectionToggle(1).checked).toBe(false);
     expect(component.getSelectionToggle(2).checked).toBe(false);
     expect(component.getSelectionToggle(3).checked).toBe(false);
 
-    await component.clickSelectAll();
+    component.clickSelectAll();
 
     expect(component.getSelectAll().checked).toBe(true);
     expect(component.getSelectionToggle(0).checked).toBe(true);
     expect(component.getSelectionToggle(1).checked).toBe(true);
     expect(component.getSelectionToggle(2).checked).toBe(true);
     expect(component.getSelectionToggle(3).checked).toBe(true);
-  });
+  }));
 
-  it('should allow toggle rows', () => {
+  it('should allow toggle rows', fakeAsync(() => {
     expect(component.getSelectAll().checked).toBe(false);
     expect(component.getSelectAll().indeterminate).toBe(false);
     expect(component.getSelectionToggle(0).checked).toBe(false);
@@ -347,10 +340,10 @@ describe('cdkSelectionColumn', () => {
     expect(component.getSelectionToggle(1).checked).toBe(true);
     expect(component.getSelectionToggle(2).checked).toBe(true);
     expect(component.getSelectionToggle(3).checked).toBe(true);
-  });
+  }));
 
   describe('cdkRowSelection', () => {
-    it('should set .cdk-selected on selected rows', () => {
+    it('should set .cdk-selected on selected rows', fakeAsync(() => {
       expect(component.getRow(0).classList.contains('cdk-selected')).toBeFalsy();
       expect(component.getRow(1).classList.contains('cdk-selected')).toBeFalsy();
       expect(component.getRow(2).classList.contains('cdk-selected')).toBeFalsy();
@@ -363,9 +356,9 @@ describe('cdkSelectionColumn', () => {
       component.clickSelectionToggle(0);
 
       expect(component.getRow(0).classList.contains('cdk-selected')).toBeFalsy();
-    });
+    }));
 
-    it('should set aria-selected on selected rows', () => {
+    it('should set aria-selected on selected rows', fakeAsync(() => {
       expect(component.getRow(0).getAttribute('aria-selected')).toBe('false');
       expect(component.getRow(1).getAttribute('aria-selected')).toBe('false');
       expect(component.getRow(2).getAttribute('aria-selected')).toBe('false');
@@ -378,7 +371,7 @@ describe('cdkSelectionColumn', () => {
       component.clickSelectionToggle(0);
 
       expect(component.getRow(0).getAttribute('aria-selected')).toBe('false');
-    });
+    }));
   });
 });
 
@@ -396,7 +389,7 @@ describe('cdkSelectionColumn with multiple = false', () => {
     expect(component.elementRef.nativeElement.querySelector('input[cdkselectall]')).toBe(null);
   });
 
-  it('should allow selecting one single row', () => {
+  it('should allow selecting one single row', fakeAsync(() => {
     expect(component.getSelectionToggle(0).checked).toBe(false);
     expect(component.getSelectionToggle(1).checked).toBe(false);
     expect(component.getSelectionToggle(2).checked).toBe(false);
@@ -413,12 +406,8 @@ describe('cdkSelectionColumn with multiple = false', () => {
 
     component.clickSelectionToggle(1);
     expect(component.getSelectionToggle(1).checked).toBe(false);
-  });
+  }));
 });
-
-function wait(milliseconds: number) {
-  return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
 
 @Component({
   template: `
@@ -440,7 +429,6 @@ function wait(milliseconds: number) {
       }
     </ul>`,
   imports: [CdkSelectionModule, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithMultiSelection {
   private readonly _elementRef = inject(ElementRef);
@@ -462,9 +450,9 @@ class ListWithMultiSelection {
     }
   }
 
-  async clickSelectAll() {
+  clickSelectAll() {
     this.getSelectAll().click();
-    await wait(0);
+    flush();
     this._cdr.detectChanges();
   }
 
@@ -475,6 +463,7 @@ class ListWithMultiSelection {
     }
 
     toggle.click();
+    flush();
     this._cdr.detectChanges();
   }
 
@@ -504,7 +493,6 @@ class ListWithMultiSelection {
       }
     </ul>`,
   imports: [CdkSelectionModule, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithSingleSelection {
   private readonly _elementRef = inject(ElementRef);
@@ -522,6 +510,7 @@ class ListWithSingleSelection {
     }
 
     toggle.click();
+    flush();
     this._cdr.detectChanges();
   }
 
@@ -545,7 +534,6 @@ class ListWithSingleSelection {
     </table>
     `,
   imports: [CdkSelectionModule, CdkTableModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiSelectTableWithSelectionColumn {
   readonly elementRef = inject(ElementRef);
@@ -566,10 +554,11 @@ class MultiSelectTableWithSelectionColumn {
     }
   }
 
-  async clickSelectAll() {
+  clickSelectAll() {
     this.getSelectAll().click();
-    await wait(0);
+    flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   clickSelectionToggle(index: number) {
@@ -579,7 +568,9 @@ class MultiSelectTableWithSelectionColumn {
     }
 
     toggle.click();
+    flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   getSelectAll(): HTMLInputElement {
@@ -610,7 +601,6 @@ class MultiSelectTableWithSelectionColumn {
     </table>
     `,
   imports: [CdkSelectionModule, CdkTableModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleSelectTableWithSelectionColumn {
   readonly elementRef = inject(ElementRef);
@@ -628,7 +618,9 @@ class SingleSelectTableWithSelectionColumn {
     }
 
     toggle.click();
+    flush();
     this._cdr.detectChanges();
+    flush();
   }
 
   getSelectionToggle(index: number): HTMLInputElement {

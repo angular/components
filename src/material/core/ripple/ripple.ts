@@ -133,6 +133,8 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   /** @docs-private Whether ripple directive is initialized and the input bindings are set. */
   _isInitialized: boolean = false;
 
+  constructor(...args: unknown[]);
+
   constructor() {
     const ngZone = inject(NgZone);
     const platform = inject(Platform);

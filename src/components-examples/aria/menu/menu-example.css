@@ -77,9 +77,7 @@
 
 .example-menu-trigger:hover,
 .example-menu-item[data-active='true'],
-.example-menu-bar-item:hover,
-.example-menu-bar-item:focus-within,
-.example-menu-bar-item[aria-expanded='true'] {
+.example-menu-bar-item[data-active='true'] {
   background: color-mix(
     in srgb,
     var(--mat-sys-on-surface) calc(var(--mat-sys-hover-state-layer-opacity) * 100%),

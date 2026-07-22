@@ -1,4 +1,4 @@
-import {Component, TemplateRef, inject, viewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {
   MatBottomSheet,
   MatBottomSheetConfig,
@@ -16,9 +16,9 @@ import {
 export class BottomSheetHarnessExample {
   readonly bottomSheet = inject(MatBottomSheet);
 
-  template = viewChild.required<TemplateRef<any>>(TemplateRef);
+  @ViewChild(TemplateRef) template!: TemplateRef<any>;
 
   open(config?: MatBottomSheetConfig) {
-    return this.bottomSheet.open(this.template(), config);
+    return this.bottomSheet.open(this.template, config);
   }
 }

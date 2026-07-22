@@ -20,6 +20,12 @@ import {CdkVirtualScrollable, VIRTUAL_SCROLLABLE} from './virtual-scrollable';
   },
 })
 export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
+  constructor(...args: unknown[]);
+
+  constructor() {
+    super();
+  }
+
   override measureBoundingClientRectWithScrollOffset(
     from: 'left' | 'top' | 'right' | 'bottom',
   ): number {

@@ -7,7 +7,7 @@
  */
 
 import {InjectionToken} from '@angular/core';
-import type {ComboboxPopup} from './combobox-popup';
+import type {Combobox} from './combobox';
 
-/** Token used to expose the combobox popup. */
-export const COMBOBOX_POPUP = new InjectionToken<ComboboxPopup>('COMBOBOX_POPUP');
+/** Token used to provide the combobox to child components. */
+export const COMBOBOX = new InjectionToken<Combobox<unknown>>('COMBOBOX');

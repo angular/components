@@ -101,12 +101,6 @@ are completed.
   </mat-step>
 </mat-stepper>
 ```
-
-#### Using Signal Forms
-The stepper also supports passing in a Signal Forms field as the `stepControl`:
-
-<!-- example(stepper-signal-forms) -->
-
 ### Types of steps
 
 #### Optional step
@@ -159,17 +153,17 @@ However, it can be overridden the same way as mentioned above.
 
 In order to use the custom step states, you must add the `displayDefaultIndicatorType` option to
 the global default stepper options which can be specified by providing a value for
-`STEPPER_GLOBAL_OPTIONS` in your app config.
+`STEPPER_GLOBAL_OPTIONS` in your application's root module.
 
 ```ts
-bootstrapApplication(MyApp, {
+@NgModule({
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { displayDefaultIndicatorType: false }
     }
   ]
-});
+})
 ```
 
 <!-- example(stepper-states) -->
@@ -183,14 +177,14 @@ errors via the `showError` option in the `STEPPER_GLOBAL_OPTIONS` injection toke
 will not affect steppers marked as `linear`.
 
 ```ts
-bootstrapApplication(MyApp, {
+@NgModule({
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
     }
   ]
-});
+})
 ```
 
 <!-- example(stepper-errors) -->
@@ -219,14 +213,16 @@ viewport.
 
 ### Localizing labels
 Labels used by the stepper are provided through `MatStepperIntl`. Localization of these messages
-can be done by providing a subclass with translated values in your app config.
+can be done by providing a subclass with translated values in your application root module.
 
 ```ts
-bootstrapApplication(MyApp, {
+@NgModule({
+  imports: [MatStepperModule],
   providers: [
     {provide: MatStepperIntl, useClass: MyIntl},
-  ]
-});
+  ],
+})
+export class MyApp {}
 ```
 
 <!-- example(stepper-intl) -->

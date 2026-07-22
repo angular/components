@@ -126,6 +126,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
 
   private _isViewInited = false;
 
+  constructor(...args: unknown[]);
+
   constructor() {
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_CdkTextFieldStyleLoader);

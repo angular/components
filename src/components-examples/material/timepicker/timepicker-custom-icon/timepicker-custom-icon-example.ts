@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import {MatIcon} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
@@ -11,5 +11,6 @@ import {provideNativeDateAdapter} from '@angular/material/core';
   templateUrl: 'timepicker-custom-icon-example.html',
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatTimepickerModule, MatIcon],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimepickerCustomIconExample {}

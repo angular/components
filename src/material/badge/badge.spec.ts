@@ -1,16 +1,8 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {
-  Component,
-  DebugElement,
-  ViewEncapsulation,
-  ViewChild,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, DebugElement, ViewEncapsulation, ViewChild, signal} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule, MatBadgePosition, MatBadgeSize} from './index';
 import {ThemePalette} from '../core';
-import {MAT_BADGE_CONFIG, MatBadgeConfig} from './badge';
 
 describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
@@ -266,31 +258,6 @@ describe('MatBadge', () => {
         .toBeFalse();
     });
   });
-
-  it('should be able to specify default values through DI', () => {
-    TestBed.configureTestingModule({
-      providers: [
-        {
-          provide: MAT_BADGE_CONFIG,
-          useValue: {
-            color: 'accent',
-            overlap: false,
-            position: 'below before',
-            size: 'large',
-          } satisfies MatBadgeConfig,
-        },
-      ],
-    });
-
-    const fixture = TestBed.createComponent(SimpleBadge);
-    fixture.detectChanges();
-    const badge = fixture.componentInstance.badgeInstance;
-
-    expect(badge.color).toBe('accent');
-    expect(badge.overlap).toBe(false);
-    expect(badge.position).toBe('below before');
-    expect(badge.size).toBe('large');
-  });
 });
 
 /** Test component that contains a MatBadge. */
@@ -311,7 +278,6 @@ describe('MatBadge', () => {
     </button>
   `,
   imports: [MatBadgeModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BadgeOnInteractiveElement {
   @ViewChild(MatBadge) badgeInstance!: MatBadge;
@@ -328,7 +294,6 @@ class BadgeOnInteractiveElement {
 @Component({
   template: '<span matBadge="7" [matBadgeDescription]="description()">Hello</span>',
   imports: [MatBadgeModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BadgeOnNonInteractiveElement {
   description = signal('');
@@ -342,7 +307,6 @@ class BadgeOnNonInteractiveElement {
     </span>
   `,
   imports: [MatBadgeModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PreExistingBadge {}
 
@@ -354,25 +318,12 @@ class PreExistingBadge {}
     </span>
   `,
   imports: [MatBadgeModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedBadge {}
 
 @Component({
-  template: `<ng-template matBadge="1">Notifications</ng-template>`,
+  template: `
+    <ng-template matBadge="1">Notifications</ng-template>`,
   imports: [MatBadgeModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BadgeOnTemplate {}
-
-@Component({
-  template: `
-    <button matBadge="Hello">
-      home
-    </button>
-  `,
-  imports: [MatBadgeModule],
-})
-class SimpleBadge {
-  @ViewChild(MatBadge) badgeInstance!: MatBadge;
-}

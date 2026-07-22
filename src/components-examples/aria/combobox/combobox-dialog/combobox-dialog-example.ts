@@ -6,32 +6,44 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
+import {
+  Combobox,
+  ComboboxDialog,
+  ComboboxInput,
+  ComboboxPopupContainer,
+} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
+  ChangeDetectionStrategy,
   Component,
   computed,
   signal,
-  viewChild,
   untracked,
-  ElementRef,
+  viewChild,
 } from '@angular/core';
-import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
-import {STATES as states} from '../states';
 
 /** @title Combobox with a dialog popup. */
 @Component({
   selector: 'combobox-dialog-example',
   templateUrl: 'combobox-dialog-example.html',
-  styleUrls: ['../combobox-example.css'],
-  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
+  styleUrl: 'combobox-dialog-example.css',
+  imports: [
+    ComboboxDialog,
+    Combobox,
+    ComboboxInput,
+    ComboboxPopupContainer,
+    Listbox,
+    Option,
+    FormsModule,
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxDialogExample {
+  dialog = viewChild(ComboboxDialog);
   listbox = viewChild<Listbox<string>>(Listbox);
-  combobox = viewChild(Combobox);
-  searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  combobox = viewChild<Combobox<string>>(Combobox);
 
   value = signal('');
   searchString = signal('');
@@ -41,38 +53,93 @@ export class ComboboxDialogExample {
   );
 
   selectedStates = signal<string[]>([]);
-  popupExpanded = signal(false);
 
   constructor() {
     afterRenderEffect(() => {
-      if (this.popupExpanded()) {
-        untracked(() => {
-          setTimeout(() => {
-            this.searchInput()?.nativeElement.focus();
-          });
-        });
+      if (this.dialog() && this.combobox()?.expanded()) {
+        untracked(() => this.listbox()?.gotoFirst());
+        this.positionDialog();
       }
     });
 
     afterRenderEffect(() => {
-      if (this.popupExpanded()) {
-        this.listbox()?.scrollActiveItemIntoView();
+      if (this.selectedStates().length > 0) {
+        untracked(() => this.dialog()?.close());
+        this.value.set(this.selectedStates()[0]);
+        this.searchString.set('');
       }
     });
+
+    afterRenderEffect(() => this.listbox()?.scrollActiveItemIntoView());
   }
 
-  onCommit() {
-    const selected = this.selectedStates();
-    if (selected.length > 0) {
-      this.value.set(selected[0]);
-      this.searchString.set('');
-      this.popupExpanded.set(false);
-      this.combobox()?.element.focus();
+  // TODO(wagnermaciel): Switch to using the CDK for positioning.
+
+  positionDialog() {
+    const dialog = this.dialog()!;
+    const combobox = this.combobox()!;
+
+    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+
+    const scrollY = window.scrollY;
+
+    if (comboboxRect) {
+      dialog.element.style.width = `${comboboxRect.width}px`;
+      dialog.element.style.top = `${comboboxRect.bottom + scrollY + 4}px`;
+      dialog.element.style.left = `${comboboxRect.left - 1}px`;
     }
   }
-
-  onSearchEscape(event: Event) {
-    this.popupExpanded.set(false);
-    this.combobox()?.element.focus(); // Focus back to main trigger!
-  }
 }
+
+const states = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Florida',
+  'Georgia',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Pennsylvania',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
+];

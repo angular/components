@@ -1,18 +1,21 @@
-<mat-tree #tree [dataSource]="dataSource()" [childrenAccessor]="childrenAccessor">
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
     <button matIconButton disabled></button>
-    {{node.name}}
+    {{node.item}}
   </mat-tree-node>
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
-    [cdkTreeNodeTypeaheadLabel]="node.name" (expandedChange)="onNodeExpanded(node, $event)">
-    <button matIconButton [attr.aria-label]="'Toggle ' + node.name" matTreeNodeToggle>
+                [cdkTreeNodeTypeaheadLabel]="node.item">
+    <button matIconButton
+            [attr.aria-label]="'Toggle ' + node.item" matTreeNodeToggle>
       <mat-icon class="mat-icon-rtl-mirror">
-        {{tree.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
       </mat-icon>
     </button>
-    {{node.name}}
+    {{node.item}}
     @if (node.isLoading()) {
-    <mat-progress-bar mode="indeterminate" class="example-tree-progress-bar"></mat-progress-bar>
+      <mat-progress-bar
+          mode="indeterminate"
+          class="example-tree-progress-bar"></mat-progress-bar>
     }
   </mat-tree-node>
 </mat-tree>

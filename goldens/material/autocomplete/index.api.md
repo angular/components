@@ -43,7 +43,7 @@ export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
 // @public
 export class MatAutocomplete implements AfterContentInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
     ariaLabel: string;
@@ -136,6 +136,7 @@ export class MatAutocompleteModule {
 
 // @public
 export class MatAutocompleteOrigin {
+    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     // (undocumented)
@@ -155,6 +156,7 @@ export class MatAutocompleteSelectedEvent {
 
 // @public
 export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
+    constructor(...args: unknown[]);
     get activeOption(): MatOption | null;
     autocomplete: MatAutocomplete;
     autocompleteAttribute: string;
@@ -174,7 +176,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges<this>): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     _onChange: (value: any) => void;
@@ -202,7 +204,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
 
 // @public
 export class MatOptgroup {
-    constructor();
+    constructor(...args: unknown[]);
     disabled: boolean;
     _inert: boolean;
     label: string;
@@ -217,7 +219,7 @@ export class MatOptgroup {
 
 // @public
 export class MatOption<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     get active(): boolean;
     // (undocumented)
     _changeDetectorRef: ChangeDetectorRef;

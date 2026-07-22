@@ -6,10 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ViewContainerRef, Injector, Binding} from '@angular/core';
+import {ViewContainerRef, Injector} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {ScrollStrategy} from '@angular/cdk/overlay';
-import {DialogConfig, RestoreFocusValue} from '@angular/cdk/dialog';
+import {DialogConfig} from '@angular/cdk/dialog';
 
 /** Options for where to set focus to automatically on dialog open */
 export type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
@@ -129,8 +129,11 @@ export class MatDialogConfig<D = any> {
    */
   autoFocus?: AutoFocusTarget | string | boolean = 'first-tabbable';
 
-  /** Configures the focus restoration behavior. See `RestoreFocusValue` for more information. */
-  restoreFocus?: RestoreFocusValue = true;
+  /**
+   * Whether the dialog should restore focus to the
+   * previously-focused element, after it's closed.
+   */
+  restoreFocus?: boolean = true;
 
   /** Whether to wait for the opening animation to finish before trapping focus. */
   delayFocusTrap?: boolean = true;
@@ -159,9 +162,5 @@ export class MatDialogConfig<D = any> {
    */
   exitAnimationDuration?: string | number;
 
-  /**
-   * Bindings to apply to the component rendered inside the dialog.
-   * Does nothing for template-based dialogs.
-   */
-  bindings?: Binding[];
+  // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
 }

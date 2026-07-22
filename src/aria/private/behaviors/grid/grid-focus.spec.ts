@@ -281,7 +281,7 @@ describe('GridFocus', () => {
   });
 
   describe('focusCell', () => {
-    it('should set the active cell and coordinates (#focusCell)', () => {
+    it('should set the active cell and coordinates', () => {
       const cells = createTestGrid(createGridA);
       const gridFocus = setupGridFocus(signal(cells));
 
@@ -330,7 +330,7 @@ describe('GridFocus', () => {
   });
 
   describe('focusCoordinates', () => {
-    it('should set the active cell and coordinates (#focusCoordinates)', () => {
+    it('should set the active cell and coordinates', () => {
       const cells = createTestGrid(createGridD);
       const gridFocus = setupGridFocus(signal(cells));
 

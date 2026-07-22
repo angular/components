@@ -11,7 +11,6 @@ ng_project(
     deps = [
         "//:node_modules/@angular/core",
         "//src/aria/private",
-        "//src/aria/private/utils",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
     ],
@@ -27,7 +26,6 @@ ng_project(
         ":tabs",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/platform-browser",
-        "//src/aria/private/testing",
         "//src/cdk/testing/private",
     ],
 )

@@ -15,6 +15,7 @@ import {
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Directive,
@@ -54,6 +55,15 @@ import {ComponentPortal} from '@angular/cdk/portal';
 import {MediaMatcher} from '@angular/cdk/layout';
 import {Observable, Subject} from 'rxjs';
 import {_animationsDisabled} from '../core';
+
+declare global {
+  interface CSSStyleDeclaration {
+    msUserSelect: string;
+    MozUserSelect: string;
+    webkitUserDrag: string;
+    webkitTapHighlightColor: string;
+  }
+}
 
 /** Possible positions for a tooltip. */
 export type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';
@@ -139,23 +149,12 @@ export interface MatTooltipDefaultOptions {
   tooltipClass?: string | string[];
 
   /**
-   * By default the tooltip attempts to detect whether the user's device is able to hover by
-   * consulting the `Platform` provider that was created a long time ago and is based on
-   * some data points that may not be entirely accurate anymore (e.g. user agent string and
-   * Android/iOS-specific APIs), however changing them will break existing users. You can use this
-   * config property to opt into a more modern detection mechanism.
-   *
-   * The supported values include:
-   *
-   * - `false` - Default value. Detection is based on the `Platform` provider.
-   * - `true` - The tooltip will use the `any-hover` media query for more accurate detection.
-   * Note that this may break existing unit tests running in a headless browser.
-   * - `() => boolean` - If the automatic detection doesn't work properly in your case (e.g. the
-   * `any-hover` media query isn't supported) and you're able to detect more accurately, you can
-   * pass in a function that will be used for detection instead. It should return `true` if the
-   * device **has the ability to hover**, or `false` if it cannot.
+   * Whether the tooltip should use a media query to detect if the device is able to hover.
+   * Note that this may affect tests that run in a headless browser which reports that it's
+   * unable to hover. In such cases you may need to include an additional timeout, because
+   * the tooltip will fall back to treating the device as a touch screen.
    */
-  detectHoverCapability?: boolean | (() => boolean);
+  detectHoverCapability?: boolean;
 }
 
 /**
@@ -376,6 +375,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
   /** Whether ngOnDestroyed has been called. */
   private _isDestroyed = false;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     const defaultOptions = this._defaultOptions;
@@ -863,12 +864,6 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   private _isTouchPlatform(): boolean {
-    const detectHoverCapability = this._defaultOptions?.detectHoverCapability;
-
-    if (typeof detectHoverCapability === 'function') {
-      return !detectHoverCapability();
-    }
-
     if (this._platform.IOS || this._platform.ANDROID) {
       // If we detected iOS or Android, it's definitely supported.
       return true;
@@ -877,7 +872,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       return false;
     }
 
-    return !!detectHoverCapability && this._mediaMatcher.matchMedia('(any-hover: none)').matches;
+    return (
+      !!this._defaultOptions?.detectHoverCapability &&
+      this._mediaMatcher.matchMedia('(any-hover: none)').matches
+    );
   }
 
   /** Disables the native browser gestures, based on how the tooltip has been configured. */
@@ -886,26 +884,26 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     if (gestures !== 'off') {
       const element = this._elementRef.nativeElement;
-      const style = element.style as unknown as Record<string, string>;
+      const style = element.style;
 
       // If gestures are set to `auto`, we don't disable text selection on inputs and
       // textareas, because it prevents the user from typing into them on iOS Safari.
       if (gestures === 'on' || (element.nodeName !== 'INPUT' && element.nodeName !== 'TEXTAREA')) {
-        style['userSelect'] =
-          style['msUserSelect'] =
-          style['webkitUserSelect'] =
-          style['MozUserSelect'] =
+        style.userSelect =
+          style.msUserSelect =
+          style.webkitUserSelect =
+          style.MozUserSelect =
             'none';
       }
 
       // If we have `auto` gestures and the element uses native HTML dragging,
       // we don't set `-webkit-user-drag` because it prevents the native behavior.
       if (gestures === 'on' || !element.draggable) {
-        style['webkitUserDrag'] = 'none';
+        style.webkitUserDrag = 'none';
       }
 
-      style['touchAction'] = 'none';
-      style['webkitTapHighlightColor'] = 'transparent';
+      style.touchAction = 'none';
+      style.webkitTapHighlightColor = 'transparent';
     }
   }
 
@@ -960,6 +958,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   templateUrl: 'tooltip.html',
   styleUrl: 'tooltip.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     '(mouseleave)': '_handleMouseLeave($event)',
     'aria-hidden': 'true',
@@ -1015,6 +1014,10 @@ export class TooltipComponent implements OnDestroy {
 
   /** Name of the hide animation and the class that toggles it. */
   private readonly _hideAnimation = 'mat-mdc-tooltip-hide';
+
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   /**
    * Shows the tooltip with an animation originating from the provided origin

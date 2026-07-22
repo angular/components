@@ -61,37 +61,37 @@ class TreeListFocus<T extends TreeItem<V, T>, V> extends ListFocus<T> {
 /** Controls the state of a tree. */
 export class Tree<T extends TreeItem<V, T>, V> {
   /** Controls navigation for the tree. */
-  readonly navigationBehavior: ListNavigation<T>;
+  navigationBehavior: ListNavigation<T>;
 
   /** Controls selection for the tree. */
-  readonly selectionBehavior: ListSelection<T, V>;
+  selectionBehavior: ListSelection<T, V>;
 
   /** Controls typeahead for the tree. */
-  readonly typeaheadBehavior: ListTypeahead<T>;
+  typeaheadBehavior: ListTypeahead<T>;
 
   /** Controls focus for the tree. */
-  readonly focusBehavior: ListFocus<T>;
+  focusBehavior: ListFocus<T>;
 
   /** Controls expansion for the tree. */
-  readonly expansionBehavior: ListExpansion;
+  expansionBehavior: ListExpansion;
 
   /** Whether the tree is disabled. */
-  readonly disabled = computed(() => this.focusBehavior.isListDisabled());
+  disabled = computed(() => this.focusBehavior.isListDisabled());
 
   /** The id of the current active item. */
-  readonly activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
+  activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
 
   /** The tab index of the tree. */
-  readonly tabIndex = computed(() => this.focusBehavior.getListTabIndex());
+  tabIndex = computed(() => this.focusBehavior.getListTabIndex());
 
   /** The index of the currently active item in the tree (within the flattened list). */
-  readonly activeIndex = computed(() => this.focusBehavior.activeIndex());
+  activeIndex = computed(() => this.focusBehavior.activeIndex());
 
   /** The uncommitted index for selecting a range of options. */
-  private readonly _anchorIndex = signal(0);
+  private _anchorIndex = signal(0);
 
   /** Whether the list should wrap. */
-  private readonly _wrap = signal(true);
+  private _wrap = signal(true);
 
   constructor(readonly inputs: TreeInputs<T, V>) {
     this.focusBehavior = new TreeListFocus<T, V>(inputs);
@@ -260,11 +260,9 @@ export class Tree<T extends TreeItem<V, T>, V> {
     item ??= this.inputs.activeItem();
     if (!item) return;
 
-    // If the item has a parent, get all of the parent's children.
-    // Otherwise, it is a root item, and get all other root items.
     const parent = item.parent?.();
+    // TODO: This assumes that items without a parent are root items.
     const siblings = parent ? parent.children?.() : this.inputs.items().filter(i => !i.parent?.());
-
     siblings?.forEach(s => this.expand(s));
   }
 

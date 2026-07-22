@@ -7,8 +7,9 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
-  Service,
+  Injectable,
   ListenerOptions,
   NgZone,
   OnDestroy,
@@ -45,6 +46,7 @@ const activeCapturingEventOptions = {
   styleUrl: 'resets.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {'cdk-drag-resets-container': ''},
 })
 export class _ResetsLoader {}
@@ -54,7 +56,7 @@ export class _ResetsLoader {}
  * instances, and manages global event listeners on the `document`.
  * @docs-private
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class DragDropRegistry implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _document = inject(DOCUMENT);
@@ -99,6 +101,9 @@ export class DragDropRegistry implements OnDestroy {
    * while the user is dragging a drag item instance.
    */
   readonly pointerUp: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Adds a drop container to the registry. */
   registerDropContainer(drop: DropListRef) {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager, PointerEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {
@@ -22,7 +22,10 @@ export interface AccordionGroupInputs extends Omit<
     ListFocusInputs<AccordionTriggerPattern> &
     Omit<ListExpansionInputs, 'items'>,
   'focusMode'
-> {}
+> {
+  /** A function that returns the trigger associated with a given element. */
+  getItem: (e: Element | null | undefined) => AccordionTriggerPattern | undefined;
+}
 
 const focusMode = () => 'roving' as const;
 
@@ -53,7 +56,7 @@ export class AccordionGroupPattern {
   }
 
   /** The key used to navigate to the previous accordion trigger. */
-  readonly prevKey = computed(() => {
+  prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
@@ -61,7 +64,7 @@ export class AccordionGroupPattern {
   });
 
   /** The key used to navigate to the next accordion trigger. */
-  readonly nextKey = computed(() => {
+  nextKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
@@ -69,7 +72,7 @@ export class AccordionGroupPattern {
   });
 
   /** The keydown event manager for the accordion trigger. */
-  readonly keydown = computed(() => {
+  keydown = computed(() => {
     return new KeyboardEventManager()
       .on(this.prevKey, () => this.navigationBehavior.prev(), {ignoreRepeat: false})
       .on(this.nextKey, () => this.navigationBehavior.next(), {ignoreRepeat: false})
@@ -79,10 +82,10 @@ export class AccordionGroupPattern {
       .on('Enter', () => this.toggle());
   });
 
-  /** The click event manager for the accordion trigger. */
-  readonly click = computed(() => {
-    return new ClickEventManager<PointerEvent>().on((e: PointerEvent) => {
-      const item = this._findTriggerPattern(e.target as Element);
+  /** The pointerdown event manager for the accordion trigger. */
+  pointerdown = computed(() => {
+    return new PointerEventManager().on(e => {
+      const item = this.inputs.getItem(e.target as Element);
       if (!item) return;
 
       this.navigationBehavior.goto(item);
@@ -95,14 +98,14 @@ export class AccordionGroupPattern {
     this.keydown().handle(event);
   }
 
-  /** Handles click events on the trigger, delegating to the group if not disabled. */
-  onClick(event: PointerEvent): void {
-    this.click().handle(event);
+  /** Handles pointerdown events on the trigger, delegating to the group if not disabled. */
+  onPointerdown(event: PointerEvent): void {
+    this.pointerdown().handle(event);
   }
 
   /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */
   onFocus(event: FocusEvent): void {
-    const item = this._findTriggerPattern(event.target as Element);
+    const item = this.inputs.getItem(event.target as Element);
     if (!item) return;
     if (!this.focusBehavior.isFocusable(item)) return;
 
@@ -115,66 +118,25 @@ export class AccordionGroupPattern {
     if (activeItem === undefined) return;
     this.expansionBehavior.toggle(activeItem);
   }
-
-  /** Expands all accordion panels if multi-expandable. */
-  expandAll() {
-    this.expansionBehavior.openAll();
-  }
-
-  /** Collapses all accordion panels. */
-  collapseAll() {
-    this.expansionBehavior.closeAll();
-  }
-
-  /** Returns a set of violations */
-  validate(): string[] {
-    const violations: string[] = [];
-
-    if (!this.inputs.multiExpandable()) {
-      const expandedCount = this.inputs.items().filter(t => t.expanded()).length;
-      if (expandedCount > 1) {
-        violations.push(
-          'ngAccordionGroup has multiExpandable set to false, but multiple ngAccordionTrigger panels are initially expanded.',
-        );
-      }
-    }
-
-    return violations;
-  }
-
-  /** Finds the trigger pattern for a given element. */
-  private _findTriggerPattern(
-    element: Element | null | undefined,
-  ): AccordionTriggerPattern | undefined {
-    let target = element;
-
-    while (target) {
-      const pattern = this.inputs.items().find(t => t.element() === target);
-      if (pattern) {
-        return pattern;
-      }
-
-      target = target.parentElement?.closest('[ngAccordionTrigger]');
-    }
-
-    return undefined;
-  }
 }
 
 /** Inputs for the AccordionTriggerPattern. */
 export interface AccordionTriggerInputs
   extends Omit<ListNavigationItem & ListFocusItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
+  /** A local unique identifier for the trigger's corresponding panel. */
+  panelId: SignalLike<string>;
+
   /** The parent accordion group that controls this trigger. */
   accordionGroup: SignalLike<AccordionGroupPattern>;
 
-  /** The accordion panel id controlled by this trigger. */
-  accordionPanelId: SignalLike<string>;
+  /** The accordion panel controlled by this trigger. */
+  accordionPanel: SignalLike<AccordionPanelPattern | undefined>;
 }
 
 /** A pattern controls the expansion state of an accordion. */
 export class AccordionTriggerPattern implements ListNavigationItem, ListFocusItem, ExpansionItem {
   /** A unique identifier for this trigger. */
-  readonly id: SignalLike<string>; // set from inputs
+  readonly id: SignalLike<string> = () => this.inputs.id();
 
   /** A reference to the trigger element. */
   readonly element: SignalLike<HTMLElement> = () => this.inputs.element()!;
@@ -183,13 +145,13 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
   readonly expandable: SignalLike<boolean> = () => true;
 
   /** Whether the corresponding panel is expanded. */
-  readonly expanded: WritableSignalLike<boolean>; // set from inputs
+  readonly expanded: WritableSignalLike<boolean>;
 
   /** Whether the trigger is active. */
   readonly active = computed(() => this.inputs.accordionGroup().inputs.activeItem() === this);
 
   /** Id of the accordion panel controlled by the trigger. */
-  readonly controls: SignalLike<string>; // set from inputs
+  readonly controls = computed(() => this.inputs.accordionPanel()?.inputs.id());
 
   /** The tabindex of the trigger. */
   readonly tabIndex = computed(() =>
@@ -206,10 +168,11 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     () => this.disabled() && !this.inputs.accordionGroup().inputs.softDisabled(),
   );
 
+  /** The index of the trigger within its accordion group. */
+  readonly index = computed(() => this.inputs.accordionGroup().inputs.items().indexOf(this));
+
   constructor(readonly inputs: AccordionTriggerInputs) {
-    this.id = inputs.id;
     this.expanded = inputs.expanded;
-    this.controls = inputs.accordionPanelId;
   }
 
   /** Opens the accordion panel. */
@@ -225,5 +188,35 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
   /** Toggles the accordion panel. */
   toggle(): void {
     this.inputs.accordionGroup().expansionBehavior.toggle(this);
+  }
+}
+
+/** Represents the required inputs for the AccordionPanelPattern. */
+export interface AccordionPanelInputs {
+  /** A global unique identifier for the panel. */
+  id: SignalLike<string>;
+
+  /** A local unique identifier for the panel, matching its trigger's panelId. */
+  panelId: SignalLike<string>;
+
+  /** The parent accordion trigger that controls this panel. */
+  accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
+}
+
+/** Represents an accordion panel. */
+export class AccordionPanelPattern {
+  /** A global unique identifier for the panel. */
+  id: SignalLike<string>;
+
+  /** The parent accordion trigger that controls this panel. */
+  accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
+
+  /** Whether the accordion panel is hidden. True if the associated trigger is not expanded. */
+  hidden: SignalLike<boolean>;
+
+  constructor(readonly inputs: AccordionPanelInputs) {
+    this.id = inputs.id;
+    this.accordionTrigger = inputs.accordionTrigger;
+    this.hidden = computed(() => inputs.accordionTrigger()?.expanded() === false);
   }
 }

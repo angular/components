@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Fixed size virtual scroll with custom buffer parameters */
@@ -6,6 +6,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   selector: 'cdk-virtual-scroll-fixed-buffer-example',
   styleUrl: 'cdk-virtual-scroll-fixed-buffer-example.css',
   templateUrl: 'cdk-virtual-scroll-fixed-buffer-example.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollFixedBufferExample {

@@ -106,18 +106,6 @@ export class MapAdvancedMarker
   private _draggable: boolean | undefined;
 
   /**
-   * If `true`, the `AdvancedMarkerElement` will be clickable and trigger the
-   * gmp-click event, and will be interactive for accessibility purposes (e.g.
-   * allowing keyboard navigation via arrow keys).
-   * @see https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.gmpClickable
-   */
-  @Input()
-  set gmpClickable(clickable: boolean) {
-    this._clickable = clickable;
-  }
-  private _clickable: boolean | undefined;
-
-  /**
    * Options for constructing an AdvancedMarkerElement.
    * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions
    */
@@ -195,14 +183,6 @@ export class MapAdvancedMarker
   @Output() readonly mapDragstart: Observable<google.maps.MapMouseEvent> =
     this._eventManager.getLazyEmitter<google.maps.MapMouseEvent>('dragstart');
 
-  /**
-   * This event is fired when the user starts dragging the AdvancedMarkerElement.
-   * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.gmp-click
-   */
-  @Output()
-  readonly gmpClick: Observable<google.maps.marker.AdvancedMarkerClickEvent> =
-    this._eventManager.getLazyEmitter<google.maps.marker.AdvancedMarkerClickEvent>('gmp-click');
-
   /** Event emitted when the marker is initialized. */
   @Output() readonly markerInitialized: EventEmitter<google.maps.marker.AdvancedMarkerElement> =
     new EventEmitter<google.maps.marker.AdvancedMarkerElement>();
@@ -213,6 +193,9 @@ export class MapAdvancedMarker
    * See developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement
    */
   advancedMarker!: google.maps.marker.AdvancedMarkerElement;
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     if (!this._googleMap._isBrowser) {
@@ -247,8 +230,8 @@ export class MapAdvancedMarker
     });
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
-    const {advancedMarker, _content, _position, _title, _draggable, _clickable, _zIndex} = this;
+  ngOnChanges(changes: SimpleChanges) {
+    const {advancedMarker, _content, _position, _title, _draggable, _zIndex} = this;
     if (advancedMarker) {
       if (changes['title']) {
         advancedMarker.title = _title;
@@ -256,10 +239,6 @@ export class MapAdvancedMarker
 
       if (changes['gmpDraggable']) {
         advancedMarker.gmpDraggable = _draggable;
-      }
-
-      if (changes['gmpClickable']) {
-        advancedMarker.gmpClickable = _clickable;
       }
 
       if (changes['content']) {
@@ -307,7 +286,6 @@ export class MapAdvancedMarker
       content: this._content || options.content,
       zIndex: this._zIndex ?? options.zIndex,
       gmpDraggable: this._draggable ?? options.gmpDraggable,
-      gmpClickable: this._clickable ?? options.gmpClickable,
       map: this._googleMap.googleMap,
     };
   }

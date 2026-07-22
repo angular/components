@@ -145,7 +145,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     return this.childMenu;
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['menuPosition'] && this.overlayRef) {
       this.overlayRef.updatePositionStrategy(this._getOverlayPositionStrategy());
     }

@@ -1,17 +1,15 @@
-import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
+import {Component, inject} from '@angular/core';
+import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {MAT_DIALOG_DATA, MatDialogRef, MatDialogState} from '../../dialog';
 import {MatTestDialogOpener} from './dialog-opener';
 
 describe('MatTestDialogOpener', () => {
-  it('should open a dialog when created', async () => {
+  it('should open a dialog when created', fakeAsync(() => {
     const fixture = TestBed.createComponent(MatTestDialogOpener.withComponent(ExampleComponent));
-    fixture.detectChanges();
-    await fixture.whenStable();
-
+    flush();
     expect(fixture.componentInstance.dialogRef.getState()).toBe(MatDialogState.OPEN);
     expect(document.querySelector('mat-dialog-container')).toBeTruthy();
-  });
+  }));
 
   it('should throw an error if no dialog component is provided', () => {
     expect(() => TestBed.createComponent(MatTestDialogOpener)).toThrow(
@@ -29,7 +27,7 @@ describe('MatTestDialogOpener', () => {
     expect(dialogContainer!.innerHTML).toContain('Data: test');
   });
 
-  it('should get closed result data', async () => {
+  it('should get closed result data', fakeAsync(() => {
     const config = {data: 'test'};
     const fixture = TestBed.createComponent(
       MatTestDialogOpener.withComponent<ExampleComponent, ExampleDialogResult>(
@@ -37,12 +35,12 @@ describe('MatTestDialogOpener', () => {
         config,
       ),
     );
+    flush();
     const closeButton = document.querySelector('#close-btn') as HTMLElement;
     closeButton.click();
-    await new Promise(resolve => setTimeout(resolve, 100));
-
+    flush();
     expect(fixture.componentInstance.closedResult).toEqual({reason: 'closed'});
-  });
+  }));
 });
 
 interface ExampleDialogResult {
@@ -55,7 +53,6 @@ interface ExampleDialogResult {
     Data: {{data}}
     <button id="close-btn" (click)="close()">Close</button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ExampleComponent {
   dialogRef = inject<MatDialogRef<ExampleComponent, ExampleDialogResult>>(MatDialogRef);

@@ -7,7 +7,6 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   inject,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -324,7 +323,6 @@ function getActiveElement() {
     </div>
     `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleFocusTrap {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -343,7 +341,6 @@ const AUTO_FOCUS_TEMPLATE = `
 @Component({
   template: AUTO_FOCUS_TEMPLATE,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapWithAutoCapture {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -355,7 +352,6 @@ class FocusTrapWithAutoCapture {
   template: AUTO_FOCUS_TEMPLATE,
   encapsulation: ViewEncapsulation.ShadowDom,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {}
 
@@ -369,7 +365,6 @@ class FocusTrapWithAutoCaptureInShadowDom extends FocusTrapWithAutoCapture {}
     }
   `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapWithBindings {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -390,7 +385,6 @@ class FocusTrapWithBindings {
     </div>
     `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapTargets {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -403,7 +397,6 @@ class FocusTrapTargets {
     </div>
     `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapUnfocusableTarget {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -418,7 +411,6 @@ class FocusTrapUnfocusableTarget {
     </div>
     `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapWithSvg {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -431,7 +423,6 @@ class FocusTrapWithSvg {
     </div>
     `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapWithoutFocusableElements {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
@@ -450,7 +441,6 @@ class FocusTrapWithoutFocusableElements {
   </ng-template>
   `,
   imports: [A11yModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapInsidePortal {
   viewContainerRef = inject(ViewContainerRef);

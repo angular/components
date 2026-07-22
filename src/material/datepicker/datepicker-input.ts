@@ -132,6 +132,8 @@ export class MatDatepickerInput<D>
   /** The combined form control validator for this input. */
   protected _validator: ValidatorFn | null = null;
 
+  constructor(...args: unknown[]);
+
   constructor() {
     super();
     this._validator = Validators.compose(super._getValidators());

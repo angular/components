@@ -7,9 +7,9 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {EventEmitter, Service, OnDestroy, signal} from '@angular/core';
+import {EventEmitter, Injectable, OnDestroy, signal} from '@angular/core';
 
-@Service({autoProvided: false})
+@Injectable()
 export class DevAppDirectionality implements Directionality, OnDestroy {
   readonly change = new EventEmitter<Direction>();
 

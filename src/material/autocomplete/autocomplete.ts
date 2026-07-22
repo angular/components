@@ -8,6 +8,7 @@
 
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -103,6 +104,7 @@ export const MAT_AUTOCOMPLETE_DEFAULT_OPTIONS = new InjectionToken<MatAutocomple
   templateUrl: 'autocomplete.html',
   styleUrl: 'autocomplete.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   exportAs: 'matAutocomplete',
   host: {
     'class': 'mat-mdc-autocomplete',
@@ -243,6 +245,8 @@ export class MatAutocomplete implements AfterContentInit, OnDestroy {
    * @docs-private
    */
   readonly inertGroups: boolean;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     const platform = inject(Platform);

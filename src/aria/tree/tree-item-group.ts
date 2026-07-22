@@ -16,8 +16,9 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {TreeItemPattern, DeferredContent, sortDirectives} from '../private';
+import {TreeItemPattern, DeferredContent} from '../private';
 import type {TreeItem} from './tree-item';
+import {sortDirectives} from './utils';
 
 /**
  * Group that contains children tree items.
@@ -36,6 +37,8 @@ import type {TreeItem} from './tree-item';
  *   </ul>
  * </li>
  * ```
+ *
+ * @developerPreview 21.0
  *
  * @see [Tree](guide/aria/tree)
  */

@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -111,6 +111,5 @@ describe('MatIconHarness', () => {
     <mat-icon><span>ligature_icon_with_indirect_name</span></mat-icon>
   `,
   imports: [MatIconModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class IconHarnessTest {}

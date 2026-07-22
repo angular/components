@@ -6,46 +6,37 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
 import {
-  ComboboxListboxExample,
-  ComboboxTreeExample,
-  ComboboxSelectExample,
-  ComboboxGridExample,
-  ComboboxDatepickerExample,
+  ComboboxDialogExample,
   ComboboxAutoSelectExample,
   ComboboxHighlightExample,
+  ComboboxManualExample,
   ComboboxDisabledExample,
   ComboboxReadonlyExample,
-  ComboboxHardDisabledExample,
-  ComboboxReadonlyDisabledExample,
   ComboboxReadonlyMultiselectExample,
-  ComboboxDialogExample,
+  ComboboxReadonlyDisabledExample,
   ComboboxTreeAutoSelectExample,
   ComboboxTreeHighlightExample,
-  ComboboxMultiselectDialogExample,
+  ComboboxTreeManualExample,
 } from '@angular/components-examples/aria/combobox';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 
 @Component({
   templateUrl: 'combobox-demo.html',
   styleUrl: 'combobox-demo.css',
   imports: [
-    ComboboxListboxExample,
-    ComboboxTreeExample,
-    ComboboxSelectExample,
-    ComboboxGridExample,
-    ComboboxDatepickerExample,
+    ComboboxDialogExample,
+    ComboboxManualExample,
     ComboboxAutoSelectExample,
     ComboboxHighlightExample,
     ComboboxDisabledExample,
     ComboboxReadonlyExample,
-    ComboboxHardDisabledExample,
-    ComboboxReadonlyDisabledExample,
     ComboboxReadonlyMultiselectExample,
-    ComboboxDialogExample,
+    ComboboxReadonlyDisabledExample,
+    ComboboxTreeManualExample,
     ComboboxTreeAutoSelectExample,
     ComboboxTreeHighlightExample,
-    ComboboxMultiselectDialogExample,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxDemo {}

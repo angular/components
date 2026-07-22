@@ -35,6 +35,8 @@ import type {Menu} from './menu';
  * </div>
  * ```
  *
+ * @developerPreview 21.0
+ *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
  */
@@ -65,7 +67,7 @@ export class MenuTrigger<V> {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The menu associated with the trigger. */
-  readonly menu = input<Menu<V> | undefined>(undefined);
+  menu = input<Menu<V> | undefined>(undefined);
 
   /** Whether the menu is expanded. */
   readonly expanded = computed(() => this._pattern.expanded());
@@ -80,7 +82,7 @@ export class MenuTrigger<V> {
   readonly softDisabled = input(true, {transform: booleanAttribute});
 
   /** The menu trigger ui pattern instance. */
-  readonly _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
+  _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
     textDirection: this.textDirection,
     element: computed(() => this._elementRef.nativeElement),
     menu: computed(() => this.menu()?._pattern),
@@ -89,12 +91,6 @@ export class MenuTrigger<V> {
 
   constructor() {
     effect(() => this.menu()?.parent.set(this));
-    effect(() => this._pattern.pendingFocusEffect());
-
-    // Automatically prevent form submission.
-    if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {
-      this.element.setAttribute('type', 'button');
-    }
   }
 
   /** Opens the menu focusing on the first menu item. */

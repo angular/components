@@ -1,0 +1,27 @@
+<div ngCombobox readonly>
+  <div #origin class="example-select">
+    <div class="example-select-value">
+      <span class="example-select-label">{{ displayValue() }}</span>
+    </div>
+    <input aria-label="Select a day of the week" ngComboboxInput />
+    <span class="example-arrow material-symbols-outlined">arrow_drop_down</span>
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlay]="{origin, usePopover: 'inline', matchWidth: true}"
+    [cdkConnectedOverlayOpen]="true"
+  >
+    <ng-template ngComboboxPopupContainer>
+      <div class="example-popup">
+        <div ngListbox multi>
+          @for (item of items; track item) {
+            <div ngOption [value]="item" [label]="item">
+              <span class="example-option-text">{{item}}</span>
+              <span aria-hidden="true" class="example-option-check material-symbols-outlined">check</span>
+            </div>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

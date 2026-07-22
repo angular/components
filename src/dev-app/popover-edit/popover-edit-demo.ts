@@ -19,7 +19,7 @@ import {
   PopoverEditMatTableFlexExample,
   PopoverEditTabOutMatTableExample,
 } from '@angular/components-examples/material-experimental/popover-edit';
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -57,5 +57,6 @@ import {FormsModule} from '@angular/forms';
     PopoverEditTabOutMatTableExample,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PopoverEditDemo {}

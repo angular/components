@@ -10,6 +10,7 @@ import {CdkPortalOutlet, ComponentPortal, ComponentType, Portal} from '@angular/
 import {
   AfterContentInit,
   AfterViewChecked,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -56,6 +57,7 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
   templateUrl: 'calendar-header.html',
   exportAs: 'matCalendarHeader',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatButton, MatIconButton, MatTooltip],
 })
 export class MatCalendarHeader<D> {
@@ -68,6 +70,8 @@ export class MatCalendarHeader<D> {
   private _periodButtonLabel!: string;
   private _prevButtonLabel!: string;
   private _nextButtonLabel!: string;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
@@ -250,6 +254,7 @@ export class MatCalendarHeader<D> {
   },
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
   imports: [CdkPortalOutlet, CdkMonitorFocus, MatMonthView, MatYearView, MatMultiYearView],
 })
@@ -415,6 +420,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    */
   readonly stateChanges = new Subject<void>();
 
+  constructor(...args: unknown[]);
+
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
@@ -452,24 +459,18 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this.stateChanges.complete();
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     // Ignore date changes that are at a different time on the same day. This fixes issues where
     // the calendar re-renders when there is no meaningful change to [minDate] or [maxDate]
     // (#24435).
     const minDateChange: SimpleChange | undefined =
       changes['minDate'] &&
-      !this._dateAdapter.sameDate(
-        changes['minDate'].previousValue as D | null,
-        changes['minDate'].currentValue as D | null,
-      )
+      !this._dateAdapter.sameDate(changes['minDate'].previousValue, changes['minDate'].currentValue)
         ? changes['minDate']
         : undefined;
     const maxDateChange: SimpleChange | undefined =
       changes['maxDate'] &&
-      !this._dateAdapter.sameDate(
-        changes['maxDate'].previousValue as D | null,
-        changes['maxDate'].currentValue as D | null,
-      )
+      !this._dateAdapter.sameDate(changes['maxDate'].previousValue, changes['maxDate'].currentValue)
         ? changes['maxDate']
         : undefined;
 

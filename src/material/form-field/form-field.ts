@@ -14,6 +14,7 @@ import {
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -172,6 +173,7 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.ng-pending]': '_shouldForward("pending")',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {provide: MAT_FORM_FIELD, useExisting: MatFormField},
     {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
@@ -281,7 +283,7 @@ export class MatFormField
     }
     this._appearanceSignal.set(newAppearance);
   }
-  private _appearanceSignal = signal<MatFormFieldAppearance>(DEFAULT_APPEARANCE);
+  private _appearanceSignal = signal(DEFAULT_APPEARANCE);
 
   /**
    * Whether the form field should reserve space for one line of hint/error text (default)
@@ -340,6 +342,8 @@ export class MatFormField
   private _describedByChanges: Subscription | undefined;
   private _outlineLabelOffsetResizeObserver: ResizeObserver | null = null;
   protected readonly _animationsDisabled = _animationsDisabled();
+
+  constructor(...args: unknown[]);
 
   constructor() {
     const defaults = this._defaults;

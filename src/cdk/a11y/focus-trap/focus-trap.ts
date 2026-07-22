@@ -13,7 +13,7 @@ import {
   Directive,
   DoCheck,
   ElementRef,
-  Service,
+  Injectable,
   Injector,
   Input,
   NgZone,
@@ -64,7 +64,8 @@ export class FocusTrap {
     readonly _ngZone: NgZone,
     readonly _document: Document,
     deferAnchors = false,
-    readonly _injector: Injector,
+    /** @breaking-change 20.0.0 param to become required */
+    readonly _injector?: Injector,
   ) {
     if (!deferAnchors) {
       this.attachAnchors();
@@ -358,14 +359,19 @@ export class FocusTrap {
 
   /** Executes a function when the zone is stable. */
   private _executeOnStable(fn: () => any): void {
-    afterNextRender(fn, {injector: this._injector});
+    // TODO: remove this conditional when injector is required in the constructor.
+    if (this._injector) {
+      afterNextRender(fn, {injector: this._injector});
+    } else {
+      setTimeout(fn);
+    }
   }
 }
 
 /**
  * Factory that allows easy instantiation of focus traps.
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class FocusTrapFactory {
   private _checker = inject(InteractivityChecker);
   private _ngZone = inject(NgZone);
@@ -373,6 +379,7 @@ export class FocusTrapFactory {
   private _document = inject(DOCUMENT);
   private _injector = inject(Injector);
 
+  constructor(...args: unknown[]);
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
   }
@@ -429,6 +436,8 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   @Input({alias: 'cdkTrapFocusAutoCapture', transform: booleanAttribute})
   autoCapture: boolean = false;
 
+  constructor(...args: unknown[]);
+
   constructor() {
     const platform = inject(Platform);
 
@@ -462,7 +471,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
     }
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     const autoCaptureChange = changes['autoCapture'];
 
     if (

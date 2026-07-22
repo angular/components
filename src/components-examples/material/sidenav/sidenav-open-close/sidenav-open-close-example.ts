@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -12,12 +12,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   imports: [MatSidenavModule, MatCheckboxModule, FormsModule, MatButtonModule],
 })
 export class SidenavOpenCloseExample {
-  events = signal<('open!' | 'close!')[]>([]);
-  opened = signal(false);
+  events: string[] = [];
+  opened = false;
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);
-
-  trackEvent(event: 'open!' | 'close!') {
-    this.events.update(events => [...events, event]);
-  }
 }

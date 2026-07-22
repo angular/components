@@ -7,30 +7,23 @@
  */
 
 import {
-  afterNextRender,
+  Directive,
+  ElementRef,
   afterRenderEffect,
   booleanAttribute,
   computed,
-  Directive,
-  ElementRef,
   inject,
   input,
   model,
-  OnDestroy,
   signal,
-  Signal,
   untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {
-  SortedCollection,
-  tabIndexTransform,
-  TreeItemPattern,
-  TreePattern,
-  reportViolations,
-} from '../private';
+import {ComboboxTreePattern, TreeItemPattern, TreePattern} from '../private';
+import {ComboboxPopup} from '../combobox';
 import type {TreeItem} from './tree-item';
+import {sortDirectives} from './utils';
 
 /**
  * A container that transforms nested lists into an accessible, ARIA-compliant tree structure.
@@ -64,6 +57,8 @@ import type {TreeItem} from './tree-item';
  * </ng-template>
  * ```
  *
+ * @developerPreview 21.0
+ *
  * @see [Tree](guide/aria/tree)
  */
 @Directive({
@@ -76,21 +71,27 @@ import type {TreeItem} from './tree-item';
     '[attr.aria-multiselectable]': '_pattern.multi()',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
-    '[tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
+    '[tabindex]': '_pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
-    '(click)': '_pattern.onClick($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(pointerdown)': '_pattern.onPointerdown($event)',
+    '(focusin)': '_onFocus()',
   },
+  hostDirectives: [ComboboxPopup],
 })
-export class Tree<V> implements OnDestroy {
+export class Tree<V> {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The collection of tree items. */
-  readonly _collection = new SortedCollection<TreeItem<V>>();
+  /** A reference to the parent combobox popup, if one exists. */
+  private readonly _popup = inject<ComboboxPopup<V>>(ComboboxPopup, {
+    optional: true,
+  });
+
+  /** All TreeItem instances within this tree. */
+  private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
   /** A unique identifier for the tree. */
   readonly id = input(inject(_IdGenerator).getId('ng-tree-', true));
@@ -130,14 +131,8 @@ export class Tree<V> implements OnDestroy {
   /** The delay in seconds before the typeahead search is reset. */
   readonly typeaheadDelay = input(500);
 
-  /** The tabindex of the tree. */
-  readonly tabIndex = input(undefined, {
-    alias: 'tabindex',
-    transform: tabIndexTransform,
-  });
-
   /** The values of the currently selected items. */
-  readonly value = model<V[]>([]);
+  readonly values = model<V[]>([]);
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
@@ -156,53 +151,77 @@ export class Tree<V> implements OnDestroy {
   /** The UI pattern for the tree. */
   readonly _pattern: TreePattern<V>;
 
-  /** The ID of the active descendant in the tree. */
-  readonly activeDescendant: Signal<string | undefined>;
+  /** Whether the tree has received focus since it was rendered. */
+  private _hasFocused = signal(false);
 
   constructor() {
     const inputs = {
       ...this,
       id: this.id,
-      items: computed(() => this._collection.orderedItems().map(item => item._pattern)),
+      items: computed(() =>
+        [...this._unorderedItems()].sort(sortDirectives).map(item => item._pattern),
+      ),
       activeItem: signal<TreeItemPattern<V> | undefined>(undefined),
+      combobox: () => this._popup?.combobox?._pattern,
       element: () => this.element,
     };
 
-    this._pattern = new TreePattern<V>(inputs);
+    this._pattern = this._popup?.combobox
+      ? new ComboboxTreePattern<V>(inputs)
+      : new TreePattern<V>(inputs);
 
-    this.activeDescendant = computed(() => this._pattern.activeDescendant());
-
-    afterNextRender(() => {
-      this._collection.startObserving(this.element);
-    });
-
-    // Check for any violations after the DOM has been updated.
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      afterRenderEffect({
-        read: () => {
-          reportViolations(this._pattern.validate(), this.element);
-        },
-      });
+    if (this._popup?.combobox) {
+      this._popup?._controls?.set(this._pattern as ComboboxTreePattern<V>);
     }
 
-    // Resets default focus based on selection state until interacted.
-    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
-
-    afterRenderEffect({
-      write: () => {
-        const items = inputs.items();
-        const activeItem = untracked(() => inputs.activeItem());
-
-        if (activeItem && !items.some(i => i === activeItem)) {
-          this._pattern.treeBehavior.unfocus();
-          this._pattern.setDefaultState();
+    afterRenderEffect(() => {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        const violations = this._pattern.validate();
+        for (const violation of violations) {
+          console.error(violation);
         }
-      },
+      }
+    });
+
+    afterRenderEffect(() => {
+      if (!this._hasFocused()) {
+        this._pattern.setDefaultState();
+      }
+    });
+
+    afterRenderEffect(() => {
+      const items = inputs.items();
+      const activeItem = untracked(() => inputs.activeItem());
+
+      if (!items.some(i => i === activeItem) && activeItem) {
+        this._pattern.treeBehavior.unfocus();
+      }
+    });
+
+    afterRenderEffect(() => {
+      if (!(this._pattern instanceof ComboboxTreePattern)) return;
+
+      const items = inputs.items();
+      const values = untracked(() => this.values());
+
+      if (items && values.some(v => !items.some(i => i.value() === v))) {
+        this.values.set(values.filter(v => items.some(i => i.value() === v)));
+      }
     });
   }
 
-  ngOnDestroy() {
-    this._collection.stopObserving();
+  _onFocus() {
+    this._hasFocused.set(true);
+  }
+
+  _register(child: TreeItem<V>) {
+    this._unorderedItems().add(child);
+    this._unorderedItems.set(new Set(this._unorderedItems()));
+  }
+
+  _unregister(child: TreeItem<V>) {
+    this._unorderedItems().delete(child);
+    this._unorderedItems.set(new Set(this._unorderedItems()));
   }
 
   scrollActiveItemIntoView(options: ScrollIntoViewOptions = {block: 'nearest'}) {

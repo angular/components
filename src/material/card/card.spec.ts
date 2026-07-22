@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, Provider, Type, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Provider, Type, signal} from '@angular/core';
 import {MatCard, MAT_CARD_CONFIG, MatCardAppearance} from './card';
 
 describe('MatCard', () => {
@@ -44,7 +44,6 @@ describe('MatCard', () => {
 @Component({
   template: '<mat-card [appearance]="appearance()!"></mat-card>',
   imports: [MatCard],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicCard {
   appearance = signal<MatCardAppearance | undefined>(undefined);
@@ -53,6 +52,5 @@ class BasicCard {
 @Component({
   template: '<mat-card></mat-card>',
   imports: [MatCard],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicCardNoAppearance {}

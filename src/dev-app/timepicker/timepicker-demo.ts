@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, inject, OnDestroy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnDestroy} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -23,6 +23,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
   selector: 'timepicker-demo',
   templateUrl: 'timepicker-demo.html',
   styleUrl: 'timepicker-demo.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatTimepickerModule,
     MatDatepickerModule,

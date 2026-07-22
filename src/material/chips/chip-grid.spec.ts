@@ -32,10 +32,9 @@ import {
   WritableSignal,
   inject,
   signal,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MATERIAL_ANIMATIONS} from '../core';
@@ -66,10 +65,6 @@ describe('MatChipGrid', () => {
     expect(document.activeElement).toBe(primaryActions[primaryActions.length - 1]);
   };
 
-  function wait(milliseconds: number) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-  }
-
   describe('StandardChipGrid', () => {
     describe('basic behaviors', () => {
       let fixture: ComponentFixture<StandardChipGrid>;
@@ -98,7 +93,7 @@ describe('MatChipGrid', () => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
       });
 
-      it('should disable a chip that is added after the list became disabled', async () => {
+      it('should disable a chip that is added after the list became disabled', fakeAsync(() => {
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
 
         chipGridInstance.disabled = true;
@@ -110,11 +105,11 @@ describe('MatChipGrid', () => {
         fixture.componentInstance.chips.push(5, 6);
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
-        await fixture.whenStable();
+        tick();
         fixture.detectChanges();
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
-      });
+      }));
 
       it('should not set a role on the grid when the list is empty', () => {
         testComponent.chips = [];
@@ -180,24 +175,6 @@ describe('MatChipGrid', () => {
         expect(chipGridNativeElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should clear the active item in key manager when the last focused chip is destroyed', async () => {
-        const fixture = createComponent(InputChipGrid);
-        patchElementFocus(primaryActions[0]);
-        fixture.detectChanges();
-
-        // Focus a chip
-        chips.first.focus();
-        fixture.detectChanges();
-
-        // Remove ALL chips
-        fixture.componentInstance.foods.set([]); // Clear the bound data array
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        // Verify key manager is reset to prevent stale references
-        expect((chipGridInstance as any)._keyManager.activeItemIndex).toBe(-1);
-      });
-
       describe('on chip destroy', () => {
         it('should focus the next item', () => {
           const fixture = createComponent(StandardChipGrid);
@@ -237,22 +214,24 @@ describe('MatChipGrid', () => {
           expect(document.activeElement).toBe(primaryActions[primaryActions.length - 2]);
         });
 
-        it('should not focus if chip grid is not focused', () => {
+        it('should not focus if chip grid is not focused', fakeAsync(() => {
           const fixture = createComponent(StandardChipGrid);
           const midItem = chips.get(2)!;
 
           // Focus and blur the middle item
           midItem.focus();
           (document.activeElement as HTMLElement).blur();
+          tick();
 
           // Destroy the middle item
           testComponent.chips.splice(2, 1);
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
+          flush();
 
           // Should not have focus
           expect(chipGridNativeElement.contains(document.activeElement)).toBe(false);
-        });
+        }));
 
         it('should focus the grid if the last focused item is removed', () => {
           const fixture = createComponent(StandardChipGrid);
@@ -286,12 +265,13 @@ describe('MatChipGrid', () => {
         let fixture: ComponentFixture<ChipGridWithRemove>;
         let trailingActions: NodeListOf<HTMLElement>;
 
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
           fixture = createComponent(ChipGridWithRemove);
+          flush();
           trailingActions = chipGridNativeElement.querySelectorAll(
             '.mdc-evolution-chip__action--secondary',
           );
-        });
+        }));
 
         it('should focus previous column when press LEFT ARROW', () => {
           const lastIndex = primaryActions.length - 1;
@@ -410,7 +390,7 @@ describe('MatChipGrid', () => {
           expect(document.activeElement).toBe(primaryActions[1]);
         });
 
-        it('should allow focus to escape when tabbing away', async () => {
+        it('should allow focus to escape when tabbing away', fakeAsync(() => {
           let nativeChips = chipGridNativeElement.querySelectorAll('mat-chip-row');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
@@ -420,14 +400,14 @@ describe('MatChipGrid', () => {
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
-          await wait(0);
+          flush();
 
           expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 0')
             .toBe(0);
-        });
+        }));
 
-        it('should use user defined tabIndex', async () => {
+        it('should use user defined tabIndex', fakeAsync(() => {
           chipGridInstance.tabIndex = 4;
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
@@ -444,12 +424,12 @@ describe('MatChipGrid', () => {
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
-          await wait(0);
+          flush();
 
           expect(chipGridNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 4')
             .toBe(4);
-        });
+        }));
       });
 
       describe('keydown behavior', () => {
@@ -499,7 +479,7 @@ describe('MatChipGrid', () => {
           expect(document.activeElement).toBe(primaryActions[4]);
         });
 
-        it('should ignore all non-tab navigation keyboard events from an editing chip', () => {
+        it('should ignore all non-tab navigation keyboard events from an editing chip', fakeAsync(() => {
           testComponent.editable = true;
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
@@ -509,6 +489,7 @@ describe('MatChipGrid', () => {
 
           dispatchKeyboardEvent(document.activeElement!, 'keydown', ENTER);
           fixture.detectChanges();
+          flush();
 
           const previousActiveElement = document.activeElement;
           const keysToIgnore = [HOME, END, LEFT_ARROW, RIGHT_ARROW];
@@ -516,10 +497,11 @@ describe('MatChipGrid', () => {
           for (const key of keysToIgnore) {
             dispatchKeyboardEvent(document.activeElement!, 'keydown', key);
             fixture.detectChanges();
+            flush();
 
             expect(document.activeElement).toBe(previousActiveElement);
           }
-        });
+        }));
       });
     });
   });
@@ -661,18 +643,20 @@ describe('MatChipGrid', () => {
       expect(chipGridInstance.focused).toBe(true);
     });
 
-    it('should set aria-describedby on the grid when there is no input', () => {
+    it('should set aria-describedby on the grid when there is no input', fakeAsync(() => {
       const fixture = createComponent(ChipGridWithoutInput);
       const hint = fixture.debugElement.query(By.css('mat-hint')).nativeElement;
+      flush();
       fixture.detectChanges();
 
       expect(chipGridNativeElement.getAttribute('aria-describedby')).toBe(hint.id);
-    });
+    }));
   });
 
   describe('with chip remove', () => {
-    it('should properly focus next item if chip is removed through click', () => {
+    it('should properly focus next item if chip is removed through click', fakeAsync(() => {
       const fixture = createComponent(ChipGridWithRemove);
+      flush();
       const trailingActions = chipGridNativeElement.querySelectorAll<HTMLElement>(
         '.mdc-evolution-chip__action--secondary',
       );
@@ -684,9 +668,10 @@ describe('MatChipGrid', () => {
       // associated chip remove element.
       trailingActions[2].click();
       fixture.detectChanges();
+      flush();
 
       expect(document.activeElement).toBe(primaryActions[3]);
-    });
+    }));
   });
 
   describe('chip grid with chip input', () => {
@@ -725,7 +710,7 @@ describe('MatChipGrid', () => {
       expect(chipGrid.value).toEqual('[pizza-1]');
     });
 
-    it('should update the form value when the view changes', async () => {
+    it('should update the form value when the view changes', fakeAsync(() => {
       expect(fixture.componentInstance.control.value)
         .withContext(`Expected the control's value to be empty initially.`)
         .toEqual(null);
@@ -736,12 +721,13 @@ describe('MatChipGrid', () => {
       fixture.detectChanges();
       dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
       fixture.detectChanges();
+      flush();
 
       dispatchFakeEvent(nativeInput, 'blur');
-      await wait(0);
+      flush();
 
       expect(fixture.componentInstance.control.value).toContain('123-8');
-    });
+    }));
 
     it('should clear the value when the control is reset', () => {
       fixture.componentInstance.control.setValue('pizza-1');
@@ -753,34 +739,34 @@ describe('MatChipGrid', () => {
       expect(fixture.componentInstance.chipGrid.value).toEqual(null);
     });
 
-    it('should set the control to touched when the chip grid is touched', async () => {
+    it('should set the control to touched when the chip grid is touched', fakeAsync(() => {
       expect(fixture.componentInstance.control.touched)
         .withContext('Expected the control to start off as untouched.')
         .toBe(false);
 
       dispatchFakeEvent(nativeChipGrid, 'blur');
-      await wait(0);
+      tick();
 
       expect(fixture.componentInstance.control.touched)
         .withContext('Expected the control to be touched.')
         .toBe(true);
-    });
+    }));
 
-    it('should not set touched when a disabled chip grid is touched', async () => {
+    it('should not set touched when a disabled chip grid is touched', fakeAsync(() => {
       expect(fixture.componentInstance.control.touched)
         .withContext('Expected the control to start off as untouched.')
         .toBe(false);
 
       fixture.componentInstance.control.disable();
       dispatchFakeEvent(nativeChipGrid, 'blur');
-      await wait(0);
+      tick();
 
       expect(fixture.componentInstance.control.touched)
         .withContext('Expected the control to stay untouched.')
         .toBe(false);
-    });
+    }));
 
-    it("should set the control to dirty when the chip grid's value changes in the DOM", async () => {
+    it("should set the control to dirty when the chip grid's value changes in the DOM", fakeAsync(() => {
       expect(fixture.componentInstance.control.dirty)
         .withContext(`Expected control to start out pristine.`)
         .toEqual(false);
@@ -791,14 +777,15 @@ describe('MatChipGrid', () => {
       fixture.detectChanges();
       dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
       fixture.detectChanges();
+      flush();
 
       dispatchFakeEvent(nativeInput, 'blur');
-      await wait(0);
+      flush();
 
       expect(fixture.componentInstance.control.dirty)
         .withContext(`Expected control to be dirty after value was changed by user.`)
         .toEqual(true);
-    });
+    }));
 
     it('should not set the control to dirty when the value changes programmatically', () => {
       expect(fixture.componentInstance.control.dirty)
@@ -840,7 +827,7 @@ describe('MatChipGrid', () => {
       ).toBeTruthy();
     });
 
-    it('should blur the form field when the active chip is blurred', async () => {
+    it('should blur the form field when the active chip is blurred', fakeAsync(() => {
       const formField: HTMLElement = fixture.nativeElement.querySelector('.mat-mdc-form-field');
       const firstAction = nativeChips[0].querySelector('.mat-mdc-chip-action') as HTMLElement;
 
@@ -854,25 +841,26 @@ describe('MatChipGrid', () => {
       fixture.detectChanges();
       fixture.detectChanges();
       fixture.detectChanges();
-      await wait(0);
+      flush();
 
       expect(formField.classList).not.toContain('mat-focused');
-    });
+    }));
 
-    it('should keep focus on the input after adding the first chip', () => {
+    it('should keep focus on the input after adding the first chip', fakeAsync(() => {
       const chipEls = Array.from<HTMLElement>(
         fixture.nativeElement.querySelectorAll('mat-chip-row'),
       ).reverse();
 
       // Remove the chips via backspace to simulate the user removing them.
-      for (const chip of chipEls) {
+      chipEls.forEach(chip => {
         chip.focus();
         dispatchKeyboardEvent(chip, 'keydown', BACKSPACE);
         fixture.detectChanges();
-      }
+        tick();
+      });
 
       nativeInput.focus();
-      expect(fixture.componentInstance.foods())
+      expect(fixture.componentInstance.foods)
         .withContext('Expected all chips to be removed.')
         .toEqual([]);
       expect(document.activeElement).withContext('Expected input to be focused.').toBe(nativeInput);
@@ -881,13 +869,14 @@ describe('MatChipGrid', () => {
       fixture.detectChanges();
       dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
       fixture.detectChanges();
+      tick();
 
       expect(document.activeElement)
         .withContext('Expected input to remain focused.')
         .toBe(nativeInput);
-    });
+    }));
 
-    it('should set aria-invalid if the form field is invalid', async () => {
+    it('should set aria-invalid if the form field is invalid', fakeAsync(() => {
       fixture.componentInstance.control = new FormControl('', [Validators.required]);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -900,13 +889,14 @@ describe('MatChipGrid', () => {
       fixture.detectChanges();
       dispatchKeyboardEvent(input, 'keydown', ENTER);
       fixture.detectChanges();
+      flush();
 
       dispatchFakeEvent(input, 'blur');
-      await wait(0);
+      flush();
 
       fixture.detectChanges();
       expect(input.getAttribute('aria-invalid')).toBe('false');
-    });
+    }));
 
     describe('when the input has focus', () => {
       beforeEach(() => {
@@ -954,15 +944,16 @@ describe('MatChipGrid', () => {
     let chipGridEl: HTMLElement;
     let inputEl: HTMLElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(ChipGridWithFormErrorMessages);
+      flush();
       fixture.detectChanges();
 
       errorTestComponent = fixture.componentInstance;
       containerEl = fixture.debugElement.query(By.css('mat-form-field'))!.nativeElement;
       chipGridEl = fixture.debugElement.query(By.css('mat-chip-grid'))!.nativeElement;
       inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
-    });
+    }));
 
     it('should not show any errors if the user has not interacted', () => {
       expect(errorTestComponent.formControl.untouched)
@@ -976,7 +967,7 @@ describe('MatChipGrid', () => {
         .toBe('false');
     });
 
-    it('should display an error message when the grid is touched and invalid', () => {
+    it('should display an error message when the grid is touched and invalid', fakeAsync(() => {
       expect(errorTestComponent.formControl.invalid)
         .withContext('Expected form control to be invalid')
         .toBe(true);
@@ -986,6 +977,7 @@ describe('MatChipGrid', () => {
 
       errorTestComponent.formControl.markAsTouched();
       fixture.detectChanges();
+      tick();
 
       expect(containerEl.classList)
         .withContext('Expected container to have the invalid CSS class.')
@@ -996,9 +988,9 @@ describe('MatChipGrid', () => {
       expect(chipGridEl.getAttribute('aria-invalid'))
         .withContext('Expected aria-invalid to be set to "true".')
         .toBe('true');
-    });
+    }));
 
-    it('should display an error message when the parent form is submitted', () => {
+    it('should display an error message when the parent form is submitted', fakeAsync(() => {
       expect(errorTestComponent.form.submitted)
         .withContext('Expected form not to have been submitted')
         .toBe(false);
@@ -1010,6 +1002,7 @@ describe('MatChipGrid', () => {
         .toBe(0);
 
       dispatchFakeEvent(fixture.debugElement.query(By.css('form'))!.nativeElement, 'submit');
+      flush();
       fixture.detectChanges();
 
       expect(errorTestComponent.form.submitted)
@@ -1024,10 +1017,12 @@ describe('MatChipGrid', () => {
       expect(chipGridEl.getAttribute('aria-invalid'))
         .withContext('Expected aria-invalid to be set to "true".')
         .toBe('true');
-    });
+      flush();
+    }));
 
-    it('should hide the errors and show the hints once the chip grid becomes valid', () => {
+    it('should hide the errors and show the hints once the chip grid becomes valid', fakeAsync(() => {
       errorTestComponent.formControl.markAsTouched();
+      flush();
       fixture.detectChanges();
 
       expect(containerEl.classList)
@@ -1041,6 +1036,7 @@ describe('MatChipGrid', () => {
         .toBe(0);
 
       errorTestComponent.formControl.setValue('something');
+      flush();
       fixture.detectChanges();
 
       expect(containerEl.classList).not.toContain(
@@ -1053,7 +1049,9 @@ describe('MatChipGrid', () => {
       expect(containerEl.querySelectorAll('mat-hint').length)
         .withContext('Expected one hint to be shown once the input is valid.')
         .toBe(1);
-    });
+
+      flush();
+    }));
 
     it('should set the proper aria-live attribute on the error messages', () => {
       errorTestComponent.formControl.markAsTouched();
@@ -1064,7 +1062,7 @@ describe('MatChipGrid', () => {
       ).toBe('polite');
     });
 
-    it('sets the aria-describedby on the input to reference errors when in error state', () => {
+    it('sets the aria-describedby on the input to reference errors when in error state', fakeAsync(() => {
       let hintId = fixture.debugElement
         .query(By.css('.mat-mdc-form-field-hint'))!
         .nativeElement.getAttribute('id');
@@ -1077,6 +1075,7 @@ describe('MatChipGrid', () => {
       fixture.detectChanges();
 
       // Flush the describedby timer and detect changes caused by it.
+      flush();
       fixture.detectChanges();
 
       let errorIds = fixture.debugElement
@@ -1087,7 +1086,7 @@ describe('MatChipGrid', () => {
 
       expect(errorIds).withContext('errors should be shown').toBeTruthy();
       expect(errorDescribedBy).toBe(errorIds);
-    });
+    }));
   });
 
   function createComponent<T>(
@@ -1130,7 +1129,6 @@ describe('MatChipGrid', () => {
     </mat-chip-grid>
     <input name="test" [matChipInputFor]="chipGrid"/>`,
   imports: [MatChipGrid, MatChipRow, MatChipInput],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardChipGrid {
   name: string = 'Test';
@@ -1153,7 +1151,6 @@ class StandardChipGrid {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FormFieldChipGrid {
   chips = ['Chip 0', 'Chip 1', 'Chip 2'];
@@ -1172,7 +1169,7 @@ class FormFieldChipGrid {
     <mat-form-field>
       <mat-label>New food...</mat-label>
       <mat-chip-grid #chipGrid placeholder="Food" [formControl]="control">
-        @for (food of foods(); track food) {
+        @for (food of foods; track food) {
           <mat-chip-row [value]="food.value" (removed)="remove(food)">
             {{ food.viewValue }}
           </mat-chip-row>
@@ -1186,10 +1183,9 @@ class FormFieldChipGrid {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatLabel, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputChipGrid {
-  readonly foods = signal([
+  foods: any[] = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos', disabled: true},
@@ -1198,7 +1194,7 @@ class InputChipGrid {
     {value: 'eggs-5', viewValue: 'Eggs'},
     {value: 'pasta-6', viewValue: 'Pasta'},
     {value: 'sushi-7', viewValue: 'Sushi'},
-  ]);
+  ];
   control = new FormControl<string | null>(null);
 
   separatorKeyCodes = [ENTER, SPACE];
@@ -1209,13 +1205,10 @@ class InputChipGrid {
 
     // Add our foods
     if (value) {
-      this.foods.update(current => [
-        ...current,
-        {
-          value: `${value.toLowerCase()}-${current.length}`,
-          viewValue: value,
-        },
-      ]);
+      this.foods.push({
+        value: `${value.toLowerCase()}-${this.foods.length}`,
+        viewValue: value,
+      });
     }
 
     // Reset the input value
@@ -1223,14 +1216,10 @@ class InputChipGrid {
   }
 
   remove(food: any): void {
-    const index = this.foods().indexOf(food);
+    const index = this.foods.indexOf(food);
 
     if (index > -1) {
-      this.foods.update(current => {
-        const newValue = current.slice();
-        newValue.splice(index, 1);
-        return newValue;
-      });
+      this.foods.splice(index, 1);
     }
   }
 
@@ -1263,7 +1252,6 @@ class InputChipGrid {
     ReactiveFormsModule,
     FormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridWithFormErrorMessages {
   foods: any[] = [
@@ -1300,7 +1288,6 @@ class ChipGridWithFormErrorMessages {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatChipInput, MatFormField, MatChipRemove],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridWithRemove {
   chips = [0, 1, 2, 3, 4];
@@ -1323,7 +1310,6 @@ class ChipGridWithRemove {
     </mat-form-field>
   `,
   imports: [MatChipGrid, MatChipRow, MatFormField, MatLabel, MatHint],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridWithoutInput {
   chips = ['Pizza', 'Pasta', 'Tacos'];

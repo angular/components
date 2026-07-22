@@ -16,7 +16,6 @@ import {
   ChangeDetectorRef,
   input,
   inject,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -50,7 +49,6 @@ interface Link {
   selector: 'table-of-contents',
   styleUrls: ['./table-of-contents.scss'],
   templateUrl: './table-of-contents.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   private _router = inject(Router);

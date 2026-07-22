@@ -8,6 +8,7 @@
 
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -44,6 +45,7 @@ import {Platform} from '@angular/cdk/platform';
   host: {
     'class': 'mdc-slider__thumb mat-mdc-slider-visual-thumb',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER_VISUAL_THUMB, useExisting: MatSliderVisualThumb}],
   imports: [MatRipple],
@@ -102,6 +104,9 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
   _hostElement = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   private _platform = inject(Platform);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterViewInit() {
     const sliderInput = this._slider._getInput(this.thumbPosition);

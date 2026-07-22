@@ -10,6 +10,7 @@ import { OnDestroy } from '@angular/core';
 
 // @public
 export class BreakpointObserver implements OnDestroy {
+    constructor(...args: unknown[]);
     isMatched(value: string | readonly string[]): boolean;
     ngOnDestroy(): void;
     observe(value: string | readonly string[]): Observable<BreakpointState>;
@@ -57,7 +58,7 @@ export class LayoutModule {
 
 // @public
 export class MediaMatcher {
-    constructor();
+    constructor(...args: unknown[]);
     matchMedia(query: string): MediaQueryList;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, never>;

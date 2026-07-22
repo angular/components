@@ -42,7 +42,6 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
     static hostSelector: string;
     isDisabled(): Promise<boolean>;
     isFocused(): Promise<boolean>;
-    isShowingProgress(): Promise<boolean>;
     static with<T extends MatButtonHarness>(this: ComponentHarnessConstructor<T>, options?: ButtonHarnessFilters): HarnessPredicate<T>;
 }
 

@@ -53,7 +53,8 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
 }
 
 // @public
-export class CdkScrollable implements ScrollDispatcherTarget, OnInit, OnDestroy {
+export class CdkScrollable implements OnInit, OnDestroy {
+    constructor(...args: unknown[]);
     // (undocumented)
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
@@ -92,7 +93,7 @@ export class CdkScrollableModule {
 
 // @public
 export class CdkVirtualForOf<T> implements CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     get cdkVirtualForOf(): DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined;
     set cdkVirtualForOf(value: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined);
     // (undocumented)
@@ -131,6 +132,7 @@ export type CdkVirtualForOfContext<T> = {
 
 // @public
 export abstract class CdkVirtualScrollable extends CdkScrollable {
+    constructor(...args: unknown[]);
     abstract measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     measureViewportSize(orientation: 'horizontal' | 'vertical'): number;
     // (undocumented)
@@ -141,6 +143,7 @@ export abstract class CdkVirtualScrollable extends CdkScrollable {
 
 // @public
 export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
+    constructor(...args: unknown[]);
     // (undocumented)
     measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
@@ -151,7 +154,7 @@ export class CdkVirtualScrollableElement extends CdkVirtualScrollable {
 
 // @public
 export class CdkVirtualScrollableWindow extends CdkVirtualScrollable {
-    constructor();
+    constructor(...args: unknown[]);
     // (undocumented)
     measureBoundingClientRectWithScrollOffset(from: 'left' | 'top' | 'right' | 'bottom'): number;
     // (undocumented)
@@ -170,7 +173,7 @@ export interface CdkVirtualScrollRepeater<T> {
 
 // @public
 export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements OnInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     appendOnly: boolean;
     attach(forOf: CdkVirtualScrollRepeater<any>): void;
     checkViewportSize(): void;
@@ -257,24 +260,19 @@ export type _Right = {
 
 // @public
 export class ScrollDispatcher implements OnDestroy {
-    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
-    deregister(target: ScrollDispatcherTarget): void;
-    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): ScrollDispatcherTarget[];
+    constructor(...args: unknown[]);
+    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    deregister(scrollable: CdkScrollable): void;
+    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
     // (undocumented)
     ngOnDestroy(): void;
-    register(target: ScrollDispatcherTarget): void;
-    readonly scrollContainers: Map<ScrollDispatcherTarget, Subscription>;
-    scrolled(auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
+    register(scrollable: CdkScrollable): void;
+    scrollContainers: Map<CdkScrollable, Subscription>;
+    scrolled(auditTimeInMs?: number): Observable<CdkScrollable | void>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<ScrollDispatcher>;
-}
-
-// @public
-export interface ScrollDispatcherTarget {
-    elementScrolled(): Observable<Event>;
-    getElementRef(): ElementRef<HTMLElement>;
 }
 
 // @public
@@ -299,7 +297,7 @@ export type _Top = {
 
 // @public
 export class ViewportRuler implements OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     change(throttleTime?: number): Observable<Event>;
     protected _document: Document;
     getViewportRect(): {

@@ -1,13 +1,5 @@
-import {
-  Component,
-  Injector,
-  Provider,
-  signal,
-  ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, Injector, Provider, signal, ViewChild, ViewEncapsulation} from '@angular/core';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DateAdapter, MATERIAL_ANIMATIONS, provideNativeDateAdapter} from '../core';
 import {
   clearElement,
@@ -45,7 +37,7 @@ describe('MatTimepicker', () => {
   beforeEach(() => configureTestingModule());
 
   describe('value selection', () => {
-    it('should only change the time part of the selected date', async () => {
+    it('should only change the time part of the selected date', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.componentInstance.value.set(new Date(2024, 0, 15, 0, 0, 0));
       fixture.detectChanges();
@@ -54,7 +46,7 @@ describe('MatTimepicker', () => {
 
       getOptions()[3].click();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
 
       const value = fixture.componentInstance.input.value()!;
       expect(value).toBeTruthy();
@@ -64,9 +56,9 @@ describe('MatTimepicker', () => {
       expect(adapter.getHours(value)).toBe(1);
       expect(adapter.getMinutes(value)).toBe(30);
       expect(adapter.getSeconds(value)).toBe(0);
-    });
+    }));
 
-    it('should accept the selected value and close the panel when clicking an option', async () => {
+    it('should accept the selected value and close the panel when clicking an option', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       const input = getInput(fixture);
       fixture.detectChanges();
@@ -79,7 +71,7 @@ describe('MatTimepicker', () => {
 
       getOptions()[1].click();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
 
       expect(getPanel()).toBeFalsy();
       expect(input.value).toBe('12:30 AM');
@@ -91,9 +83,9 @@ describe('MatTimepicker', () => {
           value: jasmine.any(Date),
         }),
       );
-    });
+    }));
 
-    it('should support two-way binding on the `value` input', async () => {
+    it('should support two-way binding on the `value` input', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerTwoWayBinding);
       const input = getInput(fixture);
       fixture.detectChanges();
@@ -115,14 +107,14 @@ describe('MatTimepicker', () => {
       // Propagation from host down to input
       fixture.componentInstance.value.set(createTime(13, 37));
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       value = inputInstance.value()!;
       expect(adapter.getHours(value)).toBe(13);
       expect(adapter.getMinutes(value)).toBe(37);
       expectSameTime(fixture.componentInstance.value(), value);
-    });
+    }));
 
-    it('should emit the `selected` event if the option being clicked was selected already', async () => {
+    it('should emit the `selected` event if the option being clicked was selected already', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.componentInstance.value.set(new Date(2024, 0, 15, 2, 30, 0));
       fixture.detectChanges();
@@ -132,7 +124,7 @@ describe('MatTimepicker', () => {
 
       getOptions()[getActiveOptionIndex()].click();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
 
       expect(getPanel()).toBeFalsy();
       expect(fixture.componentInstance.selectedSpy).toHaveBeenCalledTimes(1);
@@ -142,7 +134,7 @@ describe('MatTimepicker', () => {
           value: jasmine.any(Date),
         }),
       );
-    });
+    }));
   });
 
   describe('input behavior', () => {
@@ -343,7 +335,7 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeFalsy();
     });
 
-    it('should close the timepicker when clicking outside', async () => {
+    it('should close the timepicker when clicking outside', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.detectChanges();
       getInput(fixture).click();
@@ -351,11 +343,11 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeTruthy();
       document.body.click();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(getPanel()).toBeFalsy();
-    });
+    }));
 
-    it('should close the timepicker when tabbing away from the input', async () => {
+    it('should close the timepicker when tabbing away from the input', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.detectChanges();
       getInput(fixture).click();
@@ -363,11 +355,11 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeTruthy();
       dispatchKeyboardEvent(getInput(fixture), 'keydown', TAB);
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(getPanel()).toBeFalsy();
-    });
+    }));
 
-    it('should close the timepicker when pressing escape', async () => {
+    it('should close the timepicker when pressing escape', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.detectChanges();
       getInput(fixture).click();
@@ -375,12 +367,12 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeTruthy();
       const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(getPanel()).toBeFalsy();
       expect(event.defaultPrevented).toBe(true);
-    });
+    }));
 
-    it('should emit events on open/close', async () => {
+    it('should emit events on open/close', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.detectChanges();
       const {openedSpy, closedSpy} = fixture.componentInstance;
@@ -394,10 +386,10 @@ describe('MatTimepicker', () => {
 
       document.body.click();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(openedSpy).toHaveBeenCalledTimes(1);
       expect(closedSpy).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('should clean up the overlay if it is open on destroy', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
@@ -409,7 +401,7 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeFalsy();
     });
 
-    it('should be able to open and close the panel programmatically', async () => {
+    it('should be able to open and close the panel programmatically', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.detectChanges();
       fixture.componentInstance.timepicker.open();
@@ -417,9 +409,9 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeTruthy();
       fixture.componentInstance.timepicker.close();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(getPanel()).toBeFalsy();
-    });
+    }));
 
     it('should focus the input when opened programmatically', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
@@ -431,7 +423,7 @@ describe('MatTimepicker', () => {
       expect(document.activeElement).toBe(input);
     });
 
-    it('should expose the current open state', async () => {
+    it('should expose the current open state', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       fixture.detectChanges();
       const timepicker = fixture.componentInstance.timepicker;
@@ -441,12 +433,12 @@ describe('MatTimepicker', () => {
       expect(timepicker.isOpen()).toBe(true);
       timepicker.close();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(timepicker.isOpen()).toBe(false);
-    });
+    }));
 
     // Note: this will be a type checking error, but we check it just in case for JIT mode.
-    it('should do nothing if trying to open a timepicker without an input', async () => {
+    it('should do nothing if trying to open a timepicker without an input', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithoutInput);
       fixture.detectChanges();
       fixture.componentInstance.timepicker.open();
@@ -456,10 +448,11 @@ describe('MatTimepicker', () => {
       expect(() => {
         fixture.componentInstance.timepicker.close();
         fixture.detectChanges();
+        flush();
       }).not.toThrow();
-    });
+    }));
 
-    it('should be able to reopen the panel when closed by a scroll strategy', async () => {
+    it('should be able to reopen the panel when closed by a scroll strategy', fakeAsync(() => {
       const scrolledSubject = new Subject();
 
       TestBed.resetTestingModule();
@@ -481,12 +474,12 @@ describe('MatTimepicker', () => {
       expect(getPanel()).toBeTruthy();
       scrolledSubject.next();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(getPanel()).toBeFalsy();
       fixture.componentInstance.timepicker.open();
       fixture.detectChanges();
       expect(getPanel()).toBeTruthy();
-    });
+    }));
 
     it('should be able to opt out of opening on click', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
@@ -821,7 +814,7 @@ describe('MatTimepicker', () => {
       expect(event.defaultPrevented).toBe(true);
     });
 
-    it('should select the active option and close when pressing enter', async () => {
+    it('should select the active option and close when pressing enter', fakeAsync(() => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
       const input = getInput(fixture);
       fixture.detectChanges();
@@ -841,7 +834,7 @@ describe('MatTimepicker', () => {
 
       const event = dispatchKeyboardEvent(input, 'keydown', ENTER);
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
 
       expect(input.value).toBe('1:30 AM');
       expectSameTime(fixture.componentInstance.input.value(), createTime(1, 30));
@@ -854,7 +847,7 @@ describe('MatTimepicker', () => {
           value: jasmine.any(Date),
         }),
       );
-    });
+    }));
 
     it('should not navigate using the left/right arrow keys', () => {
       const fixture = TestBed.createComponent(StandaloneTimepicker);
@@ -1039,7 +1032,7 @@ describe('MatTimepicker', () => {
       expect(fixture.componentInstance.control.touched).toBe(true);
     });
 
-    it('should mark the control as touched when the panel is closed', async () => {
+    it('should mark the control as touched when the panel is closed', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       fixture.detectChanges();
       expect(fixture.componentInstance.control.touched).toBe(false);
@@ -1050,9 +1043,9 @@ describe('MatTimepicker', () => {
 
       document.body.click();
       fixture.detectChanges();
-      await fixture.whenStable();
+      flush();
       expect(fixture.componentInstance.control.touched).toBe(true);
-    });
+    }));
 
     it('should not set the `required` error if there is no valid value in the input', () => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
@@ -1070,7 +1063,7 @@ describe('MatTimepicker', () => {
       expect(control.errors?.['required']).toBeFalsy();
     });
 
-    it('should set an error if the user enters an invalid time string', () => {
+    it('should set an error if the user enters an invalid time string', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const control = fixture.componentInstance.control;
       const input = getInput(fixture);
@@ -1114,9 +1107,9 @@ describe('MatTimepicker', () => {
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerParse']).toBeFalsy();
       expectSameTime(control.value, createTime(12, 10));
-    });
+    }));
 
-    it('should set an error if the user enters a time earlier than the minimum', async () => {
+    it('should set an error if the user enters a time earlier than the minimum', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const control = fixture.componentInstance.control;
       const input = getInput(fixture);
@@ -1137,9 +1130,9 @@ describe('MatTimepicker', () => {
       fixture.componentInstance.min.set(createTime(11, 0));
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerMin']).toBeFalsy();
-    });
+    }));
 
-    it('should set an error if the user enters a time later than the maximum', async () => {
+    it('should set an error if the user enters a time later than the maximum', fakeAsync(() => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const control = fixture.componentInstance.control;
       const input = getInput(fixture);
@@ -1160,7 +1153,7 @@ describe('MatTimepicker', () => {
       fixture.componentInstance.max.set(createTime(13, 0));
       fixture.detectChanges();
       expect(control.errors?.['matTimepickerMax']).toBeFalsy();
-    });
+    }));
 
     it('should mark the input as disabled when the form control is disabled', () => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
@@ -1442,7 +1435,6 @@ describe('MatTimepicker', () => {
       [tabIndex]="toggleTabIndex()"/>
   `,
   imports: [MatTimepicker, MatTimepickerInput, MatTimepickerToggle],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneTimepicker {
   @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
@@ -1483,7 +1475,6 @@ class StandaloneTimepicker {
     MatFormField,
     MatSuffix,
   ],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerInFormField {
   @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
@@ -1496,7 +1487,6 @@ class TimepickerInFormField {
     <mat-timepicker #picker/>
   `,
   imports: [MatTimepicker, MatTimepickerInput],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerTwoWayBinding {
   @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
@@ -1513,7 +1503,6 @@ class TimepickerTwoWayBinding {
     <mat-timepicker #picker/>
   `,
   imports: [MatTimepicker, MatTimepickerInput, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerWithForms {
   @ViewChild(MatTimepickerInput) input!: MatTimepickerInput<Date>;
@@ -1530,14 +1519,12 @@ class TimepickerWithForms {
     <mat-timepicker #picker/>
   `,
   imports: [MatTimepicker, MatTimepickerInput],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerWithMultipleInputs {}
 
 @Component({
   template: '<mat-timepicker/>',
   imports: [MatTimepicker],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerWithoutInput {
   @ViewChild(MatTimepicker) timepicker!: MatTimepicker<Date>;
@@ -1550,6 +1537,5 @@ class TimepickerWithoutInput {
   `,
   imports: [MatTimepicker, MatTimepickerInput],
   encapsulation: ViewEncapsulation.ShadowDom,
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TimepickerInShadowDom {}

@@ -9,9 +9,8 @@ import {
   Renderer2,
   RendererFactory2,
   runInInjectionContext,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import {TestBed} from '@angular/core/testing';
+import {fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {
@@ -2457,7 +2456,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
       },
     );
 
-    it('should account for sub-pixel deviations in the size of the overlay', async () => {
+    it('should account for sub-pixel deviations in the size of the overlay', fakeAsync(() => {
       originElement.style.top = '200px';
       originElement.style.left = '200px';
 
@@ -2497,12 +2496,11 @@ describe('FlexibleConnectedPositionStrategy', () => {
       // Trigger a resize so that the overlay get repositioned from scratch
       // and to have it use the patched `getBoundingClientRect`.
       dispatchFakeEvent(window, 'resize');
-      // The resize listener is usually debounced.
-      await new Promise(resolve => setTimeout(resolve, 200));
+      tick(100); // The resize listener is usually debounced.
 
       const overlayRect = originalGetBoundingClientRect.apply(overlayRef.overlayElement);
       expect(Math.floor(overlayRect.top)).toBe(0);
-    });
+    }));
   });
 
   describe('onPositionChange with scrollable view properties', () => {
@@ -3075,6 +3073,5 @@ function createOverflowContainerElement() {
       style="width: ${DEFAULT_WIDTH}px; height: ${DEFAULT_HEIGHT}px;"></div>
   `,
   imports: [ScrollingModule, OverlayModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestOverlay {}

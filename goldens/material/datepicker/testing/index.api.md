@@ -6,7 +6,6 @@
 
 import { BaseHarnessFilters } from '@angular/cdk/testing';
 import { ComponentHarness } from '@angular/cdk/testing';
-import { ContentContainerComponentHarness } from '@angular/cdk/testing';
 import { HarnessPredicate } from '@angular/cdk/testing';
 import { MatFormFieldControlHarnessBase } from '@angular/material/form-field/testing/control';
 import { MatFormFieldControlHarnessFilters } from '@angular/material/form-field/testing/control';
@@ -35,10 +34,6 @@ export enum CalendarView {
     MULTI_YEAR = 2,
     // (undocumented)
     YEAR = 1
-}
-
-// @public
-export interface DatepickerActionsHarnessFilters extends BaseHarnessFilters {
 }
 
 // @public
@@ -95,15 +90,6 @@ export class MatCalendarHarness extends ComponentHarness {
     previous(): Promise<void>;
     selectCell(filter?: CalendarCellHarnessFilters): Promise<void>;
     static with(options?: CalendarHarnessFilters): HarnessPredicate<MatCalendarHarness>;
-}
-
-// @public
-export class MatDatepickerActionsHarness extends ContentContainerComponentHarness<string> {
-    apply(): Promise<void>;
-    cancel(): Promise<void>;
-    // (undocumented)
-    static hostSelector: string;
-    static with(options?: DatepickerActionsHarnessFilters): HarnessPredicate<MatDatepickerActionsHarness>;
 }
 
 // @public

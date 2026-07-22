@@ -1,4 +1,4 @@
-import {Component, OnInit, computed, inject, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, computed, inject, signal} from '@angular/core';
 import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 import {MatButtonModule} from '@angular/material/button';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
@@ -22,6 +22,7 @@ import {MatInputModule} from '@angular/material/input';
     provideLuxonDateAdapter(),
   ],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerLocaleExample implements OnInit {
   private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);

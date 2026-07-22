@@ -1,6 +1,7 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {AsyncPipe, JsonPipe} from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnDestroy,
@@ -48,6 +49,7 @@ import {Subject} from 'rxjs';
     AsyncPipe,
     JsonPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldCustomControlExample {
   readonly form = new FormGroup({
@@ -75,6 +77,7 @@ export class MyTel {
     '[id]': 'id',
   },
   imports: [FormsModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
   static nextId = 0;

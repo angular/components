@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 
 /**
  * Internal shared component used as a container in form field controls.
@@ -14,10 +14,12 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
  * @docs-private
  */
 @Component({
-  selector: '[mat-internal-form-field]',
+  // Use a `div` selector to match the old markup closer.
+  selector: 'div[mat-internal-form-field]',
   template: '<ng-content></ng-content>',
   styleUrl: 'internal-form-field.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
     'class': 'mdc-form-field mat-internal-form-field',
     '[class.mdc-form-field--align-end]': 'labelPosition === "before"',

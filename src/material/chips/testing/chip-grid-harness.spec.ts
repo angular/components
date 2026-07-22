@@ -1,6 +1,6 @@
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatChipsModule} from '../index';
@@ -132,7 +132,6 @@ describe('MatChipGridHarness', () => {
     </mat-chip-grid>
   `,
   imports: [MatChipsModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ChipGridHarnessTest {
   control = new FormControl('value', [Validators.required]);

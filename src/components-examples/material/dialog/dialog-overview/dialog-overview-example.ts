@@ -1,4 +1,4 @@
-import {Component, inject, model, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, model, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {
@@ -25,6 +25,7 @@ export interface DialogData {
   selector: 'dialog-overview-example',
   templateUrl: 'dialog-overview-example.html',
   imports: [MatFormFieldModule, MatInputModule, FormsModule, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogOverviewExample {
   readonly animal = signal('');

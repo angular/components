@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -75,6 +76,7 @@ export class MatChipSelectionChange {
     {provide: MAT_CHIP, useExisting: MatChipOption},
   ],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatChipAction],
 })
 export class MatChipOption extends MatChip implements OnInit {

@@ -6,19 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  computed,
-  Directive,
-  ElementRef,
-  inject,
-  signal,
-  afterNextRender,
-  OnDestroy,
-} from '@angular/core';
+import {computed, Directive, ElementRef, inject, signal} from '@angular/core';
 import {TabList} from './tab-list';
 import {TabPanel} from './tab-panel';
-import {TABS} from './tab-tokens';
-import {SortedCollection, TabPanelPattern, TabPattern} from '../private';
+import {TABS} from './utils';
+import {TabPanelPattern, TabPattern} from '../private';
 
 /**
  * A Tabs container.
@@ -47,6 +39,8 @@ import {SortedCollection, TabPanelPattern, TabPattern} from '../private';
  * </div>
  * ```
  *
+ * @developerPreview 21.0
+ *
  * @see [Tabs](guide/aria/tabs)
  */
 @Directive({
@@ -54,63 +48,46 @@ import {SortedCollection, TabPanelPattern, TabPattern} from '../private';
   exportAs: 'ngTabs',
   providers: [{provide: TABS, useExisting: Tabs}],
 })
-export class Tabs implements OnDestroy {
+export class Tabs {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The TabList registered for this container. */
-  readonly _tabList = signal<TabList | undefined>(undefined);
+  /** The TabList nested inside of the container. */
+  private readonly _tablist = signal<TabList | undefined>(undefined);
 
-  /** The collection of TabPanels. */
-  readonly _collection = new SortedCollection<TabPanel>();
+  /** The TabPanels nested inside of the container. */
+  private readonly _unorderedPanels = signal(new Set<TabPanel>());
 
   /** The Tab UIPattern of the child Tabs. */
-  readonly _tabPatterns = computed<TabPattern[] | undefined>(() => this._tabList()?._tabPatterns());
+  readonly _tabPatterns = computed<TabPattern[] | undefined>(() => this._tablist()?._tabPatterns());
 
   /** The TabPanel UIPattern of the child TabPanels. */
-  readonly _tabPanelPatterns = computed<TabPanelPattern[]>(() =>
-    this._collection.orderedItems().map(tabpanel => tabpanel._pattern),
+  readonly _unorderedTabpanelPatterns = computed<TabPanelPattern[]>(() =>
+    [...this._unorderedPanels()].map(tabpanel => tabpanel._pattern),
   );
 
-  /** A reactive map of tab values to their TabPanelPattern. */
-  readonly _panelMap = computed(() => {
-    const map = new Map<string, TabPanelPattern>();
-    for (const panel of this._collection.orderedItems()) {
-      map.set(panel.value(), panel._pattern);
+  _register(child: TabList | TabPanel) {
+    if (child instanceof TabList) {
+      this._tablist.set(child);
     }
-    return map;
-  });
 
-  /** A reactive map of tab values to their TabPattern. */
-  readonly _tabMap = computed(() => {
-    const map = new Map<string, TabPattern>();
-    const tabList = this._tabList();
-    if (tabList) {
-      for (const tab of tabList._collection.orderedItems()) {
-        map.set(tab.value(), tab._pattern);
-      }
+    if (child instanceof TabPanel) {
+      this._unorderedPanels().add(child);
+      this._unorderedPanels.set(new Set(this._unorderedPanels()));
     }
-    return map;
-  });
-
-  constructor() {
-    afterNextRender(() => {
-      this._collection.startObserving(this.element);
-    });
   }
 
-  ngOnDestroy() {
-    this._collection.stopObserving();
-  }
+  _unregister(child: TabList | TabPanel) {
+    if (child instanceof TabList) {
+      this._tablist.set(undefined);
+    }
 
-  _register(child: TabList) {
-    this._tabList.set(child);
-  }
-
-  _unregister() {
-    this._tabList.set(undefined);
+    if (child instanceof TabPanel) {
+      this._unorderedPanels().delete(child);
+      this._unorderedPanels.set(new Set(this._unorderedPanels()));
+    }
   }
 }

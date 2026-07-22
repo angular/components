@@ -1,4 +1,4 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -297,7 +297,6 @@ describe('MatInputHarness', () => {
     </mat-form-field>
   `,
   imports: [MatInputModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class InputHarnessTest {
   inputType = signal('number');

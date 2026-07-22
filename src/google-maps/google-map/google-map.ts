@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -52,6 +53,7 @@ export const DEFAULT_WIDTH = '500px';
 @Component({
   selector: 'google-map',
   exportAs: 'googleMap',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<div class="map-container"></div><ng-content />',
   encapsulation: ViewEncapsulation.None,
 })
@@ -245,6 +247,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   @Output() readonly zoomChanged: Observable<void> =
     this._eventManager.getLazyEmitter<void>('zoom_changed');
 
+  constructor(...args: unknown[]);
+
   constructor() {
     const platformId = inject<Object>(PLATFORM_ID);
     this._isBrowser = isPlatformBrowser(platformId);
@@ -270,7 +274,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['height'] || changes['width']) {
       this._setSize();
     }

@@ -1,4 +1,4 @@
-import {Component, inject, viewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, viewChild} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {
   MatDialog,
@@ -14,6 +14,7 @@ import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
   selector: 'dialog-from-menu-example',
   templateUrl: 'dialog-from-menu-example.html',
   imports: [MatButtonModule, MatMenuModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogFromMenuExample {
   readonly menuTrigger = viewChild.required(MatMenuTrigger);
@@ -35,5 +36,6 @@ export class DialogFromMenuExample {
   selector: 'dialog-from-menu-dialog',
   templateUrl: 'dialog-from-menu-example-dialog.html',
   imports: [MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogFromMenuExampleDialog {}

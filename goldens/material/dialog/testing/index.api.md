@@ -6,7 +6,6 @@
 
 import * as _angular_cdk_testing from '@angular/cdk/testing';
 import { BaseHarnessFilters } from '@angular/cdk/testing';
-import { Binding } from '@angular/core';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentHarnessConstructor } from '@angular/cdk/testing';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -23,7 +22,6 @@ import * as i0 from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -67,7 +65,7 @@ export enum MatDialogSection {
 
 // @public
 export class MatTestDialogOpener<T = unknown, R = unknown> implements OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     closedResult: R | undefined;
     protected static component: ComponentType<unknown> | undefined;
     protected static config: MatDialogConfig | undefined;

@@ -177,6 +177,8 @@ export abstract class MatListItemBase implements AfterViewInit, OnDestroy, Rippl
     return this.disableRipple || !!this.rippleConfig.disabled;
   }
 
+  constructor(...args: unknown[]);
+
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     const globalRippleOptions = inject<RippleGlobalOptions>(MAT_RIPPLE_GLOBAL_OPTIONS, {

@@ -1,6 +1,6 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonToggleAppearance, MatButtonToggleModule} from '../../button-toggle';
 import {MatButtonToggleGroupHarness} from './button-toggle-group-harness';
@@ -82,7 +82,6 @@ describe('MatButtonToggleGroupHarness', () => {
     </mat-button-toggle-group>
   `,
   imports: [MatButtonToggleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ButtonToggleGroupHarnessTest {
   disabled = false;

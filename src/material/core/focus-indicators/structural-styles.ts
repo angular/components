@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 /**
  * Component used to load structural styles for focus indicators.
@@ -17,5 +17,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
   styleUrl: 'structural-styles.css',
   encapsulation: ViewEncapsulation.None,
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class _StructuralStylesLoader {}

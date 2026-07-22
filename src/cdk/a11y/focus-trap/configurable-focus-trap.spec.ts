@@ -6,7 +6,6 @@ import {
   ViewChild,
   Provider,
   inject,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
@@ -114,7 +113,6 @@ function createComponent<T>(
       <button>SAVE</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleFocusTrap implements AfterViewInit {
   private _focusTrapFactory = inject(ConfigurableFocusTrapFactory);

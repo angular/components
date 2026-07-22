@@ -20,6 +20,7 @@ import {
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -57,6 +58,7 @@ export const yearsPerRow = 4;
   templateUrl: 'multi-year-view.html',
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
 export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
@@ -156,6 +158,8 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
 
   /** The year of the selected date. Null if the selected date is null. */
   _selectedYear = signal<number | null>(null);
+
+  constructor(...args: unknown[]);
 
   constructor() {
     if (!this._dateAdapter && (typeof ngDevMode === 'undefined' || ngDevMode)) {

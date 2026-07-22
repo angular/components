@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/material/button-toggle';
 
 /**
@@ -8,6 +8,7 @@ import {MatButtonToggleAppearance, MatButtonToggleModule} from '@angular/materia
   selector: 'button-toggle-harness-example',
   templateUrl: 'button-toggle-harness-example.html',
   imports: [MatButtonToggleModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleHarnessExample {
   disabled = signal(false);

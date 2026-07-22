@@ -22,6 +22,7 @@ export class MatGridAvatarCssMatStyler {
 
 // @public (undocumented)
 export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
+    constructor(...args: unknown[]);
     get cols(): number;
     set cols(value: NumberInput);
     get gutterSize(): string;
@@ -51,6 +52,7 @@ export class MatGridListModule {
 
 // @public (undocumented)
 export class MatGridTile {
+    constructor(...args: unknown[]);
     get colspan(): number;
     set colspan(value: NumberInput);
     // (undocumented)
@@ -86,6 +88,7 @@ export class MatGridTileHeaderCssMatStyler {
 
 // @public (undocumented)
 export class MatGridTileText implements AfterContentInit {
+    constructor(...args: unknown[]);
     // (undocumented)
     _lines: QueryList<MatLine>;
     // (undocumented)

@@ -10,6 +10,7 @@
 /// <reference types="youtube" preserve="true" />
 
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -37,9 +38,12 @@ import {Observable, of as observableOf, Subject, BehaviorSubject, fromEventPatte
 import {takeUntil, switchMap} from 'rxjs/operators';
 import {PlaceholderImageQuality, YouTubePlayerPlaceholder} from './youtube-player-placeholder';
 
-type YoutubeWindow = {
-  onYouTubeIframeAPIReady?: (() => void) | undefined;
-};
+declare global {
+  interface Window {
+    YT: typeof YT | undefined;
+    onYouTubeIframeAPIReady: (() => void) | undefined;
+  }
+}
 
 /** Injection token used to configure the `YouTubePlayer`. */
 export const YOUTUBE_PLAYER_CONFIG = new InjectionToken<YouTubePlayerConfig>(
@@ -108,6 +112,7 @@ enum PlayerState {
  */
 @Component({
   selector: 'youtube-player',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [YouTubePlayerPlaceholder],
   styleUrl: 'youtube-player.css',
@@ -248,6 +253,8 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('youtubeContainer', {static: true})
   youtubeContainer!: ElementRef<HTMLElement>;
 
+  constructor(...args: unknown[]);
+
   constructor() {
     const platformId = inject<Object>(PLATFORM_ID);
     const config = inject(YOUTUBE_PLAYER_CONFIG, {optional: true});
@@ -262,7 +269,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
     this._conditionallyLoad();
   }
 
-  ngOnChanges(changes: SimpleChanges<this>): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (this._shouldRecreatePlayer(changes)) {
       this._conditionallyLoad();
     } else if (this._player) {
@@ -285,7 +292,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
 
     if (this._player) {
       this._player.destroy();
-      (window as YoutubeWindow).onYouTubeIframeAPIReady = this._existingApiReadyCallback;
+      window.onYouTubeIframeAPIReady = this._existingApiReadyCallback;
     }
 
     this._playerChanges.complete();
@@ -494,13 +501,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       return;
     }
 
-    // Might be clobbered by something like `<form id="YT"><input name="Player"></form>`.
-    if (
-      typeof window.YT !== 'object' ||
-      !window.YT ||
-      !window.YT.Player ||
-      typeof window.YT.Player !== 'function'
-    ) {
+    if (!window.YT || !window.YT.Player) {
       if (this.loadApi) {
         this._isLoading = true;
         loadApi(this._nonce);
@@ -512,14 +513,9 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
         );
       }
 
-      const existingCallback = (window as YoutubeWindow).onYouTubeIframeAPIReady;
+      this._existingApiReadyCallback = window.onYouTubeIframeAPIReady;
 
-      // The callback might be clobbered by an element with an ID of `onYouTubeIframeAPIReady`.
-      if (typeof existingCallback === 'function') {
-        this._existingApiReadyCallback = (window as YoutubeWindow).onYouTubeIframeAPIReady;
-      }
-
-      (window as YoutubeWindow).onYouTubeIframeAPIReady = () => {
+      window.onYouTubeIframeAPIReady = () => {
         this._existingApiReadyCallback?.();
         this._ngZone.run(() => this._createPlayer(playVideo));
       };
@@ -585,10 +581,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
 
     // A player can't be created if the API isn't loaded,
     // or there isn't a video or playlist to be played.
-    if (
-      typeof (window as Window & {YT?: typeof YT}).YT === 'undefined' ||
-      (!this.videoId && !this.playerVars?.list)
-    ) {
+    if (typeof YT === 'undefined' || (!this.videoId && !this.playerVars?.list)) {
       return;
     }
 
@@ -609,11 +602,7 @@ export class YouTubePlayer implements AfterViewInit, OnChanges, OnDestroy {
       params.videoId = this.videoId;
     }
     const player = this._ngZone.runOutsideAngular(
-      () =>
-        new (window as Window & {YT?: typeof YT}).YT!.Player(
-          this.youtubeContainer.nativeElement,
-          params,
-        ),
+      () => new YT.Player(this.youtubeContainer.nativeElement, params),
     );
 
     const whenReady = (event: YT.PlayerEvent) => {

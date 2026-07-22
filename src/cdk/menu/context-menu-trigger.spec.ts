@@ -1,11 +1,4 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  ViewChildren,
-  QueryList,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, ViewChild, ElementRef, ViewChildren, QueryList} from '@angular/core';
 import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {CdkMenu} from './menu';
 import {CdkContextMenuTrigger} from './context-menu-trigger';
@@ -428,7 +421,6 @@ describe('CdkContextMenuTrigger', () => {
     </ng-template>
   `,
   imports: [CdkContextMenuTrigger, CdkMenu, CdkMenuItem],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleContextMenu {
   @ViewChild(CdkContextMenuTrigger) trigger!: CdkContextMenuTrigger;
@@ -458,7 +450,6 @@ class SimpleContextMenu {
     </ng-template>
   `,
   imports: [CdkContextMenuTrigger, CdkMenu],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedContextMenu {
   @ViewChild('cut_trigger', {read: ElementRef}) cutContext!: ElementRef<HTMLElement>;
@@ -485,7 +476,6 @@ class NestedContextMenu {
     </ng-template>
   `,
   imports: [CdkContextMenuTrigger, CdkMenuTrigger, CdkMenu, CdkMenuItem],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContextMenuWithSubmenu {
   @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) context!: ElementRef<HTMLElement>;
@@ -517,7 +507,6 @@ class ContextMenuWithSubmenu {
     </div>
   `,
   imports: [CdkContextMenuTrigger, CdkMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuBar],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContextMenuWithMenuBarAndInlineMenu {
   @ViewChild(CdkMenuBar, {read: ElementRef}) nativeMenuBar!: ElementRef;
@@ -547,7 +536,6 @@ class ContextMenuWithMenuBarAndInlineMenu {
     </ng-template>
   `,
   imports: [CdkMenuBar, CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuBarAndContextTriggerShareMenu {
   @ViewChild(CdkMenuTrigger) menuBarTrigger!: CdkMenuTrigger;
@@ -564,7 +552,6 @@ class MenuBarAndContextTriggerShareMenu {
     </ng-template>
   `,
   imports: [CdkContextMenuTrigger, CdkMenu],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ContextTriggerWithData {
   @ViewChild(CdkContextMenuTrigger, {read: ElementRef}) triggerElement!: ElementRef<HTMLElement>;

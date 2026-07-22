@@ -7,20 +7,19 @@
  */
 
 import {
-  afterNextRender,
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
   model,
-  OnDestroy,
   output,
   signal,
 } from '@angular/core';
-import {SignalLike, MenuBarPattern, SortedCollection} from '../private';
+import {SignalLike, MenuBarPattern} from '../private';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuItem} from './menu-item';
 import {MENU_COMPONENT} from './menu-tokens';
@@ -49,6 +48,8 @@ import {MENU_COMPONENT} from './menu-tokens';
  * </div>
  * ```
  *
+ * @developerPreview 21.0
+ *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
  */
@@ -68,12 +69,12 @@ import {MENU_COMPONENT} from './menu-tokens';
   },
   providers: [{provide: MENU_COMPONENT, useExisting: MenuBar}],
 })
-export class MenuBar<V> implements OnDestroy {
-  /** The collection of menu items. */
-  readonly _collection = new SortedCollection<MenuItem<V>>();
+export class MenuBar<V> {
+  /** The menu items contained in the menubar. */
+  readonly _allItems = contentChildren<MenuItem<V>>(MenuItem, {descendants: true});
 
   readonly _items: SignalLike<MenuItem<V>[]> = () =>
-    this._collection.orderedItems().filter(i => i.parent === this);
+    this._allItems().filter(i => i.parent === this);
 
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
@@ -91,7 +92,7 @@ export class MenuBar<V> implements OnDestroy {
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** The values of the currently selected menu items. */
-  readonly value = model<V[]>([]);
+  readonly values = model<V[]>([]);
 
   /** Whether the menu should wrap its items. */
   readonly wrap = input(true, {transform: booleanAttribute});
@@ -103,7 +104,7 @@ export class MenuBar<V> implements OnDestroy {
   readonly _pattern: MenuBarPattern<V>;
 
   /** The menu items as a writable signal. */
-  private readonly _itemPatterns = computed(() => this._items().map(i => i._pattern));
+  private readonly _itemPatterns = signal<any[]>([]);
 
   /** A callback function triggered when a menu item is selected. */
   readonly itemSelected = output<V>();
@@ -113,6 +114,7 @@ export class MenuBar<V> implements OnDestroy {
       ...this,
       items: this._itemPatterns,
       multi: () => false,
+      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',
@@ -121,15 +123,15 @@ export class MenuBar<V> implements OnDestroy {
       element: computed(() => this._elementRef.nativeElement),
     });
 
-    afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
-
-    afterNextRender(() => {
-      this._collection.startObserving(this.element);
+    afterRenderEffect(() => {
+      this._itemPatterns.set(this._items().map(i => i._pattern));
     });
-  }
 
-  ngOnDestroy() {
-    this._collection.stopObserving();
+    afterRenderEffect(() => {
+      if (!this._pattern.hasBeenFocused()) {
+        this._pattern.setDefaultState();
+      }
+    });
   }
 
   /** Closes the menubar. */

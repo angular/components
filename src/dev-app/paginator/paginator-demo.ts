@@ -10,7 +10,7 @@ import {
   PaginatorConfigurableExample,
   PaginatorOverviewExample,
 } from '@angular/components-examples/material/paginator';
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -32,6 +32,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     PaginatorOverviewExample,
     PaginatorConfigurableExample,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatorDemo {
   length = 50;

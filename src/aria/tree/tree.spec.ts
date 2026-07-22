@@ -1,4 +1,4 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -7,7 +7,6 @@ import {provideFakeDirectionality, runAccessibilityChecks} from '@angular/cdk/te
 import {Tree} from './tree';
 import {TreeItem} from './tree-item';
 import {TreeItemGroup} from './tree-item-group';
-import {waitForMicrotasks} from '../private/testing/test-helpers';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -23,42 +22,38 @@ describe('Tree', () => {
   let treeInstance: Tree<string>;
   let treeItemElements: HTMLElement[];
 
-  const keydown = async (key: string, modifierKeys: ModifierKeys = {}) => {
+  const keydown = (key: string, modifierKeys: ModifierKeys = {}) => {
     const event = new KeyboardEvent('keydown', {key, bubbles: true, ...modifierKeys});
     treeElement.dispatchEvent(event);
-    await fixture.whenStable();
+    fixture.detectChanges();
     defineTestVariables();
   };
 
-  const up = async (modifierKeys?: ModifierKeys) => await keydown('ArrowUp', modifierKeys);
-  const down = async (modifierKeys?: ModifierKeys) => await keydown('ArrowDown', modifierKeys);
-  const left = async (modifierKeys?: ModifierKeys) => await keydown('ArrowLeft', modifierKeys);
-  const right = async (modifierKeys?: ModifierKeys) => await keydown('ArrowRight', modifierKeys);
-  const home = async (modifierKeys?: ModifierKeys) => await keydown('Home', modifierKeys);
-  const end = async (modifierKeys?: ModifierKeys) => await keydown('End', modifierKeys);
-  const enter = async (modifierKeys?: ModifierKeys) => await keydown('Enter', modifierKeys);
-  const space = async (modifierKeys?: ModifierKeys) => await keydown(' ', modifierKeys);
-  const shift = async () => await keydown('Shift');
-  const type = async (chars: string) => {
+  const pointerDown = (target: HTMLElement, eventInit: PointerEventInit = {}) => {
+    target.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true, ...eventInit}));
+    fixture.detectChanges();
+    defineTestVariables();
+  };
+
+  const up = (modifierKeys?: ModifierKeys) => keydown('ArrowUp', modifierKeys);
+  const down = (modifierKeys?: ModifierKeys) => keydown('ArrowDown', modifierKeys);
+  const left = (modifierKeys?: ModifierKeys) => keydown('ArrowLeft', modifierKeys);
+  const right = (modifierKeys?: ModifierKeys) => keydown('ArrowRight', modifierKeys);
+  const home = (modifierKeys?: ModifierKeys) => keydown('Home', modifierKeys);
+  const end = (modifierKeys?: ModifierKeys) => keydown('End', modifierKeys);
+  const enter = (modifierKeys?: ModifierKeys) => keydown('Enter', modifierKeys);
+  const space = (modifierKeys?: ModifierKeys) => keydown(' ', modifierKeys);
+  const shift = () => keydown('Shift');
+  const type = (chars: string) => {
     for (const char of chars) {
-      await keydown(char);
+      keydown(char);
     }
   };
-  const clickHelper = async (target: HTMLElement, eventInit: PointerEventInit = {}) => {
-    target.dispatchEvent(
-      new PointerEvent('click', {
-        bubbles: true,
-        ...eventInit,
-      }),
-    );
-    await fixture.whenStable();
-    defineTestVariables();
-  };
-  const click = async (target: HTMLElement) => await clickHelper(target);
-  const shiftClick = async (target: HTMLElement) => await clickHelper(target, {shiftKey: true});
-  const ctrlClick = async (target: HTMLElement) => await clickHelper(target, {ctrlKey: true});
+  const click = (target: HTMLElement) => pointerDown(target);
+  const shiftClick = (target: HTMLElement) => pointerDown(target, {shiftKey: true});
+  const ctrlClick = (target: HTMLElement) => pointerDown(target, {ctrlKey: true});
 
-  async function setupTestTree(textDirection: Direction = 'ltr') {
+  function setupTestTree(textDirection: Direction = 'ltr') {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality(textDirection)],
     });
@@ -66,7 +61,7 @@ describe('Tree', () => {
     fixture = TestBed.createComponent(TestTreeComponent);
     testComponent = fixture.componentInstance;
 
-    await fixture.whenStable();
+    fixture.detectChanges();
     defineTestVariables();
   }
 
@@ -79,10 +74,10 @@ describe('Tree', () => {
     treeItemElements = treeItemDebugElements.map(debugEl => debugEl.nativeElement);
   }
 
-  async function updateTree(
+  function updateTree(
     config: {
       nodes?: TestTreeNode[];
-      value?: string[];
+      values?: string[];
       disabled?: boolean;
       orientation?: 'horizontal' | 'vertical';
       multi?: boolean;
@@ -92,11 +87,10 @@ describe('Tree', () => {
       selectionMode?: 'follow' | 'explicit';
       nav?: boolean;
       currentType?: 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false';
-      tabIndex?: number;
     } = {},
   ) {
     if (config.nodes !== undefined) testComponent.nodes.set(config.nodes);
-    if (config.value !== undefined) treeInstance.value.set(config.value);
+    if (config.values !== undefined) treeInstance.values.set(config.values);
     if (config.disabled !== undefined) testComponent.disabled.set(config.disabled);
     if (config.orientation !== undefined) testComponent.orientation.set(config.orientation);
     if (config.multi !== undefined) testComponent.multi.set(config.multi);
@@ -106,13 +100,12 @@ describe('Tree', () => {
     if (config.selectionMode !== undefined) testComponent.selectionMode.set(config.selectionMode);
     if (config.nav !== undefined) testComponent.nav.set(config.nav);
     if (config.currentType !== undefined) testComponent.currentType.set(config.currentType);
-    if (config.tabIndex !== undefined) testComponent.tabIndex.set(config.tabIndex);
 
-    await fixture.whenStable();
+    fixture.detectChanges();
     defineTestVariables();
   }
 
-  async function updateTreeItemByValue(value: string, config: Partial<TestTreeNode<string>>) {
+  function updateTreeItemByValue(value: string, config: Partial<TestTreeNode<string>>) {
     const newNodes = JSON.parse(JSON.stringify(testComponent.nodes()));
     const childrenList = [newNodes];
     while (childrenList.length > 0) {
@@ -124,7 +117,7 @@ describe('Tree', () => {
           if (config.children !== undefined) node.children = config.children;
           if (config.disabled !== undefined) node.disabled = config.disabled;
           if (config.selectable !== undefined) node.selectable = config.selectable;
-          await updateTree({nodes: newNodes});
+          updateTree({nodes: newNodes});
           return;
         }
         if (node.children) {
@@ -151,97 +144,33 @@ describe('Tree', () => {
     return item?.getAttribute('data-value') ?? undefined;
   }
 
-  async function expandAll() {
+  function expandAll() {
     const fruitsEl = getTreeItemElementByValue('fruits')!;
-    await click(fruitsEl);
+    click(fruitsEl);
     const berriesEl = getTreeItemElementByValue('berries')!;
-    await click(berriesEl);
+    click(berriesEl);
     const vegetablesEl = getTreeItemElementByValue('vegetables')!;
-    await click(vegetablesEl);
-    await updateTree({value: []});
+    click(vegetablesEl);
+    updateTree({values: []});
   }
 
   afterEach(async () => {
-    await fixture.whenStable();
+    fixture.detectChanges();
     await runAccessibilityChecks(fixture.nativeElement);
-  });
-
-  describe('dynamic updates', () => {
-    it('should update item order correctly after items are shuffled', async () => {
-      await setupTestTree();
-      await expandAll();
-      await fixture.whenStable();
-
-      const treeDirective = fixture.debugElement.query(By.directive(Tree)).injector.get(Tree);
-      const itemsBefore = treeDirective._pattern.inputs.items();
-      expect(itemsBefore.length).toBe(11);
-      expect(itemsBefore[0].value()).toBe('fruits');
-
-      // Shuffle top-level nodes: move fruits to end
-      const nodes = testComponent.nodes();
-      const firstNode = nodes.shift()!;
-      nodes.push(firstNode);
-      testComponent.nodes.set([...nodes]);
-      await fixture.whenStable();
-      await waitForMicrotasks();
-
-      const itemsAfter = treeDirective._pattern.inputs.items();
-      expect(itemsAfter.length).toBe(11);
-      expect(itemsAfter[0].value()).toBe('vegetables');
-    });
-  });
-
-  describe('structural validations', () => {
-    let consoleSpy: jasmine.Spy;
-
-    beforeEach(() => {
-      consoleSpy = spyOn(console, 'warn');
-    });
-
-    afterEach(async () => {
-      TestBed.resetTestingModule();
-      await setupTestTree();
-    });
-
-    it('should warn when duplicate values are detected inside ngTree', () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [TreeWithDuplicateValues],
-      });
-      const duplicateFixture = TestBed.createComponent(TreeWithDuplicateValues);
-      duplicateFixture.detectChanges();
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        "Duplicate tree item value 'item0' detected inside ngTree.",
-      );
-    });
-
-    it('should warn when single-select tree has multiple selected values', () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [SingleSelectTreeWithMultipleValues],
-      });
-      const singleSelectFixture = TestBed.createComponent(SingleSelectTreeWithMultipleValues);
-      singleSelectFixture.detectChanges();
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'A single-select tree should not have multiple selected options. Selected options: item0, item1',
-      );
-    });
   });
 
   describe('ARIA attributes and roles', () => {
     describe('default configuration', () => {
-      beforeEach(async () => {
-        await setupTestTree();
+      beforeEach(() => {
+        setupTestTree();
       });
 
       it('should correctly set the role attribute to "tree" for Tree', () => {
         expect(treeElement.getAttribute('role')).toBe('tree');
       });
 
-      it('should correctly set the role attribute to "treeitem" for TreeItem', async () => {
-        await expandAll();
+      it('should correctly set the role attribute to "treeitem" for TreeItem', () => {
+        expandAll();
 
         expect(getTreeItemElementByValue('fruits')!.getAttribute('role')).toBe('treeitem');
         expect(getTreeItemElementByValue('vegetables')!.getAttribute('role')).toBe('treeitem');
@@ -280,8 +209,8 @@ describe('Tree', () => {
         expect(fruitsItem.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should set aria-level, aria-setsize, and aria-posinset correctly', async () => {
-        await expandAll();
+      it('should set aria-level, aria-setsize, and aria-posinset correctly', () => {
+        expandAll();
 
         const fruits = getTreeItemElementByValue('fruits')!;
         expect(fruits.getAttribute('aria-level')).toBe('1');
@@ -324,43 +253,38 @@ describe('Tree', () => {
     });
 
     describe('custom configuration', () => {
-      beforeEach(async () => {
-        await setupTestTree();
+      beforeEach(() => {
+        setupTestTree();
       });
 
-      it('should set aria-orientation to "horizontal"', async () => {
-        await updateTree({orientation: 'horizontal'});
+      it('should set aria-orientation to "horizontal"', () => {
+        updateTree({orientation: 'horizontal'});
 
         expect(treeElement.getAttribute('aria-orientation')).toBe('horizontal');
       });
 
-      it('should set aria-multiselectable to "true"', async () => {
-        await updateTree({multi: true});
+      it('should set aria-multiselectable to "true"', () => {
+        updateTree({multi: true});
 
         expect(treeElement.getAttribute('aria-multiselectable')).toBe('true');
       });
 
-      it('should set aria-disabled to "true" for the tree', async () => {
-        await updateTree({disabled: true});
+      it('should set aria-disabled to "true" for the tree', () => {
+        updateTree({disabled: true});
 
         expect(treeElement.getAttribute('aria-disabled')).toBe('true');
       });
 
-      it('should be able to override tabindex', async () => {
-        await updateTree({tabIndex: -1});
-        expect(treeElement.getAttribute('tabindex')).toBe('-1');
-      });
-
-      it('should set aria-disabled to "true" for disabled items', async () => {
-        await updateTreeItemByValue('fruits', {disabled: true});
+      it('should set aria-disabled to "true" for disabled items', () => {
+        updateTreeItemByValue('fruits', {disabled: true});
 
         const fruitsItem = getTreeItemElementByValue('fruits')!;
         expect(fruitsItem.getAttribute('aria-disabled')).toBe('true');
       });
 
-      it('should set aria-selected to "true" for selected items', async () => {
-        await expandAll();
-        await updateTree({value: ['apple']});
+      it('should set aria-selected to "true" for selected items', () => {
+        expandAll();
+        updateTree({values: ['apple']});
 
         const appleItem = getTreeItemElementByValue('apple')!;
         expect(appleItem.getAttribute('aria-selected')).toBe('true');
@@ -368,76 +292,76 @@ describe('Tree', () => {
         expect(fruitsItem.getAttribute('aria-selected')).toBe('false');
       });
 
-      it('should set aria-expanded to "true" for expanded items', async () => {
-        await right();
+      it('should set aria-expanded to "true" for expanded items', () => {
+        right();
 
         const fruitsItem = getTreeItemElementByValue('fruits')!;
         expect(fruitsItem.getAttribute('aria-expanded')).toBe('true');
       });
 
-      it('should set aria-current to specific current type when nav="true"', async () => {
-        await expandAll();
-        await updateTree({nav: true, value: ['apple']});
+      it('should set aria-current to specific current type when nav="true"', () => {
+        expandAll();
+        updateTree({nav: true, values: ['apple']});
 
         const appleItem = getTreeItemElementByValue('apple')!;
         const bananaItem = getTreeItemElementByValue('banana')!;
         expect(appleItem.getAttribute('aria-current')).toBe('page');
         expect(bananaItem.hasAttribute('aria-current')).toBe(false);
 
-        await updateTree({currentType: 'location'});
+        updateTree({currentType: 'location'});
         expect(appleItem.getAttribute('aria-current')).toBe('location');
       });
 
-      it('should not set aria-current when not selectable', async () => {
-        await expandAll();
-        await updateTree({nav: true, value: ['apple']});
+      it('should not set aria-current when not selectable', () => {
+        expandAll();
+        updateTree({nav: true, values: ['apple']});
         const appleItem = getTreeItemElementByValue('apple')!;
         expect(appleItem.getAttribute('aria-current')).toBe('page');
 
-        await updateTreeItemByValue('apple', {selectable: false});
+        updateTreeItemByValue('apple', {selectable: false});
         expect(appleItem.hasAttribute('aria-current')).toBe(false);
       });
 
-      it('should not set aria-selected when nav="true"', async () => {
-        await expandAll();
+      it('should not set aria-selected when nav="true"', () => {
+        expandAll();
 
-        await updateTree({value: ['apple'], nav: true});
+        updateTree({values: ['apple'], nav: true});
         const appleItem = getTreeItemElementByValue('apple')!;
         expect(appleItem.hasAttribute('aria-selected')).toBe(false);
 
-        await updateTree({nav: false});
+        updateTree({nav: false});
         expect(appleItem.getAttribute('aria-selected')).toBe('true');
       });
 
-      it('should not set aria-selected when not selectable', async () => {
-        await expandAll();
-        await updateTree({value: ['apple']});
+      it('should not set aria-selected when not selectable', () => {
+        expandAll();
+        updateTree({values: ['apple']});
         const appleItem = getTreeItemElementByValue('apple')!;
         expect(appleItem.getAttribute('aria-selected')).toBe('true');
 
-        await updateTreeItemByValue('apple', {selectable: false});
+        updateTreeItemByValue('apple', {selectable: false});
         expect(appleItem.hasAttribute('aria-selected')).toBe(false);
       });
     });
 
     describe('roving focus mode (focusMode="roving")', () => {
-      beforeEach(async () => {
-        await setupTestTree();
-        await updateTree({focusMode: 'roving'});
+      beforeEach(() => {
+        setupTestTree();
+        updateTree({focusMode: 'roving'});
       });
 
       it('should set tabindex="-1" for the tree', () => {
         expect(treeElement.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set tabindex="0" for the tree when disabled when softDisabled is false', async () => {
-        await updateTree({disabled: true, focusMode: 'roving', softDisabled: false});
+      it('should set tabindex="0" for the tree when disabled when softDisabled is false', () => {
+        updateTree({disabled: true, focusMode: 'roving', softDisabled: false});
 
         expect(treeElement.getAttribute('tabindex')).toBe('0');
       });
 
-      it('should set tabindex="0" for the tree when disabled when softDisabled is true', async () => {
-        await updateTree({disabled: true, focusMode: 'roving'});
+      it('should set tabindex="0" for the tree when disabled when softDisabled is true', () => {
+        updateTree({disabled: true, focusMode: 'roving'});
 
         expect(treeElement.getAttribute('tabindex')).toBe('0');
       });
@@ -454,8 +378,8 @@ describe('Tree', () => {
         expect(dairyItem.getAttribute('tabindex')).toBe('-1');
       });
 
-      it('should set initial focus (tabindex="0") on the first selected item', async () => {
-        await updateTree({value: ['vegetables', 'dairy'], focusMode: 'roving'});
+      it('should set initial focus (tabindex="0") on the first selected item', () => {
+        updateTree({values: ['vegetables', 'dairy'], focusMode: 'roving'});
 
         const fruitsItem = getTreeItemElementByValue('fruits')!;
         const vegetablesItem = getTreeItemElementByValue('vegetables')!;
@@ -474,9 +398,9 @@ describe('Tree', () => {
     });
 
     describe('activedescendant focus mode (focusMode="activedescendant")', () => {
-      beforeEach(async () => {
-        await setupTestTree();
-        await updateTree({focusMode: 'activedescendant'});
+      beforeEach(() => {
+        setupTestTree();
+        updateTree({focusMode: 'activedescendant'});
       });
 
       it('should set tabindex="0" for the tree', () => {
@@ -488,15 +412,15 @@ describe('Tree', () => {
         expect(treeElement.getAttribute('aria-activedescendant')).toBe(fruitsItem.id);
       });
 
-      it('should set aria-activedescendant to the ID of the first selected item', async () => {
-        await updateTree({value: ['vegetables', 'dairy'], focusMode: 'activedescendant'});
+      it('should set aria-activedescendant to the ID of the first selected item', () => {
+        updateTree({values: ['vegetables', 'dairy'], focusMode: 'activedescendant'});
 
         const vegetablesItem = getTreeItemElementByValue('vegetables')!;
         expect(treeElement.getAttribute('aria-activedescendant')).toBe(vegetablesItem.id);
       });
 
-      it('should set tabindex="-1" for all items', async () => {
-        await expandAll();
+      it('should set tabindex="-1" for all items', () => {
+        expandAll();
 
         expect(getTreeItemElementByValue('fruits')!.getAttribute('tabindex')).toBe('-1');
         expect(getTreeItemElementByValue('apple')!.getAttribute('tabindex')).toBe('-1');
@@ -514,10 +438,10 @@ describe('Tree', () => {
   });
 
   describe('value and selection', () => {
-    it('should select items based on the initial value input', async () => {
-      await setupTestTree();
-      await expandAll();
-      await updateTree({value: ['apple', 'strawberry', 'carrot']});
+    it('should select items based on the initial value input', () => {
+      setupTestTree();
+      expandAll();
+      updateTree({values: ['apple', 'strawberry', 'carrot']});
 
       expect(getTreeItemElementByValue('apple')!.getAttribute('aria-selected')).toBe('true');
       expect(getTreeItemElementByValue('strawberry')!.getAttribute('aria-selected')).toBe('true');
@@ -527,55 +451,55 @@ describe('Tree', () => {
 
     describe('pointer interactions', () => {
       describe('single select (multi=false, selectionMode="explicit")', () => {
-        beforeEach(async () => {
-          await setupTestTree();
-          await updateTree({multi: false, selectionMode: 'explicit'});
+        beforeEach(() => {
+          setupTestTree();
+          updateTree({multi: false, selectionMode: 'explicit'});
         });
 
-        it('should select an item on click and deselect others', async () => {
-          await right();
+        it('should select an item on click and deselect others', () => {
+          right();
           const appleEl = getTreeItemElementByValue('apple')!;
           const bananaEl = getTreeItemElementByValue('banana')!;
 
-          await click(appleEl);
-          expect(treeInstance.value()).toEqual(['apple']);
+          click(appleEl);
+          expect(treeInstance.values()).toEqual(['apple']);
           expect(appleEl.getAttribute('aria-selected')).toBe('true');
           expect(bananaEl.getAttribute('aria-selected')).toBe('false');
 
-          await click(bananaEl);
-          expect(treeInstance.value()).toEqual(['banana']);
+          click(bananaEl);
+          expect(treeInstance.values()).toEqual(['banana']);
           expect(appleEl.getAttribute('aria-selected')).toBe('false');
           expect(bananaEl.getAttribute('aria-selected')).toBe('true');
         });
       });
 
       describe('multi select (multi=true)', () => {
-        beforeEach(async () => {
-          await setupTestTree();
-          await updateTree({multi: true});
+        beforeEach(() => {
+          setupTestTree();
+          updateTree({multi: true});
 
           // Expands vegetables and fruits
-          await down();
-          await right();
-          await up();
-          await right();
+          down();
+          right();
+          up();
+          right();
         });
 
         describe('selectionMode="explicit"', () => {
-          beforeEach(async () => {
-            await updateTree({selectionMode: 'explicit'});
+          beforeEach(() => {
+            updateTree({selectionMode: 'explicit'});
           });
 
-          it('should select a range with shift+click', async () => {
+          it('should select a range with shift+click', () => {
             const appleEl = getTreeItemElementByValue('apple')!;
             const carrotEl = getTreeItemElementByValue('carrot')!;
 
-            await click(appleEl);
-            expect(treeInstance.value()).toEqual(['apple']);
+            click(appleEl);
+            expect(treeInstance.values()).toEqual(['apple']);
             expect(appleEl.getAttribute('aria-selected')).toBe('true');
 
             shiftClick(carrotEl);
-            expect(treeInstance.value()).toEqual([
+            expect(treeInstance.values()).toEqual([
               'apple',
               'banana',
               'berries',
@@ -584,79 +508,79 @@ describe('Tree', () => {
             ]);
           });
 
-          it('should toggle selection of an item on simple click, leaving other selections intact', async () => {
+          it('should toggle selection of an item on simple click, leaving other selections intact', () => {
             const appleEl = getTreeItemElementByValue('apple')!;
             const bananaEl = getTreeItemElementByValue('banana')!;
 
-            await click(appleEl);
-            expect(treeInstance.value()).toEqual(['apple']);
+            click(appleEl);
+            expect(treeInstance.values()).toEqual(['apple']);
 
-            await click(bananaEl);
-            expect(treeInstance.value()).toEqual(['apple', 'banana']);
+            click(bananaEl);
+            expect(treeInstance.values()).toEqual(['apple', 'banana']);
 
-            await click(appleEl);
-            expect(treeInstance.value()).toEqual(['banana']);
+            click(appleEl);
+            expect(treeInstance.values()).toEqual(['banana']);
           });
 
           describe('selectable=false', () => {
-            it('should not select an item on click', async () => {
-              await updateTree({value: ['banana']});
-              await updateTreeItemByValue('apple', {selectable: false});
+            it('should not select an item on click', () => {
+              updateTree({values: ['banana']});
+              updateTreeItemByValue('apple', {selectable: false});
               const appleEl = getTreeItemElementByValue('apple')!;
 
-              await click(appleEl);
-              expect(treeInstance.value()).not.toContain('apple');
-              expect(treeInstance.value()).toContain('banana');
+              click(appleEl);
+              expect(treeInstance.values()).not.toContain('apple');
+              expect(treeInstance.values()).toContain('banana');
             });
           });
         });
 
         describe('selectionMode="follow"', () => {
-          beforeEach(async () => {
-            await updateTree({selectionMode: 'follow'});
+          beforeEach(() => {
+            updateTree({selectionMode: 'follow'});
           });
 
-          it('should select only the clicked item with a simple click (like single select), deselecting others', async () => {
+          it('should select only the clicked item with a simple click (like single select), deselecting others', () => {
             const appleEl = getTreeItemElementByValue('apple')!;
             const bananaEl = getTreeItemElementByValue('banana')!;
             const carrotEl = getTreeItemElementByValue('carrot')!;
 
             ctrlClick(appleEl);
             ctrlClick(bananaEl);
-            expect(treeInstance.value()).toEqual(['apple', 'banana']);
+            expect(treeInstance.values()).toEqual(['apple', 'banana']);
 
-            await click(carrotEl);
-            expect(treeInstance.value()).toEqual(['carrot']);
+            click(carrotEl);
+            expect(treeInstance.values()).toEqual(['carrot']);
 
-            await click(appleEl);
-            expect(treeInstance.value()).toEqual(['apple']);
+            click(appleEl);
+            expect(treeInstance.values()).toEqual(['apple']);
           });
 
-          it('should add to selection with ctrl+click and toggle individual items', async () => {
+          it('should add to selection with ctrl+click and toggle individual items', () => {
             const appleEl = getTreeItemElementByValue('apple')!;
             const berriesEl = getTreeItemElementByValue('berries')!;
 
-            await click(appleEl);
-            expect(treeInstance.value()).toEqual(['apple']);
+            click(appleEl);
+            expect(treeInstance.values()).toEqual(['apple']);
 
             ctrlClick(berriesEl);
-            expect(treeInstance.value()).toEqual(['apple', 'berries']);
+            expect(treeInstance.values()).toEqual(['apple', 'berries']);
 
             ctrlClick(appleEl);
-            expect(treeInstance.value()).toEqual(['berries']);
+            expect(treeInstance.values()).toEqual(['berries']);
           });
 
-          it('should select a range with shift+click, anchoring from last selected/focused', async () => {
+          it('should select a range with shift+click, anchoring from last selected/focused', () => {
             const appleEl = getTreeItemElementByValue('apple')!;
             const berriesEl = getTreeItemElementByValue('berries')!;
             const carrotEl = getTreeItemElementByValue('carrot')!;
             const broccoliEl = getTreeItemElementByValue('broccoli')!;
 
-            await click(appleEl);
-            expect(treeInstance.value()).toEqual(['apple']);
+            click(appleEl);
+            expect(treeInstance.values()).toEqual(['apple']);
 
             shiftClick(carrotEl);
-            expect(treeInstance.value()).toEqual([
+            expect(treeInstance.values()).toEqual([
               'apple',
               'banana',
               'berries',
@@ -664,11 +588,11 @@ describe('Tree', () => {
               'carrot',
             ]);
 
-            await click(berriesEl);
-            expect(treeInstance.value()).toEqual(['berries']);
+            click(berriesEl);
+            expect(treeInstance.values()).toEqual(['berries']);
 
             shiftClick(broccoliEl);
-            expect(treeInstance.value()).toEqual([
+            expect(treeInstance.values()).toEqual([
               'berries',
               'strawberry',
               'blueberry',
@@ -679,35 +603,35 @@ describe('Tree', () => {
           });
 
           describe('selectable=false', () => {
-            it('should not select a range with shift+click if an item is not selectable', async () => {
-              await updateTreeItemByValue('banana', {selectable: false});
+            it('should not select a range with shift+click if an item is not selectable', () => {
+              updateTreeItemByValue('banana', {selectable: false});
               const appleEl = getTreeItemElementByValue('apple')!;
               const berriesEl = getTreeItemElementByValue('berries')!;
 
-              await click(appleEl);
+              click(appleEl);
               shiftClick(berriesEl);
 
-              expect(treeInstance.value()).not.toContain('banana');
-              expect(treeInstance.value()).toContain('apple');
-              expect(treeInstance.value()).toContain('berries');
+              expect(treeInstance.values()).not.toContain('banana');
+              expect(treeInstance.values()).toContain('apple');
+              expect(treeInstance.values()).toContain('berries');
             });
 
-            it('should not toggle selection of an item on simple click', async () => {
-              await updateTreeItemByValue('apple', {selectable: false});
+            it('should not toggle selection of an item on simple click', () => {
+              updateTreeItemByValue('apple', {selectable: false});
               const appleEl = getTreeItemElementByValue('apple')!;
 
-              await click(appleEl);
-              expect(treeInstance.value()).not.toContain('apple');
+              click(appleEl);
+              expect(treeInstance.values()).not.toContain('apple');
             });
 
-            it('should not add to selection with ctrl+click', async () => {
-              await updateTree({value: ['banana']});
-              await updateTreeItemByValue('apple', {selectable: false});
+            it('should not add to selection with ctrl+click', () => {
+              updateTree({values: ['banana']});
+              updateTreeItemByValue('apple', {selectable: false});
               const appleEl = getTreeItemElementByValue('apple')!;
 
               ctrlClick(appleEl);
-              expect(treeInstance.value()).not.toContain('apple');
-              expect(treeInstance.value()).toContain('banana');
+              expect(treeInstance.values()).not.toContain('apple');
+              expect(treeInstance.values()).toContain('banana');
             });
           });
         });
@@ -716,168 +640,168 @@ describe('Tree', () => {
 
     describe('keyboard interactions', () => {
       describe('single select (multi=false)', () => {
-        beforeEach(async () => {
-          await setupTestTree();
-          await updateTree({multi: false});
+        beforeEach(() => {
+          setupTestTree();
+          updateTree({multi: false});
         });
 
         describe('selectionMode="explicit"', () => {
-          beforeEach(async () => {
-            await updateTree({selectionMode: 'explicit'});
+          beforeEach(() => {
+            updateTree({selectionMode: 'explicit'});
           });
 
-          it('should select the focused item with Enter and deselect others', async () => {
-            await enter();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should select the focused item with Enter and deselect others', () => {
+            enter();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            await enter();
-            expect(treeInstance.value()).toEqual(['vegetables']);
+            down();
+            enter();
+            expect(treeInstance.values()).toEqual(['vegetables']);
           });
 
-          it('should select the focused item with Space and deselect others', async () => {
-            await space();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should select the focused item with Space and deselect others', () => {
+            space();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            await space();
-            expect(treeInstance.value()).toEqual(['vegetables']);
+            down();
+            space();
+            expect(treeInstance.values()).toEqual(['vegetables']);
           });
 
-          it('should move focus with arrows without changing selection until Enter/Space', async () => {
-            await enter();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should move focus with arrows without changing selection until Enter/Space', () => {
+            enter();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            expect(treeInstance.value()).toEqual(['fruits']);
+            down();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            expect(treeInstance.value()).toEqual(['fruits']);
+            down();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await enter();
-            expect(treeInstance.value()).toEqual(['grains']);
+            enter();
+            expect(treeInstance.values()).toEqual(['grains']);
           });
 
           describe('selectable=false', () => {
-            it('should not select the focused item with Enter', async () => {
-              await updateTreeItemByValue('fruits', {selectable: false});
-              await enter();
-              expect(treeInstance.value()).toEqual([]);
+            it('should not select the focused item with Enter', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              enter();
+              expect(treeInstance.values()).toEqual([]);
             });
 
-            it('should not select the focused item with Space', async () => {
-              await updateTreeItemByValue('fruits', {selectable: false});
-              await space();
-              expect(treeInstance.value()).toEqual([]);
+            it('should not select the focused item with Space', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              space();
+              expect(treeInstance.values()).toEqual([]);
             });
           });
         });
 
         describe('selectionMode="follow"', () => {
-          beforeEach(async () => {
-            await updateTree({selectionMode: 'follow'});
+          beforeEach(() => {
+            updateTree({selectionMode: 'follow'});
           });
 
-          it('should select an item when it becomes focused with ArrowDown and deselect others', async () => {
-            await updateTree({value: ['fruits']});
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should select an item when it becomes focused with ArrowDown and deselect others', () => {
+            updateTree({values: ['fruits']});
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            expect(treeInstance.value()).toEqual(['vegetables']);
+            down();
+            expect(treeInstance.values()).toEqual(['vegetables']);
 
-            await down();
-            expect(treeInstance.value()).toEqual(['grains']);
+            down();
+            expect(treeInstance.values()).toEqual(['grains']);
           });
 
-          it('should select an item when it becomes focused with ArrowUp and deselect others', async () => {
-            await updateTree({value: ['grains']});
+          it('should select an item when it becomes focused with ArrowUp and deselect others', () => {
+            updateTree({values: ['grains']});
 
-            await up();
-            expect(treeInstance.value()).toEqual(['vegetables']);
+            up();
+            expect(treeInstance.values()).toEqual(['vegetables']);
           });
 
-          it('should select the first item with Home and deselect others', async () => {
-            await updateTree({value: ['grains']});
-            expect(treeInstance.value()).toEqual(['grains']);
+          it('should select the first item with Home and deselect others', () => {
+            updateTree({values: ['grains']});
+            expect(treeInstance.values()).toEqual(['grains']);
 
-            await home();
-            expect(treeInstance.value()).toEqual(['fruits']);
+            home();
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
-          it('should select the last visible item with End and deselect others', async () => {
-            await updateTree({value: ['fruits']});
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should select the last visible item with End and deselect others', () => {
+            updateTree({values: ['fruits']});
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await end();
-            expect(treeInstance.value()).toEqual(['dairy']);
+            end();
+            expect(treeInstance.values()).toEqual(['dairy']);
           });
 
-          it('should select an item via typeahead and deselect others', async () => {
-            await updateTree({value: ['fruits']});
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should select an item via typeahead and deselect others', () => {
+            updateTree({values: ['fruits']});
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await type('V');
-            expect(treeInstance.value()).toEqual(['vegetables']);
+            type('V');
+            expect(treeInstance.values()).toEqual(['vegetables']);
           });
         });
       });
 
       describe('multi select (multi=true)', () => {
-        beforeEach(async () => {
-          await setupTestTree();
-          await updateTree({multi: true});
+        beforeEach(() => {
+          setupTestTree();
+          updateTree({multi: true});
         });
 
         describe('selectionMode="explicit"', () => {
-          beforeEach(async () => {
-            await updateTree({selectionMode: 'explicit'});
+          beforeEach(() => {
+            updateTree({selectionMode: 'explicit'});
           });
 
-          it('should toggle selection of the focused item with Space, leaving other selections intact', async () => {
-            await space();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should toggle selection of the focused item with Space, leaving other selections intact', () => {
+            space();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            await space();
-            expect(treeInstance.value().sort()).toEqual(['fruits', 'vegetables']);
+            down();
+            space();
+            expect(treeInstance.values().sort()).toEqual(['fruits', 'vegetables']);
           });
 
-          it('should move focus with arrows without changing selection', async () => {
-            await space();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should move focus with arrows without changing selection', () => {
+            space();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            expect(treeInstance.value()).toEqual(['fruits']);
+            down();
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
-          it('should extend selection downwards with Shift+ArrowDown', async () => {
-            await shift();
-            await down({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['fruits', 'vegetables']);
+          it('should extend selection downwards with Shift+ArrowDown', () => {
+            shift();
+            down({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['fruits', 'vegetables']);
 
-            await down({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['fruits', 'grains', 'vegetables']);
+            down({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['fruits', 'grains', 'vegetables']);
           });
 
-          it('should extend selection upwards with Shift+ArrowUp', async () => {
-            await end();
-            await shift();
-            await up({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['dairy', 'grains']);
+          it('should extend selection upwards with Shift+ArrowUp', () => {
+            end();
+            shift();
+            up({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['dairy', 'grains']);
           });
 
-          it('Ctrl+A should select all enabled visible items, then deselect all', async () => {
+          it('Ctrl+A should select all enabled visible items, then deselect all', () => {
             // Expands vegetables and fruits
-            await down();
-            await right();
-            await up();
-            await right();
+            down();
+            right();
+            up();
+            right();
 
-            await updateTreeItemByValue('carrot', {disabled: true});
-            await updateTreeItemByValue('broccoli', {disabled: true});
+            updateTreeItemByValue('carrot', {disabled: true});
+            updateTreeItemByValue('broccoli', {disabled: true});
 
-            await keydown('A', {ctrlKey: true});
-            expect(treeInstance.value().sort()).toEqual([
+            keydown('A', {ctrlKey: true});
+            expect(treeInstance.values().sort()).toEqual([
               'apple',
               'banana',
               'berries',
@@ -887,43 +811,43 @@ describe('Tree', () => {
               'vegetables',
             ]);
 
-            await keydown('A', {ctrlKey: true});
-            expect(treeInstance.value()).toEqual([]);
+            keydown('A', {ctrlKey: true});
+            expect(treeInstance.values()).toEqual([]);
           });
 
-          it('Ctrl+ArrowKey should move focus without changing selection', async () => {
-            await space();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('Ctrl+ArrowKey should move focus without changing selection', () => {
+            space();
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down({ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            down({ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await up({ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            up({ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
           describe('selectable=false', () => {
-            it('should not toggle selection of the focused item with Space', async () => {
-              await updateTreeItemByValue('fruits', {selectable: false});
-              await space();
-              expect(treeInstance.value()).toEqual([]);
+            it('should not toggle selection of the focused item with Space', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              space();
+              expect(treeInstance.values()).toEqual([]);
             });
 
-            it('should not extend selection with Shift+ArrowDown', async () => {
-              await updateTreeItemByValue('vegetables', {selectable: false});
-              await shift();
-              await down({shiftKey: true});
-              await down({shiftKey: true});
-              expect(treeInstance.value()).not.toContain('vegetables');
-              expect(treeInstance.value().sort()).toEqual(['fruits', 'grains']);
+            it('should not extend selection with Shift+ArrowDown', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              shift();
+              down({shiftKey: true});
+              down({shiftKey: true});
+              expect(treeInstance.values()).not.toContain('vegetables');
+              expect(treeInstance.values().sort()).toEqual(['fruits', 'grains']);
             });
 
-            it('Ctrl+A should not select non-selectable items', async () => {
-              await expandAll();
-              await updateTreeItemByValue('apple', {selectable: false});
-              await updateTreeItemByValue('carrot', {selectable: false});
-              await keydown('A', {ctrlKey: true});
-              const value = treeInstance.value();
+            it('Ctrl+A should not select non-selectable items', () => {
+              expandAll();
+              updateTreeItemByValue('apple', {selectable: false});
+              updateTreeItemByValue('carrot', {selectable: false});
+              keydown('A', {ctrlKey: true});
+              const value = treeInstance.values();
               expect(value).not.toContain('apple');
               expect(value).not.toContain('carrot');
               expect(value).toContain('banana');
@@ -933,111 +857,111 @@ describe('Tree', () => {
         });
 
         describe('selectionMode="follow"', () => {
-          beforeEach(async () => {
-            await updateTree({selectionMode: 'follow'});
+          beforeEach(() => {
+            updateTree({selectionMode: 'follow'});
           });
 
-          it('should select the focused item and deselect others on ArrowDown', async () => {
-            await updateTree({value: ['fruits']});
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should select the focused item and deselect others on ArrowDown', () => {
+            updateTree({values: ['fruits']});
+            expect(treeInstance.values()).toEqual(['fruits']);
 
-            await down();
-            expect(treeInstance.value()).toEqual(['vegetables']);
+            down();
+            expect(treeInstance.values()).toEqual(['vegetables']);
           });
 
-          it('should select the focused item and deselect others on ArrowUp', async () => {
-            await updateTree({value: ['vegetables']});
-            expect(treeInstance.value()).toEqual(['vegetables']);
+          it('should select the focused item and deselect others on ArrowUp', () => {
+            updateTree({values: ['vegetables']});
+            expect(treeInstance.values()).toEqual(['vegetables']);
 
-            await up();
-            expect(treeInstance.value()).toEqual(['fruits']);
+            up();
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
-          it('should move focus without changing selection on Ctrl+ArrowDown', async () => {
-            await updateTree({value: ['fruits']});
+          it('should move focus without changing selection on Ctrl+ArrowDown', () => {
+            updateTree({values: ['fruits']});
             expect(getFocusedTreeItemValue()).toBe('fruits');
 
-            await down({ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            down({ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
             expect(getFocusedTreeItemValue()).toBe('vegetables');
           });
 
-          it('should move focus without changing selection on Ctrl+ArrowUp', async () => {
-            await updateTree({value: ['fruits']});
+          it('should move focus without changing selection on Ctrl+ArrowUp', () => {
+            updateTree({values: ['fruits']});
 
-            await down({ctrlKey: true});
+            down({ctrlKey: true});
             expect(getFocusedTreeItemValue()).toBe('vegetables');
 
-            await up({ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            up({ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
             expect(getFocusedTreeItemValue()).toBe('fruits');
           });
 
-          it('should toggle selection of the focused item on Ctrl+Space, adding to existing selection', async () => {
-            await updateTree({value: ['fruits']});
-            await down({ctrlKey: true});
+          it('should toggle selection of the focused item on Ctrl+Space, adding to existing selection', () => {
+            updateTree({values: ['fruits']});
+            down({ctrlKey: true});
             expect(getFocusedTreeItemValue()).toBe('vegetables');
 
-            await space({ctrlKey: true});
-            expect(treeInstance.value().sort()).toEqual(['fruits', 'vegetables']);
+            space({ctrlKey: true});
+            expect(treeInstance.values().sort()).toEqual(['fruits', 'vegetables']);
 
-            await space({ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            space({ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
-          it('should toggle selection of the focused item on Ctrl+Enter, adding to existing selection', async () => {
-            await updateTree({value: ['fruits']});
-            await down({ctrlKey: true});
+          it('should toggle selection of the focused item on Ctrl+Enter, adding to existing selection', () => {
+            updateTree({values: ['fruits']});
+            down({ctrlKey: true});
             expect(getFocusedTreeItemValue()).toBe('vegetables');
 
-            await enter({ctrlKey: true});
-            expect(treeInstance.value().sort()).toEqual(['fruits', 'vegetables']);
+            enter({ctrlKey: true});
+            expect(treeInstance.values().sort()).toEqual(['fruits', 'vegetables']);
 
-            await enter({ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            enter({ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
-          it('should extend selection downwards with Shift+ArrowDown', async () => {
-            await right(); // Expands fruits
-            await updateTree({value: ['fruits']});
+          it('should extend selection downwards with Shift+ArrowDown', () => {
+            right(); // Expands fruits
+            updateTree({values: ['fruits']});
 
-            await shift();
-            await down({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['apple', 'fruits']);
+            shift();
+            down({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['apple', 'fruits']);
 
-            await down({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['apple', 'banana', 'fruits']);
+            down({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['apple', 'banana', 'fruits']);
           });
 
-          it('should extend selection upwards with Shift+ArrowUp', async () => {
-            await updateTree({value: ['grains']});
+          it('should extend selection upwards with Shift+ArrowUp', () => {
+            updateTree({values: ['grains']});
 
-            await shift();
-            await up({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['grains', 'vegetables']);
+            shift();
+            up({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['grains', 'vegetables']);
 
-            await up({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['fruits', 'grains', 'vegetables']);
+            up({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['fruits', 'grains', 'vegetables']);
           });
 
-          it('should select a range with Shift+Space, anchoring from last selected/focused item', async () => {
-            await right(); // Expands fruits
-            await updateTree({value: ['fruits']});
+          it('should select a range with Shift+Space, anchoring from last selected/focused item', () => {
+            right(); // Expands fruits
+            updateTree({values: ['fruits']});
 
-            await down({ctrlKey: true});
-            await down({ctrlKey: true});
+            down({ctrlKey: true});
+            down({ctrlKey: true});
             expect(getFocusedTreeItemValue()).toBe('banana');
 
-            await space({shiftKey: true});
-            expect(treeInstance.value().sort()).toEqual(['apple', 'banana', 'fruits']);
+            space({shiftKey: true});
+            expect(treeInstance.values().sort()).toEqual(['apple', 'banana', 'fruits']);
           });
 
-          it('Ctrl+A: select all enabled visible items; second Ctrl+A deselects all except focused', async () => {
-            await right(); // Expands fruits
-            await updateTreeItemByValue('vegetables', {disabled: true});
+          it('Ctrl+A: select all enabled visible items; second Ctrl+A deselects all except focused', () => {
+            right(); // Expands fruits
+            updateTreeItemByValue('vegetables', {disabled: true});
 
-            await keydown('A', {ctrlKey: true});
-            expect(treeInstance.value().sort()).toEqual([
+            keydown('A', {ctrlKey: true});
+            expect(treeInstance.values().sort()).toEqual([
               'apple',
               'banana',
               'berries',
@@ -1046,69 +970,68 @@ describe('Tree', () => {
               'grains',
             ]);
 
-            await keydown('A', {ctrlKey: true});
-            expect(treeInstance.value()).toEqual(['fruits']);
+            keydown('A', {ctrlKey: true});
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
 
-          it('typeahead should select the focused item and deselect others', async () => {
-            await updateTree({value: ['fruits']});
-            await type('V');
-            expect(treeInstance.value()).toEqual(['vegetables']);
+          it('typeahead should select the focused item and deselect others', () => {
+            updateTree({values: ['fruits']});
+            type('V');
+            expect(treeInstance.values()).toEqual(['vegetables']);
             expect(getFocusedTreeItemValue()).toBe('vegetables');
           });
 
           describe('selectable=false', () => {
-            it('should not select an item on ArrowDown', async () => {
-              await updateTreeItemByValue('vegetables', {selectable: false});
-              await down();
-              expect(treeInstance.value()).not.toContain('vegetables');
-              expect(treeInstance.value()).toEqual([]);
+            it('should not select an item on ArrowDown', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              down();
+              expect(treeInstance.values()).not.toContain('vegetables');
+              expect(treeInstance.values()).toEqual([]);
             });
 
-            it('should not toggle selection of the focused item on Ctrl+Space', async () => {
-              await updateTreeItemByValue('fruits', {selectable: false});
-              await space({ctrlKey: true});
-              expect(treeInstance.value()).toEqual([]);
+            it('should not toggle selection of the focused item on Ctrl+Space', () => {
+              updateTreeItemByValue('fruits', {selectable: false});
+              space({ctrlKey: true});
+              expect(treeInstance.values()).toEqual([]);
             });
 
-            it('should not extend selection with Shift+ArrowDown', async () => {
-              await updateTreeItemByValue('vegetables', {selectable: false});
-              await shift();
-              await down({shiftKey: true});
-              await down({shiftKey: true});
-              expect(treeInstance.value()).not.toContain('vegetables');
-              expect(treeInstance.value().sort()).toEqual(['fruits', 'grains']);
+            it('should not extend selection with Shift+ArrowDown', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              shift();
+              down({shiftKey: true});
+              down({shiftKey: true});
+              expect(treeInstance.values()).not.toContain('vegetables');
+              expect(treeInstance.values().sort()).toEqual(['fruits', 'grains']);
             });
 
-            it('typeahead should not select the focused item', async () => {
-              await updateTreeItemByValue('vegetables', {selectable: false});
-              await type('v');
+            it('typeahead should not select the focused item', () => {
+              updateTreeItemByValue('vegetables', {selectable: false});
+              type('v');
               expect(getFocusedTreeItemValue()).toBe('vegetables');
-              expect(treeInstance.value()).not.toContain('vegetables');
+              expect(treeInstance.values()).not.toContain('vegetables');
             });
           });
 
-          it('should not select disabled items during Shift+ArrowKey navigation even if softDisabled is true', async () => {
-            await right(); // Expands fruits
-            await updateTreeItemByValue('banana', {disabled: true});
-            await updateTree({value: ['apple'], softDisabled: true});
-            await down(); // Focus moves to apple
+          it('should not select disabled items during Shift+ArrowKey navigation even if softDisabled is true', () => {
+            right(); // Expands fruits
+            updateTreeItemByValue('banana', {disabled: true});
+            updateTree({values: ['apple'], softDisabled: true});
             expect(getFocusedTreeItemValue()).toBe('apple');
 
-            await keydown('Shift');
-            await down({shiftKey: true});
+            keydown('Shift');
+            down({shiftKey: true});
             expect(getFocusedTreeItemValue()).toBe('banana');
-            expect(treeInstance.value().sort()).toEqual(['apple']);
+            expect(treeInstance.values().sort()).toEqual(['apple']);
 
-            await down({shiftKey: true}); // Focus 'berries'
+            down({shiftKey: true}); // Focus 'berries'
             expect(getFocusedTreeItemValue()).toBe('berries');
-            expect(treeInstance.value().sort()).toEqual(['apple', 'berries']);
+            expect(treeInstance.values().sort()).toEqual(['apple', 'berries']);
           });
 
-          it('should not change selection if tree is disabled', async () => {
-            await updateTree({value: ['fruits'], disabled: true});
-            await down();
-            expect(treeInstance.value()).toEqual(['fruits']);
+          it('should not change selection if tree is disabled', () => {
+            updateTree({values: ['fruits'], disabled: true});
+            down();
+            expect(treeInstance.values()).toEqual(['fruits']);
           });
         });
       });
@@ -1116,9 +1039,9 @@ describe('Tree', () => {
   });
 
   describe('expansion and collapse', () => {
-    it('should expand items by setting expanded input', async () => {
-      await setupTestTree();
-      await updateTree({
+    it('should expand items by setting expanded input', () => {
+      setupTestTree();
+      updateTree({
         nodes: [
           {
             value: 'fruits',
@@ -1146,9 +1069,9 @@ describe('Tree', () => {
       expect(berriesEl.getAttribute('aria-expanded')).toBe('true');
     });
 
-    it('should not affect selected item when collapse', async () => {
-      await setupTestTree();
-      await updateTree({
+    it('should not affect selected item when collapse', () => {
+      setupTestTree();
+      updateTree({
         nodes: [
           {
             value: 'fruits',
@@ -1174,105 +1097,105 @@ describe('Tree', () => {
       const berriesEl = getTreeItemElementByValue('berries')!;
       const fruits = getTreeItemElementByValue('fruits')!;
 
-      await click(blueberryEl);
-      expect(treeInstance.value()).toEqual(['blueberry']);
+      click(blueberryEl);
+      expect(treeInstance.values()).toEqual(['blueberry']);
 
-      await left();
-      await left(); // collapse berries
+      left();
+      left(); // collapse berries
       expect(berriesEl.getAttribute('aria-expanded')).toBe('false');
-      expect(treeInstance.value()).toEqual(['blueberry']);
+      expect(treeInstance.values()).toEqual(['blueberry']);
 
-      await left();
-      await left(); // collapse fruits
+      left();
+      left(); // collapse fruits
       expect(fruits.getAttribute('aria-expanded')).toBe('false');
-      expect(treeInstance.value()).toEqual(['blueberry']);
+      expect(treeInstance.values()).toEqual(['blueberry']);
     });
 
     describe('LTR', () => {
-      beforeEach(async () => {
-        await setupTestTree();
+      beforeEach(() => {
+        setupTestTree();
       });
 
       describe('orientation="vertical"', () => {
-        beforeEach(async () => {
-          await updateTree({orientation: 'vertical'});
+        beforeEach(() => {
+          updateTree({orientation: 'vertical'});
         });
 
-        it('should expand a collapsed item with ArrowRight', async () => {
+        it('should expand a collapsed item with ArrowRight', () => {
           const fruitsEl = getTreeItemElementByValue('fruits')!;
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
 
-          await right();
+          right();
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
         });
 
-        it('should move focus to first child if ArrowRight on an expanded item', async () => {
-          await right(); // Expands fruits
+        it('should move focus to first child if ArrowRight on an expanded item', () => {
+          right(); // Expands fruits
           expect(getFocusedTreeItemValue()).toBe('fruits');
 
-          await right();
+          right();
           expect(getFocusedTreeItemValue()).toBe('apple');
         });
 
-        it('should collapse an expanded item with ArrowLeft', async () => {
-          await right(); // Expands fruits
+        it('should collapse an expanded item with ArrowLeft', () => {
+          right(); // Expands fruits
           const fruitsEl = getTreeItemElementByValue('fruits')!;
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
-          await left();
+          left();
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
         });
 
-        it('should move focus to parent if ArrowLeft on a collapsed non-root item', async () => {
-          await right(); // Expands fruits
-          await right(); // Focus apple (child of fruits)
+        it('should move focus to parent if ArrowLeft on a collapsed non-root item', () => {
+          right(); // Expands fruits
+          right(); // Focus apple (child of fruits)
           expect(getFocusedTreeItemValue()).toBe('apple');
 
-          await left();
+          left();
           expect(getFocusedTreeItemValue()).toBe('fruits');
         });
       });
 
       describe('orientation="horizontal"', () => {
-        beforeEach(async () => {
-          await updateTree({orientation: 'horizontal'});
+        beforeEach(() => {
+          updateTree({orientation: 'horizontal'});
         });
 
-        it('should expand a collapsed item with ArrowDown', async () => {
-          await updateTree({orientation: 'horizontal'});
+        it('should expand a collapsed item with ArrowDown', () => {
+          updateTree({orientation: 'horizontal'});
           const fruitsEl = getTreeItemElementByValue('fruits')!;
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
-          await down();
+          down();
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
         });
 
-        it('should move focus to first child if ArrowDown on an expanded item', async () => {
-          await updateTree({orientation: 'horizontal'});
+        it('should move focus to first child if ArrowDown on an expanded item', () => {
+          updateTree({orientation: 'horizontal'});
           expect(getFocusedTreeItemValue()).toBe('fruits');
-          await down();
-          await down();
+          down();
+          down();
           expect(getFocusedTreeItemValue()).toBe('apple');
         });
 
-        it('should collapse an expanded item with ArrowUp', async () => {
-          await updateTree({orientation: 'horizontal'});
-          await down(); // Expands fruits
+        it('should collapse an expanded item with ArrowUp', () => {
+          updateTree({orientation: 'horizontal'});
+          down(); // Expands fruits
           const fruitsEl = getTreeItemElementByValue('fruits')!;
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
-          await up();
+          up();
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
         });
 
-        it('should move focus to parent if ArrowUp on a collapsed non-root item', async () => {
-          await updateTree({orientation: 'horizontal'});
-          await down(); // Expands fruits
-          await down();
+        it('should move focus to parent if ArrowUp on a collapsed non-root item', () => {
+          updateTree({orientation: 'horizontal'});
+          down(); // Expands fruits
+          down();
           expect(getFocusedTreeItemValue()).toBe('apple');
-          await up();
+          up();
           expect(getFocusedTreeItemValue()).toBe('fruits');
         });
       });
 
-      it('should expand all sibling items with Shift + *', async () => {
+      it('should expand all sibling items with Shift + *', () => {
         const fruitsEl = getTreeItemElementByValue('fruits')!;
         const vegetablesEl = getTreeItemElementByValue('vegetables')!;
         const grainsEl = getTreeItemElementByValue('grains')!;
@@ -1281,7 +1204,7 @@ describe('Tree', () => {
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
         expect(vegetablesEl.getAttribute('aria-expanded')).toBe('false');
 
-        await keydown('*', {shiftKey: true});
+        keydown('*', {shiftKey: true});
 
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
         expect(vegetablesEl.getAttribute('aria-expanded')).toBe('true');
@@ -1289,90 +1212,90 @@ describe('Tree', () => {
         expect(dairyEl.hasAttribute('aria-expanded')).toBe(false);
       });
 
-      it('should toggle expansion on pointerdown (click) for an expandable item', async () => {
+      it('should toggle expansion on pointerdown (click) for an expandable item', () => {
         const fruitsEl = getTreeItemElementByValue('fruits')!;
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
 
-        await click(fruitsEl);
+        click(fruitsEl);
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
         expect(getFocusedTreeItemValue()).toBe('fruits');
 
-        await click(fruitsEl);
+        click(fruitsEl);
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should not expand a non-expandable item on click', async () => {
+      it('should not expand a non-expandable item on click', () => {
         const grainsEl = getTreeItemElementByValue('grains')!;
         expect(grainsEl.hasAttribute('aria-expanded')).toBe(false);
 
-        await click(grainsEl);
+        click(grainsEl);
         expect(grainsEl.hasAttribute('aria-expanded')).toBe(false);
         expect(getFocusedTreeItemValue()).toBe('grains');
       });
 
-      it('should not expand a non-expandable item with expand key', async () => {
+      it('should not expand a non-expandable item with expand key', () => {
         const grainsEl = getTreeItemElementByValue('grains')!;
-        await down();
-        await down();
+        down();
+        down();
         expect(getFocusedTreeItemValue()).toBe('grains');
 
-        await right();
+        right();
         expect(grainsEl.hasAttribute('aria-expanded')).toBe(false);
         expect(getFocusedTreeItemValue()).toBe('grains');
       });
 
-      it('should not expand/collapse if item is disabled', async () => {
-        await updateTreeItemByValue('fruits', {disabled: true});
+      it('should not expand/collapse if item is disabled', () => {
+        updateTreeItemByValue('fruits', {disabled: true});
         const fruitsEl = getTreeItemElementByValue('fruits')!;
 
-        await click(fruitsEl);
+        click(fruitsEl);
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
 
-        await right();
+        right();
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should not expand/collapse if tree is disabled', async () => {
-        await updateTree({disabled: true});
+      it('should not expand/collapse if tree is disabled', () => {
+        updateTree({disabled: true});
         const fruitsEl = getTreeItemElementByValue('fruits')!;
 
-        await click(fruitsEl);
+        click(fruitsEl);
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
 
-        await right();
+        right();
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
       });
 
-      it('should do nothing on collapseKey if item is collapsed and is a root item', async () => {
+      it('should do nothing on collapseKey if item is collapsed and is a root item', () => {
         const fruitsEl = getTreeItemElementByValue('fruits')!;
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
         expect(getFocusedTreeItemValue()).toBe('fruits');
 
-        await left();
+        left();
         expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
         expect(getFocusedTreeItemValue()).toBe('fruits');
       });
     });
 
     describe('RTL', () => {
-      beforeEach(async () => {
-        await setupTestTree('rtl');
+      beforeEach(() => {
+        setupTestTree('rtl');
       });
 
       describe('orientation="vertical"', () => {
-        it('should expand a collapsed item with ArrowLeft', async () => {
+        it('should expand a collapsed item with ArrowLeft', () => {
           const fruitsEl = getTreeItemElementByValue('fruits')!;
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
-          await left();
+          left();
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
         });
 
-        it('should collapse an expanded item with ArrowRight', async () => {
-          await left();
+        it('should collapse an expanded item with ArrowRight', () => {
+          left();
           const fruitsEl = getTreeItemElementByValue('fruits')!;
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('true');
 
-          await right();
+          right();
           expect(fruitsEl.getAttribute('aria-expanded')).toBe('false');
         });
       });
@@ -1385,234 +1308,215 @@ describe('Tree', () => {
 
       describe(`focusMode="${focusMode}"`, () => {
         describe('LTR', () => {
-          beforeEach(async () => {
-            await setupTestTree('ltr');
-            await updateTree({focusMode});
+          beforeEach(() => {
+            setupTestTree('ltr');
+            updateTree({focusMode});
           });
 
           describe('vertical orientation', () => {
-            beforeEach(async () => {
-              await updateTree({orientation: 'vertical'});
+            beforeEach(() => {
+              updateTree({orientation: 'vertical'});
             });
 
-            it('should move focus to the next visible item on ArrowDown', async () => {
+            it('should move focus to the next visible item on ArrowDown', () => {
               expect(isFocused('fruits')).toBe(true);
-              await right(); // Expands fruits
-              await down();
+              right(); // Expands fruits
+              down();
               expect(isFocused('apple')).toBe(true);
-              await down();
+              down();
               expect(isFocused('banana')).toBe(true);
             });
 
-            it('should move focus to the previous visible item on ArrowUp', async () => {
+            it('should move focus to the previous visible item on ArrowUp', () => {
               expect(isFocused('fruits')).toBe(true);
-              await right(); // Expands fruits
-              await down();
-              await down();
+              right(); // Expands fruits
+              down();
+              down();
               expect(isFocused('banana')).toBe(true);
-              await up();
+              up();
               expect(isFocused('apple')).toBe(true);
-              await up();
+              up();
               expect(isFocused('fruits')).toBe(true);
             });
 
-            it('should skip disabled items with ArrowDown if softDisabled=false', async () => {
-              await right(); // Expands fruits
-              await updateTreeItemByValue('apple', {disabled: true});
-              await updateTree({softDisabled: false});
+            it('should skip disabled items with ArrowDown if softDisabled=false', () => {
+              right(); // Expands fruits
+              updateTreeItemByValue('apple', {disabled: true});
+              updateTree({softDisabled: false});
 
               expect(isFocused('fruits')).toBe(true);
-              await down();
+              down();
               expect(isFocused('banana')).toBe(true);
             });
 
-            it('should not skip disabled items with ArrowDown if softDisabled=true', async () => {
-              await right(); // Expands fruits
-              await updateTreeItemByValue('apple', {disabled: true});
-              await updateTree({softDisabled: true});
+            it('should not skip disabled items with ArrowDown if softDisabled=true', () => {
+              right(); // Expands fruits
+              updateTreeItemByValue('apple', {disabled: true});
+              updateTree({softDisabled: true});
 
               expect(isFocused('fruits')).toBe(true);
-              await down();
+              down();
               expect(isFocused('apple')).toBe(true);
             });
 
-            it('should wrap focus from last to first with ArrowDown when wrap is true', async () => {
-              await updateTree({wrap: true});
-              await end();
+            it('should wrap focus from last to first with ArrowDown when wrap is true', () => {
+              updateTree({wrap: true});
+              end();
               expect(isFocused('dairy')).toBe(true);
-              await down();
+              down();
               expect(isFocused('fruits')).toBe(true);
             });
 
-            it('should not wrap focus from last to first with ArrowDown when wrap is false', async () => {
-              await updateTree({wrap: false});
-              await end();
+            it('should not wrap focus from last to first with ArrowDown when wrap is false', () => {
+              updateTree({wrap: false});
+              end();
               expect(isFocused('dairy')).toBe(true);
-              await down();
+              down();
               expect(isFocused('dairy')).toBe(true);
             });
           });
 
           describe('horizontal orientation', () => {
-            beforeEach(async () => {
-              await updateTree({orientation: 'horizontal'});
+            beforeEach(() => {
+              updateTree({orientation: 'horizontal'});
             });
 
-            it('should move focus to the next visible item on ArrowRight', async () => {
+            it('should move focus to the next visible item on ArrowRight', () => {
               expect(isFocused('fruits')).toBe(true);
-              await right();
+              right();
               expect(isFocused('vegetables')).toBe(true);
             });
 
-            it('should move focus to the previous visible item on ArrowLeft', async () => {
-              await right();
+            it('should move focus to the previous visible item on ArrowLeft', () => {
+              right();
               expect(isFocused('vegetables')).toBe(true);
-              await left();
+              left();
               expect(isFocused('fruits')).toBe(true);
             });
           });
 
-          it('should move focus to the last enabled visible item on End (softDisabled="false")', async () => {
-            await updateTree({softDisabled: false});
-            await right(); // Expands fruits
-            await updateTreeItemByValue('dairy', {disabled: true});
-            await updateTreeItemByValue('grains', {disabled: true});
-            await updateTreeItemByValue('vegetables', {disabled: true});
-            await end();
+          it('should move focus to the last enabled visible item on End (softDisabled="false")', () => {
+            updateTree({softDisabled: false});
+            right(); // Expands fruits
+            updateTreeItemByValue('dairy', {disabled: true});
+            updateTreeItemByValue('grains', {disabled: true});
+            updateTreeItemByValue('vegetables', {disabled: true});
+            end();
             expect(isFocused('berries')).toBe(true);
           });
 
-          it('should move focus to the first enabled visible item on Home (softDisabled="false")', async () => {
-            await updateTree({softDisabled: false});
-            await end();
-            await updateTreeItemByValue('fruits', {disabled: true});
-            await home();
+          it('should move focus to the first enabled visible item on Home (softDisabled="false")', () => {
+            updateTree({softDisabled: false});
+            end();
+            updateTreeItemByValue('fruits', {disabled: true});
+            home();
             expect(isFocused('vegetables')).toBe(true);
           });
         });
 
         describe('RTL', () => {
-          beforeEach(async () => {
-            await setupTestTree('rtl');
-            await updateTree({focusMode});
+          beforeEach(() => {
+            setupTestTree('rtl');
+            updateTree({focusMode});
           });
 
           describe('vertical orientation', () => {
-            beforeEach(async () => {
-              await updateTree({orientation: 'vertical'});
+            beforeEach(() => {
+              updateTree({orientation: 'vertical'});
             });
 
-            it('should move focus to the next visible item on ArrowDown', async () => {
+            it('should move focus to the next visible item on ArrowDown', () => {
               expect(isFocused('fruits')).toBe(true);
-              await down();
+              down();
               expect(isFocused('vegetables')).toBe(true);
             });
 
-            it('should move focus to the previous visible item on ArrowUp', async () => {
-              await down();
+            it('should move focus to the previous visible item on ArrowUp', () => {
+              down();
               expect(isFocused('vegetables')).toBe(true);
-              await up();
+              up();
               expect(isFocused('fruits')).toBe(true);
             });
           });
 
           describe('horizontal orientation', () => {
-            beforeEach(async () => {
-              await updateTree({orientation: 'horizontal'});
+            beforeEach(() => {
+              updateTree({orientation: 'horizontal'});
             });
 
-            it('should move focus to the next visible item on ArrowLeft', async () => {
+            it('should move focus to the next visible item on ArrowLeft', () => {
               expect(isFocused('fruits')).toBe(true);
-              await left();
+              left();
               expect(isFocused('vegetables')).toBe(true);
             });
 
-            it('should move focus to the previous visible item on ArrowRight', async () => {
-              await left();
+            it('should move focus to the previous visible item on ArrowRight', () => {
+              left();
               expect(isFocused('vegetables')).toBe(true);
-              await right();
+              right();
               expect(isFocused('fruits')).toBe(true);
             });
           });
         });
 
         describe('pointer navigation', () => {
-          beforeEach(async () => await setupTestTree());
+          beforeEach(() => setupTestTree());
 
-          it('should move focus to the clicked item', async () => {
+          it('should move focus to the clicked item', () => {
             const vegetablesEl = getTreeItemElementByValue('vegetables')!;
-            await click(vegetablesEl);
+            click(vegetablesEl);
             expect(isFocused('vegetables')).toBe(true);
           });
 
-          it('should move focus to the clicked disabled item if softDisabled=true', async () => {
-            await updateTreeItemByValue('vegetables', {disabled: true});
-            await updateTree({softDisabled: true});
+          it('should move focus to the clicked disabled item if softDisabled=true', () => {
+            updateTreeItemByValue('vegetables', {disabled: true});
+            updateTree({softDisabled: true});
             const vegetablesEl = getTreeItemElementByValue('vegetables')!;
-            await click(vegetablesEl);
+            click(vegetablesEl);
             expect(isFocused('vegetables')).toBe(true);
           });
         });
 
         describe('typeahead functionality', () => {
-          beforeEach(async () => await setupTestTree()); // LTR by default
+          beforeEach(() => setupTestTree()); // LTR by default
 
-          it('should focus the first matching visible item when typing characters', async () => {
-            await right(); // Expands fruits
-            await type('Ba');
+          it('should focus the first matching visible item when typing characters', () => {
+            right(); // Expands fruits
+            type('Ba');
             expect(isFocused('banana')).toBe(true);
           });
 
-          it('should select the focused item if selectionMode is "follow"', async () => {
-            await updateTree({selectionMode: 'follow'});
-            await type('Gr');
+          it('should select the focused item if selectionMode is "follow"', () => {
+            updateTree({selectionMode: 'follow'});
+            type('Gr');
             expect(isFocused('grains')).toBe(true);
-            expect(treeInstance.value()).toEqual(['grains']);
+            expect(treeInstance.values()).toEqual(['grains']);
           });
 
-          it('should not select the focused item if selectionMode is "explicit"', async () => {
-            await updateTree({selectionMode: 'explicit'});
-            await type('Gr');
+          it('should not select the focused item if selectionMode is "explicit"', () => {
+            updateTree({selectionMode: 'explicit'});
+            type('Gr');
             expect(isFocused('grains')).toBe(true);
-            expect(treeInstance.value()).toEqual([]);
+            expect(treeInstance.values()).toEqual([]);
           });
 
-          it('should skip disabled items with typeahead if softDisabled=false', async () => {
-            await right(); // Expands fruits
-            await updateTreeItemByValue('banana', {disabled: true});
-            await updateTree({softDisabled: false});
-            await type('B');
+          it('should skip disabled items with typeahead if softDisabled=false', () => {
+            right(); // Expands fruits
+            updateTreeItemByValue('banana', {disabled: true});
+            updateTree({softDisabled: false});
+            type('B');
             expect(isFocused('berries')).toBe(true);
           });
 
-          it('should focus disabled items with typeahead if softDisabled=true', async () => {
-            await updateTreeItemByValue('vegetables', {disabled: true});
-            await updateTree({softDisabled: true});
-            await type('V');
+          it('should focus disabled items with typeahead if softDisabled=true', () => {
+            updateTreeItemByValue('vegetables', {disabled: true});
+            updateTree({softDisabled: true});
+            type('V');
             expect(isFocused('vegetables')).toBe(true);
           });
         });
       });
     }
-  });
-
-  describe('item mutations and focus stability', () => {
-    it('should recover focus by shifting to the default state if the active item is removed', async () => {
-      await setupTestTree();
-      await updateTree({focusMode: 'activedescendant'});
-
-      const vegetablesEl = getTreeItemElementByValue('vegetables')!;
-      await click(vegetablesEl);
-      expect(getFocusedTreeItemValue()).toBe('vegetables');
-
-      const updatedNodes = testComponent.nodes().filter(n => n.value !== 'vegetables');
-      testComponent.nodes.set(updatedNodes);
-      await fixture.whenStable();
-      await waitForMicrotasks();
-      defineTestVariables();
-
-      expect(getFocusedTreeItemValue()).toBe('fruits');
-    });
   });
 });
 
@@ -1636,10 +1540,9 @@ interface TestTreeNode<V = string> {
       [softDisabled]="softDisabled()"
       [orientation]="orientation()"
       [disabled]="disabled()"
-      [(value)]="value"
+      [(values)]="values"
       [nav]="nav()"
       [currentType]="currentType()"
-      [tabIndex]="tabIndex()"
       #tree="ngTree"
     >
       @for (node of nodes(); track node.value) {
@@ -1676,7 +1579,6 @@ interface TestTreeNode<V = string> {
     </ng-template>
   `,
   imports: [Tree, TreeItem, TreeItemGroup, NgTemplateOutlet],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestTreeComponent {
   nodes = signal<TestTreeNode[]>([
@@ -1707,7 +1609,7 @@ class TestTreeComponent {
     {value: 'grains', label: 'Grains'},
     {value: 'dairy', label: 'Dairy'},
   ]);
-  value = signal<string[]>([]);
+  values = signal<string[]>([]);
   disabled = signal(false);
   orientation = signal<'vertical' | 'horizontal'>('vertical');
   multi = signal(false);
@@ -1717,29 +1619,4 @@ class TestTreeComponent {
   selectionMode = signal<'explicit' | 'follow'>('explicit');
   nav = signal(false);
   currentType = signal('page' as 'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false');
-  tabIndex = signal<number | undefined>(undefined);
 }
-
-@Component({
-  template: `
-    <ul ngTree #tree="ngTree">
-      <li ngTreeItem [parent]="tree" value="item0">Item 0</li>
-      <li ngTreeItem [parent]="tree" value="item0">Item 0 Copy</li>
-    </ul>
-  `,
-  imports: [Tree, TreeItem],
-  changeDetection: ChangeDetectionStrategy.Eager,
-})
-class TreeWithDuplicateValues {}
-
-@Component({
-  template: `
-    <ul ngTree [multi]="false" [value]="['item0', 'item1']" #tree="ngTree">
-      <li ngTreeItem [parent]="tree" value="item0">Item 0</li>
-      <li ngTreeItem [parent]="tree" value="item1">Item 1</li>
-    </ul>
-  `,
-  imports: [Tree, TreeItem],
-  changeDetection: ChangeDetectionStrategy.Eager,
-})
-class SingleSelectTreeWithMultipleValues {}

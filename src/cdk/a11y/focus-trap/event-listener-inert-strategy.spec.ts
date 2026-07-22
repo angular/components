@@ -6,9 +6,8 @@ import {
   Type,
   ViewChild,
   inject,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {patchElementFocus} from '../../testing/private';
 import {
   ConfigurableFocusTrap,
@@ -22,48 +21,47 @@ describe('EventListenerFocusTrapInertStrategy', () => {
     {provide: FOCUS_TRAP_INERT_STRATEGY, useValue: new EventListenerFocusTrapInertStrategy()},
   ];
 
-  it('refocuses the first FocusTrap element when focus moves outside the FocusTrap', async () => {
+  it('refocuses the first FocusTrap element when focus moves outside the FocusTrap', fakeAsync(() => {
     const fixture = createComponent(SimpleFocusTrap, providers);
     const componentInstance = fixture.componentInstance;
     fixture.detectChanges();
 
-    // Focus something outside the FocusTrap.
-    document.body.focus();
-    await new Promise(resolve => setTimeout(resolve, 10));
+    componentInstance.outsideFocusableElement.nativeElement.focus();
+    flush();
 
     expect(componentInstance.activeElement)
       .withContext('Expected first focusable element to be focused')
       .toBe(componentInstance.firstFocusableElement.nativeElement);
-  });
+  }));
 
-  it('does not intercept focus when focus moves to another element in the FocusTrap', async () => {
+  it('does not intercept focus when focus moves to another element in the FocusTrap', fakeAsync(() => {
     const fixture = createComponent(SimpleFocusTrap, providers);
     const componentInstance = fixture.componentInstance;
     fixture.detectChanges();
-    await fixture.whenStable();
+    flush();
 
     componentInstance.secondFocusableElement.nativeElement.focus();
-    await fixture.whenStable();
+    flush();
 
     expect(componentInstance.activeElement)
       .withContext('Expected second focusable element to be focused')
       .toBe(componentInstance.secondFocusableElement.nativeElement);
-  });
+  }));
 
-  it('should not intercept focus if it moved outside the trap and back in again', async () => {
+  it('should not intercept focus if it moved outside the trap and back in again', fakeAsync(() => {
     const fixture = createComponent(SimpleFocusTrap, providers);
     fixture.detectChanges();
-    await fixture.whenStable();
+    flush();
     const {secondFocusableElement, outsideFocusableElement} = fixture.componentInstance;
 
     outsideFocusableElement.nativeElement.focus();
     secondFocusableElement.nativeElement.focus();
-    await fixture.whenStable();
+    flush();
 
     expect(fixture.componentInstance.activeElement)
       .withContext('Expected second focusable element to be focused')
       .toBe(secondFocusableElement.nativeElement);
-  });
+  }));
 });
 
 function createComponent<T>(
@@ -83,7 +81,6 @@ function createComponent<T>(
       <button #secondFocusable>SAVE</button>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleFocusTrap implements AfterViewInit {
   private _focusTrapFactory = inject(ConfigurableFocusTrapFactory);

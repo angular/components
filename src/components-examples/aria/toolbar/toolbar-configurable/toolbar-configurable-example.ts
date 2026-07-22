@@ -5,7 +5,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar';
 import {
-  ToolbarCombobox,
+  SimpleCombobox,
   SimpleToolbarButton,
   SimpleToolbarRadioButton,
   SimpleToolbarToggleButton,
@@ -20,7 +20,7 @@ import {
     Toolbar,
     ToolbarWidget,
     ToolbarWidgetGroup,
-    ToolbarCombobox,
+    SimpleCombobox,
     SimpleToolbarButton,
     SimpleToolbarRadioButton,
     SimpleToolbarToggleButton,

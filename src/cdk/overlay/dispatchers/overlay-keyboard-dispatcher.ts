@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, NgZone, RendererFactory2, inject} from '@angular/core';
+import {Injectable, NgZone, RendererFactory2, inject} from '@angular/core';
 import {BaseOverlayDispatcher} from './base-overlay-dispatcher';
 import type {OverlayRef} from '../overlay-ref';
 
@@ -15,7 +15,7 @@ import type {OverlayRef} from '../overlay-ref';
  * if any. It maintains a list of attached overlays to determine best suited overlay based
  * on event target and order of overlay opens.
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
   private _ngZone = inject(NgZone);
   private _renderer = inject(RendererFactory2).createRenderer(null, null);

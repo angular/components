@@ -1,4 +1,4 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -45,7 +45,6 @@ describe('MatProgressSpinnerHarness', () => {
     <mat-spinner></mat-spinner>
   `,
   imports: [MatProgressSpinnerModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressSpinnerHarnessTest {
   value = signal(0);

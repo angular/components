@@ -5,9 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { Binding } from '@angular/core';
 import { ComponentRef } from '@angular/core';
-import { DirectiveWithBindings } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
@@ -218,7 +216,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     getMenu(): Menu | undefined;
     _handleClick(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges<this>): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;
@@ -357,13 +355,15 @@ export interface MenuStackItem {
 }
 
 // @public
-export class MenuTracker {
+class MenuTracker {
     update(trigger: CdkMenuTriggerBase): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MenuTracker, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<MenuTracker>;
 }
+export { MenuTracker as ContextMenuTracker }
+export { MenuTracker }
 
 // @public
 export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER: (orientation: "vertical" | "horizontal") => {

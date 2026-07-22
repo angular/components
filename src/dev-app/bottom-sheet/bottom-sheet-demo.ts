@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, TemplateRef, ViewChild, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   MatBottomSheet,
@@ -41,6 +41,7 @@ const defaultConfig = new MatBottomSheetConfig();
     MatSelectModule,
     MatListModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BottomSheetDemo {
   private _bottomSheet = inject(MatBottomSheet);
@@ -76,6 +77,7 @@ export class BottomSheetDemo {
     </mat-nav-list>
   `,
   imports: [MatListModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExampleBottomSheet {
   private _bottomSheet = inject(MatBottomSheetRef);

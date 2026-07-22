@@ -12,7 +12,7 @@ import {
   ElementRef,
   EventEmitter,
   inject,
-  Service,
+  Injectable,
   NgZone,
   OnDestroy,
   OnInit,
@@ -46,7 +46,7 @@ const listenerOptions = {passive: true};
  * Based on the following blog post:
  * https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class AutofillMonitor implements OnDestroy {
   private _platform = inject(Platform);
   private _ngZone = inject(NgZone);
@@ -54,6 +54,9 @@ export class AutofillMonitor implements OnDestroy {
 
   private _styleLoader = inject(_CdkPrivateStyleLoader);
   private _monitoredElements = new Map<Element, MonitoredElementInfo>();
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Monitor for changes in the autofill state of the given input element.
@@ -155,6 +158,9 @@ export class CdkAutofill implements OnDestroy, OnInit {
 
   /** Emits when the autofill state of the element changes. */
   @Output() readonly cdkAutofill = new EventEmitter<AutofillEvent>();
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngOnInit() {
     this._autofillMonitor

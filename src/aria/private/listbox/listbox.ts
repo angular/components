@@ -7,7 +7,7 @@
  */
 
 import {OptionPattern} from './option';
-import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
+import {KeyboardEventManager, PointerEventManager, Modifier} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs} from '../behaviors/list/list';
 
@@ -22,40 +22,37 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 
 /** Controls the state of a listbox. */
 export class ListboxPattern<V> {
-  readonly listBehavior: List<OptionPattern<V>, V>;
-
-  /** Whether the listbox has been interacted with. */
-  readonly hasBeenInteracted = signal(false);
+  listBehavior: List<OptionPattern<V>, V>;
 
   /** Whether the list is vertically or horizontally oriented. */
-  readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+  orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether the listbox is disabled. */
-  readonly disabled = computed(() => this.listBehavior.disabled());
+  disabled = computed(() => this.listBehavior.disabled());
 
   /** Whether the listbox is readonly. */
-  readonly readonly: SignalLike<boolean>;
+  readonly: SignalLike<boolean>;
 
   /** The tab index of the listbox. */
-  readonly tabIndex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabIndex());
+  tabIndex: SignalLike<-1 | 0> = computed(() => this.listBehavior.tabIndex());
 
   /** The id of the current active item. */
-  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
+  activeDescendant = computed(() => this.listBehavior.activeDescendant());
 
   /** Whether multiple items in the list can be selected at once. */
   multi: SignalLike<boolean>;
 
   /** The number of items in the listbox. */
-  readonly setsize = computed(() => this.inputs.items().length);
+  setsize = computed(() => this.inputs.items().length);
 
   /** Whether the listbox selection follows focus. */
-  readonly followFocus = computed(() => this.inputs.selectionMode() === 'follow');
+  followFocus = computed(() => this.inputs.selectionMode() === 'follow');
 
   /** Whether the listbox should wrap. Used to disable wrapping while range selecting. */
-  readonly wrap = signal(true);
+  wrap = signal(true);
 
   /** The key used to navigate to the previous item in the list. */
-  readonly prevKey = computed(() => {
+  prevKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowUp';
     }
@@ -63,7 +60,7 @@ export class ListboxPattern<V> {
   });
 
   /** The key used to navigate to the next item in the list. */
-  readonly nextKey = computed(() => {
+  nextKey = computed(() => {
     if (this.inputs.orientation() === 'vertical') {
       return 'ArrowDown';
     }
@@ -71,13 +68,13 @@ export class ListboxPattern<V> {
   });
 
   /** Represents the space key. Does nothing when the user is actively using typeahead. */
-  readonly dynamicSpaceKey = computed(() => (this.listBehavior.isTyping() ? '' : ' '));
+  dynamicSpaceKey = computed(() => (this.listBehavior.isTyping() ? '' : ' '));
 
   /** The regexp used to decide if a key should trigger typeahead. */
-  readonly typeaheadRegexp = /^.$/;
+  typeaheadRegexp = /^.$/;
 
   /** The keydown event manager for the listbox. */
-  readonly keydown = computed(() => {
+  keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
     if (this.readonly()) {
@@ -163,9 +160,9 @@ export class ListboxPattern<V> {
     return manager;
   });
 
-  /** The click event manager for the listbox. */
-  readonly clickManager = computed(() => {
-    const manager = new ClickEventManager<PointerEvent>();
+  /** The pointerdown event manager for the listbox. */
+  pointerdown = computed(() => {
+    const manager = new PointerEventManager();
 
     if (this.readonly()) {
       return manager.on(e => this.listBehavior.goto(this._getItem(e)!));
@@ -209,22 +206,10 @@ export class ListboxPattern<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    if (!this.inputs.multi() && this.inputs.value().length > 1) {
+    if (!this.inputs.multi() && this.inputs.values().length > 1) {
       violations.push(
-        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.value().join(', ')}`,
+        `A single-select listbox should not have multiple selected options. Selected options: ${this.inputs.values().join(', ')}`,
       );
-    }
-
-    const values = this.inputs.items().map(o => o.value());
-    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
-    if (duplicates.length > 0) {
-      violations.push(`Duplicate option value '${duplicates[0]}' detected inside ngListbox.`);
-    }
-
-    const ids = this.inputs.items().map(o => o.id());
-    const duplicateIds = ids.filter((id, idx) => ids.indexOf(id) !== idx);
-    if (duplicateIds.length > 0) {
-      violations.push(`Duplicate option ID '${duplicateIds[0]}' detected inside ngListbox.`);
     }
 
     return violations;
@@ -233,20 +218,14 @@ export class ListboxPattern<V> {
   /** Handles keydown events for the listbox. */
   onKeydown(event: KeyboardEvent) {
     if (!this.disabled()) {
-      this.hasBeenInteracted.set(true);
       this.keydown().handle(event);
     }
   }
 
-  onClick(event: PointerEvent) {
+  onPointerdown(event: PointerEvent) {
     if (!this.disabled()) {
-      this.hasBeenInteracted.set(true);
-      this.clickManager().handle(event);
+      this.pointerdown().handle(event);
     }
-  }
-
-  onFocusIn() {
-    this.hasBeenInteracted.set(true);
   }
 
   /**
@@ -276,19 +255,7 @@ export class ListboxPattern<V> {
 
     if (firstItem) {
       this.inputs.activeItem.set(firstItem);
-      if (this.followFocus()) {
-        this.listBehavior.select();
-      }
     }
-  }
-
-  /**
-   * Sets the default active state of the listbox before receiving interaction for the first time.
-   */
-  setDefaultStateEffect(): void {
-    if (this.hasBeenInteracted()) return;
-
-    this.setDefaultState();
   }
 
   protected _getItem(e: PointerEvent) {

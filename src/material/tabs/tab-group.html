@@ -65,7 +65,7 @@
 
 <div
   class="mat-mdc-tab-body-wrapper"
-  [class._mat-animation-noopable]="_bodyAnimationsDisabled()"
+  [class._mat-animation-noopable]="_animationsDisabled()"
   #tabBodyWrapper>
   @for (tab of _tabs; track tab;) {
     <mat-tab-body role="tabpanel"
@@ -76,7 +76,7 @@
                  [class]="tab.bodyClass"
                  [content]="tab.content!"
                  [position]="tab.position!"
-                 [animationDuration]="_bodyAnimationDuration"
+                 [animationDuration]="animationDuration"
                  [preserveContent]="preserveContent"
                  (_onCentered)="_removeTabBodyWrapperHeight()"
                  (_onCentering)="_setTabBodyWrapperHeight($event)"

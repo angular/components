@@ -1,7 +1,13 @@
 import {MatTableDataSource} from './table-data-source';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
+
+declare global {
+  interface Window {
+    ngDevMode?: object | null;
+  }
+}
 
 describe('MatTableDataSource', () => {
   describe('sort', () => {
@@ -89,7 +95,7 @@ describe('MatTableDataSource', () => {
 
     it('does not warn in non-dev mode when filtering non-object data', fakeAsync(() => {
       const warnSpy = spyOn(console, 'warn');
-      (window as any).ngDevMode = null;
+      window.ngDevMode = null;
       dataSource.data = [1, 2, 3, 4, 5] as unknown as {'prop': number}[];
 
       dataSource.filter = '1';
@@ -101,7 +107,7 @@ describe('MatTableDataSource', () => {
 
     it('displays the warning in dev mode when filtering non-object data', fakeAsync(() => {
       const warnSpy = spyOn(console, 'warn');
-      (window as any).ngDevMode = {};
+      window.ngDevMode = {};
       dataSource.data = [1, 2, 3, 4, 5] as unknown as {'prop': number}[];
 
       dataSource.filter = '1';
@@ -118,7 +124,6 @@ describe('MatTableDataSource', () => {
 @Component({
   template: `<div matSort matSortDirection="asc"></div>`,
   imports: [MatSortModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatSortApp {
   @ViewChild(MatSort, {static: true}) sort!: MatSort;

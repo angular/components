@@ -6,25 +6,37 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopup,
+  ComboboxPopupContainer,
+} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
-import {OverlayModule} from '@angular/cdk/overlay';
-import {STATES as states} from '../states';
+import {
+  afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ElementRef,
+  signal,
+  viewChild,
+} from '@angular/core';
 
-/** @title Combobox Auto Select */
+/** @title Combobox with auto-select filtering. */
 @Component({
   selector: 'combobox-auto-select-example',
   templateUrl: 'combobox-auto-select-example.html',
-  styleUrl: '../combobox-example.css',
-  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
+  styleUrl: '../combobox-examples.css',
+  imports: [Combobox, ComboboxInput, ComboboxPopup, ComboboxPopupContainer, Listbox, Option],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxAutoSelectExample {
-  readonly listbox = viewChild(Listbox);
+  popover = viewChild<ElementRef>('popover');
+  listbox = viewChild<Listbox<any>>(Listbox);
+  combobox = viewChild<Combobox<any>>(Combobox);
 
-  popupExpanded = signal(false);
   searchString = signal('');
-  selectedOption = signal<string[]>([]);
 
   options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
@@ -32,15 +44,79 @@ export class ComboboxAutoSelectExample {
 
   constructor() {
     afterRenderEffect(() => {
+      const popover = this.popover()!;
+      const combobox = this.combobox()!;
+      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
       this.listbox()?.scrollActiveItemIntoView();
     });
   }
 
-  onCommit() {
-    const selectedOption = this.selectedOption();
-    if (selectedOption.length > 0) {
-      this.searchString.set(selectedOption[0]);
+  showPopover() {
+    const popover = this.popover()!;
+    const combobox = this.combobox()!;
+
+    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+    const popoverEl = popover.nativeElement;
+
+    if (comboboxRect) {
+      popoverEl.style.width = `${comboboxRect.width}px`;
+      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
+      popoverEl.style.left = `${comboboxRect.left - 1}px`;
     }
-    this.popupExpanded.set(false);
+
+    popover.nativeElement.showPopover();
   }
 }
+
+const states = [
+  'Alabama',
+  'Alaska',
+  'Arizona',
+  'Arkansas',
+  'California',
+  'Colorado',
+  'Connecticut',
+  'Delaware',
+  'Florida',
+  'Georgia',
+  'Hawaii',
+  'Idaho',
+  'Illinois',
+  'Indiana',
+  'Iowa',
+  'Kansas',
+  'Kentucky',
+  'Louisiana',
+  'Maine',
+  'Maryland',
+  'Massachusetts',
+  'Michigan',
+  'Minnesota',
+  'Mississippi',
+  'Missouri',
+  'Montana',
+  'Nebraska',
+  'Nevada',
+  'New Hampshire',
+  'New Jersey',
+  'New Mexico',
+  'New York',
+  'North Carolina',
+  'North Dakota',
+  'Ohio',
+  'Oklahoma',
+  'Oregon',
+  'Pennsylvania',
+  'Rhode Island',
+  'South Carolina',
+  'South Dakota',
+  'Tennessee',
+  'Texas',
+  'Utah',
+  'Vermont',
+  'Virginia',
+  'Washington',
+  'West Virginia',
+  'Wisconsin',
+  'Wyoming',
+];

@@ -20,6 +20,7 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
   ViewEncapsulation,
   inject,
 } from '@angular/core';
@@ -56,6 +57,7 @@ import {MatSelectAll} from './select-all';
       </td>
     </ng-container>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: 'selection-column.css',
   encapsulation: ViewEncapsulation.None,
   imports: [

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 /**
  * Component used to load the .cdk-visually-hidden styles.
@@ -17,5 +17,6 @@ import {Component, ViewEncapsulation} from '@angular/core';
   exportAs: 'cdkVisuallyHidden',
   encapsulation: ViewEncapsulation.None,
   template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class _VisuallyHiddenLoader {}

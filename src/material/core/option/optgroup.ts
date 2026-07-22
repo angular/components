@@ -9,6 +9,7 @@
 import {
   Component,
   ViewEncapsulation,
+  ChangeDetectionStrategy,
   Input,
   InjectionToken,
   booleanAttribute,
@@ -52,6 +53,7 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   exportAs: 'matOptgroup',
   templateUrl: 'optgroup.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: 'optgroup.css',
   host: {
     'class': 'mat-mdc-optgroup',
@@ -73,6 +75,8 @@ export class MatOptgroup {
 
   /** Whether the group is in inert a11y mode. */
   _inert: boolean;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     const parent = inject<MatOptionParentComponent>(MAT_OPTION_PARENT_COMPONENT, {optional: true});

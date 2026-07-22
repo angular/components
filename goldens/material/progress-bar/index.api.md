@@ -20,7 +20,7 @@ export const MAT_PROGRESS_BAR_LOCATION: InjectionToken<MatProgressBarLocation>;
 
 // @public (undocumented)
 export class MatProgressBar implements AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     readonly animationEnd: EventEmitter<ProgressAnimationEnd>;
     get bufferValue(): number;
     set bufferValue(v: number);

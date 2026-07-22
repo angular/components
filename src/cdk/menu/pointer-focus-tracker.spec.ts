@@ -6,7 +6,6 @@ import {
   AfterViewInit,
   inject,
   Renderer2,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {createMouseEvent, dispatchEvent} from '../../cdk/testing/private';
@@ -102,7 +101,6 @@ describe('FocusMouseManger', () => {
 @Component({
   selector: 'wrapper',
   template: `<ng-content></ng-content>`,
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MockWrapper implements FocusableElement {
   readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -119,7 +117,6 @@ class MockWrapper implements FocusableElement {
     </div>
   `,
   imports: [MockWrapper],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MultiElementWithConditionalComponent implements AfterViewInit {
   private _renderer = inject(Renderer2);

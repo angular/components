@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {of} from 'rxjs';
 import {CdkTreeModule} from './tree-module';
@@ -83,7 +76,6 @@ class MinimalTestData {
     </cdk-tree>
   `,
   imports: [CdkTreeModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleCdkTreeApp {
   isExpandable = (node: MinimalTestData) => node.children.length > 0;

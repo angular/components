@@ -112,7 +112,7 @@ type RenderingData<T> =
   // The view for `CdkTree` consists entirely of templates declared in other views. As they are
   // declared elsewhere, they are checked when their declaration points are checked.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [CdkTreeNodeOutlet],
 })
 export class CdkTree<T, K = T>
@@ -266,6 +266,9 @@ export class CdkTree<T, K = T>
   /** The key manager for this tree. Handles focus and activation based on user keyboard input. */
   _keyManager!: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     this._initializeKeyManager();
@@ -1261,7 +1264,7 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
 
   /**
    * The text used to locate this item during typeahead. If not specified, the `textContent` will
-   * be used.
+   * will be used.
    */
   @Input('cdkTreeNodeTypeaheadLabel') typeaheadLabel: string | null = null;
 
@@ -1384,6 +1387,8 @@ export class CdkTreeNode<T, K = T> implements OnDestroy, OnInit, TreeKeyManagerI
   }
 
   private _changeDetectorRef = inject(ChangeDetectorRef);
+
+  constructor(...args: unknown[]);
 
   constructor() {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;

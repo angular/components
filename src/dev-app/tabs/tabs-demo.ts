@@ -21,7 +21,7 @@ import {
   TabGroupStretchedExample,
   TabNavBarBasicExample,
 } from '@angular/components-examples/material/tabs';
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
@@ -43,5 +43,6 @@ import {MatTabsModule} from '@angular/material/tabs';
     TabGroupDynamicHeightExample,
     MatTabsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabsDemo {}

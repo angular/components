@@ -137,6 +137,9 @@ export class MapPolyline implements OnInit, OnDestroy {
   @Output() readonly polylineInitialized: EventEmitter<google.maps.Polyline> =
     new EventEmitter<google.maps.Polyline>();
 
+  constructor(...args: unknown[]);
+  constructor() {}
+
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions()

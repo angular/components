@@ -1,10 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  provideZoneChangeDetection,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, ElementRef, ViewChild, provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {dispatchFakeEvent} from '../testing/private';
 import {ScrollDispatcher} from './scroll-dispatcher';
@@ -42,7 +36,6 @@ describe('ScrollDispatcher Zone.js integration', () => {
 @Component({
   template: `<div #scrollingElement cdkScrollable style="height: 9999px"></div>`,
   imports: [ScrollingModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ScrollingComponent {
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;

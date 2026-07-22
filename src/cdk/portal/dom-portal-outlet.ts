@@ -59,8 +59,6 @@ export class DomPortalOutlet extends BasePortalOutlet {
         injector,
         ngModuleRef,
         projectableNodes: portal.projectableNodes || undefined,
-        bindings: portal.bindings || undefined,
-        directives: portal.directives || undefined,
       });
 
       this.setDisposeFn(() => componentRef.destroy());
@@ -76,8 +74,6 @@ export class DomPortalOutlet extends BasePortalOutlet {
         elementInjector,
         environmentInjector,
         projectableNodes: portal.projectableNodes || undefined,
-        bindings: portal.bindings || undefined,
-        directives: portal.directives || undefined,
       });
 
       appRef.attachView(componentRef.hostView);

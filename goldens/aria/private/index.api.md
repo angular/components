@@ -5,40 +5,54 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
-import { ElementRef } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { Signal } from '@angular/core';
 import { untracked } from '@angular/core/primitives/signals';
 
 // @public
 export interface AccordionGroupInputs extends Omit<ListNavigationInputs<AccordionTriggerPattern> & ListFocusInputs<AccordionTriggerPattern> & Omit<ListExpansionInputs, 'items'>, 'focusMode'> {
+    getItem: (e: Element | null | undefined) => AccordionTriggerPattern | undefined;
 }
 
 // @public
 export class AccordionGroupPattern {
     constructor(inputs: AccordionGroupInputs);
-    readonly click: SignalLike<ClickEventManager<PointerEvent>>;
-    collapseAll(): void;
-    expandAll(): void;
     readonly expansionBehavior: ListExpansion;
     readonly focusBehavior: ListFocus<AccordionTriggerPattern>;
     // (undocumented)
     readonly inputs: AccordionGroupInputs;
-    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<AccordionTriggerPattern>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
-    onClick(event: PointerEvent): void;
+    nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onFocus(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    onPointerdown(event: PointerEvent): void;
+    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     toggle(): void;
-    validate(): string[];
+}
+
+// @public
+export interface AccordionPanelInputs {
+    accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
+    id: SignalLike<string>;
+    panelId: SignalLike<string>;
+}
+
+// @public
+export class AccordionPanelPattern {
+    constructor(inputs: AccordionPanelInputs);
+    accordionTrigger: SignalLike<AccordionTriggerPattern | undefined>;
+    hidden: SignalLike<boolean>;
+    id: SignalLike<string>;
+    // (undocumented)
+    readonly inputs: AccordionPanelInputs;
 }
 
 // @public
 export interface AccordionTriggerInputs extends Omit<ListNavigationItem & ListFocusItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
     accordionGroup: SignalLike<AccordionGroupPattern>;
-    accordionPanelId: SignalLike<string>;
+    accordionPanel: SignalLike<AccordionPanelPattern | undefined>;
+    panelId: SignalLike<string>;
 }
 
 // @public
@@ -46,13 +60,14 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     constructor(inputs: AccordionTriggerInputs);
     readonly active: SignalLike<boolean>;
     close(): void;
-    readonly controls: SignalLike<string>;
+    readonly controls: SignalLike<string | undefined>;
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
     readonly expanded: WritableSignalLike<boolean>;
     readonly hardDisabled: SignalLike<boolean>;
     readonly id: SignalLike<string>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: AccordionTriggerInputs;
     open(): void;
@@ -60,72 +75,208 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     toggle(): void;
 }
 
-// @public
-export interface ComboboxInputs extends ExpansionItem {
-    alwaysExpanded: SignalLike<boolean>;
-    disabled: SignalLike<boolean>;
-    element: SignalLike<HTMLElement>;
-    inlineSuggestion: SignalLike<string | undefined>;
-    popup: SignalLike<ComboboxPopupPattern | undefined>;
-    readonly: SignalLike<boolean>;
-    softDisabled?: SignalLike<boolean>;
-    value: WritableSignalLike<string>;
+// @public (undocumented)
+export class ComboboxDialogPattern {
+    constructor(inputs: {
+        combobox: ComboboxPattern<any, any>;
+        element: SignalLike<HTMLDialogElement>;
+        id: SignalLike<string>;
+    });
+    // (undocumented)
+    id: () => string;
+    // (undocumented)
+    readonly inputs: {
+        combobox: ComboboxPattern<any, any>;
+        element: SignalLike<HTMLDialogElement>;
+        id: SignalLike<string>;
+    };
+    // (undocumented)
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    // (undocumented)
+    onClick(event: MouseEvent): void;
+    // (undocumented)
+    onKeydown(event: KeyboardEvent): void;
+    // (undocumented)
+    role: () => "dialog";
 }
 
 // @public
-export class ComboboxPattern {
-    constructor(inputs: ComboboxInputs);
-    readonly activeDescendant: _angular_core.Signal<string | undefined>;
-    readonly ariaReadonly: _angular_core.Signal<"true" | null>;
-    readonly autocomplete: _angular_core.Signal<"none" | "inline" | "list" | "both">;
-    click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
-    readonly disabled: () => boolean;
-    readonly element: () => HTMLElement;
-    highlightEffect(): void;
-    readonly inlineSuggestion: () => string | undefined;
+export interface ComboboxInputs<T extends ListItem<V>, V> {
+    alwaysExpanded: SignalLike<boolean>;
+    containerEl: SignalLike<HTMLElement | undefined>;
+    disabled: SignalLike<boolean>;
+    filterMode: SignalLike<'manual' | 'auto-select' | 'highlight'>;
+    firstMatch: SignalLike<V | undefined>;
+    inputEl: SignalLike<HTMLInputElement | undefined>;
+    inputValue?: WritableSignalLike<string>;
+    popupControls: SignalLike<ComboboxListboxControls<T, V> | ComboboxTreeControls<T, V> | ComboboxDialogPattern | undefined>;
+    readonly: SignalLike<boolean>;
+    textDirection: SignalLike<'rtl' | 'ltr'>;
+}
+
+// @public
+export interface ComboboxListboxControls<T extends ListItem<V>, V> {
+    activeId: SignalLike<string | undefined>;
+    clearSelection: () => void;
+    first: () => void;
+    focus: (item: T, opts?: {
+        focusElement?: boolean;
+    }) => void;
+    getActiveItem: () => T | undefined;
+    getItem: (e: PointerEvent) => T | undefined;
+    getSelectedItems: () => T[];
+    id: () => string;
+    items: SignalLike<T[]>;
+    last: () => void;
+    multi: SignalLike<boolean>;
+    next: () => void;
+    prev: () => void;
+    role: SignalLike<'listbox' | 'tree' | 'grid'>;
+    select: (item?: T) => void;
+    setValue: (value: V | undefined) => void;
+    toggle: (item?: T) => void;
+    unfocus: () => void;
+}
+
+// @public (undocumented)
+export type ComboboxListboxInputs<V> = ListboxInputs<V> & {
+    combobox: SignalLike<ComboboxPattern<OptionPattern<V>, V> | undefined>;
+};
+
+// @public (undocumented)
+export class ComboboxListboxPattern<V> extends ListboxPattern<V> implements ComboboxListboxControls<OptionPattern<V>, V> {
+    constructor(inputs: ComboboxListboxInputs<V>);
+    activeId: SignalLike<string | undefined>;
+    clearSelection: () => void;
+    first: () => void;
+    focus: (item: OptionPattern<V>, opts?: {
+        focusElement?: boolean;
+    }) => void;
+    getActiveItem: () => OptionPattern<V> | undefined;
+    getItem: (e: PointerEvent) => OptionPattern<V> | undefined;
+    getSelectedItems: () => OptionPattern<V>[];
+    id: SignalLike<string>;
     // (undocumented)
-    readonly inputs: ComboboxInputs;
-    readonly isDeleting: _angular_core.WritableSignal<boolean>;
-    readonly isEditable: _angular_core.Signal<boolean>;
-    readonly isExpanded: _angular_core.Signal<boolean>;
-    readonly isFocused: _angular_core.WritableSignal<boolean>;
-    readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
-    keyboardEventRelayEffect(): void;
-    keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
-    readonly nativeDisabled: _angular_core.Signal<"" | null>;
-    readonly nativeReadonly: _angular_core.Signal<"" | null>;
-    onClick(event: PointerEvent): void;
-    onFocusin(): void;
-    onFocusout(): void;
+    readonly inputs: ComboboxListboxInputs<V>;
+    items: SignalLike<OptionPattern<V>[]>;
+    last: () => void;
+    multi: SignalLike<boolean>;
+    next: () => void;
+    onKeydown(_: KeyboardEvent): void;
+    onPointerdown(_: PointerEvent): void;
+    prev: () => void;
+    role: SignalLike<"listbox">;
+    select: (item?: OptionPattern<V>) => void;
+    setDefaultState(): void;
+    setValue: (value: V | undefined) => void;
+    tabIndex: SignalLike<-1 | 0>;
+    toggle: (item?: OptionPattern<V>) => void;
+    unfocus: () => void;
+}
+
+// @public
+export class ComboboxPattern<T extends ListItem<V>, V> {
+    constructor(inputs: ComboboxInputs<T, V>);
+    activeDescendant: SignalLike<string | null>;
+    autocomplete: SignalLike<"both" | "list">;
+    click: SignalLike<PointerEventManager<PointerEvent>>;
+    close(opts?: {
+        reset: boolean;
+    }): void;
+    collapseItem(): void;
+    collapseKey: SignalLike<"ArrowLeft" | "ArrowRight">;
+    commit(): void;
+    disabled: () => boolean;
+    expanded: WritableSignalLike<boolean>;
+    expandItem(): void;
+    expandKey: SignalLike<"ArrowLeft" | "ArrowRight">;
+    first(): void;
+    firstMatch: SignalLike<T | undefined>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasPopup: SignalLike<"listbox" | "tree" | "grid" | "dialog" | null>;
+    highlight(): void;
+    highlightedItem: WritableSignalLike<T | undefined>;
+    // (undocumented)
+    readonly inputs: ComboboxInputs<T, V>;
+    isDeleting: boolean;
+    isFocused: WritableSignalLike<boolean>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    last(): void;
+    listControls: () => ComboboxListboxControls<T, V> | null | undefined;
+    next(): void;
+    onClick(event: MouseEvent): void;
+    onFilter(): void;
+    onFocusIn(): void;
+    onFocusOut(event: FocusEvent): void;
     onInput(event: Event): void;
     onKeydown(event: KeyboardEvent): void;
-    readonly popupId: _angular_core.Signal<string | undefined>;
-    readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
-    readonly readonly: () => boolean;
-    readonly softDisabled: () => boolean;
-    readonly value: WritableSignalLike<string>;
+    open(nav?: {
+        first?: boolean;
+        last?: boolean;
+        selected?: boolean;
+    }): void;
+    popupId: SignalLike<string | null>;
+    prev(): void;
+    readonly: SignalLike<true | null>;
+    select(opts?: {
+        item?: T;
+        commit?: boolean;
+        close?: boolean;
+    }): void;
+    treeControls: () => ComboboxTreeControls<T, V> | null;
 }
 
-// @public
-export interface ComboboxPopupInputs {
-    activeDescendant: SignalLike<string | undefined>;
-    controlTarget: SignalLike<HTMLElement | undefined>;
-    popupId: SignalLike<string | undefined>;
-    popupType: SignalLike<'listbox' | 'tree' | 'grid' | 'dialog'>;
+// @public (undocumented)
+export interface ComboboxTreeControls<T extends ListItem<V>, V> extends ComboboxListboxControls<T, V> {
+    collapseAll: () => void;
+    collapseItem: () => void;
+    expandAll: () => void;
+    expandItem: () => void;
+    isItemCollapsible: () => boolean;
+    isItemExpandable: (item?: T) => boolean;
+    isItemSelectable: (item?: T) => boolean;
+    toggleExpansion: (item?: T) => void;
 }
 
-// @public
-export class ComboboxPopupPattern {
-    constructor(inputs: ComboboxPopupInputs);
-    readonly activeDescendant: () => string | undefined;
-    readonly controlTarget: () => HTMLElement | undefined;
+// @public (undocumented)
+export type ComboboxTreeInputs<V> = TreeInputs<V> & {
+    combobox: SignalLike<ComboboxPattern<TreeItemPattern<V>, V> | undefined>;
+};
+
+// @public (undocumented)
+export class ComboboxTreePattern<V> extends TreePattern<V> implements ComboboxTreeControls<TreeItemPattern<V>, V> {
+    constructor(inputs: ComboboxTreeInputs<V>);
     // (undocumented)
-    readonly inputs: ComboboxPopupInputs;
-    readonly isFocused: _angular_core.WritableSignal<boolean>;
-    onFocusin(): void;
-    onFocusout(event: FocusEvent): void;
-    readonly popupId: () => string | undefined;
-    readonly popupType: () => "listbox" | "tree" | "grid" | "dialog";
+    activeId: SignalLike<string | undefined>;
+    clearSelection: () => void;
+    collapseAll: () => void;
+    collapseItem: () => void;
+    expandAll: () => void;
+    expandItem: () => void;
+    first: () => void;
+    focus: (item: TreeItemPattern<V>) => void;
+    getActiveItem: () => TreeItemPattern<V> | undefined;
+    getItem: (e: PointerEvent) => TreeItemPattern<V> | undefined;
+    getSelectedItems: () => TreeItemPattern<V>[];
+    // (undocumented)
+    readonly inputs: ComboboxTreeInputs<V>;
+    isItemCollapsible: () => boolean;
+    isItemExpandable(item?: TreeItemPattern<V> | undefined): boolean;
+    isItemSelectable: (item?: TreeItemPattern<V> | undefined) => boolean;
+    items: SignalLike<TreeItemPattern<V>[]>;
+    last: () => void;
+    next: () => void;
+    onKeydown(_: KeyboardEvent): void;
+    onPointerdown(_: PointerEvent): void;
+    prev: () => void;
+    role: () => "tree";
+    select: (item?: TreeItemPattern<V>) => void;
+    setDefaultState(): void;
+    setValue: (value: V | undefined) => void;
+    tabIndex: SignalLike<-1 | 0>;
+    toggle: (item?: TreeItemPattern<V>) => void;
+    toggleExpansion: (item?: TreeItemPattern<V>) => void;
+    unfocus: () => void;
 }
 
 // @public (undocumented)
@@ -160,22 +311,20 @@ export class DeferredContentAware {
 }
 
 // @public
-export type ElementResolver<T = HTMLElement> = ElementRef<T> | T | undefined | null | ((context: HTMLElement) => T | null | undefined);
-
-// @public
-export interface GridCellInputs extends GridCell {
+export interface GridCellInputs extends GridCell, Omit<ListNavigationInputs<GridCellWidgetPattern>, 'focusMode' | 'items' | 'activeItem' | 'softDisabled' | 'element'> {
     colIndex: SignalLike<number | undefined>;
     getWidget: (e: Element | null) => GridCellWidgetPattern | undefined;
     grid: SignalLike<GridPattern>;
     row: SignalLike<GridRowPattern>;
     rowIndex: SignalLike<number | undefined>;
-    widget: SignalLike<GridCellWidgetPattern | undefined>;
+    widgets: SignalLike<GridCellWidgetPattern[]>;
 }
 
 // @public
 export class GridCellPattern implements GridCell {
     constructor(inputs: GridCellInputs);
     readonly active: SignalLike<boolean>;
+    readonly activeWidget: WritableSignalLike<GridCellWidgetPattern | undefined>;
     readonly anchor: SignalLike<true | undefined>;
     readonly ariaColIndex: SignalLike<number | undefined>;
     readonly ariaRowIndex: SignalLike<number | undefined>;
@@ -184,44 +333,52 @@ export class GridCellPattern implements GridCell {
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     focus(): void;
+    readonly focusBehavior: ListFocus<GridCellWidgetPattern>;
     readonly id: SignalLike<string>;
     // (undocumented)
     readonly inputs: GridCellInputs;
     readonly isActivated: SignalLike<boolean>;
     readonly isFocused: WritableSignalLike<boolean>;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    readonly multiWidgetMode: SignalLike<boolean>;
+    readonly navigationActivated: WritableSignalLike<boolean>;
+    readonly navigationBehavior: ListNavigation<GridCellWidgetPattern>;
+    readonly navigationDisabled: SignalLike<boolean>;
+    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
+    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly rowSpan: SignalLike<number>;
     readonly selectable: SignalLike<boolean>;
     readonly selected: WritableSignalLike<boolean>;
+    readonly singleWidgetMode: SignalLike<boolean>;
+    startNavigation(): void;
+    stopNavigation(): void;
     readonly tabIndex: SignalLike<-1 | 0>;
-    readonly widget: SignalLike<GridCellWidgetPattern | undefined>;
+    readonly widgetActivated: SignalLike<boolean>;
     widgetTabIndex(): -1 | 0;
 }
 
 // @public
-export interface GridCellWidgetInputs {
+export interface GridCellWidgetInputs extends Omit<ListNavigationItem, 'index'> {
     cell: SignalLike<GridCellPattern>;
-    disabled: SignalLike<boolean>;
     element: SignalLike<HTMLElement>;
-    focusTarget: SignalLike<ElementResolver<HTMLElement>>;
-    onActivate?: (event: KeyboardEvent | FocusEvent | undefined) => void;
-    onDeactivate?: (event: KeyboardEvent | FocusEvent | undefined) => void;
+    focusTarget: SignalLike<HTMLElement | undefined>;
     widgetType: SignalLike<'simple' | 'complex' | 'editable'>;
 }
 
 // @public
-export class GridCellWidgetPattern {
+export class GridCellWidgetPattern implements ListNavigationItem {
     constructor(inputs: GridCellWidgetInputs);
     activate(event?: KeyboardEvent | FocusEvent): void;
-    activationEffect(): void;
     readonly active: SignalLike<boolean>;
     deactivate(event?: KeyboardEvent | FocusEvent): void;
-    deactivationEffect(): void;
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     focus(): void;
+    readonly id: SignalLike<string>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: GridCellWidgetInputs;
     readonly isActivated: WritableSignalLike<boolean>;
@@ -238,6 +395,7 @@ export class GridCellWidgetPattern {
 // @public
 export interface GridInputs extends Omit<GridInputs$1<GridCellPattern>, 'cells'> {
     element: SignalLike<HTMLElement>;
+    enableRangeSelection: SignalLike<boolean>;
     enableSelection: SignalLike<boolean>;
     getCell: (e: Element | null) => GridCellPattern | undefined;
     multi: SignalLike<boolean>;
@@ -249,34 +407,36 @@ export interface GridInputs extends Omit<GridInputs$1<GridCellPattern>, 'cells'>
 // @public
 export class GridPattern {
     constructor(inputs: GridInputs);
+    readonly acceptsPointerMove: SignalLike<boolean>;
     readonly activeCell: SignalLike<GridCellPattern | undefined>;
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly anchorCell: SignalLike<GridCellPattern | undefined>;
     readonly cells: SignalLike<GridCellPattern[][]>;
-    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     readonly disabled: SignalLike<boolean>;
     readonly dragging: WritableSignalLike<boolean>;
     focusEffect(): void;
     readonly gridBehavior: Grid<GridCellPattern>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
+    readonly hasBeenFocused: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: GridInputs;
     readonly isFocused: WritableSignalLike<boolean>;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    readonly multiSelectable: SignalLike<boolean | undefined>;
     readonly nextColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
-    onClick(event: PointerEvent): void;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
+    onPointerdown(event: PointerEvent): void;
+    onPointermove(event: PointerEvent): void;
+    onPointerup(event: PointerEvent): void;
     readonly pauseNavigation: SignalLike<boolean>;
+    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    readonly pointerup: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
     resetFocusEffect(): void;
     resetStateEffect(): void;
     restoreFocusEffect(): void;
     setDefaultStateEffect(): void;
     readonly tabIndex: SignalLike<0 | -1>;
-    validate(): string[];
 }
 
 // @public
@@ -295,12 +455,6 @@ export class GridRowPattern {
 }
 
 // @public (undocumented)
-export interface HasElement {
-    // (undocumented)
-    element: HTMLElement;
-}
-
-// @public (undocumented)
 export function linkedSignal<T>(sourceFn: () => T): WritableSignalLike<T>;
 
 // @public
@@ -312,36 +466,32 @@ export type ListboxInputs<V> = ListInputs<OptionPattern<V>, V> & {
 // @public
 export class ListboxPattern<V> {
     constructor(inputs: ListboxInputs<V>);
-    readonly activeDescendant: SignalLike<string | undefined>;
-    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
-    readonly disabled: SignalLike<boolean>;
-    readonly dynamicSpaceKey: SignalLike<"" | " ">;
-    readonly followFocus: SignalLike<boolean>;
+    activeDescendant: SignalLike<string | undefined>;
+    disabled: SignalLike<boolean>;
+    dynamicSpaceKey: SignalLike<"" | " ">;
+    followFocus: SignalLike<boolean>;
     // (undocumented)
     protected _getItem(e: PointerEvent): OptionPattern<V> | undefined;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: ListboxInputs<V>;
-    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     // (undocumented)
-    readonly listBehavior: List<OptionPattern<V>, V>;
+    listBehavior: List<OptionPattern<V>, V>;
     multi: SignalLike<boolean>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
-    // (undocumented)
-    onClick(event: PointerEvent): void;
-    // (undocumented)
-    onFocusIn(): void;
+    nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
     onKeydown(event: KeyboardEvent): void;
-    readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
-    readonly readonly: SignalLike<boolean>;
+    // (undocumented)
+    onPointerdown(event: PointerEvent): void;
+    orientation: SignalLike<'vertical' | 'horizontal'>;
+    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
+    prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly: SignalLike<boolean>;
     setDefaultState(): void;
-    setDefaultStateEffect(): void;
-    readonly setsize: SignalLike<number>;
-    readonly tabIndex: SignalLike<-1 | 0>;
-    readonly typeaheadRegexp: RegExp;
+    setsize: SignalLike<number>;
+    tabIndex: SignalLike<-1 | 0>;
+    typeaheadRegexp: RegExp;
     validate(): string[];
-    readonly wrap: WritableSignalLike<boolean>;
+    wrap: WritableSignalLike<boolean>;
 }
 
 // @public
@@ -355,17 +505,17 @@ export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
 export class MenuBarPattern<V> {
     constructor(inputs: MenuBarInputs<V>);
     close(): void;
-    readonly disabled: () => boolean;
-    readonly dynamicSpaceKey: SignalLike<"" | " ">;
+    disabled: () => boolean;
+    dynamicSpaceKey: SignalLike<"" | " ">;
     goto(item: MenuItemPattern<V>, opts?: {
         focusElement?: boolean;
     }): void;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: MenuBarInputs<V>;
-    readonly isFocused: WritableSignalLike<boolean>;
-    readonly keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    readonly listBehavior: List<MenuItemPattern<V>, V>;
+    isFocused: WritableSignalLike<boolean>;
+    keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    listBehavior: List<MenuItemPattern<V>, V>;
     next(): void;
     onClick(event: MouseEvent): void;
     onFocusIn(): void;
@@ -374,13 +524,12 @@ export class MenuBarPattern<V> {
     onMouseOver(event: MouseEvent): void;
     prev(): void;
     setDefaultState(): void;
-    setDefaultStateEffect(): void;
-    readonly tabIndex: () => 0 | -1;
-    readonly typeaheadRegexp: RegExp;
+    tabIndex: () => 0 | -1;
+    typeaheadRegexp: RegExp;
 }
 
 // @public
-export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value'> {
+export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'values'> {
     expansionDelay: SignalLike<number>;
     id: SignalLike<string>;
     items: SignalLike<MenuItemPattern<V>[]>;
@@ -392,26 +541,25 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
 // @public
 export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
     parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
-    role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
     submenu: SignalLike<MenuPattern<V> | undefined>;
 }
 
 // @public
 export class MenuItemPattern<V> implements ListItem<V> {
     constructor(inputs: MenuItemInputs<V>);
-    readonly active: SignalLike<boolean>;
+    active: SignalLike<boolean>;
     close(opts?: {
         refocus?: boolean;
     }): void;
-    readonly controls: WritableSignalLike<string | undefined>;
-    readonly disabled: () => boolean;
-    readonly element: SignalLike<HTMLElement | undefined>;
-    readonly expanded: SignalLike<boolean | null>;
-    readonly _expanded: WritableSignalLike<boolean>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
-    readonly hasPopup: SignalLike<boolean>;
-    readonly id: SignalLike<string>;
-    readonly index: SignalLike<number>;
+    controls: WritableSignalLike<string | undefined>;
+    disabled: () => boolean;
+    element: SignalLike<HTMLElement | undefined>;
+    expanded: SignalLike<boolean | null>;
+    _expanded: WritableSignalLike<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasPopup: SignalLike<boolean>;
+    id: SignalLike<string>;
+    index: SignalLike<number>;
     // (undocumented)
     readonly inputs: MenuItemInputs<V>;
     onFocusIn(): void;
@@ -419,12 +567,12 @@ export class MenuItemPattern<V> implements ListItem<V> {
         first?: boolean;
         last?: boolean;
     }): void;
-    readonly role: () => "menuitem" | "menuitemradio" | "menuitemcheckbox";
-    readonly searchTerm: SignalLike<string>;
-    readonly selectable: SignalLike<boolean>;
-    readonly submenu: SignalLike<MenuPattern<V> | undefined>;
-    readonly tabIndex: SignalLike<0 | -1>;
-    readonly value: SignalLike<V>;
+    role: () => string;
+    searchTerm: SignalLike<string>;
+    selectable: SignalLike<boolean>;
+    submenu: SignalLike<MenuPattern<V> | undefined>;
+    tabIndex: SignalLike<0 | -1>;
+    value: SignalLike<V>;
 }
 
 // @public
@@ -437,19 +585,19 @@ export class MenuPattern<V> {
     closeAll(): void;
     _closeTimeout: any;
     collapse(): void;
-    readonly disabled: () => boolean;
-    readonly dynamicSpaceKey: SignalLike<"" | " ">;
+    disabled: () => boolean;
+    dynamicSpaceKey: SignalLike<"" | " ">;
     expand(): void;
     first(): void;
-    readonly hasBeenHovered: WritableSignalLike<boolean>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
-    readonly id: SignalLike<string>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasBeenHovered: WritableSignalLike<boolean>;
+    id: SignalLike<string>;
     // (undocumented)
     readonly inputs: MenuInputs<V>;
-    readonly isFocused: WritableSignalLike<boolean>;
-    readonly keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    isFocused: WritableSignalLike<boolean>;
+    keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     last(): void;
-    readonly listBehavior: List<MenuItemPattern<V>, V>;
+    listBehavior: List<MenuItemPattern<V>, V>;
     next(): void;
     onClick(event: MouseEvent): void;
     onFocusIn(): void;
@@ -459,17 +607,15 @@ export class MenuPattern<V> {
     onMouseOver(event: MouseEvent): void;
     _openTimeout: any;
     prev(): void;
-    readonly role: () => string;
-    readonly root: SignalLike<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined>;
+    role: () => string;
+    root: SignalLike<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined>;
     setDefaultState(): void;
-    setDefaultStateEffect(): void;
-    readonly shouldFocus: SignalLike<boolean>;
+    shouldFocus: SignalLike<boolean>;
     submit(item?: MenuItemPattern<V> | undefined): void;
-    readonly tabIndex: () => 0 | -1;
+    tabIndex: () => 0 | -1;
     trigger(): void;
-    readonly typeaheadRegexp: RegExp;
-    validate(): string[];
-    readonly visible: SignalLike<boolean>;
+    typeaheadRegexp: RegExp;
+    visible: SignalLike<boolean>;
 }
 
 // @public
@@ -486,14 +632,14 @@ export class MenuTriggerPattern<V> {
     close(opts?: {
         refocus?: boolean;
     }): void;
-    readonly disabled: () => boolean;
-    readonly expanded: WritableSignalLike<boolean>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
-    readonly hasPopup: () => boolean;
+    disabled: () => boolean;
+    expanded: WritableSignalLike<boolean>;
+    hasBeenFocused: WritableSignalLike<boolean>;
+    hasPopup: () => boolean;
     // (undocumented)
     readonly inputs: MenuTriggerInputs<V>;
-    readonly keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    readonly menu: SignalLike<MenuPattern<V> | undefined>;
+    keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    menu: SignalLike<MenuPattern<V> | undefined>;
     onClick(): void;
     onFocusIn(): void;
     onFocusOut(event: FocusEvent): void;
@@ -502,10 +648,8 @@ export class MenuTriggerPattern<V> {
         first?: boolean;
         last?: boolean;
     }): void;
-    readonly pendingFocus: WritableSignalLike<"first" | "last" | undefined>;
-    pendingFocusEffect(): void;
-    readonly role: () => string;
-    readonly tabIndex: SignalLike<-1 | 0>;
+    role: () => string;
+    tabIndex: SignalLike<-1 | 0>;
 }
 
 // @public
@@ -517,24 +661,18 @@ export interface OptionInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable
 // @public
 export class OptionPattern<V> {
     constructor(args: OptionInputs<V>);
-    readonly active: SignalLike<boolean>;
-    readonly disabled: SignalLike<boolean>;
-    readonly element: SignalLike<HTMLElement | undefined>;
-    readonly id: SignalLike<string>;
-    readonly index: SignalLike<number>;
-    readonly listbox: SignalLike<ListboxPattern$1<V> | undefined>;
-    readonly searchTerm: SignalLike<string>;
-    readonly selectable: () => boolean;
-    readonly selected: SignalLike<boolean | undefined>;
-    readonly tabIndex: SignalLike<0 | -1 | undefined>;
-    readonly value: SignalLike<V>;
+    active: SignalLike<boolean>;
+    disabled: SignalLike<boolean>;
+    element: SignalLike<HTMLElement | undefined>;
+    id: SignalLike<string>;
+    index: SignalLike<number>;
+    listbox: SignalLike<ListboxPattern$1<V> | undefined>;
+    searchTerm: SignalLike<string>;
+    selectable: () => boolean;
+    selected: SignalLike<boolean | undefined>;
+    tabIndex: SignalLike<0 | -1 | undefined>;
+    value: SignalLike<V>;
 }
-
-// @public
-export function reportViolations(violations: string[], element: Element): void;
-
-// @public
-export function resolveElement<T = HTMLElement>(resolver: ElementResolver<T>, context: HTMLElement): T | undefined;
 
 // @public (undocumented)
 export function signal<T>(initialValue: T): WritableSignalLike<T>;
@@ -543,34 +681,14 @@ export function signal<T>(initialValue: T): WritableSignalLike<T>;
 export type SignalLike<T> = () => T;
 
 // @public
-export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;
-
-// @public
-export class SortedCollection<T extends HasElement> {
-    // (undocumented)
-    readonly orderedItems: Signal<T[]>;
-    // (undocumented)
-    register(item: T): void;
-    // (undocumented)
-    startObserving(element: HTMLElement): void;
-    // (undocumented)
-    stopObserving(): void;
-    // (undocumented)
-    unregister(item: T): void;
-}
-
-// @public
-export function tabIndexTransform(v: string | number | undefined): number | undefined;
-
-// @public
-export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable' | 'expanded'> {
-    tabList: SignalLike<TabListPattern>;
-    tabPanel: SignalLike<TabPanelPattern | undefined>;
+export interface TabInputs extends Omit<ListNavigationItem, 'index'>, Omit<ExpansionItem, 'expandable'> {
+    tablist: SignalLike<TabListPattern>;
+    tabpanel: SignalLike<TabPanelPattern | undefined>;
+    value: SignalLike<string>;
 }
 
 // @public
 export interface TabListInputs extends Omit<ListNavigationInputs<TabPattern>, 'multi'>, Omit<ListExpansionInputs, 'multiExpandable' | 'items'> {
-    selectedTab: WritableSignalLike<TabPattern | undefined>;
     selectionMode: SignalLike<'follow' | 'explicit'>;
 }
 
@@ -579,33 +697,32 @@ export class TabListPattern {
     constructor(inputs: TabListInputs);
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeTab: SignalLike<TabPattern | undefined>;
-    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     readonly disabled: SignalLike<boolean>;
     readonly expansionBehavior: ListExpansion;
     readonly focusBehavior: ListFocus<TabPattern>;
     readonly followFocus: SignalLike<boolean>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: TabListInputs;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<TabPattern>;
     readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
-    onClick(event: PointerEvent): void;
-    onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
+    onPointerdown(event: PointerEvent): void;
+    open(value: string): boolean;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+    readonly pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly selectedTab: WritableSignalLike<TabPattern | undefined>;
     setDefaultState(): void;
-    setDefaultStateEffect(): void;
     readonly tabIndex: SignalLike<0 | -1>;
 }
 
 // @public
-export interface TabPanelInputs {
+export interface TabPanelInputs extends LabelControlOptionalInputs {
     id: SignalLike<string>;
-    readonly tab: SignalLike<TabPattern | undefined>;
+    tab: SignalLike<TabPattern | undefined>;
+    value: SignalLike<string>;
 }
 
 // @public
@@ -616,7 +733,9 @@ export class TabPanelPattern {
     // (undocumented)
     readonly inputs: TabPanelInputs;
     readonly labelledBy: SignalLike<string | undefined>;
+    readonly labelManager: LabelControl;
     readonly tabIndex: SignalLike<-1 | 0>;
+    readonly value: SignalLike<string>;
 }
 
 // @public
@@ -627,14 +746,15 @@ export class TabPattern {
     readonly disabled: SignalLike<boolean>;
     readonly element: SignalLike<HTMLElement>;
     readonly expandable: SignalLike<boolean>;
-    // (undocumented)
     readonly expanded: WritableSignalLike<boolean>;
     readonly id: SignalLike<string>;
+    readonly index: SignalLike<number>;
     // (undocumented)
     readonly inputs: TabInputs;
     open(): boolean;
     readonly selected: SignalLike<boolean>;
     readonly tabIndex: SignalLike<0 | -1>;
+    readonly value: SignalLike<string>;
 }
 
 // @public
@@ -648,13 +768,10 @@ export class ToolbarPattern<V> {
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeItem: () => ToolbarWidgetPattern<V> | undefined;
     readonly disabled: SignalLike<boolean>;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: ToolbarInputs<V>;
     readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
     onClick(event: MouseEvent): void;
-    // (undocumented)
-    onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     onPointerdown(event: PointerEvent): void;
@@ -662,10 +779,8 @@ export class ToolbarPattern<V> {
     // (undocumented)
     select(): void;
     setDefaultState(): void;
-    setDefaultStateEffect(): void;
     readonly softDisabled: SignalLike<boolean>;
     readonly tabIndex: SignalLike<0 | -1>;
-    validate(): string[];
 }
 
 // @public
@@ -767,7 +882,6 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly activeDescendant: SignalLike<string | undefined>;
     readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
     readonly children: SignalLike<TreeItemPattern<V>[]>;
-    readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
     readonly collapseKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     _collapseOrParent(opts?: SelectOptions): void;
     readonly currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
@@ -781,7 +895,6 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly followFocus: SignalLike<boolean>;
     protected _getItem(event: Event): TreeItemPattern<V> | undefined;
     goto(e: PointerEvent, opts?: SelectOptions): void;
-    readonly hasBeenInteracted: WritableSignalLike<boolean>;
     readonly id: SignalLike<string>;
     // (undocumented)
     readonly inputs: TreeInputs<V>;
@@ -792,14 +905,13 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly multi: SignalLike<boolean>;
     readonly nav: SignalLike<boolean>;
     readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
-    onClick(event: PointerEvent): void;
-    onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
+    onPointerdown(event: PointerEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
+    pointerdown: SignalLike<PointerEventManager<PointerEvent>>;
     readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
     readonly selectionMode: SignalLike<'follow' | 'explicit'>;
     setDefaultState(): void;
-    setDefaultStateEffect(): void;
     readonly softDisabled: SignalLike<boolean>;
     readonly tabIndex: SignalLike<-1 | 0>;
     readonly textDirection: SignalLike<'ltr' | 'rtl'>;
@@ -807,7 +919,7 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly typeaheadDelay: SignalLike<number>;
     readonly typeaheadRegexp: RegExp;
     validate(): string[];
-    readonly value: WritableSignalLike<V[]>;
+    readonly values: WritableSignalLike<V[]>;
     readonly visible: () => boolean;
     readonly wrap: SignalLike<boolean>;
 }

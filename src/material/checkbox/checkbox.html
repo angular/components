@@ -1,10 +1,7 @@
 <div mat-internal-form-field [labelPosition]="labelPosition" (click)="_preventBubblingFromLabel($event)">
   <div #checkbox class="mdc-checkbox">
     <!-- Render this element first so the input is on top. -->
-    <div
-      class="mat-mdc-checkbox-touch-target"
-      (click)="_onTouchTargetClick()"
-      aria-hidden="true"></div>
+    <div class="mat-mdc-checkbox-touch-target" (click)="_onTouchTargetClick()"></div>
     <input #input
            type="checkbox"
            class="mdc-checkbox__native-control"
@@ -28,20 +25,19 @@
            (blur)="_onBlur()"
            (click)="_onInputClick()"
            (change)="_onInteractionEvent($event)"/>
-    <div class="mdc-checkbox__ripple" aria-hidden="true"></div>
-    <div class="mdc-checkbox__background" aria-hidden="true">
+    <div class="mdc-checkbox__ripple"></div>
+    <div class="mdc-checkbox__background">
       <svg class="mdc-checkbox__checkmark"
            focusable="false"
-           viewBox="0 0 24 24">
+           viewBox="0 0 24 24"
+           aria-hidden="true">
         <path class="mdc-checkbox__checkmark-path"
               fill="none"
               d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
       </svg>
       <div class="mdc-checkbox__mixedmark"></div>
     </div>
-    <div class="mat-mdc-checkbox-ripple mat-focus-indicator"
-      mat-ripple
-      aria-hidden="true"
+    <div class="mat-mdc-checkbox-ripple mat-focus-indicator" mat-ripple
       [matRippleTrigger]="checkbox"
       [matRippleDisabled]="disableRipple || disabled"
       [matRippleCentered]="true"></div>

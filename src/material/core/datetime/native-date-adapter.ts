@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {inject, Service} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 
 /**
@@ -40,10 +40,12 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 }
 
 /** Adapts the native JS Date for use with cdk-based components that work with dates. */
-@Service({autoProvided: false})
+@Injectable()
 export class NativeDateAdapter extends DateAdapter<Date> {
   /** The injected locale. */
   private readonly _matDateLocale = inject(MAT_DATE_LOCALE, {optional: true});
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();

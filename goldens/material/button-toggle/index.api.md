@@ -28,7 +28,7 @@ export const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
 export class MatButtonToggle implements OnInit, AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     get appearance(): MatButtonToggleAppearance;
     set appearance(value: MatButtonToggleAppearance);
     ariaLabel: string;
@@ -96,7 +96,7 @@ export interface MatButtonToggleDefaultOptions {
 
 // @public
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterContentInit {
-    constructor();
+    constructor(...args: unknown[]);
     appearance: MatButtonToggleAppearance;
     _buttonToggles: QueryList<MatButtonToggle>;
     readonly change: EventEmitter<MatButtonToggleChange>;

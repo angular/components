@@ -22,30 +22,9 @@
     >No icon</mat-slide-toggle
   >
 
-  <p>With icon as part of the label.</p>
-
-  <mat-slide-toggle [(ngModel)]="firstToggle">
-    <span class="demo-slide-toggle-label-with-icon">
-      <mat-icon>notifications</mat-icon>
-      Notifications
-    </span>
-  </mat-slide-toggle>
-  <mat-slide-toggle labelPosition="before" [(ngModel)]="firstToggle">
-    <span class="demo-slide-toggle-label-with-icon">
-      <mat-icon>volume_up</mat-icon>
-      Sounds
-    </span>
-  </mat-slide-toggle>
-
   <p>With no label.</p>
 
   <mat-slide-toggle aria-label="Toggle only" hideLabel color="primary" [(ngModel)]="firstToggle" />
-
-  <p>With full width</p>
-  <div class="demo-full-width-container">
-    <mat-slide-toggle fullWidth labelPosition="before" [(ngModel)]="firstToggle">Full Width Before</mat-slide-toggle>
-    <mat-slide-toggle fullWidth labelPosition="after" [(ngModel)]="firstToggle">Full Width After</mat-slide-toggle>
-  </div>
 
   <p>Example where the slide toggle is required inside of a form.</p>
 

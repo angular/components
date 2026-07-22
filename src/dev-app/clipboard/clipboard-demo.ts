@@ -7,7 +7,7 @@
  */
 
 import {Clipboard, ClipboardModule} from '@angular/cdk/clipboard';
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -15,6 +15,7 @@ import {FormsModule} from '@angular/forms';
   styleUrl: 'clipboard-demo.css',
   templateUrl: 'clipboard-demo.html',
   imports: [ClipboardModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClipboardDemo {
   private _clipboard = inject(Clipboard);

@@ -57,10 +57,6 @@ area and will be closed if the user clicks away.
 You can set up a `mat-menu` as a context menu by adding the `matContextMenuTriggerFor` directive
 to your container and binding it to a menu instance.
 
-Note that by default context menus don't create a backdrop element in order to allow the user to
-right click somewhere else. You can opt into the backdrop by explicitly setting
-`[hasBackdrop]="true"` on the menu.
-
 <!-- example(context-menu) -->
 
 ### Lazy rendering

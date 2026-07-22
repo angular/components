@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, Input, NgZone, inject} from '@angular/core';
+import {Component, Input, NgZone, inject} from '@angular/core';
 import {ExampleData} from '@angular/components-examples';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -18,7 +18,6 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   selector: 'stackblitz-button',
   templateUrl: './stackblitz-button.html',
   imports: [MatIconButton, MatTooltip, MatIcon],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class StackblitzButton {
   private _stackBlitzWriter = inject(StackBlitzWriter);

@@ -1,12 +1,6 @@
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {
-  Component,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {TestBed, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
@@ -133,7 +127,7 @@ describe('MatList', () => {
     expect(activeItem.getAttribute('aria-current')).toBe('page');
   });
 
-  it('should not show ripples for non-nav lists', () => {
+  it('should not show ripples for non-nav lists', fakeAsync(() => {
     const fixture = TestBed.createComponent(ListWithOneAnchorItem);
     fixture.detectChanges();
 
@@ -144,7 +138,7 @@ describe('MatList', () => {
       dispatchMouseEvent(item._hostElement, 'mousedown');
       expect(fixture.nativeElement.querySelector('.mat-ripple-element')).toBe(null);
     });
-  });
+  }));
 
   it('should allow disabling ripples for specific nav-list items', () => {
     const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
@@ -252,7 +246,7 @@ describe('MatList', () => {
     expect(items.every(item => item.rippleDisabled)).toBe(true);
   });
 
-  it('should disable item ripples when list ripples are disabled via the input in nav list', () => {
+  it('should disable item ripples when list ripples are disabled via the input in nav list', fakeAsync(() => {
     const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
     fixture.detectChanges();
 
@@ -285,9 +279,9 @@ describe('MatList', () => {
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected no ripples after list ripples are disabled.')
       .toBe(0);
-  });
+  }));
 
-  it('should disable item ripples when list ripples are disabled via the input in an action list', () => {
+  it('should disable item ripples when list ripples are disabled via the input in an action list', fakeAsync(() => {
     const fixture = TestBed.createComponent(ActionListWithoutType);
     fixture.detectChanges();
 
@@ -320,7 +314,7 @@ describe('MatList', () => {
     expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
       .withContext('Expected no ripples after list ripples are disabled.')
       .toBe(0);
-  });
+  }));
 
   it('should be able to disable a single list item', () => {
     const fixture = TestBed.createComponent(ListWithDisabledItems);
@@ -417,7 +411,6 @@ class BaseTestList {
     </a>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithOneAnchorItem extends BaseTestList {
   // This needs to be declared directly on the class; if declared on the BaseTestList superclass,
@@ -433,7 +426,6 @@ class ListWithOneAnchorItem extends BaseTestList {
     </a>
   </mat-nav-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NavListWithOneAnchorItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -452,7 +444,6 @@ class NavListWithOneAnchorItem extends BaseTestList {
     }
   </mat-nav-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NavListWithActivatedItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -471,7 +462,6 @@ class NavListWithActivatedItem extends BaseTestList {
     </button>
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ActionListWithoutType extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -487,7 +477,6 @@ class ActionListWithoutType extends BaseTestList {
     </button>
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ActionListWithType extends BaseTestList {
   @ViewChildren(MatListItem) listItems!: QueryList<MatListItem>;
@@ -501,7 +490,6 @@ class ActionListWithType extends BaseTestList {
     }
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ActionListWithDisabledList extends BaseTestList {
   disableList = true;
@@ -515,7 +503,6 @@ class ActionListWithDisabledList extends BaseTestList {
     </button>
   </mat-action-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ActionListWithDisabledItem extends BaseTestList {
   @ViewChild(MatListItem) buttonItem!: MatListItem;
@@ -530,7 +517,6 @@ class ActionListWithDisabledItem extends BaseTestList {
     </mat-list-item>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithOneItem extends BaseTestList {}
 
@@ -546,7 +532,6 @@ class ListWithOneItem extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithTwoLineItem extends BaseTestList {}
 
@@ -562,7 +547,6 @@ class ListWithTwoLineItem extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithThreeLineItem extends BaseTestList {}
 
@@ -578,7 +562,6 @@ class ListWithThreeLineItem extends BaseTestList {}
     </mat-list-item>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithAvatar extends BaseTestList {}
 
@@ -593,7 +576,6 @@ class ListWithAvatar extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithItemWithCssClass extends BaseTestList {}
 
@@ -611,7 +593,6 @@ class ListWithItemWithCssClass extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithDynamicNumberOfLines extends BaseTestList {}
 
@@ -623,7 +604,6 @@ class ListWithDynamicNumberOfLines extends BaseTestList {}
     }
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithMultipleItems extends BaseTestList {}
 
@@ -635,7 +615,6 @@ class ListWithMultipleItems extends BaseTestList {}
     <mat-list-item>Three</mat-list-item>
   </mat-list>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ListWithDisabledItems {
   firstItemDisabled = false;
@@ -645,6 +624,5 @@ class ListWithDisabledItems {
 @Component({
   template: `<mat-list-item></mat-list-item>`,
   imports: [MatListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandaloneListItem {}

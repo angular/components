@@ -7,13 +7,7 @@ import {
   dispatchMouseEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  Provider,
-  ViewChild,
-  ViewEncapsulation,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, Provider, ViewChild, ViewEncapsulation} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
@@ -832,7 +826,6 @@ describe('MatRipple', () => {
     </div>
   `,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicRippleContainer {
   @ViewChild('ripple') ripple!: MatRipple;
@@ -852,7 +845,6 @@ class BasicRippleContainer {
     <div class="alternateTrigger"></div>
   `,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RippleContainerWithInputBindings {
   animationConfig!: RippleAnimationConfig;
@@ -867,14 +859,12 @@ class RippleContainerWithInputBindings {
 @Component({
   template: `<div id="container" #ripple="matRipple" matRipple></div>`,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RippleContainerWithoutBindings {}
 
 @Component({
   template: `@if (!isDestroyed) {<div id="container" matRipple></div>}`,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RippleContainerWithNgIf {
   @ViewChild(MatRipple) ripple!: MatRipple;
@@ -886,7 +876,6 @@ class RippleContainerWithNgIf {
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RippleCssTransitionNone {}
 
@@ -895,7 +884,6 @@ class RippleCssTransitionNone {}
   template: `<div id="container" matRipple></div>`,
   encapsulation: ViewEncapsulation.None,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RippleCssTransitionDurationZero {}
 
@@ -906,7 +894,6 @@ class RippleCssTransitionDurationZero {}
     }
   `,
   imports: [MatRippleModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class RippleWithDomRemovalOnClick {
   show = true;

@@ -14,7 +14,7 @@ import {
 } from '@angular/cdk/overlay';
 import {
   ComponentRef,
-  Service,
+  Injectable,
   InjectionToken,
   Injector,
   OnDestroy,
@@ -54,7 +54,7 @@ export const MAT_DIALOG_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
 /**
  * Service to open Material Design modal dialogs.
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class MatDialog implements OnDestroy {
   private _defaultOptions = inject<MatDialogConfig>(MAT_DIALOG_DEFAULT_OPTIONS, {optional: true});
   private _scrollStrategy = inject(MAT_DIALOG_SCROLL_STRATEGY);
@@ -97,6 +97,8 @@ export class MatDialog implements OnDestroy {
       ? this._getAfterAllClosed()
       : this._getAfterAllClosed().pipe(startWith(undefined)),
   ) as Observable<any>;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     this._dialogRefConstructor = MatDialogRef;

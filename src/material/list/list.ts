@@ -7,6 +7,7 @@
  */
 
 import {
+  ChangeDetectionStrategy,
   Component,
   Input,
   ContentChildren,
@@ -37,6 +38,7 @@ export const MAT_LIST = new InjectionToken<MatList>('MatList');
   },
   styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatList}],
 })
 export class MatList extends MatListBase {}
@@ -58,6 +60,7 @@ export class MatList extends MatListBase {}
   },
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkObserveContent],
 })
 export class MatListItem extends MatListItemBase {

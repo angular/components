@@ -6,13 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  ViewEncapsulation,
-  inject,
-} from '@angular/core';
+import {Component, OnDestroy, ViewEncapsulation, inject} from '@angular/core';
 
 import {AnalyticsService} from './shared/analytics/analytics';
 import {NavigationFocusService} from './shared/navigation-focus/navigation-focus.service';
@@ -33,7 +27,6 @@ import {HeaderTagManager} from './shared/header-tag-manager';
   styleUrls: ['./material-docs-app.scss'],
   encapsulation: ViewEncapsulation.None,
   imports: [NavBar, RouterOutlet, CookiePopup],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class MaterialDocsApp implements OnDestroy {
   private _subscriptions = new Subscription();

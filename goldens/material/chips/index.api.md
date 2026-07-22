@@ -13,7 +13,6 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Field } from '@angular/forms/signals';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -32,7 +31,7 @@ import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
-export const MAT_CHIP: InjectionToken<MatChip>;
+export const MAT_CHIP: InjectionToken<unknown>;
 
 // @public
 export const MAT_CHIP_AVATAR: InjectionToken<unknown>;
@@ -54,7 +53,7 @@ export const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 // @public
 export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     protected _allEditIcons: QueryList<MatChipEdit>;
     protected _allLeadingIcons: QueryList<MatChipAvatar>;
     protected _allRemoveIcons: QueryList<MatChipRemove>;
@@ -164,6 +163,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
 
 // @public
 export class MatChipEditInput {
+    constructor(...args: unknown[]);
     // (undocumented)
     getNativeElement(): HTMLElement;
     // (undocumented)
@@ -185,7 +185,7 @@ export interface MatChipEvent {
 
 // @public
 export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterViewInit, ControlValueAccessor, DoCheck, MatFormFieldControl<any>, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     protected _allowFocusEscape(): void;
     _blur(): void;
     readonly change: EventEmitter<MatChipGridChange>;
@@ -229,8 +229,6 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     set placeholder(value: string);
     // (undocumented)
     protected _placeholder: string;
-    // (undocumented)
-    protected _redirectDestroyedChipFocus(): void;
     registerInput(inputElement: MatChipTextControl): void;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
@@ -266,7 +264,7 @@ export class MatChipGridChange {
 
 // @public
 export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     addOnBlur: boolean;
     _blur(): void;
     readonly chipEnd: EventEmitter<MatChipInputEvent>;
@@ -438,7 +436,7 @@ export class MatChipRemove extends MatChipAction {
 
 // @public
 export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     // (undocumented)
     protected basicChipAttrName: string;
     contentEditInput?: MatChipEditInput;
@@ -493,6 +491,7 @@ export class MatChipSelectionChange {
 
 // @public
 export class MatChipSet implements AfterViewInit, OnDestroy {
+    constructor(...args: unknown[]);
     protected _allowFocusEscape(): void;
     // (undocumented)
     protected _changeDetectorRef: ChangeDetectorRef;
@@ -517,7 +516,6 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     protected _hasFocusedChip(): boolean;
     protected _isValidIndex(index: number): boolean;
     protected _keyManager: FocusKeyManager<MatChipAction>;
-    protected _lastDestroyedFocusedChipIndex: number | null;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -527,7 +525,6 @@ export class MatChipSet implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     protected _originatesFromChip(event: Event): boolean;
-    protected _redirectDestroyedChipFocus(): void;
     get role(): string | null;
     set role(value: string | null);
     protected _skipPredicate(action: MatChipContent): boolean;

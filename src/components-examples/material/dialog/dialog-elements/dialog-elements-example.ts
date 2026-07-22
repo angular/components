@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {
   MatDialog,
@@ -15,6 +15,7 @@ import {
   selector: 'dialog-elements-example',
   templateUrl: 'dialog-elements-example.html',
   imports: [MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogElementsExample {
   readonly dialog = inject(MatDialog);
@@ -28,5 +29,6 @@ export class DialogElementsExample {
   selector: 'dialog-elements-example-dialog',
   templateUrl: 'dialog-elements-example-dialog.html',
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogClose, MatButtonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogElementsExampleDialog {}

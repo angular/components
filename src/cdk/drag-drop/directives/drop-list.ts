@@ -194,6 +194,8 @@ export class CdkDropList<T = any> implements OnDestroy {
    */
   private _unsortedItems = new Set<CdkDrag>();
 
+  constructor(...args: unknown[]);
+
   constructor() {
     const config = inject<DragDropConfig>(CDK_DRAG_CONFIG, {optional: true});
     const injector = inject(Injector);

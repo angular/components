@@ -8,7 +8,7 @@
 
 import {PositionStrategy} from './position-strategy';
 import {DOCUMENT, ElementRef, Injector} from '@angular/core';
-import {ViewportRuler, ScrollDispatcherTarget, ViewportScrollPosition} from '../../scrolling';
+import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '../../scrolling';
 import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
@@ -117,7 +117,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _viewportMargin: ViewportMargin = 0;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
-  private _scrollables: ScrollDispatcherTarget[] = [];
+  private _scrollables: CdkScrollable[] = [];
 
   /** Ordered list of preferred positions, from most to least desirable. */
   _preferredPositions: ConnectionPositionPair[] = [];
@@ -416,7 +416,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * on reposition we can evaluate if it or the overlay has been clipped or outside view. Every
    * Scrollable must be an ancestor element of the strategy's origin element.
    */
-  withScrollableContainers(scrollables: ScrollDispatcherTarget[]): this {
+  withScrollableContainers(scrollables: CdkScrollable[]): this {
     this._scrollables = scrollables;
     return this;
   }

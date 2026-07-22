@@ -1,11 +1,5 @@
-import {
-  Component,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ChangeDetectionStrategy,
-} from '@angular/core';
-
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {fakeAsync, flush} from '@angular/core/testing';
 import {CdkDropList} from './drop-list';
 import {CdkDrag} from './drag';
 import {moveItemInArray} from '../drag-utils';
@@ -26,7 +20,7 @@ describe('mixed drop list', () => {
     getSortedSiblings,
   });
 
-  it('should dispatch the `dropped` event in a wrapping drop zone', async () => {
+  it('should dispatch the `dropped` event in a wrapping drop zone', fakeAsync(() => {
     const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
     fixture.detectChanges();
     const dragItems = fixture.componentInstance.dragItems;
@@ -51,7 +45,7 @@ describe('mixed drop list', () => {
       seventhItemRect.left + 1,
       seventhItemRect.top + 1,
     );
-    await fixture.whenStable();
+    flush();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
@@ -81,29 +75,29 @@ describe('mixed drop list', () => {
       'Zero',
       'Seven',
     ]);
-  });
+  }));
 
-  it('should move the placeholder as an item is being sorted to the right in a wrapping drop zone', async () => {
+  it('should move the placeholder as an item is being sorted to the right in a wrapping drop zone', fakeAsync(() => {
     const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
     fixture.detectChanges();
-    await assertStartToEndSorting(
+    assertStartToEndSorting(
       'horizontal',
       fixture,
       getSortedSiblings,
       fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
     );
-  });
+  }));
 
-  it('should move the placeholder as an item is being sorted to the left in a wrapping drop zone', async () => {
+  it('should move the placeholder as an item is being sorted to the left in a wrapping drop zone', fakeAsync(() => {
     const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
     fixture.detectChanges();
-    await assertEndToStartSorting(
+    assertEndToStartSorting(
       'horizontal',
       fixture,
       getSortedSiblings,
       fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
     );
-  });
+  }));
 });
 
 function getSortedSiblings(item: Element) {
@@ -138,7 +132,6 @@ function getSortedSiblings(item: Element) {
     </div>
   `,
   imports: [CdkDropList, CdkDrag],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableInHorizontalWrappingDropZone {
   @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;

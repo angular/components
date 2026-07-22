@@ -15,6 +15,7 @@ import {
   QueryList,
   AfterContentInit,
   Directive,
+  ChangeDetectionStrategy,
   inject,
 } from '@angular/core';
 import {MatLine, setLines} from '../core';
@@ -34,6 +35,7 @@ import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
   templateUrl: 'grid-tile.html',
   styleUrl: 'grid-list.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatGridTile {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -41,6 +43,9 @@ export class MatGridTile {
 
   _rowspan: number = 1;
   _colspan: number = 1;
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Amount of rows that the grid tile takes up. */
   @Input()
@@ -72,12 +77,16 @@ export class MatGridTile {
 @Component({
   selector: 'mat-grid-tile-header, mat-grid-tile-footer',
   templateUrl: 'grid-tile-text.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatGridTileText implements AfterContentInit {
   private _element = inject<ElementRef<HTMLElement>>(ElementRef);
 
   @ContentChildren(MatLine, {descendants: true}) _lines!: QueryList<MatLine>;
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     setLines(this._lines, this._element);

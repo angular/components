@@ -7,7 +7,7 @@
  */
 
 import {CdkAccordionModule} from '@angular/cdk/accordion';
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ViewChild} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -37,6 +37,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     MatRadioModule,
     MatSlideToggleModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpansionDemo {
   @ViewChild(MatAccordion) accordion!: MatAccordion;

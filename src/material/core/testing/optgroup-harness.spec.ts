@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -69,6 +69,5 @@ describe('MatOptgroupHarness', () => {
     </mat-optgroup>
   `,
   imports: [MatOptionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class OptgroupHarnessTest {}

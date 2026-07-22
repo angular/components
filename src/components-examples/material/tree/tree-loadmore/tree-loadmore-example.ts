@@ -5,32 +5,56 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {Component, Service, inject, signal} from '@angular/core';
-import {MatTreeModule} from '@angular/material/tree';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {ChangeDetectionStrategy, Component, Injectable, inject} from '@angular/core';
+import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/material/tree';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
-/** Node data with optional children */
-interface TreeNode {
-  name: string;
-  parent: string | null;
-  expandable: boolean;
-  isLoadMore: boolean;
-  children?: TreeNode[];
+let loadMoreId = 1;
+
+/** Nested node */
+class NestedNode {
+  childrenChange = new BehaviorSubject<NestedNode[]>([]);
+
+  get children(): NestedNode[] {
+    return this.childrenChange.value;
+  }
+
+  constructor(
+    public name: string,
+    public hasChildren = false,
+    public parent: string | null = null,
+    public isLoadMore = false,
+  ) {}
+}
+
+/** Flat node with expandable and level information */
+export class FlatNode {
+  constructor(
+    public name: string,
+    public level = 1,
+    public expandable = false,
+    public parent: string | null = null,
+    public isLoadMore = false,
+  ) {}
 }
 
 /** Number of nodes loaded at a time */
 const batchSize = 3;
 
 /**
- * A database that only loads part of the data initially. After user clicks on the `Load more`
+ * A database that only load part of the data initially. After user clicks on the `Load more`
  * button, more data will be loaded.
  */
-@Service({autoProvided: false})
+@Injectable()
 export class LoadmoreDatabase {
   /** Map of node name to node */
-  private _nodes = new Map<string, TreeNode>();
+  nodes = new Map<string, NestedNode>();
+
+  dataChange = new BehaviorSubject<NestedNode[]>([]);
 
   /** Example data */
   rootNodes: string[] = ['Vegetables', 'Fruits'];
@@ -56,53 +80,42 @@ export class LoadmoreDatabase {
     ['Onion', ['Yellow', 'White', 'Purple', 'Green', 'Shallot', 'Sweet', 'Red', 'Leek']],
   ]);
 
-  initialize(): TreeNode[] {
-    return this.rootNodes.map(name => this._getOrCreateNode(name, null));
+  initialize() {
+    const data = this.rootNodes.map(name => this._generateNode(name, null));
+    this.dataChange.next(data);
   }
 
-  private _getOrCreateNode(name: string, parent: string | null): TreeNode {
-    if (!this._nodes.has(name)) {
-      this._nodes.set(name, {
-        name,
-        parent,
-        expandable: this.childMap.has(name),
-        isLoadMore: false,
-        children: undefined,
-      });
+  /** Expand a node whose children are not loaded */
+  loadChildren(name: string, onlyFirstTime = false) {
+    if (!this.nodes.has(name) || !this.childMap.has(name)) {
+      return;
     }
-    return this._nodes.get(name)!;
-  }
+    const parent = this.nodes.get(name)!;
+    const children = this.childMap.get(name)!;
 
-  /** Load children for a node, with pagination support */
-  loadChildren(parentName: string, onlyFirstTime = false): void {
-    const parent = this._nodes.get(parentName);
-    const childNames = this.childMap.get(parentName);
-    if (!parent || !childNames) {
+    if (onlyFirstTime && parent.children!.length > 0) {
       return;
     }
 
-    if (onlyFirstTime && parent.children && parent.children.length > 0) {
-      return;
+    const newChildrenNumber = parent.children!.length + batchSize;
+    const nodes = children
+      .slice(0, newChildrenNumber)
+      .map(name => this._generateNode(name, parent.name));
+    if (newChildrenNumber < children.length) {
+      // Need a new "Load More" node
+      nodes.push(new NestedNode(`LOAD_MORE-${loadMoreId++}`, false, name, true));
     }
 
-    const currentChildCount = parent.children?.filter(c => !c.isLoadMore).length ?? 0;
-    const newChildCount = currentChildCount + batchSize;
+    parent.childrenChange.next(nodes);
+    this.dataChange.next(this.dataChange.value);
+  }
 
-    const children = childNames
-      .slice(0, newChildCount)
-      .map(name => this._getOrCreateNode(name, parentName));
-
-    // Add "Load more" node if there are more children
-    if (newChildCount < childNames.length) {
-      children.push({
-        name: `LOAD_MORE_${parentName}_${Date.now()}`,
-        parent: parentName,
-        expandable: false,
-        isLoadMore: true,
-      });
+  private _generateNode(name: string, parent: string | null): NestedNode {
+    if (!this.nodes.has(name)) {
+      this.nodes.set(name, new NestedNode(name, this.childMap.has(name), parent));
     }
 
-    parent.children = children;
+    return this.nodes.get(name)!;
   }
 }
 
@@ -115,41 +128,78 @@ export class LoadmoreDatabase {
   styleUrl: 'tree-loadmore-example.css',
   providers: [LoadmoreDatabase],
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeLoadmoreExample {
   private _database = inject(LoadmoreDatabase);
 
-  dataSource = signal<TreeNode[]>([]);
-
-  childrenAccessor = (node: TreeNode) => node.children ?? [];
-
-  hasChild = (_: number, node: TreeNode) => node.expandable;
-
-  isLoadMore = (_: number, node: TreeNode) => node.isLoadMore;
+  nodeMap = new Map<string, FlatNode>();
+  treeControl: FlatTreeControl<FlatNode>;
+  treeFlattener: MatTreeFlattener<NestedNode, FlatNode>;
+  // Flat tree data source
+  dataSource: MatTreeFlatDataSource<NestedNode, FlatNode>;
 
   constructor() {
-    this.dataSource.set(this._database.initialize());
+    const _database = this._database;
+
+    this.treeFlattener = new MatTreeFlattener(
+      this.transformer,
+      this.getLevel,
+      this.isExpandable,
+      this.getChildren,
+    );
+
+    // TODO(#27626): Remove treeControl. Adopt either levelAccessor or childrenAccessor.
+    this.treeControl = new FlatTreeControl<FlatNode>(this.getLevel, this.isExpandable);
+
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+    _database.dataChange.subscribe(data => {
+      this.dataSource.data = data;
+    });
+
+    _database.initialize();
   }
 
-  loadChildren(node: TreeNode) {
+  getChildren = (node: NestedNode): Observable<NestedNode[]> => node.childrenChange;
+
+  transformer = (node: NestedNode, level: number) => {
+    const existingNode = this.nodeMap.get(node.name);
+
+    if (existingNode) {
+      return existingNode;
+    }
+
+    const newNode = new FlatNode(node.name, level, node.hasChildren, node.parent, node.isLoadMore);
+    this.nodeMap.set(node.name, newNode);
+    return newNode;
+  };
+
+  getLevel = (node: FlatNode) => node.level;
+
+  isExpandable = (node: FlatNode) => node.expandable;
+
+  hasChild = (_: number, node: FlatNode) => node.expandable;
+
+  isLoadMore = (_: number, node: FlatNode) => node.isLoadMore;
+
+  loadChildren(node: FlatNode) {
     this._database.loadChildren(node.name, true);
-    // Trigger change detection by updating the signal
-    this.dataSource.set([...this.dataSource()]);
   }
 
   /** Load more nodes when clicking on "Load more" node. */
-  loadOnClick(event: MouseEvent, node: TreeNode) {
+  loadOnClick(event: MouseEvent, node: FlatNode) {
     this._loadSiblings(event.target as HTMLElement, node);
   }
 
-  /** Load more nodes on keypress when focused on "Load more" node */
-  loadOnKeypress(event: KeyboardEvent, node: TreeNode) {
+  /** Load more nodes on keyboardpress when focused on "Load more" node */
+  loadOnKeypress(event: KeyboardEvent, node: FlatNode) {
     if (event.keyCode === ENTER || event.keyCode === SPACE) {
       this._loadSiblings(event.target as HTMLElement, node);
     }
   }
 
-  private _loadSiblings(nodeElement: HTMLElement, node: TreeNode) {
+  private _loadSiblings(nodeElement: HTMLElement, node: FlatNode) {
     if (node.parent) {
       // Store a reference to the sibling of the "Load More" node before it is removed from the DOM
       const previousSibling = nodeElement.previousElementSibling;
@@ -157,14 +207,11 @@ export class TreeLoadmoreExample {
       // Synchronously load data.
       this._database.loadChildren(node.parent);
 
-      // Trigger change detection
-      this.dataSource.set([...this.dataSource()]);
+      const focusDesination = previousSibling?.nextElementSibling || previousSibling;
 
-      const focusDestination = previousSibling?.nextElementSibling || previousSibling;
-
-      if (focusDestination) {
+      if (focusDesination) {
         // Restore focus.
-        (focusDestination as HTMLElement).focus();
+        (focusDesination as HTMLElement).focus();
       }
     }
   }

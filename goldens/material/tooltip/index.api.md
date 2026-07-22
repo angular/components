@@ -34,7 +34,7 @@ export const MAT_TOOLTIP_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
 export class MatTooltip implements OnDestroy, AfterViewInit {
-    constructor();
+    constructor(...args: unknown[]);
     protected _addOffset(position: ConnectedPosition): ConnectedPosition;
     // (undocumented)
     protected _dir: Directionality;
@@ -92,7 +92,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
 // @public
 export interface MatTooltipDefaultOptions {
-    detectHoverCapability?: boolean | (() => boolean);
+    detectHoverCapability?: boolean;
     disableTooltipInteractivity?: boolean;
     hideDelay: number;
     position?: TooltipPosition;
@@ -122,14 +122,15 @@ export const TOOLTIP_PANEL_CLASS = "mat-mdc-tooltip-panel";
 
 // @public
 export class TooltipComponent implements OnDestroy {
+    constructor(...args: unknown[]);
     afterHidden(): Observable<void>;
     _cancelPendingAnimations(): void;
     // (undocumented)
     protected _elementRef: ElementRef<HTMLElement>;
-    _handleAnimationEnd(input: AnimationEvent): void;
+    _handleAnimationEnd({ animationName }: AnimationEvent): void;
     _handleBodyInteraction(): void;
     // (undocumented)
-    _handleMouseLeave(input: MouseEvent): void;
+    _handleMouseLeave({ relatedTarget }: MouseEvent): void;
     hide(delay: number): void;
     // (undocumented)
     _isMultiline: boolean;

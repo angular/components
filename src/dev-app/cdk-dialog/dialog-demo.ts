@@ -8,6 +8,7 @@
 
 import {DIALOG_DATA, Dialog, DialogConfig, DialogModule, DialogRef} from '@angular/cdk/dialog';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   TemplateRef,
@@ -25,6 +26,7 @@ const defaultDialogConfig = new DialogConfig();
   styleUrl: 'dialog-demo.css',
   encapsulation: ViewEncapsulation.None,
   imports: [DialogModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDemo {
   dialog = inject(Dialog);
@@ -106,6 +108,7 @@ export class DialogDemo {
       opacity: 0;
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JazzDialog {
   dialogRef = inject<DialogRef<string>>(DialogRef);

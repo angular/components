@@ -12,10 +12,14 @@ $_is-external-build: true;
   @include radio-common.radio-structure(true);
   @include radio-common.radio-noop-animations();
 
-  // TODO(crisbeto): disable internally due to a large amount of breakages.
-  // Prevent the label from taking up space when it's empty.
-  @if ($_is-external-build) {
-    .mat-internal-form-field-label {
+  // Clicking the label toggles the radio, but MDC does not include any styles that inform the
+  // user of this. Therefore we add the pointer cursor on top of MDC's styles.
+  label {
+    cursor: pointer;
+
+    // TODO(crisbeto): disable internally due to a large amount of breakages.
+    // Prevent the label from taking up space when it's empty.
+    @if ($_is-external-build) {
       &:empty {
         display: none;
       }
@@ -47,10 +51,9 @@ $_is-external-build: true;
     font-size: token-utils.slot(radio-label-text-size, $fallbacks);
     letter-spacing: token-utils.slot(radio-label-text-tracking, $fallbacks);
     font-weight: token-utils.slot(radio-label-text-weight, $fallbacks);
-    cursor: pointer;
   }
 
-  .mdc-radio--disabled + .mat-internal-form-field-label {
+  .mdc-radio--disabled + label {
     color: token-utils.slot(radio-disabled-label-color, $fallbacks);
   }
 

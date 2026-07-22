@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
@@ -39,6 +39,7 @@ interface Color {
     </div>
   `,
   styleUrl: 'theme-demo.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemeDemoColors {
   colors = input<Color[]>();
@@ -49,6 +50,7 @@ export class ThemeDemoColors {
   templateUrl: 'theme-demo.html',
   styleUrl: 'theme-demo.css',
   imports: [MatCardModule, MatExpansionModule, MatIconModule, ThemeDemoColors],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemeDemo {
   state = getAppState();

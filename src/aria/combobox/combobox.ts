@@ -10,154 +10,153 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
+  contentChild,
   Directive,
   ElementRef,
   inject,
   input,
-  model,
-  OnInit,
   signal,
-  Renderer2,
 } from '@angular/core';
-import {DeferredContentAware, ComboboxPattern, tabIndexTransform} from '@angular/aria/private';
-import type {ComboboxPopup} from './combobox-popup';
+import {DeferredContentAware, ComboboxPattern} from '../private';
+import {Directionality} from '@angular/cdk/bidi';
+import {COMBOBOX} from './combobox-tokens';
+import {ComboboxPopup} from './combobox-popup';
 
 /**
- * A directive that coordinates a combobox trigger element and its associated popup widget.
+ * The container element that wraps a combobox input and popup, and orchestrates its behavior.
  *
- * The `ngCombobox` directive is applied directly to the interactive trigger element, which can be
- * either an editable `<input>` (for search/autocomplete behaviors) or a non-editable element like
- * a `<div>` (for custom select dropdowns). It manages focus and expansion states, coordinates autocomplete
- * suggestions (if editable), and forwards navigation keys down into the active popup.
+ * The `ngCombobox` directive is the main entry point for creating a combobox and customizing its
+ * behavior. It coordinates the interactions between the `ngComboboxInput` and the popup, which
+ * is defined by a `ng-template` with the `ngComboboxPopupContainer` directive. If using the
+ * `CdkOverlay`, the `cdkConnectedOverlay` directive takes the place of `ngComboboxPopupContainer`.
  *
- * ### Example 1: Editable Autocomplete Input
  * ```html
- * <input ngCombobox #combobox="ngCombobox" [(value)]="searchQuery" [(expanded)]="isExpanded" />
+ * <div ngCombobox filterMode="highlight">
+ *   <input
+ *     ngComboboxInput
+ *     placeholder="Search for a state..."
+ *     [(value)]="searchString"
+ *   />
  *
- * <ng-template ngComboboxPopup [combobox]="combobox">
- *   <div ngComboboxWidget #listbox="ngListbox" ngListbox [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
- *     <div ngOption value="first">First Option</div>
- *     <div ngOption value="second">Second Option</div>
- *   </div>
- * </ng-template>
- * ```
- *
- * ### Example 2: Non-Editable Custom Select Dropdown
- * ```html
- * <div ngCombobox #combobox="ngCombobox" [(expanded)]="isExpanded" class="select-trigger">
- *   {{selectedValue}}
+ *   <ng-template ngComboboxPopupContainer>
+ *     <div ngListbox [(value)]="selectedValue">
+ *       @for (option of filteredOptions(); track option) {
+ *         <div ngOption [value]="option" [label]="option">
+ *           <span>{{option}}</span>
+ *         </div>
+ *       }
+ *     </div>
+ *   </ng-template>
  * </div>
- *
- * <ng-template ngComboboxPopup [combobox]="combobox">
- *   <div ngComboboxWidget #listbox="ngListbox" ngListbox [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
- *     <div ngOption value="first">First Option</div>
- *     <div ngOption value="second">Second Option</div>
- *   </div>
- * </ng-template>
  * ```
+ *
+ * @developerPreview 21.0
+ *
+ * @see [Combobox](guide/aria/combobox)
+ * @see [Select](guide/aria/select)
+ * @see [Multiselect](guide/aria/multiselect)
+ * @see [Autocomplete](guide/aria/autocomplete)
  */
 @Directive({
   selector: '[ngCombobox]',
   exportAs: 'ngCombobox',
+  hostDirectives: [
+    {
+      directive: DeferredContentAware,
+      inputs: ['preserveContent'],
+    },
+  ],
   host: {
-    'role': 'combobox',
-    '[attr.aria-autocomplete]': '_pattern.autocomplete()',
-    '[attr.aria-disabled]': '_pattern.disabled()',
-    '[attr.aria-readonly]': '_pattern.ariaReadonly()',
-    '[attr.aria-expanded]': '_pattern.isExpanded()',
-    '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
-    '[attr.aria-controls]': '_pattern.popupId()',
-    '[attr.aria-haspopup]': '_pattern.popupType()',
-    '[attr.tabindex]':
-      'disabled() && !softDisabled() ? -1 : (tabIndex() !== undefined ? tabIndex() : 0)',
-    '[attr.disabled]': '_pattern.nativeDisabled()',
-    '[attr.readonly]': '_pattern.nativeReadonly()',
-    '(keydown)': '_pattern.onKeydown($event)',
-    '(focusin)': '_pattern.onFocusin()',
-    '(focusout)': '_pattern.onFocusout()',
-    '(click)': '_pattern.onClick($event)',
+    '[attr.data-expanded]': 'expanded()',
     '(input)': '_pattern.onInput($event)',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(click)': '_pattern.onClick($event)',
+    '(focusin)': '_pattern.onFocusIn()',
+    '(focusout)': '_pattern.onFocusOut($event)',
   },
+  providers: [{provide: COMBOBOX, useExisting: Combobox}],
 })
-export class Combobox extends DeferredContentAware implements OnInit {
-  private readonly _renderer = inject(Renderer2);
+export class Combobox<V> {
+  /** A signal wrapper for directionality. */
+  protected textDirection = inject(Directionality).valueSignal.asReadonly();
 
   /** The element that the combobox is attached to. */
-  private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+  private readonly _elementRef = inject(ElementRef);
 
-  /** A reference to the input element. */
-  readonly element = this._elementRef.nativeElement;
+  /** A reference to the combobox element. */
+  readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The popup associated with the combobox. */
-  readonly _popup = signal<ComboboxPopup | undefined>(undefined);
+  /** The DeferredContentAware host directive. */
+  private readonly _deferredContentAware = inject(DeferredContentAware, {optional: true});
+
+  /** The combobox popup. */
+  readonly popup = contentChild<ComboboxPopup<V>>(ComboboxPopup);
+
+  /**
+   * The filter mode for the combobox.
+   * - `manual`: The consumer is responsible for filtering the options.
+   * - `auto-select`: The combobox automatically selects the first matching option.
+   * - `highlight`: The combobox highlights matching text in the options without changing selection.
+   */
+  filterMode = input<'manual' | 'auto-select' | 'highlight'>('manual');
 
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
 
-  /** Whether the combobox is readonly. */
+  /** Whether the combobox is read-only. */
   readonly readonly = input(false, {transform: booleanAttribute});
 
-  /** Whether the combobox is soft disabled (remains focusable). */
-  readonly softDisabled = input(true, {transform: booleanAttribute});
-
-  /** Whether the combobox should always remain expanded. */
-  readonly alwaysExpanded = input(false, {transform: booleanAttribute});
-
-  /** The tabindex of the combobox. */
-  readonly tabIndex = input(undefined, {
-    alias: 'tabindex',
-    transform: tabIndexTransform,
-  });
+  /** The value of the first matching item in the popup. */
+  readonly firstMatch = input<V | undefined>(undefined);
 
   /** Whether the combobox is expanded. */
-  readonly expanded = model<boolean>(false);
+  readonly expanded = computed(() => this.alwaysExpanded() || this._pattern.expanded());
 
-  /** The value of the combobox input. */
-  readonly value = model<string>('');
+  // TODO: Maybe make expanded a signal that can be passed in?
+  // Or an "always expanded" option?
 
-  /** An inline suggestion to be displayed in the input. */
-  readonly inlineSuggestion = input<string | undefined>(undefined);
+  /** Whether the combobox popup should always be expanded, regardless of user interaction. */
+  readonly alwaysExpanded = input(false, {transform: booleanAttribute});
+
+  /** Input element connected to the combobox, if any. */
+  readonly inputElement = computed(() => this._pattern.inputs.inputEl());
 
   /** The combobox ui pattern. */
-  readonly _pattern = new ComboboxPattern({
+  readonly _pattern = new ComboboxPattern<any, V>({
     ...this,
-    readonly: () => this.readonly(),
-    element: () => this.element,
-    expandable: () => true,
-    popup: computed(() => this._popup()?._pattern),
+    textDirection: this.textDirection,
+    disabled: this.disabled,
+    readonly: this.readonly,
+    inputValue: signal(''),
+    inputEl: signal(undefined),
+    containerEl: () => this._elementRef.nativeElement,
+    popupControls: () => this.popup()?._controls(),
   });
 
   constructor() {
-    super();
-
-    afterRenderEffect({write: () => this._pattern.keyboardEventRelayEffect()});
     afterRenderEffect(() => {
-      this.contentVisible.set(this._pattern.isExpanded());
+      if (this.alwaysExpanded()) {
+        this._pattern.expanded.set(true);
+      }
     });
 
-    if (this._pattern.isEditable()) {
-      afterRenderEffect(() => {
-        this._renderer.setProperty(this.element, 'value', this.value());
-      });
-      afterRenderEffect(() => {
-        this._pattern.highlightEffect();
-      });
-    }
+    afterRenderEffect(() => {
+      if (
+        !this._deferredContentAware?.contentVisible() &&
+        (this._pattern.isFocused() || this.alwaysExpanded())
+      ) {
+        this._deferredContentAware?.contentVisible.set(true);
+      }
+    });
   }
 
-  ngOnInit() {
-    if (this.alwaysExpanded()) {
-      this.expanded.set(true);
-    }
+  /** Opens the combobox to the selected item. */
+  open() {
+    this._pattern.open({selected: true});
   }
 
-  /** Registers a popup with the combobox. */
-  _registerPopup(popup: ComboboxPopup) {
-    this._popup.set(popup);
-  }
-
-  /** Unregisters the popup from the combobox. */
-  _unregisterPopup() {
-    this._popup.set(undefined);
+  /** Closes the combobox. */
+  close() {
+    this._pattern.close();
   }
 }

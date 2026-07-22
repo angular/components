@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, OnDestroy, inject, DOCUMENT} from '@angular/core';
+import {Injectable, OnDestroy, inject, DOCUMENT} from '@angular/core';
 import type {OverlayRef} from '../overlay-ref';
 import {Subject} from 'rxjs';
 
@@ -15,13 +15,17 @@ import {Subject} from 'rxjs';
  * if any. It maintains a list of attached overlays to determine best suited overlay based
  * on event target and order of overlay opens.
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export abstract class BaseOverlayDispatcher implements OnDestroy {
   /** Currently attached overlays in the order they were attached. */
   _attachedOverlays: OverlayRef[] = [];
 
   protected _document = inject(DOCUMENT);
   protected _isAttached = false;
+
+  constructor(...args: unknown[]);
+
+  constructor() {}
 
   ngOnDestroy(): void {
     this.detach();

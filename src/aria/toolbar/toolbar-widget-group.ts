@@ -14,16 +14,17 @@ import {
   input,
   booleanAttribute,
   contentChildren,
-  afterRenderEffect,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern, reportViolations} from '../private';
+import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '../private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidget} from './toolbar-widget';
-import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
+import {TOOLBAR_WIDGET_GROUP} from './utils';
 
 /**
  * A directive that groups toolbar widgets, used for more complex widgets like radio groups
  * that have their own internal navigation.
+ *
+ * @developerPreview 21.0
  *
  * @see [Toolbar](guide/aria/toolbar)
  */
@@ -63,19 +64,4 @@ export class ToolbarWidgetGroup<V> {
     items: this._itemPatterns,
     toolbar: this._toolbarPattern,
   });
-
-  constructor() {
-    // Check for any violations after the DOM has been updated.
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      afterRenderEffect({
-        read: () => {
-          const violations: string[] = [];
-          if (!this._toolbar) {
-            violations.push('ngToolbarWidgetGroup must be placed inside an ngToolbar container.');
-          }
-          reportViolations(violations, this.element);
-        },
-      });
-    }
-  }
 }

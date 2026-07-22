@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
@@ -9,6 +9,7 @@ import {MatSelectModule} from '@angular/material/select';
   templateUrl: 'form-field-hint-example.html',
   styleUrl: 'form-field-hint-example.css',
   imports: [MatFormFieldModule, MatInputModule, MatSelectModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldHintExample {
   protected readonly value = signal('');

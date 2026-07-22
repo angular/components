@@ -9,6 +9,7 @@
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {JsonPipe} from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   TemplateRef,
@@ -53,6 +54,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatSelectModule,
     JsonPipe,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DialogDemo {
   dialog = inject(MatDialog);
@@ -176,6 +178,7 @@ export class DialogDemo {
   encapsulation: ViewEncapsulation.None,
   styles: `.hidden-dialog { opacity: 0; }`,
   imports: [DragDropModule, MatInputModule, MatSelectModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JazzDialog {
   dialogRef = inject<MatDialogRef<JazzDialog>>(MatDialogRef<JazzDialog>);
@@ -250,6 +253,7 @@ export class JazzDialog {
     </mat-dialog-actions>
   `,
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContentElementDialog {
   dialog = inject(MatDialog);
@@ -285,5 +289,6 @@ export class ContentElementDialog {
     </mat-dialog-actions>
   `,
   imports: [MatButtonModule, MatDialogTitle, MatDialogContent, MatDialogClose, MatDialogActions],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IFrameDialog {}

@@ -63,19 +63,6 @@ const HEADER_SCROLL_INTERVAL = 100;
 /** Item inside a paginated tab header. */
 export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRef};
 
-/** Normalizes an animation duration value. */
-export function normalizeDuration(value: string | number): string {
-  const stringValue = value + '';
-
-  if (/^[0-9]+(?:\.[0-9]+)?$/.test(stringValue)) {
-    return `${value}ms`;
-  } else if (/^[0-9]+(?:\.[0-9]+)?(?:ms|s)$/.test(stringValue)) {
-    return stringValue;
-  } else {
-    return '';
-  }
-}
-
 /**
  * Base class for a tab header that supported pagination.
  * @docs-private
@@ -171,6 +158,8 @@ export abstract class MatPaginatedTabHeader
 
   /** Event emitted when a label is focused. */
   @Output() readonly indexFocused: EventEmitter<number> = new EventEmitter<number>();
+
+  constructor(...args: unknown[]);
 
   constructor() {
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.

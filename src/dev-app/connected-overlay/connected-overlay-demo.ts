@@ -20,6 +20,7 @@ import {
 import {TemplatePortal} from '@angular/cdk/portal';
 import {CdkOverlayBasicExample} from '@angular/components-examples/cdk/overlay';
 import {
+  ChangeDetectionStrategy,
   Component,
   Injector,
   TemplateRef,
@@ -46,6 +47,7 @@ import {MatRadioModule} from '@angular/material/radio';
     MatRadioModule,
     OverlayModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectedOverlayDemo {
   private _injector = inject(Injector);

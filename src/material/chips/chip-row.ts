@@ -9,6 +9,7 @@
 import {ENTER} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   EventEmitter,
@@ -71,6 +72,7 @@ export interface MatChipEditedEvent extends MatChipEvent {
     {provide: MAT_CHIP, useExisting: MatChipRow},
   ],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatChipAction, MatChipEditInput],
 })
 export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
@@ -107,6 +109,8 @@ export class MatChipRow extends MatChip implements AfterViewInit, OnDestroy {
   private _alreadyFocused = false;
 
   _isEditing = false;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();

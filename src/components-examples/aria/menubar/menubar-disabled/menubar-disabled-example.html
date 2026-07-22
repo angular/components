@@ -14,7 +14,6 @@
     [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlay]="{origin: fileEl, usePopover: 'inline'}"
     [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
-    [cdkConnectedOverlayDisableClose]="true"
     cdkAttachPopoverAsChild
   >
     <div ngMenu #fileMenu="ngMenu">
@@ -48,7 +47,6 @@
           [cdkConnectedOverlayOpen]="!!fileItem.expanded()"
           [cdkConnectedOverlay]="{origin: shareEl, usePopover: 'inline'}"
           [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-          [cdkConnectedOverlayDisableClose]="true"
           cdkAttachPopoverAsChild
         >
           <div ngMenu #shareMenu="ngMenu">
@@ -106,7 +104,6 @@
     [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlay]="{origin: editEl, usePopover: 'inline'}"
     [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
-    [cdkConnectedOverlayDisableClose]="true"
     cdkAttachPopoverAsChild
   >
     <div ngMenu #editMenu="ngMenu">
@@ -169,7 +166,6 @@
     [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlay]="{origin: viewEl, usePopover: 'inline'}"
     [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
-    [cdkConnectedOverlayDisableClose]="true"
     cdkAttachPopoverAsChild
   >
     <div ngMenu #viewMenu="ngMenu">
@@ -220,7 +216,6 @@
     [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlay]="{origin: insertEl, usePopover: 'inline'}"
     [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
-    [cdkConnectedOverlayDisableClose]="true"
     cdkAttachPopoverAsChild
   >
     <div ngMenu #insertMenu="ngMenu">
@@ -235,7 +230,6 @@
           [cdkConnectedOverlayOpen]="!!insertItem.expanded()"
           [cdkConnectedOverlay]="{origin: imageEl, usePopover: 'inline'}"
           [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-          [cdkConnectedOverlayDisableClose]="true"
           cdkAttachPopoverAsChild
         >
           <div ngMenu #imageMenu="ngMenu">
@@ -273,7 +267,6 @@
           [cdkConnectedOverlayOpen]="!!insertItem.expanded()"
           [cdkConnectedOverlay]="{origin: chartEl, usePopover: 'inline'}"
           [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-          [cdkConnectedOverlayDisableClose]="true"
           cdkAttachPopoverAsChild
         >
           <div ngMenu #chartMenu="ngMenu">
@@ -324,7 +317,6 @@
     [cdkConnectedOverlayOpen]="true"
     [cdkConnectedOverlay]="{origin: formatEl, usePopover: 'inline'}"
     [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
-    [cdkConnectedOverlayDisableClose]="true"
     cdkAttachPopoverAsChild
   >
     <div ngMenu #formatMenu="ngMenu">
@@ -339,7 +331,6 @@
           [cdkConnectedOverlayOpen]="!!formatItem.expanded()"
           [cdkConnectedOverlay]="{origin: textEl, usePopover: 'inline'}"
           [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-          [cdkConnectedOverlayDisableClose]="true"
           cdkAttachPopoverAsChild
         >
           <div ngMenu #textMenu="ngMenu">
@@ -379,7 +370,6 @@
                 [cdkConnectedOverlayOpen]="!!textItem.expanded()"
                 [cdkConnectedOverlay]="{origin: sizeEl, usePopover: 'inline'}"
                 [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-                [cdkConnectedOverlayDisableClose]="true"
                 cdkAttachPopoverAsChild
               >
                 <div ngMenu #sizeMenu="ngMenu">
@@ -410,7 +400,6 @@
           [cdkConnectedOverlayOpen]="!!formatItem.expanded()"
           [cdkConnectedOverlay]="{origin: paragraphEl, usePopover: 'inline'}"
           [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-          [cdkConnectedOverlayDisableClose]="true"
           cdkAttachPopoverAsChild
         >
           <div ngMenu #paragraphMenu="ngMenu">
@@ -432,7 +421,6 @@
           [cdkConnectedOverlayOpen]="!!formatItem.expanded()"
           [cdkConnectedOverlay]="{origin: alignEl, usePopover: 'inline'}"
           [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
-          [cdkConnectedOverlayDisableClose]="true"
           cdkAttachPopoverAsChild
         >
           <div ngMenu #alignMenu="ngMenu">

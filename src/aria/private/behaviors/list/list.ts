@@ -50,28 +50,28 @@ export type ListInputs<T extends ListItem<V>, V> = ListFocusInputs<T> &
 /** Controls the state of a list. */
 export class List<T extends ListItem<V>, V> {
   /** Controls navigation for the list. */
-  readonly navigationBehavior: ListNavigation<T>;
+  navigationBehavior: ListNavigation<T>;
 
   /** Controls selection for the list. */
-  readonly selectionBehavior: ListSelection<T, V>;
+  selectionBehavior: ListSelection<T, V>;
 
   /** Controls typeahead for the list. */
-  readonly typeaheadBehavior: ListTypeahead<T>;
+  typeaheadBehavior: ListTypeahead<T>;
 
   /** Controls focus for the list. */
-  readonly focusBehavior: ListFocus<T>;
+  focusBehavior: ListFocus<T>;
 
   /** Whether the list is disabled. */
-  readonly disabled = computed(() => this.focusBehavior.isListDisabled());
+  disabled = computed(() => this.focusBehavior.isListDisabled());
 
   /** The id of the current active item. */
-  readonly activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
+  activeDescendant = computed(() => this.focusBehavior.getActiveDescendant());
 
   /** The tab index of the list. */
-  readonly tabIndex = computed(() => this.focusBehavior.getListTabIndex());
+  tabIndex = computed(() => this.focusBehavior.getListTabIndex());
 
   /** The index of the currently active item in the list. */
-  readonly activeIndex = computed(() => this.focusBehavior.activeIndex());
+  activeIndex = computed(() => this.focusBehavior.activeIndex());
 
   /**
    * The uncommitted index for selecting a range of options.
@@ -85,10 +85,10 @@ export class List<T extends ListItem<V>, V> {
    * In other words, "rangeStartIndex" is only set when a user commits to starting a range selection
    * while "anchorIndex" is set whenever a user indicates they may be starting a range selection.
    */
-  private readonly _anchorIndex = signal(0);
+  private _anchorIndex = signal(0);
 
   /** Whether the list should wrap. Used to disable wrapping while range selecting. */
-  private readonly _wrap = signal(true);
+  private _wrap = signal(true);
 
   constructor(readonly inputs: ListInputs<T, V>) {
     this.focusBehavior = new ListFocus(inputs);
@@ -229,9 +229,6 @@ export class List<T extends ListItem<V>, V> {
 
     if (moved) {
       this.updateSelection(opts);
-      if (!opts?.selectRange) {
-        this.anchor(this.activeIndex());
-      }
     }
 
     this._wrap.set(true);

@@ -4,6 +4,7 @@
     "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
+    "rootDir": ".",
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "noPropertyAccessFromIndexSignature": true,

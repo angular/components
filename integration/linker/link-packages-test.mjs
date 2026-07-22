@@ -7,7 +7,7 @@ import {createEs2015LinkerPlugin} from '@angular/compiler-cli/linker/babel';
 import {NodeJSFileSystem, ConsoleLogger, LogLevel} from '@angular/compiler-cli';
 import fs from 'fs';
 import path from 'path';
-import {transformSync, traverse} from '@babel/core';
+import babel from '@babel/core';
 import {sync as globSync} from 'glob';
 import chalk from 'chalk';
 
@@ -78,7 +78,7 @@ function testPackage(pkg) {
     // Babel throws errors if the transformation fails. We catch these so that we
     // can print incompatible entry points with their errors at the end.
     try {
-      const {ast} = transformSync(fileContent, {
+      const {ast} = babel.transformSync(fileContent, {
         ast: true,
         filename: diskFilePath,
         filenameRelative: debugFileName,
@@ -86,7 +86,7 @@ function testPackage(pkg) {
       });
 
       // Naively check if there are any Angular declarations left that haven't been linked.
-      traverse(ast, {
+      babel.traverse(ast, {
         Identifier: astPath => {
           if (astPath.node.name.startsWith('ɵɵngDeclare')) {
             throw astPath.buildCodeFrameError(

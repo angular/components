@@ -6,157 +6,99 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxPopup,
+  ComboboxPopupContainer,
+} from '@angular/aria/combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
 import {
-  Component,
   afterRenderEffect,
+  ChangeDetectionStrategy,
+  Component,
   computed,
-  effect,
+  ElementRef,
   signal,
   viewChild,
-  untracked,
 } from '@angular/core';
+import {TREE_NODES, TreeNode} from '../data';
 import {NgTemplateOutlet} from '@angular/common';
-import {OverlayModule} from '@angular/cdk/overlay';
-
-interface SeasonNode {
-  name: string;
-  children?: SeasonNode[];
-  expanded?: boolean;
-}
 
 /** @title Combobox with tree popup and highlight filtering. */
 @Component({
   selector: 'combobox-tree-highlight-example',
   templateUrl: 'combobox-tree-highlight-example.html',
-  styleUrl: '../combobox-example.css',
+  styleUrl: '../combobox-examples.css',
   imports: [
     Combobox,
+    ComboboxInput,
     ComboboxPopup,
-    ComboboxWidget,
-    NgTemplateOutlet,
+    ComboboxPopupContainer,
     Tree,
     TreeItem,
     TreeItemGroup,
-    OverlayModule,
+    NgTemplateOutlet,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxTreeHighlightExample {
-  readonly tree = viewChild(Tree);
+  popover = viewChild<ElementRef>('popover');
+  tree = viewChild<Tree<TreeNode>>(Tree);
+  combobox = viewChild<Combobox<any>>(Combobox);
 
-  popupExpanded = signal(false);
   searchString = signal('');
-  selectedValues = signal<string[]>([]);
-  navigated = signal(false);
 
-  readonly dataSource = signal(SEASON_DATA);
+  nodes = computed(() => this.filterTreeNodes(TREE_NODES));
 
-  constructor() {
-    afterRenderEffect(() => this._focusAndSelectFirstMatch());
-
-    afterRenderEffect(() => {
-      const active = this.tree()?._pattern.activeItem();
-      if (active) {
-        untracked(() => {
-          active.element()?.scrollIntoView({block: 'nearest'});
-        });
-      }
-    });
-
-    effect(() => {
-      if (!this.popupExpanded()) {
-        this.navigated.set(false);
-      }
-    });
-  }
-
-  // Selects the first matching child within the tree filters.
-  private _focusAndSelectFirstMatch() {
-    this.filteredGroups();
-
-    const option = this.firstMatchingOption();
-    const treeInstance = this.tree();
-    if (option && treeInstance) {
-      untracked(() => {
-        const matchedItem = treeInstance._pattern.items().find(item => item.value() === option);
-        if (matchedItem) {
-          treeInstance._pattern.treeBehavior.goto(matchedItem, {selectOne: true});
-        }
-      });
-    }
-  }
-
-  filteredData = computed(() => {
-    const search = this.searchString().trim().toLowerCase();
-    const data = this.dataSource();
-
-    if (!search) {
-      return {groups: data, firstMatch: undefined};
-    }
-
-    let firstMatch: string | undefined = undefined;
-
-    const filterNode = (node: SeasonNode): SeasonNode | null => {
-      // Find the first leaf node that starts with the search string
-      if (!firstMatch && !node.children && node.name.toLowerCase().startsWith(search)) {
-        firstMatch = node.name;
-      }
-
-      const matches = node.name.toLowerCase().includes(search);
-      const children = node.children
-        ?.map(child => filterNode(child))
-        .filter((child): child is SeasonNode => child !== null);
-
-      if (matches || (children && children.length > 0)) {
-        return {
-          ...node,
-          children,
-          expanded: children && children.length > 0 ? true : node.expanded,
-        };
-      }
-
-      return null;
-    };
-
-    const groups = data
-      .map(node => filterNode(node))
-      .filter((node): node is SeasonNode => node !== null);
-    return {groups, firstMatch};
+  firstMatch = computed<string | undefined>(() => {
+    const flatNodes = this.flattenTreeNodes(this.nodes());
+    const node = flatNodes.find(n => this.isMatch(n));
+    return node?.name;
   });
 
-  filteredGroups = computed(() => this.filteredData().groups);
-  firstMatchingOption = computed(() => this.filteredData().firstMatch);
+  flattenTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.flatMap(node => {
+      return node.children ? [node, ...this.flattenTreeNodes(node.children)] : [node];
+    });
+  }
 
-  onCommit() {
-    const treeInstance = this.tree();
-    if (!treeInstance) return;
-
-    const activeItem = treeInstance._pattern.activeItem();
-
-    if (activeItem) {
-      if (activeItem.selectable()) {
-        // Selectable child: commit value and close popup.
-        const selected = this.selectedValues();
-        if (selected.length > 0) {
-          this.searchString.set(selected[0]);
-          this.popupExpanded.set(false);
-        }
-      } else {
-        // Non-selectable parent: expand and focus its first child.
-        const children = activeItem.children();
-        if (children.length > 0) {
-          const firstChild = children[0];
-          treeInstance._pattern.treeBehavior.goto(firstChild);
-        }
+  filterTreeNodes(nodes: TreeNode[]): TreeNode[] {
+    return nodes.reduce((acc, node) => {
+      const children = node.children ? this.filterTreeNodes(node.children) : undefined;
+      if (this.isMatch(node) || (children && children.length > 0)) {
+        acc.push({...node, children});
       }
+      return acc;
+    }, [] as TreeNode[]);
+  }
+
+  isMatch(node: TreeNode) {
+    return node.name.toLowerCase().includes(this.searchString().toLowerCase());
+  }
+
+  constructor() {
+    afterRenderEffect(() => {
+      const popover = this.popover()!;
+      const combobox = this.combobox()!;
+      combobox.expanded() ? this.showPopover() : popover.nativeElement.hidePopover();
+      this.tree()?.scrollActiveItemIntoView();
+    });
+  }
+
+  showPopover() {
+    const popover = this.popover()!;
+    const combobox = this.combobox()!;
+
+    const comboboxRect = combobox.inputElement()?.getBoundingClientRect();
+    const popoverEl = popover.nativeElement;
+
+    if (comboboxRect) {
+      popoverEl.style.width = `${comboboxRect.width}px`;
+      popoverEl.style.top = `${comboboxRect.bottom + 4}px`;
+      popoverEl.style.left = `${comboboxRect.left - 1}px`;
     }
+
+    popover.nativeElement.showPopover();
   }
 }
-
-const SEASON_DATA: SeasonNode[] = [
-  {name: 'Winter', children: [{name: 'December'}, {name: 'January'}, {name: 'February'}]},
-  {name: 'Spring', children: [{name: 'March'}, {name: 'April'}, {name: 'May'}]},
-  {name: 'Summer', children: [{name: 'June'}, {name: 'July'}, {name: 'August'}]},
-  {name: 'Fall', children: [{name: 'September'}, {name: 'October'}, {name: 'November'}]},
-];

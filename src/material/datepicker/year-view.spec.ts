@@ -14,7 +14,7 @@ import {
   dispatchKeyboardEvent,
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
-import {Component, signal, ViewChild, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, signal, ViewChild, WritableSignal} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideNativeDateAdapter} from '../core';
@@ -395,7 +395,6 @@ describe('MatYearView', () => {
     <mat-year-view [(activeDate)]="date" [(selected)]="selected"
                    (monthSelected)="selectedMonth=$event"></mat-year-view>`,
   imports: [MatYearView],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardYearView {
   date = new Date(2017, JAN, 5);
@@ -413,7 +412,6 @@ class StandardYearView {
       [minDate]="minDate"
       [maxDate]="maxDate"></mat-year-view>`,
   imports: [MatYearView],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class YearViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
@@ -433,7 +431,6 @@ class YearViewWithDateFilter {
 @Component({
   template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`,
   imports: [MatYearView],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class YearViewWithDateClass {
   activeDate = new Date(2017, JAN, 1);

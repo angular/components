@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -10,6 +10,7 @@ import {MatInputModule} from '@angular/material/input';
   templateUrl: 'datepicker-min-max-example.html',
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerMinMaxExample {
   // Set the minimum to January 1st 20 years in the past and December 31st a year in the future.

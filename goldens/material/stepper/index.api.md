@@ -16,7 +16,6 @@ import { CdkStepperNext } from '@angular/cdk/stepper';
 import { CdkStepperPrevious } from '@angular/cdk/stepper';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { Field } from '@angular/forms/signals';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -37,8 +36,6 @@ import { TemplateRef } from '@angular/core';
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
     color: ThemePalette;
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
-    // (undocumented)
-    isSignalErrorState(field: Field<unknown> | null): boolean;
     _lazyContent: MatStepContent;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -54,6 +51,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 
 // @public
 export class MatStepContent<C = unknown> {
+    constructor(...args: unknown[]);
     // (undocumented)
     _template: TemplateRef<C>;
     // (undocumented)
@@ -64,7 +62,7 @@ export class MatStepContent<C = unknown> {
 
 // @public (undocumented)
 export class MatStepHeader extends CdkStepHeader implements AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     active: boolean;
     color: ThemePalette;
     disableRipple: boolean;
@@ -111,12 +109,11 @@ export class MatStepLabel extends CdkStepLabel {
 
 // @public (undocumented)
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     _animatedContainers: QueryList<ElementRef>;
     readonly animationDone: EventEmitter<void>;
     get animationDuration(): string;
     set animationDuration(value: string);
-    ariaLabel: string | null;
     color: ThemePalette;
     disableRipple: boolean;
     // (undocumented)
@@ -139,13 +136,14 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     readonly steps: QueryList<MatStep>;
     _steps: QueryList<MatStep>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "headerPrefix": { "alias": "headerPrefix"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatStepper, "mat-stepper, mat-vertical-stepper, mat-horizontal-stepper, [matStepper]", ["matStepper", "matVerticalStepper", "matHorizontalStepper"], { "disableRipple": { "alias": "disableRipple"; "required": false; }; "color": { "alias": "color"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "headerPrefix": { "alias": "headerPrefix"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "animationDone": "animationDone"; }, ["_steps", "_icons"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepper, never>;
 }
 
 // @public
 export class MatStepperIcon {
+    constructor(...args: unknown[]);
     name: StepState;
     // (undocumented)
     templateRef: TemplateRef<MatStepperIconContext>;

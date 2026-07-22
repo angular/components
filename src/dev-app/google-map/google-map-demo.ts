@@ -8,7 +8,13 @@
 
 /// <reference types="google.maps" />
 
-import {ChangeDetectorRef, Component, ViewChild, inject} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ViewChild,
+  inject,
+} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   GoogleMap,
@@ -18,6 +24,7 @@ import {
   MapDirectionsRenderer,
   MapDirectionsService,
   MapGroundOverlay,
+  MapHeatmapLayer,
   MapInfoWindow,
   MapKmlLayer,
   MapPolygon,
@@ -66,6 +73,7 @@ let apiLoadingPromise: Promise<unknown> | null = null;
     MapCircle,
     MapDirectionsRenderer,
     MapGroundOverlay,
+    MapHeatmapLayer,
     MapInfoWindow,
     MapKmlLayer,
     MapMarkerClusterer,
@@ -77,6 +85,7 @@ let apiLoadingPromise: Promise<unknown> | null = null;
     MapTransitLayer,
     FormsModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoogleMapDemo {
   private readonly _mapDirectionsService = inject(MapDirectionsService);
@@ -98,6 +107,10 @@ export class GoogleMapDemo {
     strokeColor: 'grey',
     strokeOpacity: 0.8,
   };
+
+  heatmapData = this._getHeatmapData(5, 1);
+  heatmapOptions = {radius: 50};
+  isHeatmapDisplayed = false;
 
   isPolygonDisplayed = false;
   polygonOptions: google.maps.PolygonOptions = {
@@ -219,6 +232,22 @@ export class GoogleMapDemo {
         this.cdr.markForCheck();
       });
     }
+  }
+
+  toggleHeatmapLayerDisplay() {
+    this.isHeatmapDisplayed = !this.isHeatmapDisplayed;
+  }
+
+  private _getHeatmapData(offset: number, increment: number) {
+    const result: google.maps.LatLngLiteral[] = [];
+
+    for (let lat = this.center.lat - offset; lat < this.center.lat + offset; lat += increment) {
+      for (let lng = this.center.lng - offset; lng < this.center.lng + offset; lng += increment) {
+        result.push({lat, lng});
+      }
+    }
+
+    return result;
   }
 
   private _loadApi() {

@@ -9,12 +9,11 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {
-  afterRenderEffect,
   AfterViewInit,
   booleanAttribute,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  computed,
   ContentChild,
   ContentChildren,
   ElementRef,
@@ -35,6 +34,7 @@ import {
   RippleGlobalOptions,
   ThemePalette,
 } from '../core';
+import {Subscription} from 'rxjs';
 import {
   _MatThumb,
   _MatTickMark,
@@ -73,6 +73,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class._mat-animation-noopable]': '_noopAnimations',
   },
   exportAs: 'matSlider',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
   imports: [MatSliderVisualThumb],
@@ -371,6 +372,9 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   /** Whether animations have been disabled. */
   _noopAnimations = _animationsDisabled();
 
+  /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
+  private _dirChangeSubscription: Subscription | undefined;
+
   /** Observer used to monitor size changes in the slider. */
   private _resizeObserver: ResizeObserver | null = null;
 
@@ -397,7 +401,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   _isRange: boolean = false;
 
   /** Whether the slider is rtl. */
-  _isRtl = computed(() => this._dir?.valueSignal() === 'rtl');
+  _isRtl: boolean = false;
 
   private _hasViewInitialized: boolean = false;
 
@@ -413,22 +417,15 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   private _platform = inject(Platform);
 
+  constructor(...args: unknown[]);
+
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
 
-    let prevIsRtl = this._isRtl();
-
-    afterRenderEffect(() => {
-      const isRtl = this._isRtl();
-
-      // The diffing is normally handled by the signal, but we don't want to
-      // fire on the first run, because it'll trigger unnecessary measurements.
-      if (isRtl !== prevIsRtl) {
-        prevIsRtl = isRtl;
-        this._isRange ? this._onDirChangeRange() : this._onDirChangeNonRange();
-        this._updateTickMarkUI();
-      }
-    });
+    if (this._dir) {
+      this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
+      this._isRtl = this._dir.value === 'rtl';
+    }
   }
 
   /** The radius of the native slider's knob. AFAIK there is no way to avoid hardcoding this. */
@@ -502,8 +499,16 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   }
 
   ngOnDestroy(): void {
+    this._dirChangeSubscription?.unsubscribe();
     this._resizeObserver?.disconnect();
     this._resizeObserver = null;
+  }
+
+  /** Handles updating the slider ui after a dir change. */
+  private _onDirChange(): void {
+    this._isRtl = this._dir?.value === 'rtl';
+    this._isRange ? this._onDirChangeRange() : this._onDirChangeNonRange();
+    this._updateTickMarkUI();
   }
 
   private _onDirChangeRange(): void {
@@ -595,7 +600,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   _calcTickMarkTransform(index: number): string {
     // TODO(wagnermaciel): See if we can avoid doing this and just using flex to position these.
     const offset = index * (this._tickMarkTrackWidth / (this._tickMarks.length - 1));
-    const translateX = this._isRtl() ? this._cachedWidth - 6 - offset : offset;
+    const translateX = this._isRtl ? this._cachedWidth - 6 - offset : offset;
     return `translateX(${translateX}px)`;
   }
 
@@ -847,7 +852,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   }
 
   private _updateTrackUINonRange(source: _MatSliderThumb): void {
-    this._isRtl()
+    this._isRtl
       ? this._setTrackActiveStyles({
           left: 'auto',
           right: '0px',
@@ -888,7 +893,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     const value = this._getValue();
     let numActive = Math.max(Math.round((value - this.min) / step), 0) + 1;
     let numInactive = Math.max(Math.round((this.max - value) / step), 0) - 1;
-    this._isRtl() ? numActive++ : numInactive++;
+    this._isRtl ? numActive++ : numInactive++;
 
     this._tickMarks = Array(numActive)
       .fill(_MatTickMark.ACTIVE)

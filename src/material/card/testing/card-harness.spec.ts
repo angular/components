@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHarness, HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -120,7 +120,6 @@ describe('MatCardHarness', () => {
       </mat-card>
   `,
   imports: [MatCardModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CardHarnessTest {}
 

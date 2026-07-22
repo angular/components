@@ -13,6 +13,7 @@ import { OnDestroy } from '@angular/core';
 
 // @public
 export class CdkObserveContent implements AfterContentInit, OnDestroy {
+    constructor(...args: unknown[]);
     get debounce(): number;
     set debounce(value: NumberInput);
     get disabled(): boolean;
@@ -32,6 +33,7 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
 
 // @public
 export class ContentObserver implements OnDestroy {
+    constructor(...args: unknown[]);
     // (undocumented)
     ngOnDestroy(): void;
     observe(element: Element): Observable<MutationRecord[]>;

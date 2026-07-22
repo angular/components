@@ -6,7 +6,6 @@ import {
   EnvironmentProviders,
   Provider,
   Type,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -334,13 +333,11 @@ describe('MatProgressBar', () => {
 @Component({
   template: '<mat-progress-bar></mat-progress-bar>',
   imports: [MatProgressBar],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BasicProgressBar {}
 
 @Component({
   template: '<mat-progress-bar mode="buffer"></mat-progress-bar>',
   imports: [MatProgressBar],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BufferProgressBar {}

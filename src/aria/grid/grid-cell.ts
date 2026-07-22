@@ -11,19 +11,17 @@ import {
   afterRenderEffect,
   booleanAttribute,
   computed,
-  contentChild,
+  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
   model,
-  OnDestroy,
-  OnInit,
   Signal,
   Renderer2,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {GridCellPattern, GridCellWidgetPattern} from '../private';
+import {GridCellPattern} from '../private';
 import {GridCellWidget} from './grid-cell-widget';
 import {GRID_CELL, GRID_ROW} from './grid-tokens';
 
@@ -38,6 +36,8 @@ import {GRID_CELL, GRID_ROW} from './grid-tokens';
  * </td>
  * ```
  *
+ * @developerPreview 21.0
+ *
  * @see [Grid](guide/aria/grid)
  */
 @Directive({
@@ -45,7 +45,7 @@ import {GRID_CELL, GRID_ROW} from './grid-tokens';
   exportAs: 'ngGridCell',
   providers: [{provide: GRID_CELL, useExisting: GridCell}],
 })
-export class GridCell implements OnInit, OnDestroy {
+export class GridCell {
   private readonly _elementRef = inject(ElementRef);
   private readonly _renderer = inject(Renderer2);
 
@@ -55,12 +55,12 @@ export class GridCell implements OnInit, OnDestroy {
   /** Whether the cell is currently active (focused). */
   readonly active = computed(() => this._pattern.active());
 
-  /** The widget contained within this cell, if any. */
-  private readonly _widget = contentChild(GridCellWidget, {descendants: true});
+  /** The widgets contained within this cell, if any. */
+  private readonly _widgets = contentChildren(GridCellWidget, {descendants: true});
 
   /** The UI pattern for the widget in this cell. */
-  private readonly _widgetPattern: Signal<GridCellWidgetPattern | undefined> = computed(
-    () => this._widget()?._pattern,
+  private readonly _widgetPatterns: Signal<any[]> = computed(() =>
+    this._widgets().map(w => w._pattern),
   );
 
   /** The parent row. */
@@ -96,6 +96,12 @@ export class GridCell implements OnInit, OnDestroy {
   /** Whether the cell is selectable. */
   readonly selectable = input<boolean>(true);
 
+  /** Orientation of the widgets in the cell. */
+  readonly orientation = input<'vertical' | 'horizontal'>('horizontal');
+
+  /** Whether widgets navigation wraps. */
+  readonly wrap = input(true, {transform: booleanAttribute});
+
   /** The tabindex override. */
   readonly tabindex = input<number | undefined>();
 
@@ -112,7 +118,7 @@ export class GridCell implements OnInit, OnDestroy {
     ...this,
     grid: this._row._gridPattern,
     row: () => this._row._pattern,
-    widget: this._widgetPattern,
+    widgets: this._widgetPatterns,
     getWidget: e => this._getWidget(e),
     element: () => this.element,
   });
@@ -129,7 +135,7 @@ export class GridCell implements OnInit, OnDestroy {
         toggle('role', this.role());
         toggle('id', pattern.id());
         toggle('rowspan', rowSpan);
-        toggle('colspan', colSpan);
+        toggle('colspan', rowSpan);
         toggle('aria-rowspan', rowSpan);
         toggle('aria-colspan', colSpan);
         toggle('data-active', this.active());
@@ -143,14 +149,6 @@ export class GridCell implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    this._row._collection.register(this);
-  }
-
-  ngOnDestroy() {
-    this._row._collection.unregister(this);
-  }
-
   private _toggleAttribute = (name: string, value: unknown) => {
     if (value == null) {
       this._renderer.removeAttribute(this.element, name);
@@ -162,13 +160,11 @@ export class GridCell implements OnInit, OnDestroy {
   /** Gets the cell widget pattern for a given element. */
   private _getWidget(element: Element | null | undefined): any | undefined {
     let target = element;
-    const widget = this._widgetPattern();
-
-    if (!widget) return undefined;
 
     while (target) {
-      if (widget.element() === target) {
-        return widget;
+      const pattern = this._widgetPatterns().find(w => w.element() === target);
+      if (pattern) {
+        return pattern;
       }
 
       target = target.parentElement?.closest('[ngGridCellWidget]');

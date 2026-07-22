@@ -48,6 +48,7 @@ export const MAT_SUFFIX: InjectionToken<MatSuffix>;
 
 // @public
 export class MatError {
+    constructor(...args: unknown[]);
     // (undocumented)
     id: string;
     // (undocumented)
@@ -58,7 +59,7 @@ export class MatError {
 
 // @public
 export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     _animateAndLockLabel(): void;
     // (undocumented)
     protected readonly _animationsDisabled: boolean;

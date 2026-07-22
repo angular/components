@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, InjectionToken, inject} from '@angular/core';
+import {Injectable, InjectionToken, inject} from '@angular/core';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {
   DateTime as LuxonDateTime,
@@ -58,11 +58,13 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
 }
 
 /** Adapts Luxon Dates for use with Angular Material. */
-@Service({autoProvided: false})
+@Injectable()
 export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   private _useUTC: boolean;
   private _firstDayOfWeek: number | undefined;
   private _defaultOutputCalendar: LuxonCalendarSystem;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();
@@ -134,10 +136,7 @@ export class LuxonDateAdapter extends DateAdapter<LuxonDateTime> {
   }
 
   clone(date: LuxonDateTime): LuxonDateTime {
-    return LuxonDateTime.fromObject(date.toObject(), {
-      ...this._getOptions(),
-      zone: date.zone,
-    });
+    return LuxonDateTime.fromObject(date.toObject(), this._getOptions());
   }
 
   createDate(year: number, month: number, date: number): LuxonDateTime {

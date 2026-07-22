@@ -1,12 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Provider,
-  Type,
-  ViewChild,
-  inject,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {ChangeDetectorRef, Component, Provider, Type, ViewChild, inject} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {ThemePalette} from '../core';
 import {MatSelect} from '../select';
@@ -654,7 +646,6 @@ function getLastButton(fixture: ComponentFixture<any>): HTMLButtonElement {
     </mat-paginator>
   `,
   imports: [MatPaginator],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatPaginatorApp {
   pageIndex = 0;
@@ -681,7 +672,6 @@ class MatPaginatorApp {
 @Component({
   template: `<mat-paginator/>`,
   imports: [MatPaginator],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatPaginatorWithoutInputsApp {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -690,7 +680,6 @@ class MatPaginatorWithoutInputsApp {
 @Component({
   template: `<mat-paginator [pageSizeOptions]="[10, 20, 30]"/>`,
   imports: [MatPaginator],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatPaginatorWithoutPageSizeApp {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -699,7 +688,6 @@ class MatPaginatorWithoutPageSizeApp {
 @Component({
   template: `<mat-paginator [pageSize]="10"/>`,
   imports: [MatPaginator],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatPaginatorWithoutOptionsApp {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -714,7 +702,6 @@ class MatPaginatorWithoutOptionsApp {
     </mat-paginator>
   `,
   imports: [MatPaginator],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatPaginatorWithStringValues {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -723,7 +710,6 @@ class MatPaginatorWithStringValues {
 @Component({
   template: `<mat-paginator [pageSizeOptions]="pageSizeOptions"/>`,
   imports: [MatPaginator],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatPaginatorWithReadonlyOptions {
   @ViewChild(MatPaginator) paginator!: MatPaginator;

@@ -12,6 +12,7 @@ import {CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   Directive,
@@ -75,6 +76,7 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
   exportAs: 'matExpansionPanel',
   templateUrl: 'expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     // Provide MatAccordion as undefined to prevent nested expansion panels from registering
     // to the same accordion.
@@ -127,7 +129,7 @@ export class MatExpansionPanel
   @Output() readonly afterCollapse = new EventEmitter<void>();
 
   /** Stream that emits for changes in `@Input` properties. */
-  readonly _inputChanges = new Subject<SimpleChanges<MatExpansionPanel>>();
+  readonly _inputChanges = new Subject<SimpleChanges>();
 
   /** Optionally defined accordion the expansion panel belongs to. */
   override accordion = inject<MatAccordionBase>(MAT_ACCORDION, {optional: true, skipSelf: true})!;
@@ -147,6 +149,8 @@ export class MatExpansionPanel
 
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId: string = inject(_IdGenerator).getId('mat-expansion-panel-header-');
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();
@@ -208,7 +212,7 @@ export class MatExpansionPanel
     this._setupAnimationEvents();
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     this._inputChanges.next(changes);
   }
 

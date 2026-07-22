@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -19,6 +19,7 @@ interface FoodNode {
   selector: 'tree-flat-child-accessor-overview-example',
   templateUrl: 'tree-flat-child-accessor-overview-example.html',
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeFlatChildAccessorOverviewExample {
   dataSource = EXAMPLE_DATA;

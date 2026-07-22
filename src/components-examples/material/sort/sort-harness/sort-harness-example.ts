@@ -19,21 +19,19 @@ export class SortHarnessExample {
     {name: 'Gingerbread', calories: 356, fat: 16, carbs: 49, protein: 4},
   ];
 
-  sortedData = signal(this.desserts.slice());
+  sortedData = this.desserts.slice();
 
   sortData(sort: Sort) {
     const data = this.desserts.slice();
 
     if (!sort.active || sort.direction === '') {
-      this.sortedData.set(data);
+      this.sortedData = data;
     } else {
-      this.sortedData.set(
-        data.sort((a, b) => {
-          const aValue = a[sort.active as keyof typeof a];
-          const bValue = b[sort.active as keyof typeof b];
-          return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
-        }),
-      );
+      this.sortedData = data.sort((a, b) => {
+        const aValue = (a as any)[sort.active];
+        const bValue = (b as any)[sort.active];
+        return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
+      });
     }
   }
 }

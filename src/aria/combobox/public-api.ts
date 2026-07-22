@@ -7,8 +7,10 @@
  */
 
 export {Combobox} from './combobox';
+export {ComboboxDialog} from './combobox-dialog';
+export {ComboboxInput} from './combobox-input';
 export {ComboboxPopup} from './combobox-popup';
-export {ComboboxWidget} from './combobox-widget';
+export {ComboboxPopupContainer} from './combobox-popup-container';
 
 // This needs to be re-exported, because it's used by the combobox components.
 // See: https://github.com/angular/components/issues/30663.

@@ -11,7 +11,7 @@ import {DomPortalOutlet} from '../portal';
 import {Location} from '@angular/common';
 import {
   ApplicationRef,
-  Service,
+  Injectable,
   Injector,
   NgZone,
   ANIMATION_MODULE_TYPE,
@@ -34,7 +34,6 @@ import {ScrollStrategyOptions} from './scroll/index';
 
 /** Object used to configure the default options for overlays. */
 export interface OverlayDefaultConfig {
-  /** Whether overlays should be rendered inside popovers by default. */
   usePopover?: boolean;
 }
 
@@ -69,10 +68,7 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
 
   overlayConfig.direction = overlayConfig.direction || directionality.value;
 
-  // `document.body` can be null during page navigation or unload cycles per the WHATWG spec
-  // (https://html.spec.whatwg.org/multipage/dom.html#dom-document-body), even though TypeScript
-  // types it as non-nullable. Guard against it to avoid "Cannot use 'in' operator ... in null".
-  if (!doc.body || !('showPopover' in doc.body)) {
+  if (!('showPopover' in doc.body)) {
     overlayConfig.usePopover = false;
   } else {
     overlayConfig.usePopover = config?.usePopover ?? defaultUsePopover;
@@ -126,11 +122,14 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
  *
  * An overlay *is* a PortalOutlet, so any kind of Portal can be loaded into one.
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class Overlay {
   scrollStrategies = inject(ScrollStrategyOptions);
   private _positionBuilder = inject(OverlayPositionBuilder);
   private _injector = inject(Injector);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Creates an overlay.

@@ -30,16 +30,15 @@ component by following these steps:
    ...
    ```
 
-3. Import the component you want to use. For example, the checkbox:
+3. Import the `NgModule` for the component you want to use. For example, the checkbox:
 ```ts
-  import {Component} from '@angular/core';
-  import {MatCheckbox} from '@angular/material/checkbox';
+  import {MatCheckboxModule} from '@angular/material/checkbox';
 
-  @Component({
-    imports: [MatCheckbox],
-    // ...
+  @NgModule({
+    declarations: [MyComponent],
+    imports: [MatCheckboxModule],
   })
-  export class MyComponent {}
+  export class MyModule {}
 ```
 
 4. Use the components just as you would the normal Angular Material components. For example,

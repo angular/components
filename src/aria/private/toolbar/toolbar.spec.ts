@@ -51,7 +51,6 @@ function clickItem(item: ToolbarWidgetPattern<string>, mods?: ModifierKeys) {
     target: item.element(),
     shiftKey: mods?.shift,
     ctrlKey: mods?.control,
-    preventDefault: () => {}, // Added to prevent TypeError
   } as unknown as PointerEvent;
 }
 
@@ -80,7 +79,7 @@ function getToolbarPattern(
     element,
     items,
     activeItem,
-    value: signal([]),
+    values: signal([]),
     wrap: signal(inputs.wrap ?? true),
     disabled: signal(inputs.disabled ?? false),
     softDisabled: signal(inputs.softDisabled ?? true),
@@ -163,23 +162,9 @@ describe('Toolbar Pattern', () => {
     return toolbar.inputs.items().find(item => item.value() === value)!;
   }
 
-  describe('Tabindex', () => {
-    it('should expose tabIndex signals', () => {
-      const {toolbar, items} = getPatterns();
-
-      expect(items[0].tabIndex()).toBe(0);
-      expect(items[1].tabIndex()).toBe(-1);
-
-      toolbar.onKeydown(right()); // Move focus to item 1
-
-      expect(items[0].tabIndex()).toBe(-1);
-      expect(items[1].tabIndex()).toBe(0);
-    });
-  });
-
   describe('Navigation', () => {
     describe('with horizontal orientation', () => {
-      it('should navigate on click (horizontal, ltr)', () => {
+      it('should navigate on click', () => {
         const {toolbar} = getPatterns();
         const item5 = getItem(toolbar, 'item 5');
         toolbar.onClick(clickItem(item5));
@@ -200,20 +185,20 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 0');
         });
 
-        it('should not navigate next on ArrowDown when not in a widget group (ltr)', () => {
+        it('should not navigate next on ArrowDown when not in a widget group', () => {
           const {toolbar} = getPatterns();
           toolbar.onKeydown(down()); // Item 0 -> Item 0
           expect(toolbar.activeItem()?.value()).toBe('item 0');
         });
 
-        it('should not navigate prev on ArrowUp when not in a widget group (ltr)', () => {
+        it('should not navigate prev on ArrowUp when not in a widget group', () => {
           const {toolbar} = getPatterns();
           toolbar.onKeydown(right()); // Item 0 -> Item 1
           toolbar.onKeydown(up()); // Item 1 -> Item 1
           expect(toolbar.activeItem()?.value()).toBe('item 1');
         });
 
-        it('should navigate next in a widget group on ArrowDown (ltr)', () => {
+        it('should navigate next in a widget group on ArrowDown', () => {
           const {toolbar} = getPatterns();
 
           toolbar.onKeydown(right()); // Item 0 -> Item 1
@@ -223,7 +208,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 3');
         });
 
-        it('should navigate prev in a widget group on ArrowUp (ltr)', () => {
+        it('should navigate prev in a widget group on ArrowUp', () => {
           const {toolbar} = getPatterns();
 
           toolbar.onKeydown(right()); // Item 0 -> Item 1
@@ -234,7 +219,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 2');
         });
 
-        it('should navigate last to first in a widget group on ArrowDown (ltr)', () => {
+        it('should navigate last to first in a widget group on ArrowDown', () => {
           const {toolbar} = getPatterns();
 
           toolbar.onKeydown(right()); // Item 0 -> Item 1
@@ -246,7 +231,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 2');
         });
 
-        it('should navigate first to last in a widget group on ArrowUp (ltr)', () => {
+        it('should navigate first to last in a widget group on ArrowUp', () => {
           const {toolbar} = getPatterns();
 
           toolbar.onKeydown(right()); // Item 0 -> Item 1
@@ -257,14 +242,14 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with wrap false', () => {
-          it('should not wrap from last to first (horizontal, ltr)', () => {
+          it('should not wrap from last to first', () => {
             const {toolbar} = getPatterns({wrap: false});
             toolbar.onKeydown(end());
             toolbar.onKeydown(right());
             expect(toolbar.activeItem()?.value()).toBe('item 8');
           });
 
-          it('should not wrap from first to last (horizontal, ltr)', () => {
+          it('should not wrap from first to last', () => {
             const {toolbar} = getPatterns({wrap: false});
             toolbar.onKeydown(left());
             expect(toolbar.activeItem()?.value()).toBe('item 0');
@@ -272,7 +257,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled true', () => {
-          it('should not skip disabled items when navigating next (horizontal, ltr)', () => {
+          it('should not skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({softDisabled: true});
             items[1].inputs.disabled.set(true);
 
@@ -280,7 +265,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should not skip disabled items when navigating prev (horizontal, ltr)', () => {
+          it('should not skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({softDisabled: true});
             items[1].inputs.disabled.set(true);
 
@@ -307,7 +292,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 8');
           });
 
-          it('should navigate to the last item on End (horizontal, ltr)', () => {
+          it('should navigate to the last item on End', () => {
             const {toolbar, items} = getPatterns({softDisabled: true});
             items[items.length - 1].inputs.disabled.set(true);
 
@@ -315,7 +300,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 8');
           });
 
-          it('should navigate to the first item on Home (horizontal, ltr)', () => {
+          it('should navigate to the first item on Home', () => {
             const {toolbar, items} = getPatterns({softDisabled: true});
             items[0].inputs.disabled.set(true);
 
@@ -326,7 +311,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first (horizontal, ltr)', () => {
+            it('should wrap from last to first', () => {
               const {toolbar, items} = getPatterns({softDisabled: true, wrap: true});
               items[0].inputs.disabled.set(true);
 
@@ -336,7 +321,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 0');
             });
 
-            it('should wrap from first to last (horizontal, ltr)', () => {
+            it('should wrap from first to last', () => {
               const {toolbar, items} = getPatterns({softDisabled: true, wrap: true});
               items[items.length - 1].inputs.disabled.set(true);
 
@@ -355,7 +340,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 0');
           });
 
-          it('should skip disabled items when navigating next (horizontal, ltr)', () => {
+          it('should skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({softDisabled: false});
             items[1].inputs.disabled.set(true);
 
@@ -363,7 +348,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 2');
           });
 
-          it('should skip disabled items when navigating prev (horizontal, ltr)', () => {
+          it('should skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({softDisabled: false});
             items[1].inputs.disabled.set(true);
 
@@ -402,7 +387,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should navigate to the last focusable item on End (horizontal, ltr)', () => {
+          it('should navigate to the last focusable item on End', () => {
             const {toolbar, items} = getPatterns({softDisabled: false});
             items[items.length - 1].inputs.disabled.set(true);
 
@@ -410,7 +395,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 7');
           });
 
-          it('should navigate to the first focusable item on Home (horizontal, ltr)', () => {
+          it('should navigate to the first focusable item on Home', () => {
             const {toolbar, items} = getPatterns({softDisabled: false});
             items[0].inputs.disabled.set(true);
 
@@ -421,7 +406,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first focusable item (horizontal, ltr)', () => {
+            it('should wrap from last to first focusable item', () => {
               const {toolbar, items} = getPatterns({softDisabled: false, wrap: true});
               items[0].inputs.disabled.set(true);
 
@@ -431,7 +416,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 1');
             });
 
-            it('should wrap from first to last focusable item (horizontal, ltr)', () => {
+            it('should wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({softDisabled: false, wrap: true});
               items[items.length - 1].inputs.disabled.set(true);
 
@@ -443,7 +428,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first focusable item (horizontal, ltr)', () => {
+            it('should not wrap from last to first focusable item', () => {
               const {toolbar, items} = getPatterns({softDisabled: false, wrap: false});
               items[items.length - 1].inputs.disabled.set(true);
               toolbar.onKeydown(end());
@@ -452,7 +437,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 7');
             });
 
-            it('should not wrap from first to last focusable item (horizontal, ltr)', () => {
+            it('should not wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({softDisabled: false, wrap: false});
               items[0].inputs.disabled.set(true);
 
@@ -467,40 +452,40 @@ describe('Toolbar Pattern', () => {
       });
 
       describe('with rtl text direction', () => {
-        it('should navigate on click (horizontal, rtl)', () => {
+        it('should navigate on click', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           const item5 = getItem(toolbar, 'item 5');
           toolbar.onClick(clickItem(item5));
           expect(toolbar.activeItem()?.value()).toBe('item 5');
         });
 
-        it('should navigate next on ArrowLeft (rtl)', () => {
+        it('should navigate next on ArrowLeft', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(left()); // Item 0 -> Item 1
           expect(toolbar.activeItem()?.value()).toBe('item 1');
         });
 
-        it('should navigate prev on ArrowRight (rtl)', () => {
+        it('should navigate prev on ArrowRight', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(left()); // Item 0 -> Item 1
           toolbar.onKeydown(right()); // Item 1 -> Item 0
           expect(toolbar.activeItem()?.value()).toBe('item 0');
         });
 
-        it('should not navigate next on ArrowDown when not in a widget group (rtl)', () => {
+        it('should not navigate next on ArrowDown when not in a widget group', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(up()); // Item 0 -> Item 0
           expect(toolbar.activeItem()?.value()).toBe('item 0');
         });
 
-        it('should not navigate prev on ArrowUp when not in a widget group (rtl)', () => {
+        it('should not navigate prev on ArrowUp when not in a widget group', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(left()); // Item 0 -> Item 1
           toolbar.onKeydown(down()); // Item 1 -> Item 1
           expect(toolbar.activeItem()?.value()).toBe('item 1');
         });
 
-        it('should navigate next in a widget group on ArrowDown (rtl)', () => {
+        it('should navigate next in a widget group on ArrowDown', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
 
           toolbar.onKeydown(left()); // Item 0 -> Item 1
@@ -510,7 +495,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 3');
         });
 
-        it('should navigate prev in a widget group on ArrowUp (rtl)', () => {
+        it('should navigate prev in a widget group on ArrowUp', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
 
           toolbar.onKeydown(left()); // Item 0 -> Item 1
@@ -521,7 +506,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 2');
         });
 
-        it('should navigate first to last in a widget group on ArrowUp (rtl)', () => {
+        it('should navigate first to last in a widget group on ArrowUp', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
 
           toolbar.onKeydown(left()); // Item 0 -> Item 1
@@ -531,7 +516,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 4');
         });
 
-        it('should navigate last to first in a widget group on ArrowDown (rtl)', () => {
+        it('should navigate last to first in a widget group on ArrowDown', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
 
           toolbar.onKeydown(left()); // Item 0 -> Item 1
@@ -544,7 +529,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled true', () => {
-          it('should not skip disabled items when navigating next (horizontal, rtl)', () => {
+          it('should not skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
             items[1].inputs.disabled.set(true);
 
@@ -552,7 +537,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should not skip disabled items when navigating prev (horizontal, rtl)', () => {
+          it('should not skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
             items[1].inputs.disabled.set(true);
 
@@ -563,7 +548,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should navigate to the last item on End (horizontal, rtl)', () => {
+          it('should navigate to the last item on End', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
             items[items.length - 1].inputs.disabled.set(true);
 
@@ -571,7 +556,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 8');
           });
 
-          it('should navigate to the first item on Home (horizontal, rtl)', () => {
+          it('should navigate to the first item on Home', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, textDirection: 'rtl'});
             items[0].inputs.disabled.set(true);
 
@@ -582,7 +567,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first (horizontal, rtl)', () => {
+            it('should wrap from last to first', () => {
               const {toolbar, items} = getPatterns({
                 wrap: true,
                 softDisabled: true,
@@ -596,7 +581,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 0');
             });
 
-            it('should wrap from first to last (horizontal, rtl)', () => {
+            it('should wrap from first to last', () => {
               const {toolbar, items} = getPatterns({
                 wrap: true,
                 softDisabled: true,
@@ -610,7 +595,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first (horizontal, rtl)', () => {
+            it('should not wrap from last to first', () => {
               const {toolbar} = getPatterns({
                 wrap: false,
                 softDisabled: true,
@@ -622,7 +607,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 8');
             });
 
-            it('should not wrap from first to last (horizontal, rtl)', () => {
+            it('should not wrap from first to last', () => {
               const {toolbar} = getPatterns({
                 wrap: false,
                 softDisabled: true,
@@ -637,7 +622,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled false', () => {
-          it('should skip disabled items when navigating next (horizontal, rtl)', () => {
+          it('should skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
             items[1].inputs.disabled.set(true);
 
@@ -645,7 +630,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 2');
           });
 
-          it('should skip disabled items when navigating prev (horizontal, rtl)', () => {
+          it('should skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
             items[1].inputs.disabled.set(true);
 
@@ -655,7 +640,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 0');
           });
 
-          it('should navigate to the last focusable item on End (horizontal, rtl)', () => {
+          it('should navigate to the last focusable item on End', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
             items[items.length - 1].inputs.disabled.set(true);
 
@@ -663,7 +648,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 7');
           });
 
-          it('should navigate to the first focusable item on Home (horizontal, rtl)', () => {
+          it('should navigate to the first focusable item on Home', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, textDirection: 'rtl'});
             items[0].inputs.disabled.set(true);
 
@@ -674,7 +659,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first focusable item (horizontal, rtl)', () => {
+            it('should wrap from last to first focusable item', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: false,
                 wrap: true,
@@ -688,7 +673,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 1');
             });
 
-            it('should wrap from first to last focusable item (horizontal, rtl)', () => {
+            it('should wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: false,
                 wrap: true,
@@ -704,7 +689,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first focusable item (horizontal, rtl)', () => {
+            it('should not wrap from last to first focusable item', () => {
               const {toolbar} = getPatterns({
                 softDisabled: false,
                 wrap: false,
@@ -715,7 +700,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 8');
             });
 
-            it('should not wrap from first to last focusable item (horizontal, rtl)', () => {
+            it('should not wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: false,
                 wrap: false,
@@ -735,13 +720,13 @@ describe('Toolbar Pattern', () => {
 
     describe('with vertical orientation', () => {
       describe('with ltr text direction', () => {
-        it('should navigate next on ArrowDown (vertical, ltr)', () => {
+        it('should navigate next on ArrowDown', () => {
           const {toolbar} = getPatterns({orientation: 'vertical'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           expect(toolbar.activeItem()?.value()).toBe('item 1');
         });
 
-        it('should navigate prev on ArrowUp (vertical, ltr)', () => {
+        it('should navigate prev on ArrowUp', () => {
           const {toolbar} = getPatterns({orientation: 'vertical'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           toolbar.onKeydown(up()); // Item 1 -> Item 0
@@ -805,7 +790,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled true', () => {
-          it('should not skip disabled items when navigating next (vertical, ltr)', () => {
+          it('should not skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
             items[1].inputs.disabled.set(true);
 
@@ -814,7 +799,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should not skip disabled items when navigating prev (vertical, ltr)', () => {
+          it('should not skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
             items[1].inputs.disabled.set(true);
 
@@ -825,7 +810,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should navigate to the last item on End (vertical, ltr)', () => {
+          it('should navigate to the last item on End', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
             items[items.length - 1].inputs.disabled.set(true);
 
@@ -833,7 +818,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 8');
           });
 
-          it('should navigate to the first item on Home (vertical, ltr)', () => {
+          it('should navigate to the first item on Home', () => {
             const {toolbar, items} = getPatterns({softDisabled: true, orientation: 'vertical'});
             items[0].inputs.disabled.set(true);
 
@@ -844,7 +829,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first (vertical, ltr)', () => {
+            it('should wrap from last to first', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: true,
                 wrap: true,
@@ -858,7 +843,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 0');
             });
 
-            it('should wrap from first to last (vertical, ltr)', () => {
+            it('should wrap from first to last', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: true,
                 wrap: true,
@@ -874,7 +859,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first (vertical, ltr)', () => {
+            it('should not wrap from last to first', () => {
               const {toolbar} = getPatterns({
                 softDisabled: true,
                 wrap: false,
@@ -886,7 +871,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 8');
             });
 
-            it('should not wrap from first to last (vertical, ltr)', () => {
+            it('should not wrap from first to last', () => {
               const {toolbar} = getPatterns({
                 softDisabled: true,
                 wrap: false,
@@ -901,7 +886,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled false', () => {
-          it('should skip disabled items when navigating next (vertical, ltr)', () => {
+          it('should skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
             items[1].inputs.disabled.set(true);
 
@@ -910,7 +895,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()).toBe(items[2]);
           });
 
-          it('should skip disabled items when navigating prev (vertical, ltr)', () => {
+          it('should skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
             items[1].inputs.disabled.set(true);
 
@@ -920,7 +905,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 0');
           });
 
-          it('should navigate to the last focusable item on End (vertical, ltr)', () => {
+          it('should navigate to the last focusable item on End', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
             items[items.length - 1].inputs.disabled.set(true);
 
@@ -928,7 +913,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 7');
           });
 
-          it('should navigate to the first focusable item on Home (vertical, ltr)', () => {
+          it('should navigate to the first focusable item on Home', () => {
             const {toolbar, items} = getPatterns({softDisabled: false, orientation: 'vertical'});
             items[0].inputs.disabled.set(true);
 
@@ -939,7 +924,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first focusable item (vertical, ltr)', () => {
+            it('should wrap from last to first focusable item', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: false,
                 wrap: true,
@@ -953,7 +938,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 1');
             });
 
-            it('should wrap from first to last focusable item (vertical, ltr)', () => {
+            it('should wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: false,
                 wrap: true,
@@ -969,7 +954,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first focusable item (vertical, ltr)', () => {
+            it('should not wrap from last to first focusable item', () => {
               const {toolbar} = getPatterns({
                 softDisabled: false,
                 wrap: false,
@@ -981,7 +966,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 8');
             });
 
-            it('should not wrap from first to last focusable item (vertical, ltr)', () => {
+            it('should not wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: false,
                 wrap: false,
@@ -999,20 +984,20 @@ describe('Toolbar Pattern', () => {
       });
 
       describe('with rtl text direction', () => {
-        it('should navigate next on ArrowDown (vertical, rtl)', () => {
+        it('should navigate next on ArrowDown', () => {
           const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           expect(toolbar.activeItem()?.value()).toBe('item 1');
         });
 
-        it('should navigate prev on ArrowUp (vertical, rtl)', () => {
+        it('should navigate prev on ArrowUp', () => {
           const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           toolbar.onKeydown(up()); // Item 1 -> Item 0
           expect(toolbar.activeItem()?.value()).toBe('item 0');
         });
 
-        it('should navigate last to first in a widget group on ArrowLeft (vertical, rtl)', () => {
+        it('should navigate last to first in a widget group on ArrowLeft', () => {
           const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
 
           toolbar.onKeydown(down()); // Item 0 -> Item 1
@@ -1024,7 +1009,7 @@ describe('Toolbar Pattern', () => {
           expect(toolbar.activeItem()?.value()).toBe('item 2');
         });
 
-        it('should navigate first to last in a widget group on ArrowRight (vertical, rtl)', () => {
+        it('should navigate first to last in a widget group on ArrowRight', () => {
           const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
 
           toolbar.onKeydown(down()); // Item 0 -> Item 1
@@ -1035,7 +1020,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled true', () => {
-          it('should not skip disabled items when navigating next (vertical, rtl)', () => {
+          it('should not skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: true,
               orientation: 'vertical',
@@ -1047,7 +1032,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should not skip disabled items when navigating prev (vertical, rtl)', () => {
+          it('should not skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: true,
               orientation: 'vertical',
@@ -1062,7 +1047,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 1');
           });
 
-          it('should navigate to the last item on End (vertical, rtl)', () => {
+          it('should navigate to the last item on End', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: true,
               orientation: 'vertical',
@@ -1075,7 +1060,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 8');
           });
 
-          it('should navigate to the first item on Home (vertical, rtl)', () => {
+          it('should navigate to the first item on Home', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: true,
               orientation: 'vertical',
@@ -1090,7 +1075,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first (vertical, rtl)', () => {
+            it('should wrap from last to first', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: true,
                 wrap: true,
@@ -1105,7 +1090,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 0');
             });
 
-            it('should wrap from first to last (vertical, rtl)', () => {
+            it('should wrap from first to last', () => {
               const {toolbar, items} = getPatterns({
                 softDisabled: true,
                 wrap: true,
@@ -1122,7 +1107,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first (vertical, rtl)', () => {
+            it('should not wrap from last to first', () => {
               const {toolbar} = getPatterns({
                 softDisabled: true,
                 wrap: false,
@@ -1135,7 +1120,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 8');
             });
 
-            it('should not wrap from first to last (vertical, rtl)', () => {
+            it('should not wrap from first to last', () => {
               const {toolbar} = getPatterns({
                 softDisabled: true,
                 wrap: false,
@@ -1151,7 +1136,7 @@ describe('Toolbar Pattern', () => {
         });
 
         describe('with softDisabled false', () => {
-          it('should skip disabled items when navigating next (vertical, rtl)', () => {
+          it('should skip disabled items when navigating next', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: false,
               orientation: 'vertical',
@@ -1164,7 +1149,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()).toBe(items[2]);
           });
 
-          it('should skip disabled items when navigating prev (vertical, rtl)', () => {
+          it('should skip disabled items when navigating prev', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: false,
               orientation: 'vertical',
@@ -1178,7 +1163,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()?.value()).toBe('item 0');
           });
 
-          it('should navigate to the last focusable item on End (vertical, rtl)', () => {
+          it('should navigate to the last focusable item on End', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: false,
               orientation: 'vertical',
@@ -1190,7 +1175,7 @@ describe('Toolbar Pattern', () => {
             expect(toolbar.activeItem()).toBe(items[items.length - 2]);
           });
 
-          it('should navigate to the first focusable item on Home (vertical, rtl)', () => {
+          it('should navigate to the first focusable item on Home', () => {
             const {toolbar, items} = getPatterns({
               softDisabled: false,
               textDirection: 'rtl',
@@ -1205,7 +1190,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap true', () => {
-            it('should wrap from last to first focusable item (vertical, rtl)', () => {
+            it('should wrap from last to first focusable item', () => {
               const {toolbar, items} = getPatterns({
                 wrap: true,
                 softDisabled: false,
@@ -1220,7 +1205,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 1');
             });
 
-            it('should wrap from first to last focusable item (vertical, rtl)', () => {
+            it('should wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({
                 wrap: true,
                 softDisabled: false,
@@ -1237,7 +1222,7 @@ describe('Toolbar Pattern', () => {
           });
 
           describe('with wrap false', () => {
-            it('should not wrap from last to first focusable item (vertical, rtl)', () => {
+            it('should not wrap from last to first focusable item', () => {
               const {toolbar} = getPatterns({
                 wrap: false,
                 softDisabled: false,
@@ -1250,7 +1235,7 @@ describe('Toolbar Pattern', () => {
               expect(toolbar.activeItem()?.value()).toBe('item 8');
             });
 
-            it('should not wrap from first to last focusable item (vertical, rtl)', () => {
+            it('should not wrap from first to last focusable item', () => {
               const {toolbar, items} = getPatterns({
                 wrap: false,
                 softDisabled: false,
@@ -1270,7 +1255,7 @@ describe('Toolbar Pattern', () => {
     });
 
     describe('with disabled toolbar', () => {
-      it('should not navigate on any key press (disabled toolbar)', () => {
+      it('should not navigate on any key press', () => {
         const {toolbar} = getPatterns({disabled: true});
         const initialActiveItem = toolbar.activeItem();
 
@@ -1296,7 +1281,7 @@ describe('Toolbar Pattern', () => {
   });
 
   describe('Selection', () => {
-    it('should toggle the active item on Enter (selection)', () => {
+    it('should toggle the active item on Enter', () => {
       const {toolbar} = getPatterns();
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       toolbar.onKeydown(enter());
@@ -1305,7 +1290,7 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should toggle the active item on Space (selection)', () => {
+    it('should toggle the active item on Space', () => {
       const {toolbar} = getPatterns();
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       toolbar.onKeydown(space());
@@ -1314,7 +1299,7 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should toggle the active item on click (selection)', () => {
+    it('should toggle the active item on click', () => {
       const {toolbar, items} = getPatterns();
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       toolbar.onClick(clickItem(items[0]));
@@ -1323,7 +1308,7 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should be able to select multiple items in the toolbar (selection)', () => {
+    it('should be able to select multiple items in the toolbar', () => {
       const {toolbar} = getPatterns();
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
@@ -1340,7 +1325,7 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 1').selected()).toBeTrue();
     });
 
-    it('should not be able to select multiple items in a group (selection)', () => {
+    it('should not be able to select multiple items in a group', () => {
       const {toolbar} = getPatterns();
       expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
       expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
@@ -1359,7 +1344,7 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 3').selected()).toBeTrue();
     });
 
-    it('should not select disabled items (selection)', () => {
+    it('should not select disabled items', () => {
       const {toolbar, items} = getPatterns();
       items[1].inputs.disabled.set(true);
 
@@ -1372,7 +1357,7 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
     });
 
-    it('should not select items in a disabled group (selection)', () => {
+    it('should not select items in a disabled group', () => {
       const {toolbar, items, group0} = getPatterns();
       group0.disabled.set(true);
 
@@ -1384,42 +1369,6 @@ describe('Toolbar Pattern', () => {
       toolbar.onKeydown(enter());
       expect(toolbar.activeItem()?.value()).toBe('item 3');
       expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
-    });
-  }); // Close preceding section
-
-  describe('#setDefaultStateEffect', () => {
-    it('should set default state if not interacted', () => {
-      const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[1]); // Set to item 1
-      toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 0'); // Should reset to item 0
-    });
-
-    it('should NOT set default state if keyboard interacted', () => {
-      const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[0]);
-      toolbar.onKeydown(right()); // Interaction (ArrowRight moves to item 1)
-
-      toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1 (interacted)
-    });
-
-    it('should NOT set default state if pointer interacted', () => {
-      const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[1]);
-      toolbar.onPointerdown(clickItem(items[1])); // Interaction
-
-      toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
-    });
-
-    it('should NOT set default state if focus-in occurred', () => {
-      const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[1]);
-      toolbar.onFocusIn(); // Interaction
-
-      toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
     });
   });
 });

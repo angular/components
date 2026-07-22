@@ -1,5 +1,5 @@
 import {waitForAsync, TestBed} from '@angular/core/testing';
-import {Component, Injector, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {
@@ -116,6 +116,5 @@ describe('RepositionScrollStrategy', () => {
 @Component({
   template: '<p>Pasta</p>',
   imports: [OverlayModule, PortalModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PastaMsg {}

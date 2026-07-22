@@ -11,6 +11,7 @@ import {Direction, Directionality} from '../bidi';
 import {ENTER, hasModifierKey, SPACE} from '../keycodes';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -40,7 +41,6 @@ import {
   type NgForm,
   type FormGroupDirective,
 } from '@angular/forms';
-import type {Field} from '@angular/forms/signals';
 import {_getFocusedElementPierceShadowDom} from '../platform';
 import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -56,9 +56,6 @@ export type StepContentPositionState = 'previous' | 'current' | 'next';
 
 /** Possible orientation of a stepper. */
 export type StepperOrientation = 'horizontal' | 'vertical';
-
-/** Possible controls that can be assigned to a step. */
-export type StepControl = AbstractControl | Field<unknown>;
 
 /** Change event emitted on selection changes. */
 export class StepperSelectionEvent {
@@ -110,6 +107,7 @@ export interface StepperOptions {
   exportAs: 'cdkStep',
   template: '<ng-template><ng-content/></ng-template>',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkStep implements OnChanges {
   private _stepperOptions: StepperOptions;
@@ -136,7 +134,7 @@ export class CdkStep implements OnChanges {
   @ViewChild(TemplateRef, {static: true}) content!: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl!: StepControl;
+  @Input() stepControl!: AbstractControl;
 
   /** Whether user has attempted to move away from the step. */
   get interacted(): boolean {
@@ -199,7 +197,7 @@ export class CdkStep implements OnChanges {
       return override;
     }
 
-    return interacted && (!this.stepControl || isValid(this.stepControl));
+    return interacted && (!this.stepControl || this.stepControl.valid);
   }
   set completed(value: boolean) {
     this._completedOverride.set(value);
@@ -257,8 +255,10 @@ export class CdkStep implements OnChanges {
   private _customError = signal<boolean | null>(null);
 
   private _getDefaultError() {
-    return this.interacted && !!this.stepControl && isInvalid(this.stepControl);
+    return this.interacted && !!this.stepControl?.invalid;
   }
+
+  constructor(...args: unknown[]);
 
   constructor() {
     const stepperOptions = inject<StepperOptions>(STEPPER_GLOBAL_OPTIONS, {optional: true});
@@ -288,7 +288,7 @@ export class CdkStep implements OnChanges {
       // want the form to be back to its initial state (see #29781). Submitted state is on the
       // individual directives, rather than the control, so we need to reset them ourselves.
       this._childForms?.forEach(form => form.resetForm?.());
-      reset(this.stepControl);
+      this.stepControl.reset();
     }
   }
 
@@ -341,14 +341,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   private _sortedHeaders = new QueryList<CdkStepHeader>();
 
   /** Whether the validity of previous steps should be checked or not. */
-  @Input({transform: booleanAttribute})
-  get linear(): boolean {
-    return this._linear();
-  }
-  set linear(value: boolean) {
-    this._linear.set(value);
-  }
-  private _linear = signal(false);
+  @Input({transform: booleanAttribute}) linear: boolean = false;
 
   /** The index of the selected step. */
   @Input({transform: numberAttribute})
@@ -410,6 +403,9 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     }
   }
   private _orientation: StepperOrientation = 'horizontal';
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   ngAfterContentInit() {
     this._steps.changes
@@ -597,7 +593,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
         .some(step => {
           const control = step.stepControl;
           const isIncomplete = control
-            ? isInvalid(control) || isPending(control) || !step.interacted
+            ? control.invalid || control.pending || !step.interacted
             : !step.completed;
           return isIncomplete && !step.optional && !step._completedOverride();
         });
@@ -620,31 +616,5 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
   /** Checks whether the passed-in index is a valid step index. */
   private _isValidIndex(index: number): boolean {
     return index > -1 && (!this.steps || index < this.steps.length);
-  }
-}
-
-function isField(value: StepControl): value is Field<unknown> {
-  return typeof value === 'function';
-}
-
-function isValid(control: StepControl): boolean {
-  return isField(control) ? control().valid() : control.valid;
-}
-
-function isInvalid(control: StepControl): boolean {
-  // Note: it's a bit redundant to have both `isValid` and `isInvalid`. We need both, because
-  // some internal apps mock out `invalid` specifically so `!valid` won't hit the mock.
-  return isField(control) ? control().invalid() : control.invalid;
-}
-
-function isPending(control: StepControl): boolean {
-  return isField(control) ? control().pending() : control.pending;
-}
-
-function reset(control: StepControl): void {
-  if (isField(control)) {
-    control().reset();
-  } else {
-    control.reset();
   }
 }

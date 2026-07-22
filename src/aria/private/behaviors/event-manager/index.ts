@@ -9,4 +9,3 @@
 export {Modifier} from './event-manager';
 export {KeyboardEventManager} from './keyboard-event-manager';
 export {PointerEventManager} from './pointer-event-manager';
-export {ClickEventManager} from './click-event-manager';

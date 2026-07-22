@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, EventEmitter} from '@angular/core';
+import {Injectable, EventEmitter} from '@angular/core';
 
 export interface DocsSiteTheme {
   name: string;
@@ -16,7 +16,7 @@ export interface DocsSiteTheme {
   isDefault?: boolean;
 }
 
-@Service()
+@Injectable({providedIn: 'root'})
 export class ThemeStorage {
   static storageKey = 'docs-theme-storage-current-name';
 

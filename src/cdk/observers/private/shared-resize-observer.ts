@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {inject, Service, NgZone, OnDestroy, RendererFactory2} from '@angular/core';
+import {inject, Injectable, NgZone, OnDestroy, RendererFactory2} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {filter, shareReplay, takeUntil} from 'rxjs/operators';
 
@@ -94,7 +94,9 @@ class SingleBoxSharedResizeObserver {
  * later calls to `observe` with a different box type from influencing the events dispatched to
  * earlier calls.
  */
-@Service()
+@Injectable({
+  providedIn: 'root',
+})
 export class SharedResizeObserver implements OnDestroy {
   private _cleanupErrorListener: (() => void) | undefined;
 

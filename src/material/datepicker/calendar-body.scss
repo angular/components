@@ -261,10 +261,6 @@ $fallbacks: m3-datepicker.get-tokens();
     position: absolute;
   }
 
-  &::before {
-    border-radius: 50%;
-  }
-
   @include cdk.high-contrast {
     border: none;
   }

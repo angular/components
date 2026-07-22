@@ -37,15 +37,15 @@ const bottomSheetRef = bottomSheet.open(HobbitSheet, {
 Afterwards you can access the injected data using the `MAT_BOTTOM_SHEET_DATA` injection token:
 
 ```ts
-import {Component, inject} from '@angular/core';
-import {MAT_BOTTOM_SHEET_DATA} from '@angular/material/bottom-sheet';
+import {Component, Inject} from '@angular/core';
+import {MAT_BOTTOM_SHEET_DATA} from '../bottom-sheet';
 
 @Component({
   selector: 'hobbit-sheet',
   template: 'passed in {{ data.names }}',
 })
 export class HobbitSheet {
-  data = inject<{names: string[]}>(MAT_BOTTOM_SHEET_DATA);
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data: {names: string[]}) { }
 }
 ```
 
@@ -54,11 +54,11 @@ Default bottom sheet options can be specified by providing an instance of `MatBo
 for `MAT_BOTTOM_SHEET_DEFAULT_OPTIONS` in your application's root module.
 
 ```ts
-bootstrapApplication(MyApp, {
+@NgModule({
   providers: [
     {provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
   ]
-});
+})
 ```
 
 

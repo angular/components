@@ -18,6 +18,9 @@ import {FocusableOption} from '../a11y';
 export class CdkStepHeader implements FocusableOption {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
+  constructor(...args: unknown[]);
+  constructor() {}
+
   /** Focuses the step header. */
   focus() {
     this._elementRef.nativeElement.focus();

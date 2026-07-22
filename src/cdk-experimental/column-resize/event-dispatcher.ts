@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service, NgZone, inject} from '@angular/core';
+import {Injectable, NgZone, inject} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, map, share, skip, startWith, debounceTime} from 'rxjs/operators';
 
@@ -15,7 +15,7 @@ import {_closest} from '../popover-edit';
 import {HEADER_ROW_SELECTOR} from './selectors';
 
 /** Coordinates events between the column resize directives. */
-@Service({autoProvided: false})
+@Injectable()
 export class HeaderRowEventDispatcher {
   private readonly _ngZone = inject(NgZone);
 

@@ -15,6 +15,17 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
+// @public @deprecated
+export type ArrowViewState = SortDirection | 'hint' | 'active';
+
+// @public @deprecated
+export interface ArrowViewStateTransition {
+    // (undocumented)
+    fromState?: ArrowViewState;
+    // (undocumented)
+    toState?: ArrowViewState;
+}
+
 // @public
 export const MAT_SORT_DEFAULT_OPTIONS: InjectionToken<MatSortDefaultOptions>;
 
@@ -66,7 +77,7 @@ export interface MatSortDefaultOptions {
 
 // @public
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
-    constructor();
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
     arrowPosition: SortHeaderArrowPosition;
@@ -103,7 +114,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, never>;
 }
 
-// @public @deprecated
+// @public
 export class MatSortHeaderIntl {
     readonly changes: Subject<void>;
     // (undocumented)

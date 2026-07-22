@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "lib": ["es2020"],
     "skipLibCheck": true,
+    "downlevelIteration": true,
     "types": ["node"]
   },
   "exclude": ["**/*.spec.ts", "**/*.spec.mts", "adev-api-extraction/**"]

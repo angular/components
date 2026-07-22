@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 
 /**
@@ -10,5 +10,5 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatButtonModule],
 })
 export class ButtonHarnessExample {
-  clicked = signal(false);
+  clicked = false;
 }

@@ -7,19 +7,17 @@
  */
 
 import {
-  afterNextRender,
   computed,
+  contentChildren,
   Directive,
   ElementRef,
   inject,
   input,
-  OnDestroy,
-  OnInit,
   Signal,
 } from '@angular/core';
-import {GridPattern, GridRowPattern, SortedCollection} from '../private';
-import {GRID_ROW, GRID} from './grid-tokens';
-import {GridCell} from './grid-cell';
+import {GridPattern, GridRowPattern} from '../private';
+import {Grid} from './grid';
+import {GRID_CELL, GRID_ROW} from './grid-tokens';
 
 /**
  * Represents a row within a grid. It is a container for `ngGridCell` directives.
@@ -29,6 +27,8 @@ import {GridCell} from './grid-cell';
  *   <!-- ... cells ... -->
  * </tr>
  * ```
+ *
+ * @developerPreview 21.0
  *
  * @see [Grid](guide/aria/grid)
  */
@@ -41,23 +41,23 @@ import {GridCell} from './grid-cell';
   },
   providers: [{provide: GRID_ROW, useExisting: GridRow}],
 })
-export class GridRow implements OnInit, OnDestroy {
+export class GridRow {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
   /** A reference to the host element. */
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
-  /** The collection of cells in this row. */
-  readonly _collection = new SortedCollection<GridCell>();
+  /** The cells that make up this row. */
+  private readonly _cells = contentChildren(GRID_CELL, {descendants: true});
 
   /** The UI patterns for the cells in this row. */
   private readonly _cellPatterns: Signal<any[]> = computed(() =>
-    this._collection.orderedItems().map(c => c._pattern),
+    this._cells().map(c => c._pattern),
   );
 
   /** The parent grid. */
-  private readonly _grid = inject(GRID);
+  private readonly _grid = inject(Grid);
 
   /** The parent grid UI pattern. */
   readonly _gridPattern = computed<GridPattern>(() => this._grid._pattern);
@@ -71,19 +71,4 @@ export class GridRow implements OnInit, OnDestroy {
     cells: this._cellPatterns,
     grid: this._gridPattern,
   });
-
-  constructor() {
-    afterNextRender(() => {
-      this._collection.startObserving(this.element);
-    });
-  }
-
-  ngOnInit() {
-    this._grid._collection.register(this);
-  }
-
-  ngOnDestroy() {
-    this._grid._collection.unregister(this);
-    this._collection.stopObserving();
-  }
 }

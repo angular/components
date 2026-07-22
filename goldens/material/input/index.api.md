@@ -12,7 +12,6 @@ import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
-import { Field } from '@angular/forms/signals';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/observers';
@@ -42,6 +41,7 @@ export const MAT_INPUT_VALUE_ACCESSOR: InjectionToken<{
 
 // @public
 export class MatError {
+    constructor(...args: unknown[]);
     // (undocumented)
     id: string;
     // (undocumented)
@@ -52,7 +52,7 @@ export class MatError {
 
 // @public
 export class MatFormField implements FloatingLabelParent, AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     _animateAndLockLabel(): void;
     // (undocumented)
     protected readonly _animationsDisabled: boolean;
@@ -149,7 +149,7 @@ export class MatHint {
 
 // @public (undocumented)
 export class MatInput implements MatFormFieldControl_2<any>, OnChanges, OnDestroy, AfterViewInit, DoCheck {
-    constructor();
+    constructor(...args: unknown[]);
     autofilled: boolean;
     controlType: string;
     get describedByIds(): string[];

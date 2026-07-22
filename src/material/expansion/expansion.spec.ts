@@ -4,7 +4,7 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {
   ComponentFixture,
   TestBed,
@@ -556,7 +556,6 @@ describe('MatExpansionPanel', () => {
     <button>I am a button</button>
   </mat-expansion-panel>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PanelWithContent {
   expanded = false;
@@ -578,7 +577,6 @@ class PanelWithContent {
     }
   `,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PanelWithContentInNgIf {
   expansionShown = true;
@@ -595,7 +593,6 @@ class PanelWithContentInNgIf {
     corrupti maxime voluptate accusamus impedit atque incidunt pariatur.
   </mat-expansion-panel>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PanelWithCustomMargin {
   expanded = false;
@@ -612,7 +609,6 @@ class PanelWithCustomMargin {
     </ng-template>
   </mat-expansion-panel>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class LazyPanelWithContent {
   expanded = false;
@@ -628,7 +624,6 @@ class LazyPanelWithContent {
     </ng-template>
   </mat-expansion-panel>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class LazyPanelOpenOnLoad {}
 
@@ -638,7 +633,6 @@ class LazyPanelOpenOnLoad {}
     <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PanelWithTwoWayBinding {
   expanded = false;
@@ -650,7 +644,6 @@ class PanelWithTwoWayBinding {
     <mat-expansion-panel-header tabindex="7">Panel Title</mat-expansion-panel-header>
   </mat-expansion-panel>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class PanelWithHeaderTabindex {}
 
@@ -665,7 +658,6 @@ class PanelWithHeaderTabindex {}
     </mat-expansion-panel>
   `,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedLazyPanelWithContent {
   parentExpanded = false;

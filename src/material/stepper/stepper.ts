@@ -10,6 +10,7 @@ import {CdkStep, CdkStepper} from '@angular/cdk/stepper';
 import {
   AfterContentInit,
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ContentChild,
   ContentChildren,
@@ -41,7 +42,6 @@ import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 import {MatStepContent} from './step-content';
-import type {Field} from '@angular/forms/signals';
 
 @Component({
   selector: 'mat-step',
@@ -52,6 +52,7 @@ import type {Field} from '@angular/forms/signals';
   ],
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkPortalOutlet],
   host: {
     'hidden': '', // Hide the steps so they don't affect the layout.
@@ -113,12 +114,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
 
     return originalErrorState || customErrorState;
   }
-
-  isSignalErrorState(field: Field<unknown> | null): boolean {
-    const originalErrorState = this._errorStateMatcher.isSignalErrorState?.(field) ?? false;
-    const customErrorState = !!(field && field().invalid() && this.interacted);
-    return originalErrorState || customErrorState;
-  }
 }
 
 @Component({
@@ -139,6 +134,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentI
   },
   providers: [{provide: CdkStepper, useExisting: MatStepper}],
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet, MatStepHeader],
 })
 export class MatStepper extends CdkStepper implements AfterViewInit, AfterContentInit, OnDestroy {
@@ -192,12 +188,6 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
   @Input()
   headerPosition: 'top' | 'bottom' = 'top';
 
-  /**
-   * ARIA label for the stepper.
-   */
-  @Input('aria-label')
-  ariaLabel: string | null = null;
-
   /** The content prefix to use in the stepper header. */
   readonly headerPrefix = input<TemplateRef<unknown> | null>(null);
 
@@ -210,18 +200,14 @@ export class MatStepper extends CdkStepper implements AfterViewInit, AfterConten
     return this._animationDuration;
   }
   set animationDuration(value: string) {
-    if (/^[0-9]+(?:\.[0-9]+)?$/.test(value)) {
-      this._animationDuration = value + 'ms';
-    } else if (/^[0-9]+(?:\.[0-9]+)?(?:ms|s)$/.test(value)) {
-      this._animationDuration = value;
-    } else {
-      this._animationDuration = '';
-    }
+    this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
   }
   private _animationDuration = '';
 
   /** Whether the stepper is rendering on the server. */
   protected _isServer: boolean = !inject(Platform).isBrowser;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     super();

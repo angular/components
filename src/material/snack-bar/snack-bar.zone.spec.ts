@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   Directive,
   ViewChild,
@@ -7,7 +8,7 @@ import {
   signal,
   inject,
 } from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
 import {MatSnackBar} from './snack-bar';
 import {MatSnackBarConfig} from './snack-bar-config';
 import {MATERIAL_ANIMATIONS} from '../core';
@@ -16,11 +17,7 @@ describe('MatSnackBar Zone.js integration', () => {
   let snackBar: MatSnackBar;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
 
-  function wait(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  beforeEach(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       providers: [
         provideZoneChangeDetection(),
@@ -31,33 +28,34 @@ describe('MatSnackBar Zone.js integration', () => {
     snackBar = TestBed.inject(MatSnackBar);
     viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
     viewContainerFixture.detectChanges();
-  });
+  }));
 
-  it('should clear the dismiss timeout when dismissed before timeout expiration', async () => {
+  it('should clear the dismiss timeout when dismissed before timeout expiration', fakeAsync(() => {
     let config = new MatSnackBarConfig();
     config.duration = 1000;
     snackBar.open('content', 'test', config);
 
     setTimeout(() => snackBar.dismiss(), 500);
 
-    await wait(700);
+    tick(600);
+    flush();
 
     expect(viewContainerFixture.isStable()).toBe(true);
-  });
+  }));
 
-  it('should clear the dismiss timeout when dismissed with action', async () => {
+  it('should clear the dismiss timeout when dismissed with action', fakeAsync(() => {
     let config = new MatSnackBarConfig();
     config.duration = 1000;
     const snackBarRef = snackBar.open('content', 'test', config);
 
     setTimeout(() => snackBarRef.dismissWithAction(), 500);
 
-    await wait(700);
+    tick(600);
     viewContainerFixture.detectChanges();
-    await wait(0);
+    tick();
 
     expect(viewContainerFixture.isStable()).toBe(true);
-  });
+  }));
 });
 
 @Directive({
@@ -71,6 +69,7 @@ class DirectiveWithViewContainer {
   selector: 'arbitrary-component',
   template: `@if (childComponentExists()) {<dir-with-view-container></dir-with-view-container>}`,
   imports: [DirectiveWithViewContainer],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class ComponentWithChildViewContainer {
   @ViewChild(DirectiveWithViewContainer) childWithViewContainer!: DirectiveWithViewContainer;

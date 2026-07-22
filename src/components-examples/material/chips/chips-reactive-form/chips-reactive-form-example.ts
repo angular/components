@@ -1,5 +1,5 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
@@ -20,33 +20,37 @@ import {MatIconModule} from '@angular/material/icon';
     ReactiveFormsModule,
     MatIconModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsReactiveFormExample {
-  private _announcer = inject(LiveAnnouncer);
+  readonly reactiveKeywords = signal(['angular', 'how-to', 'tutorial', 'accessibility']);
+  readonly formControl = new FormControl(['angular']);
 
-  readonly formControl = new FormControl(['angular', 'how-to', 'tutorial', 'accessibility'], {
-    nonNullable: true,
-  });
+  announcer = inject(LiveAnnouncer);
 
-  addKeyword(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
+  removeReactiveKeyword(keyword: string) {
+    this.reactiveKeywords.update(keywords => {
+      const index = keywords.indexOf(keyword);
+      if (index < 0) {
+        return keywords;
+      }
 
-    if (value) {
-      this.formControl.setValue([...this.formControl.value, value]);
-      this._announcer.announce(`added ${value} to reactive form`);
-    }
-
-    event.chipInput.clear();
+      keywords.splice(index, 1);
+      this.announcer.announce(`removed ${keyword} from reactive form`);
+      return [...keywords];
+    });
   }
 
-  removeKeyword(keyword: string) {
-    const keywords = this.formControl.value;
-    const index = keywords.lastIndexOf(keyword);
+  addReactiveKeyword(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
 
-    if (index > -1) {
-      keywords.splice(index, 1);
-      this.formControl.setValue([...keywords]);
-      this._announcer.announce(`removed ${keyword} from reactive form`);
+    // Add our keyword
+    if (value) {
+      this.reactiveKeywords.update(keywords => [...keywords, value]);
+      this.announcer.announce(`added ${value} to reactive form`);
     }
+
+    // Clear the input value
+    event.chipInput!.clear();
   }
 }

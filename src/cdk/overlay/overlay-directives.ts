@@ -92,6 +92,9 @@ export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY = new InjectionToken<() => Sc
 })
 export class CdkOverlayOrigin {
   elementRef = inject(ElementRef);
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }
 
 /**
@@ -283,6 +286,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Emits when there are mouse outside click events that are targeted at the overlay. */
   @Output() readonly overlayOutsideClick = new EventEmitter<MouseEvent>();
 
+  constructor(...args: unknown[]);
+
   // TODO(jelbourn): inputs for size, scroll behavior, animation, etc.
 
   constructor() {
@@ -318,7 +323,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._overlayRef?.dispose();
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     if (this._position) {
       this._updatePositionStrategy(this._position);
       this._overlayRef?.updateSize({

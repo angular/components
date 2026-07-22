@@ -112,7 +112,7 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
 
 // @public
 export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     // @deprecated
     defaultTabIndex: number;
     // @deprecated

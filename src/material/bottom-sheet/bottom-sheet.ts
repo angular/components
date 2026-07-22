@@ -9,7 +9,7 @@
 import {Dialog} from '@angular/cdk/dialog';
 import {createBlockScrollStrategy, createGlobalPositionStrategy} from '@angular/cdk/overlay';
 import {ComponentType} from '@angular/cdk/portal';
-import {Service, TemplateRef, InjectionToken, OnDestroy, inject, Injector} from '@angular/core';
+import {Injectable, TemplateRef, InjectionToken, OnDestroy, inject, Injector} from '@angular/core';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetContainer} from './bottom-sheet-container';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
@@ -23,7 +23,7 @@ export const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS = new InjectionToken<MatBottomShee
 /**
  * Service to trigger Material Design bottom sheets.
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class MatBottomSheet implements OnDestroy {
   private _injector = inject(Injector);
   private _parentBottomSheet = inject(MatBottomSheet, {optional: true, skipSelf: true});
@@ -48,6 +48,9 @@ export class MatBottomSheet implements OnDestroy {
       this._bottomSheetRefAtThisLevel = value;
     }
   }
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /**
    * Opens a bottom sheet containing the given component.

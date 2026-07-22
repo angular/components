@@ -153,7 +153,7 @@ describe('Tree Pattern', () => {
         softDisabled: signal(true),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
-        value: signal([]),
+        values: signal([]),
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
@@ -207,7 +207,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(true),
           currentType: signal('page'),
@@ -218,7 +218,7 @@ describe('Tree Pattern', () => {
       it('should have undefined selected state', () => {
         const {items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         expect(item0.selected()).toBeUndefined();
       });
 
@@ -227,11 +227,11 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
 
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         expect(item0.current()).toBe('page');
         expect(item1.current()).toBeUndefined();
 
-        treeInputs.value.set(['Item 1']);
+        treeInputs.values.set(['Item 1']);
         treeInputs.currentType.set('step');
         expect(item0.current()).toBeUndefined();
         expect(item1.current()).toBe('step');
@@ -240,7 +240,7 @@ describe('Tree Pattern', () => {
       it('should have undefined current state when non-selectable', () => {
         const {items, itemPatternInputsMap} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         expect(item0.current()).toBe('page');
         itemPatternInputsMap.get(item0.id())!.selectable.set(false);
         expect(item0.current()).toBeUndefined();
@@ -263,7 +263,7 @@ describe('Tree Pattern', () => {
         softDisabled: signal(true),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
-        value: signal([]),
+        values: signal([]),
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
@@ -449,7 +449,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -462,11 +462,11 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
 
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         expect(item0.selected()).toBe(true);
         expect(item1.selected()).toBe(false);
 
-        treeInputs.value.set(['Item 1']);
+        treeInputs.values.set(['Item 1']);
         expect(item0.selected()).toBe(false);
         expect(item1.selected()).toBe(true);
       });
@@ -474,31 +474,31 @@ describe('Tree Pattern', () => {
       it('should have undefined selected state when non-selectable', () => {
         const {items, itemPatternInputsMap} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         itemPatternInputsMap.get(item0.id())!.selectable.set(false);
         expect(item0.selected()).toBeUndefined();
       });
 
-      it('should select an item on navigation in follows focus & single select mode', () => {
+      it('should select an item on navigation', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onKeydown(down());
         expect(tree.activeItem()).toBe(item1);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
 
         tree.onKeydown(up());
         expect(tree.activeItem()).toBe(item0);
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should not change selection when the tree is disabled in follows focus & single select mode', () => {
+      it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(down());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
     });
 
@@ -517,7 +517,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -525,60 +525,60 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should select an item on Space in explicit focus & single select mode', () => {
+      it('should select an item on Space', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
       it('should not deselect an item on Space', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should select an item on Enter in explicit focus & single select mode', () => {
+      it('should select an item on Enter', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
       it('should not deselect an item on Enter', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
       it('should only allow one selected item', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
 
         tree.onKeydown(down());
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should not change selection when the tree is disabled in explicit focus & single select mode', () => {
+      it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
     });
 
@@ -597,7 +597,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -605,18 +605,18 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should select an item on Space in explicit focus & multi select mode', () => {
+      it('should select an item on Space', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should select an item on Enter in explicit focus & multi select mode', () => {
+      it('should select an item on Enter', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
       it('should allow multiple selected items', () => {
@@ -625,52 +625,52 @@ describe('Tree Pattern', () => {
         tree.onKeydown(enter());
         tree.onKeydown(down());
         tree.onKeydown(enter());
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 1']);
       });
 
-      it('should select a range of visible items on Shift + ArrowDown/ArrowUp in explicit focus & multi select mode', () => {
+      it('should select a range of visible items on Shift + ArrowDown/ArrowUp', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
         tree.onKeydown(down({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0']);
 
         tree.onKeydown(down({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
 
         tree.onKeydown(up({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0']);
       });
 
-      it('should not allow wrapping while Shift is held down in explicit focus & multi select mode', () => {
+      it('should not allow wrapping while Shift is held down', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
 
         tree.onKeydown(shift());
         tree.onKeydown(up({shift: true}));
         expect(tree.activeItem()).toBe(item0);
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should select a range of visible items on Shift + Space (or Enter) in explicit focus & multi select mode', () => {
+      it('should select a range of visible items on Shift + Space (or Enter)', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(down());
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual(['Item 0-0']);
+        expect(tree.inputs.values()).toEqual(['Item 0-0']);
 
         tree.onKeydown(down());
         tree.onKeydown(down());
         tree.onKeydown(shift());
         tree.onKeydown(space({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1']);
       });
 
-      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home in explicit focus & multi select mode', () => {
+      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -679,10 +679,10 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(shift());
         tree.onKeydown(home({control: true, shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 1', 'Item 0-1', 'Item 0-0', 'Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 1', 'Item 0-1', 'Item 0-0', 'Item 0']);
       });
 
-      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End in explicit focus & multi select mode', () => {
+      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item0_0 = getItemByValue(items(), 'Item 0-0');
@@ -691,18 +691,18 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(shift());
         tree.onKeydown(end({control: true, shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
+        expect(tree.inputs.values()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
       });
 
-      it('should not change selection when the tree is disabled in explicit focus & multi select mode', () => {
+      it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(space());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
 
         tree.onKeydown(a({control: true}));
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
 
       it('should not select disabled items on Shift + ArrowUp / ArrowDown', () => {
@@ -719,7 +719,7 @@ describe('Tree Pattern', () => {
         tree.onKeydown(shift());
         tree.onKeydown(down({shift: true}));
         tree.onKeydown(down({shift: true}));
-        expect(tree.inputs.value()).toEqual(['A', 'C']);
+        expect(tree.inputs.values()).toEqual(['A', 'C']);
       });
 
       it('should not select non-selectable items on Shift + ArrowUp / ArrowDown', () => {
@@ -735,7 +735,7 @@ describe('Tree Pattern', () => {
         tree.onKeydown(shift());
         tree.onKeydown(down({shift: true}));
         tree.onKeydown(down({shift: true}));
-        expect(tree.inputs.value()).toEqual(['A', 'C']);
+        expect(tree.inputs.values()).toEqual(['A', 'C']);
       });
 
       it('should select all visible items on Ctrl + A', () => {
@@ -744,7 +744,13 @@ describe('Tree Pattern', () => {
         item0.expanded.set(true);
 
         tree.onKeydown(a({control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
+        expect(tree.inputs.values()).toEqual([
+          'Item 0',
+          'Item 0-0',
+          'Item 0-1',
+          'Item 1',
+          'Item 2',
+        ]);
       });
 
       it('should deselect all visible items on Ctrl + A if all are selected', () => {
@@ -754,7 +760,7 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(a({control: true}));
         tree.onKeydown(a({control: true}));
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
     });
 
@@ -773,7 +779,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -781,49 +787,49 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should select an item on navigation in follows focus & multi select mode', () => {
+      it('should select an item on navigation', () => {
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(down());
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
       it('should navigate without selecting if the Ctrl key is pressed', () => {
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
         tree.onKeydown(down({control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
         expect(tree.activeItem()).toBe(item1);
       });
 
       it('should toggle an item selection state on Ctrl + Space', () => {
-        treeInputs.value.set(['Item 0']);
+        treeInputs.values.set(['Item 0']);
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(down({control: true}));
         tree.onKeydown(space({control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 1']);
 
         tree.onKeydown(space({control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
 
-      it('should select a range of visible items on Shift + ArrowDown/ArrowUp in follows focus & multi select mode', () => {
-        treeInputs.value.set(['Item 0']);
+      it('should select a range of visible items on Shift + ArrowDown/ArrowUp', () => {
+        treeInputs.values.set(['Item 0']);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
         tree.onKeydown(down({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0']);
         tree.onKeydown(down({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
       });
 
-      it('should not allow wrapping while Shift is held down in follows focus & multi select mode', () => {
+      it('should not allow wrapping while Shift is held down', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         tree.treeBehavior.goto(item0);
@@ -831,10 +837,10 @@ describe('Tree Pattern', () => {
         tree.onKeydown(shift());
         tree.onKeydown(up({shift: true}));
         expect(tree.activeItem()).toBe(item0);
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
 
-      it('should select a range of visible items on Shift + Space (or Enter) in follows focus & multi select mode', () => {
+      it('should select a range of visible items on Shift + Space (or Enter)', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         item0.expanded.set(true);
@@ -844,10 +850,10 @@ describe('Tree Pattern', () => {
         tree.onKeydown(down({control: true}));
         tree.onKeydown(shift());
         tree.onKeydown(space({shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1']);
       });
 
-      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home in follows focus & multi select mode', () => {
+      it('should select the focused item and all visible items up to the first on Ctrl + Shift + Home', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
@@ -856,10 +862,10 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(shift());
         tree.onKeydown(home({control: true, shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 1', 'Item 0-1', 'Item 0-0', 'Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 1', 'Item 0-1', 'Item 0-0', 'Item 0']);
       });
 
-      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End in follows focus & multi select mode', () => {
+      it('should select the focused item and all visible items down to the last on Ctrl + Shift + End', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item0_0 = getItemByValue(items(), 'Item 0-0');
@@ -868,15 +874,15 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(shift());
         tree.onKeydown(end({control: true, shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
+        expect(tree.inputs.values()).toEqual(['Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
       });
 
-      it('should not change selection when the tree is disabled in follows focus & multi select mode', () => {
+      it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
         const {tree} = createTree(treeExample, treeInputs);
 
         tree.onKeydown(down());
-        expect(tree.inputs.value()).toEqual([]);
+        expect(tree.inputs.values()).toEqual([]);
       });
 
       it('should not select disabled items on navigation', () => {
@@ -887,11 +893,11 @@ describe('Tree Pattern', () => {
         ];
         treeInputs.softDisabled.set(false);
         const {tree, items} = createTree(localTreeData, treeInputs);
-        treeInputs.value.set(['A']);
+        treeInputs.values.set(['A']);
         tree.treeBehavior.goto(getItemByValue(items(), 'A'));
 
         tree.onKeydown(down());
-        expect(tree.inputs.value()).toEqual(['C']);
+        expect(tree.inputs.values()).toEqual(['C']);
       });
 
       it('should not select non-selectable items on navigation', () => {
@@ -901,12 +907,12 @@ describe('Tree Pattern', () => {
           {value: 'C', disabled: false, selectable: true, expanded: false},
         ];
         const {tree, items} = createTree(localTreeData, treeInputs);
-        treeInputs.value.set(['A']);
+        treeInputs.values.set(['A']);
         tree.treeBehavior.goto(getItemByValue(items(), 'A'));
 
         tree.onKeydown(down());
         tree.onKeydown(down());
-        expect(tree.inputs.value()).toEqual(['C']);
+        expect(tree.inputs.values()).toEqual(['C']);
       });
 
       it('should deselect all except the focused item on Ctrl + A if all are selected', () => {
@@ -917,9 +923,15 @@ describe('Tree Pattern', () => {
         tree.treeBehavior.goto(item0_0);
 
         tree.onKeydown(a({control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
+        expect(tree.inputs.values()).toEqual([
+          'Item 0',
+          'Item 0-0',
+          'Item 0-1',
+          'Item 1',
+          'Item 2',
+        ]);
         tree.onKeydown(a({control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0-0']);
+        expect(tree.inputs.values()).toEqual(['Item 0-0']);
       });
     });
   });
@@ -940,7 +952,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -948,22 +960,22 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and select a single item on click in follows focus & single select mode', () => {
+      it('should navigate and select a single item on click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item1.element()!));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should not change selection when the tree is disabled in follows focus & single select mode (mouse)', () => {
+      it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item1.element()!));
-        expect(tree.inputs.value()).toEqual([]);
+        tree.onPointerdown(createClickEvent(item1.element()!));
+        expect(tree.inputs.values()).toEqual([]);
       });
     });
 
@@ -982,7 +994,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -990,35 +1002,35 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and toggle selection on click in explicit focus & single select mode', () => {
+      it('should navigate and toggle selection on click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item1.element()!));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
       it('should not deselect item on click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item1.element()!));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
 
-        tree.onClick(createClickEvent(item1.element()!));
+        tree.onPointerdown(createClickEvent(item1.element()!));
         expect(tree.activeItem()).toBe(item1);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should not change selection when the tree is disabled in explicit focus & single select mode (mouse)', () => {
+      it('should not change selection when the tree is disabled', () => {
         treeInputs.disabled.set(true);
         const {tree, items} = createTree(treeExample, treeInputs);
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item1.element()!));
-        expect(tree.inputs.value()).toEqual([]);
+        tree.onPointerdown(createClickEvent(item1.element()!));
+        expect(tree.inputs.values()).toEqual([]);
       });
     });
 
@@ -1037,7 +1049,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -1045,30 +1057,30 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and toggle selection on click in explicit focus & multi select mode', () => {
+      it('should navigate and toggle selection on click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item0.element()!));
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        tree.onPointerdown(createClickEvent(item0.element()!));
+        expect(tree.inputs.values()).toEqual(['Item 0']);
 
-        tree.onClick(createClickEvent(item1.element()!));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 1']);
+        tree.onPointerdown(createClickEvent(item1.element()!));
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 1']);
 
-        tree.onClick(createClickEvent(item0.element()!));
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        tree.onPointerdown(createClickEvent(item0.element()!));
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should navigate and select range from anchor on shift + click in explicit focus & multi select mode', () => {
+      it('should navigate and select range from anchor on shift + click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
-        tree.onClick(createClickEvent(item1.element()!, {shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1']);
+        tree.onPointerdown(createClickEvent(item1.element()!, {shift: true}));
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1']);
       });
     });
 
@@ -1087,7 +1099,7 @@ describe('Tree Pattern', () => {
           softDisabled: signal(true),
           textDirection: signal('ltr'),
           typeaheadDelay: signal(0),
-          value: signal([]),
+          values: signal([]),
           wrap: signal(false),
           nav: signal(false),
           currentType: signal('page'),
@@ -1095,15 +1107,15 @@ describe('Tree Pattern', () => {
         };
       });
 
-      it('should navigate and select a single item on click in follows focus & multi select mode', () => {
+      it('should navigate and select a single item on click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item0.element()!));
-        expect(tree.inputs.value()).toEqual(['Item 0']);
-        tree.onClick(createClickEvent(item1.element()!));
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        tree.onPointerdown(createClickEvent(item0.element()!));
+        expect(tree.inputs.values()).toEqual(['Item 0']);
+        tree.onPointerdown(createClickEvent(item1.element()!));
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
       it('should navigate and toggle selection on ctrl + click', () => {
@@ -1111,22 +1123,28 @@ describe('Tree Pattern', () => {
         const item0 = getItemByValue(items(), 'Item 0');
         const item1 = getItemByValue(items(), 'Item 1');
 
-        tree.onClick(createClickEvent(item0.element()!)); // Select and expand Item 0
-        tree.onClick(createClickEvent(item1.element()!, {control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 1']);
-        tree.onClick(createClickEvent(item0.element()!, {control: true}));
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        tree.onPointerdown(createClickEvent(item0.element()!)); // Select and expand Item 0
+        tree.onPointerdown(createClickEvent(item1.element()!, {control: true}));
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 1']);
+        tree.onPointerdown(createClickEvent(item0.element()!, {control: true}));
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
-      it('should navigate and select range from anchor on shift + click in follows focus & multi select mode', () => {
+      it('should navigate and select range from anchor on shift + click', () => {
         const {tree, items} = createTree(treeExample, treeInputs);
         const item0 = getItemByValue(items(), 'Item 0');
         const item2 = getItemByValue(items(), 'Item 2');
 
-        tree.onClick(createClickEvent(item0.element()!)); // Select and expand Item 0
+        tree.onPointerdown(createClickEvent(item0.element()!)); // Select and expand Item 0
         tree.onKeydown(shift());
-        tree.onClick(createClickEvent(item2.element()!, {shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1', 'Item 2']);
+        tree.onPointerdown(createClickEvent(item2.element()!, {shift: true}));
+        expect(tree.inputs.values()).toEqual([
+          'Item 0',
+          'Item 0-0',
+          'Item 0-1',
+          'Item 1',
+          'Item 2',
+        ]);
       });
 
       it('should select a new range on subsequent shift + clicks, deselecting previous range', () => {
@@ -1137,11 +1155,11 @@ describe('Tree Pattern', () => {
         item0.expanded.set(true);
 
         tree.onKeydown(shift());
-        tree.onClick(createClickEvent(item1.element()!, {shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1']);
+        tree.onPointerdown(createClickEvent(item1.element()!, {shift: true}));
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0', 'Item 0-1', 'Item 1']);
 
-        tree.onClick(createClickEvent(item0_0.element()!, {shift: true}));
-        expect(tree.inputs.value()).toEqual(['Item 0', 'Item 0-0']);
+        tree.onPointerdown(createClickEvent(item0_0.element()!, {shift: true}));
+        expect(tree.inputs.values()).toEqual(['Item 0', 'Item 0-0']);
       });
 
       it('should not select disabled items on click', () => {
@@ -1151,8 +1169,8 @@ describe('Tree Pattern', () => {
         const {tree, items} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(items(), 'A');
 
-        tree.onClick(createClickEvent(itemA.element()!));
-        expect(tree.inputs.value()).toEqual([]);
+        tree.onPointerdown(createClickEvent(itemA.element()!));
+        expect(tree.inputs.values()).toEqual([]);
         expect(tree.activeItem()).toBe(itemA);
       });
 
@@ -1162,8 +1180,8 @@ describe('Tree Pattern', () => {
         ];
         const {tree, items} = createTree(localTreeData, treeInputs);
         const itemA = getItemByValue(items(), 'A');
-        tree.onClick(createClickEvent(itemA.element()!));
-        expect(tree.inputs.value()).toEqual([]);
+        tree.onPointerdown(createClickEvent(itemA.element()!));
+        expect(tree.inputs.values()).toEqual([]);
       });
     });
   });
@@ -1183,7 +1201,7 @@ describe('Tree Pattern', () => {
         softDisabled: signal(true),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
-        value: signal([]),
+        values: signal([]),
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
@@ -1332,9 +1350,9 @@ describe('Tree Pattern', () => {
       const item0 = getItemByValue(items(), 'Item 0');
 
       expect(item0.expanded()).toBe(false);
-      tree.onClick(createClickEvent(item0.element()!));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(true);
-      tree.onClick(createClickEvent(item0.element()!));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
     });
 
@@ -1343,7 +1361,7 @@ describe('Tree Pattern', () => {
       const item1 = getItemByValue(items(), 'Item 1');
 
       expect(item1.expanded()).toBe(false);
-      tree.onClick(createClickEvent(item1.element()!));
+      tree.onPointerdown(createClickEvent(item1.element()!));
       expect(item1.expanded()).toBe(false);
     });
 
@@ -1352,7 +1370,7 @@ describe('Tree Pattern', () => {
       const item0 = getItemByValue(items(), 'Item 0');
       itemPatternInputsMap.get(item0.id())!.disabled.set(true);
 
-      tree.onClick(createClickEvent(item0.element()!));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
     });
 
@@ -1361,7 +1379,7 @@ describe('Tree Pattern', () => {
       const {tree, items} = createTree(treeExample, treeInputs);
       const item0 = getItemByValue(items(), 'Item 0');
 
-      tree.onClick(createClickEvent(item0.element()!));
+      tree.onPointerdown(createClickEvent(item0.element()!));
       expect(item0.expanded()).toBe(false);
     });
 
@@ -1381,7 +1399,7 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(right());
         expect(tree.activeItem()).toBe(item0_0);
-        expect(tree.inputs.value()).toEqual(['Item 0-0']);
+        expect(tree.inputs.values()).toEqual(['Item 0-0']);
       });
 
       it('should navigate and select the parent on collapseKey if collapsed (vertical)', () => {
@@ -1394,7 +1412,7 @@ describe('Tree Pattern', () => {
 
         tree.onKeydown(left());
         expect(tree.activeItem()).toBe(item0);
-        expect(tree.inputs.value()).toEqual(['Item 0']);
+        expect(tree.inputs.values()).toEqual(['Item 0']);
       });
     });
 
@@ -1411,11 +1429,11 @@ describe('Tree Pattern', () => {
         const item0_0 = getItemByValue(items(), 'Item 0-0');
         tree.treeBehavior.goto(item0);
         item0.expanded.set(true);
-        tree.inputs.value.set(['Item 1']); // pre-select something else
+        tree.inputs.values.set(['Item 1']); // pre-select something else
 
         tree.onKeydown(right({control: true}));
         expect(tree.activeItem()).toBe(item0_0);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
 
       it('should navigate without select the parent on Ctrl + collapseKey if collapsed (vertical)', () => {
@@ -1425,11 +1443,11 @@ describe('Tree Pattern', () => {
         const item0_0 = getItemByValue(items(), 'Item 0-0');
         item0.expanded.set(true);
         tree.treeBehavior.goto(item0_0);
-        tree.inputs.value.set(['Item 1']); // pre-select something else
+        tree.inputs.values.set(['Item 1']); // pre-select something else
 
         tree.onKeydown(left({control: true}));
         expect(tree.activeItem()).toBe(item0);
-        expect(tree.inputs.value()).toEqual(['Item 1']);
+        expect(tree.inputs.values()).toEqual(['Item 1']);
       });
     });
   });
@@ -1449,7 +1467,7 @@ describe('Tree Pattern', () => {
         softDisabled: signal(true),
         textDirection: signal('ltr'),
         typeaheadDelay: signal(0),
-        value: signal([]),
+        values: signal([]),
         wrap: signal(false),
         nav: signal(false),
         currentType: signal('page'),
@@ -1486,7 +1504,7 @@ describe('Tree Pattern', () => {
         {value: 'B', disabled: false, selectable: true, expanded: false},
         {value: 'C', disabled: false, selectable: true, expanded: false},
       ];
-      treeInputs.value.set(['B']);
+      treeInputs.values.set(['B']);
       const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
@@ -1499,7 +1517,7 @@ describe('Tree Pattern', () => {
         {value: 'B', disabled: false, selectable: true, expanded: false},
         {value: 'C', disabled: false, selectable: true, expanded: false},
       ];
-      treeInputs.value.set(['C', 'A']);
+      treeInputs.values.set(['C', 'A']);
       const {tree, items} = createTree(localTreeData, treeInputs);
 
       tree.setDefaultState();
@@ -1512,7 +1530,7 @@ describe('Tree Pattern', () => {
         {value: 'B', disabled: true, selectable: true, expanded: false},
         {value: 'C', disabled: false, selectable: true, expanded: false},
       ];
-      treeInputs.value.set(['B']);
+      treeInputs.values.set(['B']);
       treeInputs.softDisabled.set(false);
       const {tree, items} = createTree(localTreeData, treeInputs);
 
@@ -1526,7 +1544,7 @@ describe('Tree Pattern', () => {
         {value: 'B', disabled: true, selectable: true, expanded: false},
         {value: 'C', disabled: false, selectable: true, expanded: false},
       ];
-      treeInputs.value.set(['B']);
+      treeInputs.values.set(['B']);
       treeInputs.softDisabled.set(true);
       const {tree, items} = createTree(localTreeData, treeInputs);
 
@@ -1537,51 +1555,12 @@ describe('Tree Pattern', () => {
     it('should set activeIndex to first visible focusable item if selected item is not visible', () => {
       const {tree, items} = createTree(treeExample, treeInputs);
       const item0 = getItemByValue(items(), 'Item 0');
-      treeInputs.value.set(['Item 0-0']);
+      treeInputs.values.set(['Item 0-0']);
 
       expect(item0.expanded()).toBe(false);
       expect(getItemByValue(items(), 'Item 0-0').visible()).toBe(false);
       tree.setDefaultState();
       expect(treeInputs.activeItem()).toBe(item0);
-    });
-    describe('#setDefaultStateEffect', () => {
-      it('should set default state if not interacted', () => {
-        const {tree, items} = createTree(treeExample, treeInputs);
-        const item2 = getItemByValue(items(), 'Item 2');
-        treeInputs.value.set(['Item 2']);
-        tree.setDefaultStateEffect();
-        expect(treeInputs.activeItem()).toBe(item2); // Should reset to selected Item 2
-      });
-
-      it('should NOT set default state if keyboard interacted', () => {
-        const {tree, items} = createTree(treeExample, treeInputs);
-        tree.onKeydown(down()); // Interaction (ArrowDown moves to item1)
-
-        const item1 = getItemByValue(items(), 'Item 1');
-        treeInputs.value.set(['Item 2']);
-        tree.setDefaultStateEffect();
-        expect(treeInputs.activeItem()).toBe(item1); // Should stay on item1
-      });
-
-      it('should NOT set default state if pointer interacted', () => {
-        const {tree, items} = createTree(treeExample, treeInputs);
-        const item0 = getItemByValue(items(), 'Item 0');
-        tree.onClick(createClickEvent(item0.element()!)); // Interaction
-
-        treeInputs.value.set(['Item 2']);
-        tree.setDefaultStateEffect();
-        expect(treeInputs.activeItem()).toBe(item0); // Should stay on item0
-      });
-
-      it('should NOT set default state if focus-in occurred', () => {
-        const {tree, items} = createTree(treeExample, treeInputs);
-        tree.onFocusIn(); // Interaction
-
-        const item0 = getItemByValue(items(), 'Item 0');
-        treeInputs.value.set(['Item 2']);
-        tree.setDefaultStateEffect();
-        expect(treeInputs.activeItem()).toBe(item0); // Should stay on item0
-      });
     });
   });
 });

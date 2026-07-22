@@ -40,7 +40,7 @@ import {MatRipple} from '../core';
   styleUrl: 'tab-header.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
   host: {
     'class': 'mat-mdc-tab-header',
     '[class.mat-mdc-tab-header-pagination-controls-enabled]': '_showPaginationControls',

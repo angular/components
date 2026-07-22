@@ -22,6 +22,7 @@ import {
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -66,6 +67,7 @@ let uniqueIdCounter = 0;
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
 export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
@@ -217,6 +219,8 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** The names of the weekdays. */
   _weekdays = signal<{long: string; narrow: string; id: number}[]>([]);
 
+  constructor(...args: unknown[]);
+
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_VisuallyHiddenLoader);
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
@@ -237,7 +241,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       .subscribe(() => this._init());
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     const comparisonChange = changes['comparisonStart'] || changes['comparisonEnd'];
 
     if (comparisonChange && !comparisonChange.firstChange) {

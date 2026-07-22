@@ -10,6 +10,7 @@ import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -36,6 +37,30 @@ import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {_animationsDisabled, _StructuralStylesLoader} from '../core';
 
 /**
+ * Valid positions for the arrow to be in for its opacity and translation. If the state is a
+ * sort direction, the position of the arrow will be above/below and opacity 0. If the state is
+ * hint, the arrow will be in the center with a slight opacity. Active state means the arrow will
+ * be fully opaque in the center.
+ *
+ * @docs-private
+ * @deprecated No longer being used, to be removed.
+ * @breaking-change 21.0.0
+ */
+export type ArrowViewState = SortDirection | 'hint' | 'active';
+
+/**
+ * States describing the arrow's animated position (animating fromState to toState).
+ * If the fromState is not defined, there will be no animated transition to the toState.
+ * @docs-private
+ * @deprecated No longer being used, to be removed.
+ * @breaking-change 21.0.0
+ */
+export interface ArrowViewStateTransition {
+  fromState?: ArrowViewState;
+  toState?: ArrowViewState;
+}
+
+/**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
  * arrow to display the current sort direction.
  *
@@ -58,6 +83,7 @@ import {_animationsDisabled, _StructuralStylesLoader} from '../core';
     '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
   protected _sort = inject(MatSort, {optional: true})!;
@@ -116,6 +142,8 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input({transform: booleanAttribute})
   disableClear!: boolean;
+
+  constructor(...args: unknown[]);
 
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);

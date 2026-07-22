@@ -18,6 +18,9 @@ export class MapBaseLayer implements OnInit, OnDestroy {
   protected readonly _map = inject(GoogleMap);
   protected readonly _ngZone = inject(NgZone);
 
+  constructor(...args: unknown[]);
+  constructor() {}
+
   ngOnInit() {
     if (this._map._isBrowser) {
       this._ngZone.runOutsideAngular(() => {

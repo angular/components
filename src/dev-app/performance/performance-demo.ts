@@ -9,6 +9,7 @@
 import {
   afterNextRender,
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   inject,
@@ -41,6 +42,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
     MatSelectModule,
     MatTableModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PerformanceDemo implements AfterViewInit {
   /** Controls the rendering of components. */

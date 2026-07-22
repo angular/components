@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {PageEvent, MatPaginatorModule} from '@angular/material/paginator';
 
 /**
@@ -10,15 +10,15 @@ import {PageEvent, MatPaginatorModule} from '@angular/material/paginator';
   imports: [MatPaginatorModule],
 })
 export class PaginatorHarnessExample {
-  length = signal(500);
-  pageSize = signal(10);
-  pageIndex = signal(0);
-  pageSizeOptions = signal([5, 10, 25]);
-  showFirstLastButtons = signal(true);
+  length = 500;
+  pageSize = 10;
+  pageIndex = 0;
+  pageSizeOptions = [5, 10, 25];
+  showFirstLastButtons = true;
 
   handlePageEvent(event: PageEvent) {
-    this.length.set(event.length);
-    this.pageSize.set(event.pageSize);
-    this.pageIndex.set(event.pageIndex);
+    this.length = event.length;
+    this.pageSize = event.pageSize;
+    this.pageIndex = event.pageIndex;
   }
 }

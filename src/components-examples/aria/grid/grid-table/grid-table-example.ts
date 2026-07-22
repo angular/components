@@ -11,8 +11,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
 import {Grid, GridRow, GridCell, GridCellWidget} from '@angular/aria/grid';
 import {GridChips} from './grid-chips';
 
@@ -35,8 +33,6 @@ interface TaskRow {
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    MatButtonModule,
-    MatMenuModule,
     Grid,
     GridRow,
     GridCell,
@@ -63,11 +59,15 @@ export class GridTableExample {
 
   readonly tasks: WritableSignal<TaskRow[]> = signal(this._createRows());
 
-  findSummaryInput = (host: HTMLElement) =>
-    host.querySelector<HTMLInputElement>('input.summary-input');
+  constructor() {}
 
-  startEdit(event: KeyboardEvent | FocusEvent | undefined, task: TaskRow): void {
+  startEdit(
+    event: KeyboardEvent | FocusEvent | undefined,
+    task: TaskRow,
+    inputEl: HTMLInputElement,
+  ): void {
     this.tempInput.set(task.summary());
+    inputEl.focus();
 
     if (!(event instanceof KeyboardEvent)) return;
 
@@ -75,6 +75,13 @@ export class GridTableExample {
     if (event.key.length === 1) {
       this.tempInput.set(event.key);
     }
+  }
+
+  onClickEdit(widget: GridCellWidget, task: TaskRow, inputEl: HTMLInputElement) {
+    if (widget.isActivated()) return;
+
+    widget.activate();
+    setTimeout(() => this.startEdit(undefined, task, inputEl));
   }
 
   completeEdit(event: KeyboardEvent | FocusEvent | undefined, task: TaskRow): void {
@@ -86,16 +93,18 @@ export class GridTableExample {
     }
   }
 
-  viewDetails(task: TaskRow) {
-    alert(`Viewing details for task: ${task.summary()}`);
-  }
-
-  deleteTask(task: TaskRow) {
-    this.tasks.update(tasks => tasks.filter(t => t !== task));
-  }
-
   updateSelection(checked: boolean): void {
     this.tasks().forEach(t => t.selected.set(checked));
+  }
+
+  addTag(event: KeyboardEvent | FocusEvent | undefined, task: TaskRow, inputEl: HTMLInputElement) {
+    if (event instanceof KeyboardEvent && event.key === 'Enter') {
+      const value = inputEl.value;
+      if (value.length > 0) {
+        task.tags.set([...task.tags(), value]);
+      }
+    }
+    inputEl.value = '';
   }
 
   private _createRows(): TaskRow[] {

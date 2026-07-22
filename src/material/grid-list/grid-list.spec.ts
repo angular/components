@@ -1,5 +1,5 @@
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, DebugElement, ViewChild} from '@angular/core';
 import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatGridTile, MatGridTileText} from './grid-tile';
@@ -534,31 +534,24 @@ function getComputedLeft(element: DebugElement): number {
   return elementRect.left - bodyRect.left;
 }
 
-@Component({
-  template: '<mat-grid-list></mat-grid-list>',
-  imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
-})
+@Component({template: '<mat-grid-list></mat-grid-list>', imports: [MatGridListModule]})
 class GridListWithoutCols {}
 
 @Component({
   template: '<mat-grid-list cols="4" rowHeight="4:3:2"></mat-grid-list>',
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithInvalidRowHeightRatio {}
 
 @Component({
   template: '<mat-grid-list cols="4"><mat-grid-tile colspan="5"></mat-grid-tile></mat-grid-list>',
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithTooWideColspan {}
 
 @Component({
   template: '<mat-grid-list [cols]="cols"></mat-grid-list>',
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithDynamicCols {
   @ViewChild(MatGridList) gridList!: MatGridList;
@@ -573,7 +566,6 @@ class GridListWithDynamicCols {
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithUnspecifiedRowHeight {}
 
@@ -585,7 +577,6 @@ class GridListWithUnspecifiedRowHeight {}
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GirdListWithRowHeightRatio {
   rowHeight!: string;
@@ -598,7 +589,6 @@ class GirdListWithRowHeightRatio {
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithFitRowHeightMode {
   totalHeight!: string;
@@ -610,7 +600,6 @@ class GridListWithFitRowHeightMode {
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithFixedRowHeightMode {
   rowHeight!: string;
@@ -622,7 +611,6 @@ class GridListWithFixedRowHeightMode {
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithUnitlessFixedRowHeight {
   rowHeight!: string;
@@ -638,7 +626,6 @@ class GridListWithUnitlessFixedRowHeight {
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithUnspecifiedGutterSize {}
 
@@ -652,7 +639,6 @@ class GridListWithUnspecifiedGutterSize {}
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithGutterSize {}
 
@@ -666,7 +652,6 @@ class GridListWithGutterSize {}
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithUnitlessGutterSize {}
 
@@ -679,7 +664,6 @@ class GridListWithUnitlessGutterSize {}
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithRatioHeightAndMulipleRows {}
 
@@ -690,7 +674,6 @@ class GridListWithRatioHeightAndMulipleRows {}
       <mat-grid-tile></mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithFixRowHeightAndMultipleRows {}
 
@@ -702,7 +685,6 @@ class GridListWithFixRowHeightAndMultipleRows {}
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithColspanBinding {
   colspan!: number;
@@ -714,7 +696,6 @@ class GridListWithColspanBinding {
       <mat-grid-tile [rowspan]="rowspan"></mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithRowspanBinding {
   rowspan!: number;
@@ -733,7 +714,6 @@ class GridListWithRowspanBinding {
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithComplexLayout {
   tiles!: any[];
@@ -751,7 +731,6 @@ class GridListWithComplexLayout {
     </mat-grid-list>
   </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithLayout {}
 
@@ -766,7 +745,6 @@ class GridListWithLayout {}
     </mat-grid-list>
   </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithSingleCellAtBeginning {}
 
@@ -780,7 +758,6 @@ class GridListWithSingleCellAtBeginning {}
       </mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithFootersWithoutLines {}
 
@@ -795,7 +772,6 @@ class GridListWithFootersWithoutLines {}
       </mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithFooterContainingTwoLines {}
 
@@ -814,7 +790,6 @@ class GridListWithFooterContainingTwoLines {}
       </mat-grid-tile>
     </mat-grid-list>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithFooterContainingTwoIndirectDescendantLines {}
 
@@ -828,7 +803,6 @@ class GridListWithFooterContainingTwoIndirectDescendantLines {}
   </mat-grid-list>
 `,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithoutMatchingGap {}
 
@@ -836,7 +810,6 @@ class GridListWithoutMatchingGap {}
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
   providers: [provideFakeDirectionality('ltr')],
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithEmptyDirectionality {}
 
@@ -844,7 +817,6 @@ class GridListWithEmptyDirectionality {}
   template: `<mat-grid-list cols="1"><mat-grid-tile>Hello</mat-grid-tile></mat-grid-list>`,
   providers: [provideFakeDirectionality('rtl')],
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithRtl {}
 
@@ -860,7 +832,6 @@ class GridListWithRtl {}
     </div>
   `,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridListWithIndirectTileDescendants {}
 
@@ -879,6 +850,5 @@ class GridListWithIndirectTileDescendants {}
       </mat-grid-list>
     </div>`,
   imports: [MatGridListModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedGridList {}

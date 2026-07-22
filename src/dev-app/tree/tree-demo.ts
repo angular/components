@@ -25,7 +25,7 @@ import {
   TreeNestedChildAccessorOverviewExample,
   TreeFlatChildAccessorOverviewExample,
 } from '@angular/components-examples/material/tree';
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -67,5 +67,6 @@ import {MatTreeModule} from '@angular/material/tree';
     MatTreeModule,
     MatProgressBarModule,
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeDemo {}

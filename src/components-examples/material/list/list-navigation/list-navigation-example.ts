@@ -1,5 +1,5 @@
 import {TitleCasePipe} from '@angular/common';
-import {Component, signal} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 
@@ -13,5 +13,5 @@ import {MatListModule} from '@angular/material/list';
 })
 export class ListNavigationExample {
   fragments = ['inbox', 'outbox', 'drafts'];
-  activeLink = signal<string | null>(null);
+  activeLink: string | null = null;
 }

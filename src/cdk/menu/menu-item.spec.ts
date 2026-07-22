@@ -1,4 +1,4 @@
-import {Component, Type, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '../testing/private';
 import {By} from '@angular/platform-browser';
@@ -139,7 +139,6 @@ describe('MenuItem', () => {
 @Component({
   selector: 'mat-icon',
   template: '<ng-content></ng-content>',
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FakeMatIcon {}
 
@@ -150,7 +149,6 @@ class FakeMatIcon {}
     </div>
   `,
   imports: [CdkMenuModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleMenuItem {}
 
@@ -164,7 +162,6 @@ class SingleMenuItem {}
     </div>
   `,
   imports: [CdkMenuModule, FakeMatIcon],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuItemWithIcon {
   typeahead: string | null = null;
@@ -180,7 +177,6 @@ class MenuItemWithIcon {
     </div>
   `,
   imports: [CdkMenuModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuItemWithIconClass {
   typeahead: string | null = null;
@@ -193,7 +189,6 @@ class MenuItemWithIconClass {
     </div>
   `,
   imports: [CdkMenuModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuItemWithBoldElement {}
 
@@ -213,7 +208,6 @@ class MenuItemWithBoldElement {}
     </div>
   `,
   imports: [CdkMenuModule, FakeMatIcon],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuItemWithMultipleNestings {
   typeahead = '';

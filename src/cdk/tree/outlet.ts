@@ -24,4 +24,7 @@ export const CDK_TREE_NODE_OUTLET_NODE = new InjectionToken<{}>('CDK_TREE_NODE_O
 export class CdkTreeNodeOutlet {
   viewContainer = inject(ViewContainerRef);
   _node? = inject(CDK_TREE_NODE_OUTLET_NODE, {optional: true});
+
+  constructor(...args: unknown[]);
+  constructor() {}
 }

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ComponentType} from '@angular/cdk/portal';
 
 export interface GuideItem {
@@ -67,7 +67,7 @@ const GUIDES: GuideItem[] = [
   },
 ];
 
-@Service()
+@Injectable({providedIn: 'root'})
 export class GuideItems {
   getAllItems(): GuideItem[] {
     return GUIDES;

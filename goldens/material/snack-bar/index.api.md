@@ -39,6 +39,7 @@ export const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarConfig<any
 
 // @public
 export class MatSnackBar implements OnDestroy {
+    constructor(...args: unknown[]);
     dismiss(): void;
     handsetCssClass: string;
     // (undocumented)
@@ -87,7 +88,7 @@ export class MatSnackBarConfig<D = any> {
 
 // @public
 export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _animationsDisabled: boolean;
     _animationState: string;
@@ -164,6 +165,7 @@ export type MatSnackBarVerticalPosition = 'top' | 'bottom';
 
 // @public (undocumented)
 export class SimpleSnackBar implements TextOnlySnackBar {
+    constructor(...args: unknown[]);
     action(): void;
     // (undocumented)
     data: any;

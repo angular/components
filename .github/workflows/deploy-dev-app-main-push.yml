@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Initialize environment
-        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@ba726e7bca0b08b125ccc6f93c233749e1213c17
+        uses: angular/dev-infra/github-actions/npm/checkout-and-setup-node@0edcf22f9ce677699274f2d399325f99d3d56e81
       - name: Setup Bazel
-        uses: angular/dev-infra/github-actions/bazel/setup@ba726e7bca0b08b125ccc6f93c233749e1213c17
+        uses: angular/dev-infra/github-actions/bazel/setup@0edcf22f9ce677699274f2d399325f99d3d56e81
       - name: Setup Bazel RBE
-        uses: angular/dev-infra/github-actions/bazel/configure-remote@ba726e7bca0b08b125ccc6f93c233749e1213c17
+        uses: angular/dev-infra/github-actions/bazel/configure-remote@0edcf22f9ce677699274f2d399325f99d3d56e81
       - name: Install node modules
         run: pnpm install --frozen-lockfile
 
@@ -36,7 +36,7 @@ jobs:
           npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
           npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
 
-      - uses: FirebaseExtended/action-hosting-deploy@500ac625ca2dd40cbd15f7659af953801858032a # v0
+      - uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0
         id: deploy
         with:
           # Note: No token used here as the action otherwise may attempt to post a comment.

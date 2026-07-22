@@ -1,5 +1,5 @@
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DateAdapter, provideNativeDateAdapter} from '../core';
@@ -379,7 +379,6 @@ describe('MatCalendarHeader', () => {
         (monthSelected)="selectedMonth=$event">
     </mat-calendar>`,
   imports: [MatDatepickerModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StandardCalendar {
   selected!: Date;
@@ -397,7 +396,6 @@ class StandardCalendar {
     </mat-calendar>
   `,
   imports: [MatDatepickerModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CalendarWithMinMaxDate {
   startAt = new Date(2018, JAN, 1);

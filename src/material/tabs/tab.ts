@@ -43,7 +43,7 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
   // that creating the extra class will generate more code than just duplicating the template.
   templateUrl: 'tab.html',
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
   providers: [{provide: MAT_TAB, useExisting: MatTab}],
@@ -137,11 +137,12 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
    */
   isActive = false;
 
+  constructor(...args: unknown[]);
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
   }
 
-  ngOnChanges(changes: SimpleChanges<this>): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {
       this._stateChanges.next();
     }

@@ -5,9 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { Binding } from '@angular/core';
 import { ComponentRef } from '@angular/core';
-import { DirectiveWithBindings } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
@@ -45,7 +43,7 @@ export const CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG: InjectionToken<CdkConnectedOv
 
 // @public
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-    constructor();
+    constructor(...args: unknown[]);
     readonly attach: EventEmitter<void>;
     attachOverlay(): void;
     backdropClass: string | string[];
@@ -79,7 +77,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     // (undocumented)
     static ngAcceptInputType_push: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges<this>): void;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     get offsetX(): number;
@@ -159,6 +157,7 @@ export interface CdkConnectedOverlayConfig {
 
 // @public
 export class CdkOverlayOrigin {
+    constructor(...args: unknown[]);
     // (undocumented)
     elementRef: ElementRef<any>;
     // (undocumented)
@@ -168,7 +167,8 @@ export class CdkOverlayOrigin {
 }
 
 // @public
-export class CdkScrollable implements ScrollDispatcherTarget, OnInit, OnDestroy {
+export class CdkScrollable implements OnInit, OnDestroy {
+    constructor(...args: unknown[]);
     // (undocumented)
     protected readonly _destroyed: Subject<void>;
     // (undocumented)
@@ -302,7 +302,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     withPopoverLocation(location: FlexibleOverlayPopoverLocation): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
-    withScrollableContainers(scrollables: ScrollDispatcherTarget[]): this;
+    withScrollableContainers(scrollables: CdkScrollable[]): this;
     withTransformOriginOn(selector: string): this;
     withViewportMargin(margin: ViewportMargin): this;
 }
@@ -321,6 +321,7 @@ export type FlexibleOverlayPopoverLocation = 'global' | 'inline' | {
 
 // @public
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _createContainer(): void;
     getFullscreenElement(): Element;
@@ -372,6 +373,7 @@ export interface OriginConnectionPosition {
 
 // @public
 export class Overlay {
+    constructor(...args: unknown[]);
     create(config?: OverlayConfig): OverlayRef;
     position(): OverlayPositionBuilder;
     // (undocumented)
@@ -416,6 +418,7 @@ export interface OverlayConnectionPosition {
 
 // @public
 export class OverlayContainer implements OnDestroy {
+    constructor(...args: unknown[]);
     // (undocumented)
     protected _containerElement: HTMLElement | undefined;
     protected _createContainer(): void;
@@ -437,6 +440,7 @@ export class OverlayContainer implements OnDestroy {
 
 // @public
 export interface OverlayDefaultConfig {
+    // (undocumented)
     usePopover?: boolean;
 }
 
@@ -472,6 +476,7 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
 
 // @public
 export class OverlayPositionBuilder {
+    constructor(...args: unknown[]);
     flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
     global(): GlobalPositionStrategy;
     // (undocumented)
@@ -561,14 +566,15 @@ export interface RepositionScrollStrategyConfig {
 
 // @public
 export class ScrollDispatcher implements OnDestroy {
-    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
-    deregister(target: ScrollDispatcherTarget): void;
-    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): ScrollDispatcherTarget[];
+    constructor(...args: unknown[]);
+    ancestorScrolled(elementOrElementRef: ElementRef | HTMLElement, auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    deregister(scrollable: CdkScrollable): void;
+    getAncestorScrollContainers(elementOrElementRef: ElementRef | HTMLElement): CdkScrollable[];
     // (undocumented)
     ngOnDestroy(): void;
-    register(target: ScrollDispatcherTarget): void;
-    readonly scrollContainers: Map<ScrollDispatcherTarget, Subscription>;
-    scrolled(auditTimeInMs?: number): Observable<ScrollDispatcherTarget | void>;
+    register(scrollable: CdkScrollable): void;
+    scrollContainers: Map<CdkScrollable, Subscription>;
+    scrolled(auditTimeInMs?: number): Observable<CdkScrollable | void>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
     // (undocumented)
@@ -597,6 +603,7 @@ export interface ScrollStrategy {
 
 // @public
 export class ScrollStrategyOptions {
+    constructor(...args: unknown[]);
     block: () => BlockScrollStrategy;
     close: (config?: CloseScrollStrategyConfig) => CloseScrollStrategy;
     noop: () => NoopScrollStrategy;
@@ -632,7 +639,7 @@ export type ViewportMargin = number | {
 
 // @public
 export class ViewportRuler implements OnDestroy {
-    constructor();
+    constructor(...args: unknown[]);
     change(throttleTime?: number): Observable<Event>;
     protected _document: Document;
     getViewportRect(): {

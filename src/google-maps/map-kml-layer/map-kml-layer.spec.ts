@@ -1,5 +1,5 @@
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {TestBed} from '@angular/core/testing';
+import {Component, ViewChild} from '@angular/core';
+import {TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
@@ -31,18 +31,19 @@ describe('MapKmlLayer', () => {
     (window.google as any) = undefined;
   });
 
-  it('initializes a Google Map Kml Layer', () => {
+  it('initializes a Google Map Kml Layer', fakeAsync(() => {
     const kmlLayerSpy = createKmlLayerSpy({});
     const kmlLayerConstructorSpy = createKmlLayerConstructorSpy(kmlLayerSpy);
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
 
     expect(kmlLayerConstructorSpy).toHaveBeenCalledWith({url: undefined});
     expect(kmlLayerSpy.setMap).toHaveBeenCalledWith(mapSpy);
-  });
+  }));
 
-  it('sets url from input', () => {
+  it('sets url from input', fakeAsync(() => {
     const options: google.maps.KmlLayerOptions = {url: DEMO_URL};
     const kmlLayerSpy = createKmlLayerSpy(options);
     const kmlLayerConstructorSpy = createKmlLayerConstructorSpy(kmlLayerSpy);
@@ -50,11 +51,12 @@ describe('MapKmlLayer', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.url = DEMO_URL;
     fixture.detectChanges();
+    flush();
 
     expect(kmlLayerConstructorSpy).toHaveBeenCalledWith(options);
-  });
+  }));
 
-  it('gives precedence to url input over options', () => {
+  it('gives precedence to url input over options', fakeAsync(() => {
     const expectedUrl = 'www.realurl.kml';
     const expectedOptions: google.maps.KmlLayerOptions = {...DEFAULT_KML_OPTIONS, url: expectedUrl};
     const kmlLayerSpy = createKmlLayerSpy(expectedOptions);
@@ -64,11 +66,12 @@ describe('MapKmlLayer', () => {
     fixture.componentInstance.options = DEFAULT_KML_OPTIONS;
     fixture.componentInstance.url = expectedUrl;
     fixture.detectChanges();
+    flush();
 
     expect(kmlLayerConstructorSpy).toHaveBeenCalledWith(expectedOptions);
-  });
+  }));
 
-  it('exposes methods that provide information about the KmlLayer', () => {
+  it('exposes methods that provide information about the KmlLayer', fakeAsync(() => {
     const kmlLayerSpy = createKmlLayerSpy(DEFAULT_KML_OPTIONS);
     createKmlLayerConstructorSpy(kmlLayerSpy);
 
@@ -77,6 +80,7 @@ describe('MapKmlLayer', () => {
       .query(By.directive(MapKmlLayer))!
       .injector.get<MapKmlLayer>(MapKmlLayer);
     fixture.detectChanges();
+    flush();
 
     kmlLayerComponent.getDefaultViewport();
     expect(kmlLayerSpy.getDefaultViewport).toHaveBeenCalled();
@@ -103,28 +107,30 @@ describe('MapKmlLayer', () => {
 
     kmlLayerSpy.getZIndex.and.returnValue(3);
     expect(kmlLayerComponent.getZIndex()).toBe(3);
-  });
+  }));
 
-  it('initializes KmlLayer event handlers', () => {
+  it('initializes KmlLayer event handlers', fakeAsync(() => {
     const kmlLayerSpy = createKmlLayerSpy(DEFAULT_KML_OPTIONS);
     createKmlLayerConstructorSpy(kmlLayerSpy);
 
     const addSpy = kmlLayerSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
 
     expect(addSpy).toHaveBeenCalledWith('click', jasmine.any(Function));
     expect(addSpy).not.toHaveBeenCalledWith('defaultviewport_changed', jasmine.any(Function));
     expect(addSpy).toHaveBeenCalledWith('status_changed', jasmine.any(Function));
-  });
+  }));
 
-  it('should be able to add an event listener after init', () => {
+  it('should be able to add an event listener after init', fakeAsync(() => {
     const kmlLayerSpy = createKmlLayerSpy(DEFAULT_KML_OPTIONS);
     createKmlLayerConstructorSpy(kmlLayerSpy);
 
     const addSpy = kmlLayerSpy.addListener;
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    flush();
 
     expect(addSpy).not.toHaveBeenCalledWith('defaultviewport_changed', jasmine.any(Function));
 
@@ -134,7 +140,7 @@ describe('MapKmlLayer', () => {
 
     expect(addSpy).toHaveBeenCalledWith('defaultviewport_changed', jasmine.any(Function));
     subscription.unsubscribe();
-  });
+  }));
 });
 
 @Component({
@@ -149,7 +155,6 @@ describe('MapKmlLayer', () => {
     </google-map>
   `,
   imports: [GoogleMap, MapKmlLayer],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TestApp {
   @ViewChild(MapKmlLayer) kmlLayer!: MapKmlLayer;

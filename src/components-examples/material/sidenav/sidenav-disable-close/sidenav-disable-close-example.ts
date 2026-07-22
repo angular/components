@@ -1,4 +1,4 @@
-import {Component, signal, viewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {MatButtonModule} from '@angular/material/button';
 
@@ -10,13 +10,13 @@ import {MatButtonModule} from '@angular/material/button';
   imports: [MatSidenavModule, MatButtonModule],
 })
 export class SidenavDisableCloseExample {
-  sidenav = viewChild.required<MatSidenav>('sidenav');
+  @ViewChild('sidenav') sidenav!: MatSidenav;
 
-  reason = signal('');
+  reason = '';
 
   close(reason: string) {
-    this.reason.set(reason);
-    this.sidenav().close();
+    this.reason = reason;
+    this.sidenav.close();
   }
 
   shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(window.location.host);

@@ -6,18 +6,14 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /**
  * To modify the labels and text displayed, create a new instance of MatSortHeaderIntl and
  * include it in a custom provider.
- *
- * @deprecated No longer used, will be removed.
- * @breaking-change 23.0.0
- * @docs-private
  */
-@Service()
+@Injectable({providedIn: 'root'})
 export class MatSortHeaderIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify

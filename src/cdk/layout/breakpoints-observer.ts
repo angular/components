@@ -7,7 +7,7 @@
  */
 
 import {coerceArray} from '../coercion';
-import {Service, NgZone, OnDestroy, inject} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, inject} from '@angular/core';
 import {combineLatest, concat, Observable, Observer, Subject} from 'rxjs';
 import {debounceTime, map, skip, startWith, take, takeUntil} from 'rxjs/operators';
 import {MediaMatcher} from './media-matcher';
@@ -39,7 +39,7 @@ interface Query {
 }
 
 /** Utility for checking the matching state of `@media` queries. */
-@Service()
+@Injectable({providedIn: 'root'})
 export class BreakpointObserver implements OnDestroy {
   private _mediaMatcher = inject(MediaMatcher);
   private _zone = inject(NgZone);
@@ -48,6 +48,9 @@ export class BreakpointObserver implements OnDestroy {
   private _queries = new Map<string, Query>();
   /** A subject for all other observables to takeUntil based on. */
   private readonly _destroySubject = new Subject<void>();
+
+  constructor(...args: unknown[]);
+  constructor() {}
 
   /** Completes the active subject, signalling to all other observables to complete. */
   ngOnDestroy() {

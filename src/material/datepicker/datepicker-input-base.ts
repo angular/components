@@ -245,6 +245,8 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   /** Whether the last value set on the input was valid. */
   protected _lastValueValid = false;
 
+  constructor(...args: unknown[]);
+
   constructor() {
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       if (!this._dateAdapter) {
@@ -265,7 +267,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     this._isInitialized = true;
   }
 
-  ngOnChanges(changes: SimpleChanges<this>) {
+  ngOnChanges(changes: SimpleChanges) {
     if (dateInputsHaveChanged(changes, this._dateAdapter)) {
       this.stateChanges.next(undefined);
     }

@@ -6,11 +6,11 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Service} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs';
 
 /** Stepper data that is required for internationalization. */
-@Service()
+@Injectable({providedIn: 'root'})
 export class MatStepperIntl {
   /**
    * Stream that emits whenever the labels here are changed. Use this to notify

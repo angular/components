@@ -9,7 +9,6 @@ import {
   ViewChild,
   ViewChildren,
   provideZoneChangeDetection,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -117,7 +116,6 @@ describe('MatAutocomplete Zone.js integration', () => {
     </mat-autocomplete>
   `,
   imports: [MatAutocompleteModule, MatInputModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleAutocomplete implements OnDestroy {
   stateCtrl = new FormControl<{name: string; code: string} | string | null>(null);

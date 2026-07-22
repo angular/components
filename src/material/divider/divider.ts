@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, Input, ViewEncapsulation} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 @Component({
@@ -22,6 +22,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   template: '',
   styleUrl: 'divider.css',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatDivider {
   /** Whether the divider is vertically aligned. */

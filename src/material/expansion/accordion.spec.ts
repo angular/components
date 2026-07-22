@@ -5,13 +5,7 @@ import {
   dispatchEvent,
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
-import {
-  Component,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
@@ -313,7 +307,6 @@ describe('MatAccordion', () => {
     }
   </mat-accordion>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SetOfItems {
   @ViewChild(MatAccordion) accordion!: MatAccordion;
@@ -342,7 +335,6 @@ class SetOfItems {
     </mat-expansion-panel>
   </mat-accordion>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedAccordions {
   @ViewChildren(MatExpansionPanelHeader) headers!: QueryList<MatExpansionPanelHeader>;
@@ -362,7 +354,6 @@ class NestedAccordions {
     </mat-expansion-panel>
   </mat-accordion>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class NestedPanel {
   @ViewChild('outerPanel') outerPanel!: MatExpansionPanel;
@@ -378,7 +369,6 @@ class NestedPanel {
     </mat-expansion-panel>
   </mat-accordion>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AccordionWithHideToggle {
   hideToggle = false;
@@ -393,7 +383,6 @@ class AccordionWithHideToggle {
     </mat-expansion-panel>
   </mat-accordion>`,
   imports: [MatExpansionModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AccordionWithTogglePosition {
   togglePosition: MatAccordionTogglePosition = 'after';

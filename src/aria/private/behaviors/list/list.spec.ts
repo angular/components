@@ -22,7 +22,7 @@ type TestList<V> = List<TestItem<V>, V>;
 describe('List Behavior', () => {
   function getList<V>(inputs: Partial<TestInputs<V>> & Pick<TestInputs<V>, 'items'>): TestList<V> {
     return new List({
-      value: inputs.value ?? signal([]),
+      values: inputs.values ?? signal([]),
       activeItem: signal(undefined),
       typeaheadDelay: inputs.typeaheadDelay ?? signal(500),
       wrap: inputs.wrap ?? signal(true),
@@ -38,22 +38,22 @@ describe('List Behavior', () => {
     });
   }
 
-  function getItems<V>(value: V[]): TestItem<V>[] {
-    return value.map((val, index) => ({
-      value: signal(val),
+  function getItems<V>(values: V[]): TestItem<V>[] {
+    return values.map((value, index) => ({
+      value: signal(value),
       id: signal(`item-${index}`),
       element: signal(document.createElement('div')),
       disabled: signal(false),
       selectable: signal(true),
-      searchTerm: signal(String(val)),
+      searchTerm: signal(String(value)),
       index: signal(index),
     }));
   }
 
-  function getListAndItems<V>(value: V[], inputs: Partial<TestInputs<V>> = {}) {
+  function getListAndItems<V>(values: V[], inputs: Partial<TestInputs<V>> = {}) {
     const items = signal<TestItem<V>[]>([]);
     const list = getList<V>({...inputs, items});
-    items.set(getItems(value));
+    items.set(getItems(values));
     list.inputs.activeItem.set(list.inputs.items()[0]);
     return {list, items: items()};
   }
@@ -123,11 +123,11 @@ describe('List Behavior', () => {
       list = patterns.list;
     });
 
-    it('should report disabled state (softDisabled: false)', () => {
+    it('should report disabled state', () => {
       expect(list.disabled()).toBe(true);
     });
 
-    it('should not change active index on navigation (softDisabled: false)', () => {
+    it('should not change active index on navigation', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
@@ -135,12 +135,12 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
-    it('should not select items (softDisabled: false)', () => {
+    it('should not select items', () => {
       list.next({selectOne: true});
-      expect(list.inputs.value()).toEqual([]);
+      expect(list.inputs.values()).toEqual([]);
     });
 
-    it('should have a tab index of 0 (softDisabled: false)', () => {
+    it('should have a tab index of 0', () => {
       expect(list.tabIndex()).toBe(0);
     });
   });
@@ -153,11 +153,11 @@ describe('List Behavior', () => {
       list = patterns.list;
     });
 
-    it('should report disabled state (softDisabled: true)', () => {
+    it('should report disabled state', () => {
       expect(list.disabled()).toBe(true);
     });
 
-    it('should not change active index on navigation (softDisabled: true)', () => {
+    it('should not change active index on navigation', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
       list.next();
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
@@ -165,12 +165,12 @@ describe('List Behavior', () => {
       expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
     });
 
-    it('should not select items (softDisabled: true)', () => {
+    it('should not select items', () => {
       list.next({selectOne: true});
-      expect(list.inputs.value()).toEqual([]);
+      expect(list.inputs.values()).toEqual([]);
     });
 
-    it('should have a tab index of 0 (softDisabled: true)', () => {
+    it('should have a tab index of 0', () => {
       expect(list.tabIndex()).toBe(0);
     });
   });
@@ -287,48 +287,48 @@ describe('List Behavior', () => {
 
       beforeEach(() => {
         const patterns = getDefaultPatterns({
-          value: signal([]),
+          values: signal([]),
           multi: signal(false),
         });
         list = patterns.list;
         items = patterns.items;
       });
 
-      it('should not select when navigating (single select)', () => {
+      it('should not select when navigating', () => {
         list.next();
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should select an item when navigating with selectOne:true', () => {
         list.next({selectOne: true});
-        expect(list.inputs.value()).toEqual(['Apricot']);
+        expect(list.inputs.values()).toEqual(['Apricot']);
       });
 
       it('should not select a non-selectable item when navigating with selectOne:true', () => {
         items[1].selectable.set(false);
         list.next({selectOne: true});
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should toggle an item when navigating with toggle:true', () => {
         list.goto(items[1], {selectOne: true});
-        expect(list.inputs.value()).toEqual(['Apricot']);
+        expect(list.inputs.values()).toEqual(['Apricot']);
 
         list.goto(items[1], {toggle: true});
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should not toggle a non-selectable item when navigating with toggle:true', () => {
         items[1].selectable.set(false);
         list.goto(items[1], {toggle: true});
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should only allow one selected item', () => {
         list.next({selectOne: true});
-        expect(list.inputs.value()).toEqual(['Apricot']);
+        expect(list.inputs.values()).toEqual(['Apricot']);
         list.next({selectOne: true});
-        expect(list.inputs.value()).toEqual(['Banana']);
+        expect(list.inputs.values()).toEqual(['Banana']);
       });
     });
 
@@ -338,66 +338,66 @@ describe('List Behavior', () => {
 
       beforeEach(() => {
         const patterns = getDefaultPatterns({
-          value: signal([]),
+          values: signal([]),
           multi: signal(true),
         });
         list = patterns.list;
         items = patterns.items;
       });
 
-      it('should not select when navigating (multi select)', () => {
+      it('should not select when navigating', () => {
         list.next();
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should select an item with toggle:true', () => {
         list.next({toggle: true});
-        expect(list.inputs.value()).toEqual(['Apricot']);
+        expect(list.inputs.values()).toEqual(['Apricot']);
       });
 
       it('should not select a non-selectable item with toggle:true', () => {
         items[1].selectable.set(false);
         list.next({toggle: true});
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should allow multiple selected items', () => {
         list.next({toggle: true});
         list.next({toggle: true});
-        expect(list.inputs.value()).toEqual(['Apricot', 'Banana']);
+        expect(list.inputs.values()).toEqual(['Apricot', 'Banana']);
       });
 
       it('should select a range of items with selectRange:true', () => {
         list.anchor(0);
         list.next({selectRange: true});
-        expect(list.inputs.value()).toEqual(['Apple', 'Apricot']);
+        expect(list.inputs.values()).toEqual(['Apple', 'Apricot']);
         list.next({selectRange: true});
-        expect(list.inputs.value()).toEqual(['Apple', 'Apricot', 'Banana']);
+        expect(list.inputs.values()).toEqual(['Apple', 'Apricot', 'Banana']);
         list.prev({selectRange: true});
-        expect(list.inputs.value()).toEqual(['Apple', 'Apricot']);
+        expect(list.inputs.values()).toEqual(['Apple', 'Apricot']);
         list.prev({selectRange: true});
-        expect(list.inputs.value()).toEqual(['Apple']);
+        expect(list.inputs.values()).toEqual(['Apple']);
       });
 
       it('should not wrap when range selecting', () => {
         list.anchor(0);
         list.prev({selectRange: true});
         expect(list.inputs.activeItem()).toBe(list.inputs.items()[0]);
-        expect(list.inputs.value()).toEqual([]);
+        expect(list.inputs.values()).toEqual([]);
       });
 
       it('should not select disabled items in a range', () => {
         items[1].disabled.set(true);
         list.anchor(0);
         list.goto(items[3], {selectRange: true});
-        expect(list.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry']);
+        expect(list.inputs.values()).toEqual(['Apple', 'Banana', 'Blackberry']);
       });
 
       it('should not select non-selectable items in a range', () => {
         items[1].selectable.set(false);
         list.anchor(0);
         list.goto(items[3], {selectRange: true});
-        expect(list.inputs.value()).toEqual(['Apple', 'Banana', 'Blackberry']);
+        expect(list.inputs.values()).toEqual(['Apple', 'Banana', 'Blackberry']);
       });
     });
   });
@@ -437,14 +437,14 @@ describe('List Behavior', () => {
     it('should select an item via typeahead', () => {
       const {list} = getDefaultPatterns({multi: signal(false)});
       list.search('b', {selectOne: true});
-      expect(list.inputs.value()).toEqual(['Banana']);
+      expect(list.inputs.values()).toEqual(['Banana']);
     });
 
     it('should not select a non-selectable item via typeahead', () => {
       const {list, items} = getDefaultPatterns({multi: signal(false)});
       items[2].selectable.set(false); // 'Banana'
       list.search('b', {selectOne: true});
-      expect(list.inputs.value()).toEqual([]);
+      expect(list.inputs.values()).toEqual([]);
     });
   });
 });

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
@@ -15,5 +15,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   templateUrl: 'typography-demo.html',
   styleUrl: 'typography-demo.css',
   imports: [MatCheckboxModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TypographyDemo {}

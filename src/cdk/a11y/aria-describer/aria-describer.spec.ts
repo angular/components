@@ -1,6 +1,7 @@
-import {AriaDescriber, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from './aria-describer';
+import {A11yModule, CDK_DESCRIBEDBY_HOST_ATTRIBUTE} from '../index';
+import {AriaDescriber} from './aria-describer';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ElementRef, ViewChild, inject} from '@angular/core';
 
 describe('AriaDescriber', () => {
   let ariaDescriber: AriaDescriber;
@@ -394,7 +395,7 @@ function expectMessage(el: Element, message: string) {
     <div id="description-with-existing-id">Hello</div>
     <div description-without-id>Hey</div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  imports: [A11yModule],
 })
 class TestApp {
   ariaDescriber = inject(AriaDescriber);

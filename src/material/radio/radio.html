@@ -1,7 +1,7 @@
-<label mat-internal-form-field [labelPosition]="labelPosition" [for]="inputId" #formField>
-  <span class="mdc-radio" [class.mdc-radio--disabled]="disabled">
+<div mat-internal-form-field [labelPosition]="labelPosition" #formField>
+  <div class="mdc-radio" [class.mdc-radio--disabled]="disabled">
     <!-- Render this element first so the input is on top. -->
-    <span class="mat-mdc-radio-touch-target"></span>
+    <div class="mat-mdc-radio-touch-target" (click)="_onTouchTargetClick($event)"></div>
     <!--
       Note that we set `aria-invalid="false"` on the input, because otherwise some screen readers
       will read out "required, invalid data" for each radio button that hasn't been checked.
@@ -22,19 +22,18 @@
            [attr.aria-describedby]="ariaDescribedby"
            [attr.aria-disabled]="disabled && disabledInteractive ? 'true' : null"
            (change)="_onInputInteraction($event)">
-    <span class="mdc-radio__background" aria-hidden="true">
-      <span class="mdc-radio__outer-circle"></span>
-      <span class="mdc-radio__inner-circle"></span>
-    </span>
-    <span mat-ripple class="mat-radio-ripple mat-focus-indicator"
+    <div class="mdc-radio__background">
+      <div class="mdc-radio__outer-circle"></div>
+      <div class="mdc-radio__inner-circle"></div>
+    </div>
+    <div mat-ripple class="mat-radio-ripple mat-focus-indicator"
          [matRippleTrigger]="_rippleTrigger.nativeElement"
          [matRippleDisabled]="_isRippleDisabled()"
-         [matRippleCentered]="true"
-         aria-hidden="true">
-      <span class="mat-ripple-element mat-radio-persistent-ripple"></span>
-    </span>
-  </span>
-  <span class="mat-internal-form-field-label mdc-label">
+         [matRippleCentered]="true">
+      <div class="mat-ripple-element mat-radio-persistent-ripple"></div>
+    </div>
+  </div>
+  <label class="mdc-label" [for]="inputId">
     <ng-content></ng-content>
-  </span>
-</label>
+  </label>
+</div>

@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ReactiveFormsModule, FormGroup, FormControl, Validators} from '@angular/forms';
 import {HarnessLoader, parallel} from '@angular/cdk/testing';
@@ -300,7 +300,6 @@ describe('MatStepperHarness', () => {
     </mat-stepper>
   `,
   imports: [MatStepperModule, ReactiveFormsModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StepperHarnessTest {
   oneGroup = new FormGroup({

@@ -6,18 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Component, ViewEncapsulation, computed, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
 
 /**  Quality of the placeholder image.  */
 export type PlaceholderImageQuality = 'high' | 'standard' | 'low';
 
-const VIDEO_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
-
 @Component({
   selector: 'youtube-player-placeholder',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   template: `
-    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel()">
+    <button type="button" class="youtube-player-placeholder-button" [attr.aria-label]="buttonLabel">
       <svg
         height="100%"
         version="1.1"
@@ -32,57 +31,43 @@ const VIDEO_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
   styleUrl: 'youtube-player-placeholder.css',
   host: {
     'class': 'youtube-player-placeholder',
-    '[class.youtube-player-placeholder-loading]': 'isLoading()',
-    '[style.background-image]': '_backgroundImage()',
-    '[style.width.px]': 'width()',
-    '[style.height.px]': 'height()',
+    '[class.youtube-player-placeholder-loading]': 'isLoading',
+    '[style.background-image]': '_getBackgroundImage()',
+    '[style.width.px]': 'width',
+    '[style.height.px]': 'height',
   },
 })
 export class YouTubePlayerPlaceholder {
   /** ID of the video for which to show the placeholder. */
-  readonly videoId = input.required<string>();
+  @Input() videoId!: string;
 
   /** Width of the video for which to show the placeholder. */
-  readonly width = input.required<number>();
+  @Input() width!: number;
 
   /** Height of the video for which to show the placeholder. */
-  readonly height = input.required<number>();
+  @Input() height!: number;
 
   /** Whether the video is currently being loaded. */
-  readonly isLoading = input.required<boolean>();
+  @Input() isLoading: boolean = false;
 
   /** Accessible label for the play button. */
-  readonly buttonLabel = input.required<string>();
+  @Input() buttonLabel!: string;
 
   /** Quality of the placeholder image. */
-  readonly quality = input.required<PlaceholderImageQuality>();
+  @Input() quality!: PlaceholderImageQuality;
 
   /** Gets the background image showing the placeholder. */
-  protected _backgroundImage = computed(() => {
-    const quality = this.quality();
-    const videoId = this.videoId();
-
-    // Since we're interpolating the ID into a CSS value, we need
-    // to ensure that it doesn't become an XSS attack vector.
-    if (!VIDEO_ID_REGEX.test(videoId)) {
-      if (typeof ngDevMode === 'undefined' || ngDevMode) {
-        console.error(
-          `Skipping placeholder image generation for invalid YouTube video ID: ${videoId}`,
-        );
-      }
-      return null;
-    }
-
+  protected _getBackgroundImage(): string | undefined {
     let url: string;
 
-    if (quality === 'low') {
-      url = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-    } else if (quality === 'high') {
-      url = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+    if (this.quality === 'low') {
+      url = `https://i.ytimg.com/vi/${this.videoId}/hqdefault.jpg`;
+    } else if (this.quality === 'high') {
+      url = `https://i.ytimg.com/vi/${this.videoId}/maxresdefault.jpg`;
     } else {
-      url = `https://i.ytimg.com/vi_webp/${videoId}/sddefault.webp`;
+      url = `https://i.ytimg.com/vi_webp/${this.videoId}/sddefault.webp`;
     }
 
     return `url(${url})`;
-  });
+  }
 }

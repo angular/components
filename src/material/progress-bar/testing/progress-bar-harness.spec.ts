@@ -1,4 +1,4 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -41,7 +41,6 @@ describe('MatProgressBarHarness', () => {
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   `,
   imports: [MatProgressBarModule],
-  changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ProgressBarHarnessTest {
   value = signal<number | undefined>(undefined);

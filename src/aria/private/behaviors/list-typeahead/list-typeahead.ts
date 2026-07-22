@@ -33,16 +33,16 @@ export class ListTypeahead<T extends ListTypeaheadItem> {
   timeout?: ReturnType<typeof setTimeout> | undefined;
 
   /** The focus controller of the parent list. */
-  readonly focusManager: ListFocus<T>;
+  focusManager: ListFocus<T>;
 
   /** Whether the user is actively typing a typeahead search query. */
-  readonly isTyping = computed(() => this._query().length > 0);
+  isTyping = computed(() => this._query().length > 0);
 
   /** Keeps track of the characters that typeahead search is being called with. */
-  private readonly _query = signal('');
+  private _query = signal('');
 
   /** The index where that the typeahead search was initiated from. */
-  private readonly _startIndex = signal<number | undefined>(undefined);
+  private _startIndex = signal<number | undefined>(undefined);
 
   constructor(readonly inputs: ListTypeaheadInputs<T> & {focusManager: ListFocus<T>}) {
     this.focusManager = inputs.focusManager;

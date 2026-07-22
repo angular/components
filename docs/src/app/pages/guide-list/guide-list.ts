@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 import {RouterLink} from '@angular/router';
 import {Footer} from '../../shared/footer/footer';
@@ -20,7 +20,6 @@ import {MatRipple} from '@angular/material/core';
   templateUrl: './guide-list.html',
   styleUrls: ['./guide-list.scss'],
   imports: [NavigationFocus, RouterLink, MatCard, MatCardTitle, MatCardContent, Footer, MatRipple],
-  changeDetection: ChangeDetectionStrategy.Eager,
   host: {
     'class': 'docs-main-content',
   },
