@@ -1,3 +1,22 @@
+<a name="22.0.6"></a>
+# 22.0.6 "plaid-panda" (2026-07-22)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d9fcaced49](https://github.com/angular/components/commit/d9fcaced4950ce6f3d7f759bbeab18134217dbce) | fix | **drag-drop:** reset popover overflow ([#33554](https://github.com/angular/components/pull/33554)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [842bc940b8](https://github.com/angular/components/commit/842bc940b8dd3f1e69c460e724921a5f4ababede) | fix | **expansion:** always reset outline ([#33542](https://github.com/angular/components/pull/33542)) |
+| [b5224c68f1](https://github.com/angular/components/commit/b5224c68f1ef1b996462a305d98387c564c36a83) | fix | **list:** make disabled selection list keyboard navigable ([#33544](https://github.com/angular/components/pull/33544)) |
+| [354f1ac17d](https://github.com/angular/components/commit/354f1ac17dc8365dacc61a02f3288dc73f676bb8) | fix | **radio:** avoid making the touch target a focus stop ([#33558](https://github.com/angular/components/pull/33558)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6e5acc1ecb](https://github.com/angular/components/commit/6e5acc1ecbed97c307a333f79064927534a8794d) | fix | preserve timezone on .clone() ([#33564](https://github.com/angular/components/pull/33564)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.0-next.4"></a>
 # 22.1.0-next.4 "plastic box" (2026-07-15)
 ### aria
