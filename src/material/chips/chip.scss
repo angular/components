@@ -32,10 +32,10 @@ $fallbacks: m3-chip.get-tokens();
 .mat-mdc-standard-chip,
 .mat-mdc-basic-chip,
 .mat-mdc-evolution-chip {
-  /* Ensures basic/unstyled chips also have a 32px min-height baseline */
+  // Ensures basic/unstyled chips also have a 32px min-height baseline.
   min-height: 32px;
 
-  /* 8px top and bottom margin for 48px touch target separation */
+  // 8px top and bottom margin for 48px touch target separation.
   margin-top: $_touch-target-vertical-padding;
   margin-bottom: $_touch-target-vertical-padding;
 }
