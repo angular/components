@@ -12,6 +12,8 @@ $_graphic-padding: 6px;
 $_trailing-action-padding: 8px;
 $_avatar-leading-padding: 4px;
 $_avatar-trailing-padding: 8px;
+$_touch-target-size: 48px;
+$_touch-target-vertical-padding: 8px;
 
 $fallbacks: m3-chip.get-tokens();
 
@@ -25,6 +27,27 @@ $fallbacks: m3-chip.get-tokens();
 .mdc-evolution-chip {
   position: relative;
   max-width: 100%;
+}
+
+.mat-mdc-standard-chip,
+.mat-mdc-basic-chip,
+.mat-mdc-evolution-chip {
+  /* Ensures basic/unstyled chips also have a 32px min-height baseline */
+  min-height: 32px;
+
+  /* 8px top and bottom margin for 48px touch target separation */
+  margin-top: $_touch-target-vertical-padding;
+  margin-bottom: $_touch-target-vertical-padding;
+}
+
+.mat-mdc-chip-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: $_touch-target-size;
+  transform: translateY(-50%);
+  pointer-events: auto;
 }
 
 .mdc-evolution-chip__cell,
