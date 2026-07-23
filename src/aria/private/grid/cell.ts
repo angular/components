@@ -56,7 +56,9 @@ export class GridCellPattern implements GridCell {
   readonly selectable: SignalLike<boolean> = () => this.inputs.selectable();
 
   /** Whether a cell is disabled. */
-  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
+  readonly disabled: SignalLike<boolean> = computed(
+    () => this.inputs.disabled() || (this.inputs.widget()?.inputs.disabled() ?? false),
+  );
 
   /** The number of rows the cell should span. */
   readonly rowSpan: SignalLike<number> = () => this.inputs.rowSpan();

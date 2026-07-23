@@ -1059,6 +1059,96 @@ describe('Grid directives', () => {
         expect(widgetDirective.isActivated()).toBeFalse();
       });
     });
+
+    describe('disabled element roving tabindex calculation', () => {
+      it('should not choose disabled element as active cell when softDisabled is false upon cell deletion', async () => {
+        const gridData: RowConfig[] = [
+          {
+            cells: [{id: 'c0-0'}, {id: 'c0-1', disabled: true}, {id: 'c0-2'}],
+          },
+        ];
+        await setupGrid({
+          gridData,
+          softDisabled: false,
+          focusMode: 'roving',
+        });
+        gridInstance._pattern.setDefaultStateEffect();
+        await fixture.whenStable();
+
+        expect(getActiveCellId()).toBe('c0-0');
+
+        // Delete c0-0 so c0-1 (disabled) is now at index 0
+        fixture.componentInstance.gridData.set([
+          {
+            cells: [{id: 'c0-1', disabled: true}, {id: 'c0-2'}],
+          },
+        ]);
+        await fixture.whenStable();
+        await fixture.whenStable();
+
+        expect(getActiveCellId()).toBe('c0-2');
+      });
+
+      it('should not choose cell with disabled widget as active cell when softDisabled is false upon cell deletion', async () => {
+        const gridData: RowConfig[] = [
+          {
+            cells: [
+              {id: 'c0-0'},
+              {id: 'c0-1', widgets: [{id: 'w0-1', disabled: true}]},
+              {id: 'c0-2'},
+            ],
+          },
+        ];
+        await setupGrid({
+          gridData,
+          softDisabled: false,
+          focusMode: 'roving',
+        });
+        gridInstance._pattern.setDefaultStateEffect();
+        await fixture.whenStable();
+
+        expect(getActiveCellId()).toBe('c0-0');
+
+        // Delete c0-0 so c0-1 (with disabled widget) is now at index 0
+        fixture.componentInstance.gridData.set([
+          {
+            cells: [{id: 'c0-1', widgets: [{id: 'w0-1', disabled: true}]}, {id: 'c0-2'}],
+          },
+        ]);
+        await fixture.whenStable();
+        await fixture.whenStable();
+
+        expect(getActiveCellId()).toBe('c0-2');
+      });
+
+      it('should recalculate active cell when active cell dynamically becomes disabled and softDisabled is false', async () => {
+        const gridData: RowConfig[] = [
+          {
+            cells: [{id: 'c0-0'}, {id: 'c0-1'}, {id: 'c0-2'}],
+          },
+        ];
+        await setupGrid({
+          gridData,
+          softDisabled: false,
+          focusMode: 'roving',
+        });
+        gridInstance._pattern.setDefaultStateEffect();
+        await fixture.whenStable();
+
+        expect(getActiveCellId()).toBe('c0-0');
+
+        // Dynamically disable c0-0 in-place
+        fixture.componentInstance.gridData.set([
+          {
+            cells: [{id: 'c0-0', disabled: true}, {id: 'c0-1'}, {id: 'c0-2'}],
+          },
+        ]);
+        await fixture.whenStable();
+        await fixture.whenStable();
+
+        expect(getActiveCellId()).toBe('c0-1');
+      });
+    });
   });
 
   describe('structural validations', () => {

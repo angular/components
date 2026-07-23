@@ -73,7 +73,8 @@ export class GridFocus<T extends GridFocusCell> {
 
     const activeCellNotValid = activeCellCoords === undefined;
     const activeCellMismatch = activeCell !== activeCoordsCell;
-    return activeCellNotValid || activeCellMismatch;
+    const activeCellNotFocusable = !this.isFocusable(activeCell!);
+    return activeCellNotValid || activeCellMismatch || activeCellNotFocusable;
   });
 
   /** The id of the current active cell, for ARIA activedescendant. */
