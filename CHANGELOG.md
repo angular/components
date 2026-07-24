@@ -1,3 +1,28 @@
+<a name="22.1.0-rc.0"></a>
+# 22.1.0-rc.0 "plastic-muffin" (2026-07-24)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b211bf15f7](https://github.com/angular/components/commit/b211bf15f7090546b82957cb34d0d60409733fb1) | fix | **grid:** account for disabled cell widgets and in-place disablement in roving tabindex ([#33571](https://github.com/angular/components/pull/33571)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [ce6875ea7a](https://github.com/angular/components/commit/ce6875ea7acbcf71c93cd19f3de525ceff29651c) | fix | **drag-drop:** reset popover overflow ([#33554](https://github.com/angular/components/pull/33554)) |
+| [0e34c64d0c](https://github.com/angular/components/commit/0e34c64d0cc96cd3cc8f19dea06f58a0ad4d8b59) | fix | **stepper:** allow signal form to be assigned as stepControl ([#33562](https://github.com/angular/components/pull/33562)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3d21c1b9a2](https://github.com/angular/components/commit/3d21c1b9a2ba57dc1e5c5ff23e8ff63d50b607f6) | fix | **expansion:** always reset outline ([#33542](https://github.com/angular/components/pull/33542)) |
+| [9105a44b83](https://github.com/angular/components/commit/9105a44b83062e1a2a896a98bc229f2fa050ba91) | fix | **list:** make disabled selection list keyboard navigable ([#33544](https://github.com/angular/components/pull/33544)) |
+| [a62e65971a](https://github.com/angular/components/commit/a62e65971a379715b8bae2e437e67b62c113a263) | fix | **radio:** avoid making the touch target a focus stop ([#33558](https://github.com/angular/components/pull/33558)) |
+| [56c7ff6fa3](https://github.com/angular/components/commit/56c7ff6fa3df13285e374bc4d280aa292287df58) | fix | **slide-toggle:** prevent icon label text-spacing cutoff ([#33559](https://github.com/angular/components/pull/33559)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [452d3cce3e](https://github.com/angular/components/commit/452d3cce3e2c651945e0f85c545a2e13b90b8add) | fix | preserve timezone on .clone() ([#33564](https://github.com/angular/components/pull/33564)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.0.6"></a>
 # 22.0.6 "plaid-panda" (2026-07-22)
 ### cdk
