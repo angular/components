@@ -63,7 +63,6 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     get inputId(): string;
     // (undocumented)
     _isRippleDisabled(): boolean;
-    _labelElement: ElementRef<HTMLInputElement>;
     labelPosition: 'before' | 'after';
     name: string | null;
     // (undocumented)
@@ -94,8 +93,6 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     _onInteractionEvent(event: Event): void;
     _onLabelTextChange(): void;
     _onTouched: () => any;
-    // (undocumented)
-    _onTouchTargetClick(): void;
     _preventBubblingFromLabel(event: MouseEvent): void;
     // (undocumented)
     registerOnChange(fn: (value: any) => void): void;
