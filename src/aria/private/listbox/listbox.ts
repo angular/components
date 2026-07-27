@@ -292,11 +292,11 @@ export class ListboxPattern<V> {
   }
 
   protected _getItem(e: PointerEvent) {
-    if (!(e.target instanceof HTMLElement)) {
+    if (!e.target) {
       return;
     }
 
-    const element = e.target.closest('[role="option"]');
+    const element = (e.target as Element).closest('[role="option"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }
