@@ -296,11 +296,11 @@ export class TabListPattern {
 
   /** Returns the tab item associated with the given pointer event. */
   private _getItem(e: PointerEvent) {
-    if (!(e.target instanceof HTMLElement)) {
+    if (!e.target) {
       return;
     }
 
-    const element = e.target.closest('[role="tab"]');
+    const element = (e.target as Element).closest('[role="tab"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }

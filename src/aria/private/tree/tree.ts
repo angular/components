@@ -479,10 +479,10 @@ export class TreePattern<V> implements TreeInputs<V> {
 
   /** Retrieves the TreeItemPattern associated with a DOM event, if any. */
   protected _getItem(event: Event): TreeItemPattern<V> | undefined {
-    if (!(event.target instanceof HTMLElement)) {
+    if (!event.target) {
       return;
     }
-    const element = event.target.closest('[role="treeitem"]');
+    const element = (event.target as Element).closest('[role="treeitem"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }
