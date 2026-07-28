@@ -1,18 +1,20 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
+      [attr.role]="(isHandset()) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset()) ? 'over' : 'side'"
+      [opened]="!(isHandset())">
+    <mat-toolbar>
+      <span>Menu</span>
+    </mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item <%= routing ? 'routerLink="/"' : 'href="#"' %>>Link 1</a>
-      <a mat-list-item <%= routing ? 'routerLink="/"' : 'href="#"' %>>Link 2</a>
-      <a mat-list-item <%= routing ? 'routerLink="/"' : 'href="#"' %>>Link 3</a>
+      <a mat-list-item <%= routing ? 'routerLink="/"' : 'href="#"' %> (click)="drawer.close()">Link 1</a>
+      <a mat-list-item <%= routing ? 'routerLink="/"' : 'href="#"' %> (click)="drawer.close()">Link 2</a>
+      <a mat-list-item <%= routing ? 'routerLink="/"' : 'href="#"' %> (click)="drawer.close()">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      @if (isHandset$ | async) {
+    <mat-toolbar class="mat-elevation-z4">
+      @if (isHandset()) {
         <button
           type="button"
           aria-label="Toggle sidenav"

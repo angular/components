@@ -1,13 +1,13 @@
 import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map, shareReplay } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';<% if(standalone) { %>
-import { AsyncPipe } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';<% } %>
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: '<%= selector %>',<% if(inlineTemplate) { %>
@@ -27,16 +27,17 @@ import { map, shareReplay } from 'rxjs/operators';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
-    AsyncPipe,
+    NgIf,
   ]<% } else { %>,
   standalone: false<% } %>
 })
 export class <%= classify(name) %>Component {
   private breakpointObserver = inject(BreakpointObserver);
-
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
+  protected isHandset = toSignal(
+    this.breakpointObserver.observe(Breakpoints.Handset).pipe(
       map(result => result.matches),
       shareReplay()
-    );
+    ),
+    { initialValue: false }
+  );
 }
