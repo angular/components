@@ -9,7 +9,7 @@ import { <%= classify(name) %>Component } from './<%= dasherize(name) %>.compone
 
 describe('<%= classify(name) %>Component', () => {
   let component: <%= classify(name) %>Component;
-  let fixture: ComponentFixture<<%= classify(name) %>Component>;<% if(standalone) { %>
+  let fixture: ComponentFixture<<%= classify(name) %>Component>;<% if(!standalone) { %>
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
