@@ -1,3 +1,20 @@
+<a name="22.0.7"></a>
+# 22.0.7 "v22-0-7" (2026-07-29)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e57188b33](https://github.com/angular/components/commit/e57188b33fe59a78398172016251b1c78bae75df) | fix | **grid:** account for disabled cell widgets and in-place disablement in roving tabindex ([#33571](https://github.com/angular/components/pull/33571)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [223c51543](https://github.com/angular/components/commit/223c51543352dcfe1f85da733dde9b9179f55095) | fix | **schematics:** resolve issues in navigation schematic ([#33590](https://github.com/angular/components/pull/33590)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [963383e25](https://github.com/angular/components/commit/963383e25c90d8c3f6b4489eef7f242fe16cd957) | fix | avoid instanceof checks in aria directives ([#33587](https://github.com/angular/components/pull/33587)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.0-rc.0"></a>
 # 22.1.0-rc.0 "plastic-muffin" (2026-07-24)
 ### aria
