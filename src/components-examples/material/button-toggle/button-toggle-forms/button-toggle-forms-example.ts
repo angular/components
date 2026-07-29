@@ -1,5 +1,6 @@
 import {Component, signal} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 /**
@@ -8,9 +9,10 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 @Component({
   selector: 'button-toggle-forms-example',
   templateUrl: 'button-toggle-forms-example.html',
-  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule],
+  imports: [MatButtonToggleModule, FormsModule, ReactiveFormsModule, FormField],
 })
 export class ButtonToggleFormsExample {
-  fontStyleControl = new FormControl('');
-  fontStyle = signal<string | undefined>(undefined);
+  readonly fontStyleControl = new FormControl('');
+  readonly fontStyle = signal<string | undefined>(undefined);
+  readonly fontStyleForm = form(signal(''));
 }
