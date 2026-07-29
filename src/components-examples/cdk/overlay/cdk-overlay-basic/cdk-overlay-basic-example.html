@@ -1,14 +1,14 @@
 <!-- This button is the origin to which the overlay is attached -->
-<button (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #origin="cdkOverlayOrigin">
-  {{isOpen ? "Close" : "Open"}}
+<button (click)="isOpen.update(isOpen => !isOpen)" type="button" cdkOverlayOrigin #origin="cdkOverlayOrigin">
+  {{isOpen() ? "Close" : "Open"}}
 </button>
 
 <!-- This template displays the overlay content and is connected to the button -->
 <ng-template
   cdkConnectedOverlay
   [cdkConnectedOverlayOrigin]="origin"
-  [cdkConnectedOverlayOpen]="isOpen"
-  (detach)="isOpen = false"
+  [cdkConnectedOverlayOpen]="isOpen()"
+  (detach)="isOpen.set(false)"
 >
   <ul class="example-list">
     <li>Item 1</li>

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 /**
@@ -11,5 +11,5 @@ import {OverlayModule} from '@angular/cdk/overlay';
   imports: [OverlayModule],
 })
 export class CdkOverlayBasicExample {
-  isOpen = false;
+  isOpen = signal(false);
 }
