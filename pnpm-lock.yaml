@@ -206,8 +206,8 @@ importers:
         specifier: ^4.10.3
         version: 4.12.1
       chalk:
-        specifier: ^5.4.1
-        version: 5.6.2
+        specifier: ^6.0.0
+        version: 6.0.0
       dgeni:
         specifier: ^0.4.14
         version: 0.4.14
@@ -4630,6 +4630,10 @@ packages:
   chalk@5.6.2:
     resolution: {integrity: sha512-7NzBL0rN6fMUW+f7A6Io4h40qQlG+xGmtMxfbnH/K7TAtt8JQWVQK+6g0UXKMeVJoyV5EkkNsErQ8pVD3bLHbA==}
     engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+
+  chalk@6.0.0:
+    resolution: {integrity: sha512-2uNTXIuTTxk7ciZgAU1BQcgnchcG0xXnrs6jzkQfj9SsRa9M2s5zE8WT96hS6KmG4MzWHSrvH43DF1m4XRkrFg==}
+    engines: {node: '>=22'}
 
   change-case@3.0.0:
     resolution: {integrity: sha512-O+B6Hvykrph2FAW3JxBU+sGgjEdhVn5Pu9x/GSPAq1yWiDQ5bjqzx1HlV16wUrb0pcOpBNHUD3h201gT3j22Ag==}
@@ -14203,6 +14207,8 @@ snapshots:
       supports-color: 7.2.0
 
   chalk@5.6.2: {}
+
+  chalk@6.0.0: {}
 
   change-case@3.0.0:
     dependencies:
