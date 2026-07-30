@@ -263,8 +263,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       magic-string:
-        specifier: 0.30.21
-        version: 0.30.21
+        specifier: 1.1.0
+        version: 1.1.0
       marked:
         specifier: ^18.0.0
         version: 18.0.6
