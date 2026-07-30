@@ -1,6 +1,7 @@
 name: Google Internal Tests Enforcement
 
 on:
+  # zizmor: ignore[dangerous-triggers] - {Trigger is safe as workflow does not checkout untrusted code}
   pull_request_target:
     types: [opened, reopened, synchronize]
 
@@ -13,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: angular/dev-infra/github-actions/google-internal-tests@ba726e7bca0b08b125ccc6f93c233749e1213c17
+      - uses: angular/dev-infra/github-actions/google-internal-tests@ba726e7bca0b08b125ccc6f93c233749e1213c17 # main
         with:
           run-tests-guide-url: http://go/angular-material-presubmit
           github-token: ${{ secrets.GITHUB_TOKEN }}
