@@ -1,10 +1,11 @@
-<div mat-internal-form-field [labelPosition]="labelPosition" (click)="_preventBubblingFromLabel($event)">
-  <div #checkbox class="mdc-checkbox">
+<label
+  mat-internal-form-field
+  [labelPosition]="labelPosition"
+  [for]="inputId"
+  (click)="_preventBubblingFromLabel($event)">
+  <span #checkbox class="mdc-checkbox">
     <!-- Render this element first so the input is on top. -->
-    <div
-      class="mat-mdc-checkbox-touch-target"
-      (click)="_onTouchTargetClick()"
-      aria-hidden="true"></div>
+    <span class="mat-mdc-checkbox-touch-target" aria-hidden="true"></span>
     <input #input
            type="checkbox"
            class="mdc-checkbox__native-control"
@@ -28,8 +29,8 @@
            (blur)="_onBlur()"
            (click)="_onInputClick()"
            (change)="_onInteractionEvent($event)"/>
-    <div class="mdc-checkbox__ripple" aria-hidden="true"></div>
-    <div class="mdc-checkbox__background" aria-hidden="true">
+    <span class="mdc-checkbox__ripple" aria-hidden="true"></span>
+    <span class="mdc-checkbox__background" aria-hidden="true">
       <svg class="mdc-checkbox__checkmark"
            focusable="false"
            viewBox="0 0 24 24">
@@ -37,21 +38,17 @@
               fill="none"
               d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
       </svg>
-      <div class="mdc-checkbox__mixedmark"></div>
-    </div>
-    <div class="mat-mdc-checkbox-ripple mat-focus-indicator"
+      <span class="mdc-checkbox__mixedmark"></span>
+    </span>
+    <span class="mat-mdc-checkbox-ripple mat-focus-indicator"
       mat-ripple
       aria-hidden="true"
       [matRippleTrigger]="checkbox"
       [matRippleDisabled]="disableRipple || disabled"
-      [matRippleCentered]="true"></div>
-  </div>
-  <!--
-    Avoid putting a click handler on the <label/> to fix duplicate navigation stop on Talk Back
-    (#14385). Putting a click handler on the <label/> caused this bug because the browser produced
-    an unnecessary accessibility tree node.
-  -->
-  <label class="mdc-label" #label [for]="inputId">
+      [matRippleCentered]="true"></span>
+  </span>
+
+  <span #label class="mat-internal-form-field-label mdc-label">
     <ng-content></ng-content>
-  </label>
-</div>
+  </span>
+</label>
