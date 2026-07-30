@@ -31,6 +31,7 @@ import {
   inject,
   inputBinding,
 } from '@angular/core';
+import {DialogRef} from '@angular/cdk/dialog';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -871,6 +872,14 @@ describe('MatDialog', () => {
 
     dialogRef.removePanelClass('custom-class-one');
     expect(pane.classList).not.toContain('custom-class-one', 'Expected class to be removed');
+  });
+
+  it('should not inject the CDK dialog ref into the child component', () => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    viewContainerFixture.detectChanges();
+
+    expect(dialogRef.componentInstance.cdkDialogRef).toBe(null);
+    expect(dialogRef.componentInstance.dialogRef).toBeTruthy();
   });
 
   describe('disableClose option', () => {
@@ -2372,6 +2381,7 @@ class PizzaMsg {
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
   dialogInjector = inject(Injector);
   directionality = inject(Directionality);
+  cdkDialogRef = inject(DialogRef, {optional: true});
 }
 
 @Component({

@@ -26,7 +26,7 @@ import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
 import {defer, Observable, Subject} from 'rxjs';
-import {Dialog, DialogConfig} from '@angular/cdk/dialog';
+import {Dialog, DialogConfig, DialogRef} from '@angular/cdk/dialog';
 import {startWith} from 'rxjs/operators';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {_animationsDisabled} from '../core';
@@ -178,6 +178,7 @@ export class MatDialog implements OnDestroy {
           {provide: this._dialogContainerType, useValue: dialogContainer},
           {provide: this._dialogDataToken, useValue: cdkConfig.data},
           {provide: this._dialogRefConstructor, useValue: dialogRef},
+          {provide: DialogRef, useValue: null},
         ];
       },
     });
