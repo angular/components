@@ -9,6 +9,7 @@
 export {Combobox} from './combobox';
 export {ComboboxPopup} from './combobox-popup';
 export {ComboboxWidget} from './combobox-widget';
+export {COMBOBOX_POPUP} from './combobox-tokens';
 
 // This needs to be re-exported, because it's used by the combobox components.
 // See: https://github.com/angular/components/issues/30663.

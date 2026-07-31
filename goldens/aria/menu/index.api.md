@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -36,6 +37,9 @@ export class Menu<V> implements OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Menu<any>, never>;
 }
+
+// @public
+export const MENU_COMPONENT: InjectionToken<Menu<any> | MenuBar<any>>;
 
 // @public
 export class MenuBar<V> implements OnDestroy {

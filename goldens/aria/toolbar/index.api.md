@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -30,6 +31,9 @@ export class Toolbar<V> implements OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Toolbar<any>, never>;
 }
+
+// @public
+export const TOOLBAR_WIDGET_GROUP: InjectionToken<ToolbarWidgetGroup<unknown>>;
 
 // @public
 export class ToolbarWidget<V> implements OnInit, OnDestroy {

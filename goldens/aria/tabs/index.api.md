@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -31,6 +32,9 @@ export class Tab implements HasElement, OnInit, OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Tab, never>;
 }
+
+// @public
+export const TAB_LIST: InjectionToken<TabList>;
 
 // @public
 export class TabContent {
@@ -86,6 +90,9 @@ export class TabPanel implements OnInit, OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<TabPanel, never>;
 }
+
+// @public
+export const TABS: InjectionToken<Tabs>;
 
 // @public
 export class Tabs implements OnDestroy {

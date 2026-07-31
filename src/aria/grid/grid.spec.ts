@@ -5,6 +5,7 @@ import {Grid} from './grid';
 import {GridRow} from './grid-row';
 import {GridCell} from './grid-cell';
 import {GridCellWidget} from './grid-cell-widget';
+import {GRID_ROW, GRID_CELL} from './grid-tokens';
 import {waitForMicrotasks} from '../private/testing/test-helpers';
 
 interface ModifierKeys {
@@ -1174,6 +1175,23 @@ describe('Grid directives', () => {
       expect(consoleSpy).toHaveBeenCalledWith('ngGridRow must contain at least one ngGridCell.');
     });
   });
+
+  describe('subclassing and custom providers', () => {
+    it('should support subclassing GridRow and GridCell using exported injection tokens', async () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [SubclassGridTestComponent],
+      });
+      const subclassFixture = TestBed.createComponent(SubclassGridTestComponent);
+      subclassFixture.detectChanges();
+      await subclassFixture.whenStable();
+
+      const cells = subclassFixture.debugElement.queryAll(By.directive(MyCustomCell));
+      expect(cells.length).toBe(2);
+      expect(cells[0].nativeElement.getAttribute('role')).toBe('gridcell');
+      expect(cells[1].nativeElement.getAttribute('role')).toBe('gridcell');
+    });
+  });
 });
 
 @Component({
@@ -1261,3 +1279,31 @@ class GridTestComponent {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class GridRowWithoutCells {}
+
+@Component({
+  selector: 'my-custom-cell',
+  template: `<ng-content></ng-content>`,
+  providers: [{provide: GRID_CELL, useExisting: MyCustomCell}],
+})
+class MyCustomCell extends GridCell {}
+
+@Component({
+  selector: 'my-custom-row',
+  template: `<ng-content></ng-content>`,
+  providers: [{provide: GRID_ROW, useExisting: MyCustomRow}],
+})
+class MyCustomRow extends GridRow {}
+
+@Component({
+  template: `
+    <table ngGrid>
+      <my-custom-row>
+        <my-custom-cell>Cell 1</my-custom-cell>
+        <my-custom-cell>Cell 2</my-custom-cell>
+      </my-custom-row>
+    </table>
+  `,
+  imports: [Grid, MyCustomRow, MyCustomCell],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class SubclassGridTestComponent {}
