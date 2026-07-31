@@ -9,6 +9,7 @@ import { ComboboxPattern } from '@angular/aria/private';
 import { ComboboxPopupPattern } from '@angular/aria/private';
 import { DeferredContentAware } from '@angular/aria/private';
 import * as i1 from '@angular/aria/private';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -35,6 +36,9 @@ export class Combobox extends DeferredContentAware implements OnInit {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Combobox, never>;
 }
+
+// @public
+export const COMBOBOX_POPUP: InjectionToken<ComboboxPopup>;
 
 // @public
 export class ComboboxPopup implements OnInit, OnDestroy {

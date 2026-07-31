@@ -7,9 +7,13 @@
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
+
+// @public
+export const GRID: InjectionToken<Grid>;
 
 // @public
 export class Grid implements OnDestroy {
@@ -36,6 +40,12 @@ export class Grid implements OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Grid, never>;
 }
+
+// @public
+export const GRID_CELL: InjectionToken<GridCell>;
+
+// @public
+export const GRID_ROW: InjectionToken<GridRow>;
 
 // @public
 export class GridCell implements OnInit, OnDestroy {
