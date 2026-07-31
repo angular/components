@@ -47,8 +47,7 @@ jobs:
           channelId: '${{env.PREVIEW_CHANNEL}}'
 
       - name: Deployment Status
-        # zizmor: ignore[ref-version-mismatch] - {Tag v1 updated to commit c8a0267e54a90ea07765fa88f7c7c35171859eec}
-        uses: zattoo/deploy-status@c8a0267e54a90ea07765fa88f7c7c35171859eec # v1
+        uses: zattoo/deploy-status@00e46ff4f584a96261c36d9337a4f7d2bfc4bdd3 # v1
         with:
           token: '${{github.token}}'
           environment: 'dev'
