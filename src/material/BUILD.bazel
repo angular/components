@@ -67,6 +67,7 @@ sass_library(
         "//src/material/core/theming:core_all_theme",
         "//src/material/core/tokens:classes",
         "//src/material/core/tokens:system",
+        "//src/material/core/tokens:token_registry",
         "//src/material/core/typography",
         "//src/material/core/typography:all_typography",
         "//src/material/core/typography:utils",

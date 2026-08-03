@@ -79,6 +79,7 @@ ts_project(
 
 jasmine_test(
     name = "unit_tests",
+    size = "large",
     data = [
         ":unit_test_lib",
         "//src/material:sass_lib",
