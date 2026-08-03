@@ -37,7 +37,6 @@ $fallbacks: m3-chip.get-tokens();
   transform: translateY(-50%);
   display: token-utils.slot(chip-touch-target-display, $fallbacks);
   pointer-events: auto;
-  outline: 1px solid purple;
 }
 
 .mdc-evolution-chip__cell,
