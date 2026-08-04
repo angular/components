@@ -20,8 +20,8 @@ container.
 
 <!-- example(slide-toggle-full-width) -->
 
-### Use with `@angular/forms`
-`<mat-slide-toggle>` is compatible with `@angular/forms` and supports both `FormsModule`
+### Use with Angular Forms
+`<mat-slide-toggle>` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, 
 and `ReactiveFormsModule`.
 
 ### Accessibility
