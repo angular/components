@@ -1,3 +1,9 @@
 .example-form-field {
   margin: 0 8px 16px 0;
 }
+::ng-deep .mat-calendar-comparison-range {
+  background-color: #ffd54f !important; 
+  opacity: 0.6;
+  border-radius: 4px;
+}
+
