@@ -10,7 +10,6 @@
     base: (
       slider-active-track-height: 6px,
       slider-active-track-shape: 9999px,
-      slider-handle-elevation: elevation.get-box-shadow(1),
       slider-handle-height: 20px,
       slider-handle-shape: 50%,
       slider-handle-width: 20px,
@@ -34,6 +33,7 @@
       slider-disabled-active-track-color: map.get($system, on-surface),
       slider-disabled-handle-color: map.get($system, on-surface),
       slider-disabled-inactive-track-color: map.get($system, on-surface),
+      slider-handle-elevation-shadow: elevation.get-box-shadow(1),
       slider-label-container-color: map.get($system, inverse-surface),
       slider-label-label-text-color: map.get($system, inverse-on-surface),
       slider-value-indicator-opacity: 1,

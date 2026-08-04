@@ -42,7 +42,7 @@
       slider-focus-handle-color: map.get($system, primary),
       slider-focus-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 20%),
       slider-handle-color: map.get($system, primary),
-      slider-handle-elevation: elevation.get-box-shadow(map.get($system, level1)),
+      slider-handle-elevation-shadow: elevation.get-box-shadow(map.get($system, level1)),
       slider-handle-shape: map.get($system, corner-full),
       slider-hover-handle-color: map.get($system, primary),
       slider-hover-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 5%),

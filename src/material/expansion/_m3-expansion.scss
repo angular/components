@@ -17,11 +17,11 @@ $prefix: (mat, expansion);
       expansion-container-shape: 12px,
       expansion-header-indicator-display: inline-block,
       expansion-legacy-header-indicator-display: none,
-      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
     ),
     color: (
       expansion-actions-divider-color: map.get($system, outline),
       expansion-container-background-color: map.get($system, surface),
+      expansion-container-elevation-shadow: elevation.get-box-shadow(2),
       expansion-container-text-color: map.get($system, on-surface),
       expansion-header-description-color: map.get($system, on-surface-variant),
       expansion-header-disabled-state-text-color:
