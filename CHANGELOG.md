@@ -1,3 +1,16 @@
+<a name="22.1.1"></a>
+# 22.1.1 "zinc-zebra" (2026-08-05)
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [dea26e44f](https://github.com/angular/components/commit/dea26e44f158c258eea679d20d3067a921005a65) | fix | **checkbox:** avoid making the touch target a focus stop ([#33584](https://github.com/angular/components/pull/33584)) |
+| [8e31636d7](https://github.com/angular/components/commit/8e31636d7d131d8ef6ad689d3dee970d1dc2b7e7) | fix | **chips:** add presentation role to container elements ([#33611](https://github.com/angular/components/pull/33611)) |
+| [0d9a28d20](https://github.com/angular/components/commit/0d9a28d204cf14e13705bba9ea93a5e6ae1f4942) | fix | **core:** ensure all forward statements are relative ([#33627](https://github.com/angular/components/pull/33627)) |
+| [f9ad73644](https://github.com/angular/components/commit/f9ad73644c9a1f23fd4e4bc35bb6741f275e6096) | fix | **dialog:** do not expose CDK dialog ref to users ([#33603](https://github.com/angular/components/pull/33603)) |
+| [09303ef0a](https://github.com/angular/components/commit/09303ef0aa4b3877a713924c7c315d7b40544618) | fix | **slider:** thumb jumping on safari ([#33619](https://github.com/angular/components/pull/33619)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.0"></a>
 # 22.1.0 "v22-1-0" (2026-07-29)
 ### aria
