@@ -1235,6 +1235,53 @@ describe('Combobox', () => {
       });
     });
   });
+
+  describe('with Dialog', () => {
+    let fixture: ComponentFixture<ComboboxDialogExample>;
+    let comboboxElement: HTMLElement;
+
+    const focus = async () => {
+      comboboxElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await fixture.whenStable();
+    };
+
+    const keydown = async (key: string, modifierKeys: {} = {}) => {
+      await focus();
+      comboboxElement.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key,
+          bubbles: true,
+          ...modifierKeys,
+        }),
+      );
+      await fixture.whenStable();
+    };
+
+    const down = async (modifierKeys?: {}) => await keydown('ArrowDown', modifierKeys);
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(ComboboxDialogExample);
+      await fixture.whenStable();
+      comboboxElement = fixture.debugElement.query(By.directive(Combobox))
+        .nativeElement as HTMLElement;
+    });
+
+    afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
+
+    describe('ARIA attributes and roles', () => {
+      it('should have aria-haspopup set to dialog', async () => {
+        await focus();
+        expect(comboboxElement.getAttribute('aria-haspopup')).toBe('dialog');
+      });
+
+      it('should set aria-controls to the widget id', async () => {
+        await down();
+        const widget = fixture.debugElement.query(By.directive(ComboboxWidget)).nativeElement;
+        expect(widget.id).toBeTruthy();
+        expect(comboboxElement.getAttribute('aria-controls')).toBe(widget.id);
+      });
+    });
+  });
 });
 
 @Component({
@@ -1715,4 +1762,28 @@ class ComboboxListboxHighlightExample {
     }
     this.popupExpanded.set(false);
   }
+}
+
+@Component({
+  template: `
+<div>
+  <div
+    ngCombobox
+    #combobox="ngCombobox"
+    aria-label="Search"
+    [(expanded)]="popupExpanded"
+  >{{value()}}</div>
+
+  <ng-template ngComboboxPopup [combobox]="combobox" popupType="dialog">
+    <div ngComboboxWidget>
+      <input aria-label="Filter" />
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget],
+})
+class ComboboxDialogExample {
+  popupExpanded = signal(false);
+  value = signal('');
 }
