@@ -67,9 +67,12 @@ export class ComboboxWidget implements OnInit, OnDestroy {
     });
 
     afterNextRender(() => {
+      // Imperative, not a host binding: the element's id may already be owned by another
+      // directive (e.g. Listbox, Tree, Grid), so this can't collide with it.
       if (!el.id) {
         el.id = this._idGenerator.getId('ng-combobox-widget-', true);
       }
+      // Set synchronously; the MutationObserver above only fires on the next microtask.
       this.popupId.set(el.id);
     });
   }
