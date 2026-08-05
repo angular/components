@@ -1,3 +1,12 @@
+<a name="22.2.0-next.0"></a>
+# 22.2.0-next.0 "zinc-zoo" (2026-08-05)
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8d3da9ea3](https://github.com/angular/components/commit/8d3da9ea36db6123ea0fcb44aaac18c6c91c7639) | feat | export aria injection tokens to support custom subclasses ([#33607](https://github.com/angular/components/pull/33607)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.1"></a>
 # 22.1.1 "zinc-zebra" (2026-08-05)
 ### material
