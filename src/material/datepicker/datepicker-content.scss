@@ -20,9 +20,7 @@ $touch-landscape-width: 64vh;
 $touch-landscape-height: 80vh;
 $touch-portrait-width: 80vw;
 $touch-portrait-height: 100vw;
-$touch-portrait-height-with-actions: 115vw;
 $touch-min-width: 250px;
-$touch-min-height: 312px;
 $touch-max-width: 750px;
 $touch-max-height: 788px;
 
@@ -128,7 +126,7 @@ $touch-max-height: 788px;
   }
 
   .mat-datepicker-content-container {
-    min-height: $touch-min-height;
+    min-height: fit-content;
     max-height: $touch-max-height;
     min-width: $touch-min-width;
     max-width: $touch-max-width;
@@ -155,11 +153,5 @@ $touch-max-height: 788px;
   .mat-datepicker-content-touch .mat-datepicker-content-container {
     width: $touch-portrait-width;
     height: $touch-portrait-height;
-  }
-
-  // The content needs to be a bit taller when actions have
-  // been projected so that it doesn't have to scroll.
-  .mat-datepicker-content-touch .mat-datepicker-content-container-with-actions {
-    height: $touch-portrait-height-with-actions;
   }
 }
