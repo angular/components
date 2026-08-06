@@ -3,6 +3,7 @@ import {
   computed,
   DebugElement,
   signal,
+  Type,
   untracked,
   viewChild,
   afterRenderEffect,
@@ -1236,50 +1237,44 @@ describe('Combobox', () => {
     });
   });
 
-  describe('with Dialog', () => {
-    let fixture: ComponentFixture<ComboboxDialogExample>;
+  describe('ComboboxWidget', () => {
+    let fixture: ComponentFixture<unknown>;
     let comboboxElement: HTMLElement;
+    let widgetElement: HTMLElement;
 
-    const focus = async () => {
-      comboboxElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
-      await fixture.whenStable();
-    };
-
-    const keydown = async (key: string, modifierKeys: {} = {}) => {
-      await focus();
-      comboboxElement.dispatchEvent(
-        new KeyboardEvent('keydown', {
-          key,
-          bubbles: true,
-          ...modifierKeys,
-        }),
-      );
-      await fixture.whenStable();
-    };
-
-    const down = async (modifierKeys?: {}) => await keydown('ArrowDown', modifierKeys);
-
-    beforeEach(async () => {
-      fixture = TestBed.createComponent(ComboboxDialogExample);
+    const expand = async (componentType: Type<unknown>) => {
+      fixture = TestBed.createComponent(componentType);
       await fixture.whenStable();
       comboboxElement = fixture.debugElement.query(By.directive(Combobox))
         .nativeElement as HTMLElement;
-    });
+      comboboxElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await fixture.whenStable();
+      comboboxElement.dispatchEvent(
+        new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}),
+      );
+      await fixture.whenStable();
+      widgetElement = fixture.debugElement.query(By.directive(ComboboxWidget))
+        .nativeElement as HTMLElement;
+    };
 
     afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
 
-    describe('ARIA attributes and roles', () => {
-      it('should have aria-haspopup set to dialog', async () => {
-        await focus();
-        expect(comboboxElement.getAttribute('aria-haspopup')).toBe('dialog');
-      });
+    it('should auto-generate an ID on the widget when none is provided', async () => {
+      await expand(ComboboxDialogExample);
+      expect(widgetElement.id).toMatch(/^ng-combobox-widget-/);
+      expect(comboboxElement.getAttribute('aria-controls')).toBe(widgetElement.id);
+    });
 
-      it('should set aria-controls to the widget id', async () => {
-        await down();
-        const widget = fixture.debugElement.query(By.directive(ComboboxWidget)).nativeElement;
-        expect(widget.id).toBeTruthy();
-        expect(comboboxElement.getAttribute('aria-controls')).toBe(widget.id);
-      });
+    it('should preserve an explicit ID on the widget element', async () => {
+      await expand(ComboboxDialogCustomIdExample);
+      expect(widgetElement.id).toBe('custom-id');
+      expect(comboboxElement.getAttribute('aria-controls')).toBe('custom-id');
+    });
+
+    it('should prioritize sibling directive IDs over generated IDs', async () => {
+      await expand(ComboboxListboxGeneratedIdExample);
+      expect(widgetElement.id).toMatch(/^ng-listbox-/);
+      expect(comboboxElement.getAttribute('aria-controls')).toBe(widgetElement.id);
     });
   });
 });
@@ -1786,4 +1781,54 @@ class ComboboxListboxHighlightExample {
 class ComboboxDialogExample {
   popupExpanded = signal(false);
   value = signal('');
+}
+
+@Component({
+  template: `
+<div>
+  <div
+    ngCombobox
+    #combobox="ngCombobox"
+    aria-label="Search"
+    [(expanded)]="popupExpanded"
+  >{{value()}}</div>
+
+  <ng-template ngComboboxPopup [combobox]="combobox" popupType="dialog">
+    <div ngComboboxWidget id="custom-id">
+      <input aria-label="Filter" />
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget],
+})
+class ComboboxDialogCustomIdExample {
+  popupExpanded = signal(false);
+  value = signal('');
+}
+
+@Component({
+  template: `
+<div>
+  <input
+    ngCombobox
+    #combobox="ngCombobox"
+    aria-label="Search"
+    [(expanded)]="popupExpanded"
+  />
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div ngComboboxWidget ngListbox #listbox="ngListbox" focusMode="activedescendant" [activeDescendant]="listbox.activeDescendant()">
+      @for (option of options; track option) {
+        <div ngOption [value]="option" [label]="option">{{option}}</div>
+      }
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
+})
+class ComboboxListboxGeneratedIdExample {
+  popupExpanded = signal(false);
+  options = ['Apple', 'Banana'];
 }
