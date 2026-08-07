@@ -279,13 +279,23 @@ export class FocusTrap {
     return this._hasAttached;
   }
 
+  /**
+   * Gets the children to consider for a subtree, in shadow-including tree order: a root's
+   * shadow DOM content (if any) precedes its light DOM content.
+   */
+  private _getChildren(root: HTMLElement): Element[] {
+    return root.shadowRoot
+      ? [...root.shadowRoot.children, ...root.children]
+      : Array.from(root.children);
+  }
+
   /** Get the first tabbable element from a DOM subtree (inclusive). */
   private _getFirstTabbableElement(root: HTMLElement): HTMLElement | null {
     if (this._checker.isFocusable(root) && this._checker.isTabbable(root)) {
       return root;
     }
 
-    const children = root.children;
+    const children = this._getChildren(root);
 
     for (let i = 0; i < children.length; i++) {
       const tabbableChild =
@@ -308,7 +318,7 @@ export class FocusTrap {
     }
 
     // Iterate in reverse DOM order.
-    const children = root.children;
+    const children = this._getChildren(root);
 
     for (let i = children.length - 1; i >= 0; i--) {
       const tabbableChild =
