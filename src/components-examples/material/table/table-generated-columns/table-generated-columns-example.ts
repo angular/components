@@ -40,7 +40,7 @@ export class TableGeneratedColumnsExample {
     {
       columnDef: 'name',
       header: 'Name',
-      cell: (element: PeriodicElement) => `${element.name}`,
+      cell: (element: PeriodicElement) => element.name,
     },
     {
       columnDef: 'weight',
@@ -50,7 +50,7 @@ export class TableGeneratedColumnsExample {
     {
       columnDef: 'symbol',
       header: 'Symbol',
-      cell: (element: PeriodicElement) => `${element.symbol}`,
+      cell: (element: PeriodicElement) => element.symbol,
     },
   ];
   dataSource = ELEMENT_DATA;
