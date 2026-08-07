@@ -233,7 +233,7 @@ export class MatAutocompleteTrigger
    * `autocomplete` attribute to be set on the input element.
    * @docs-private
    */
-  @Input('autocomplete') autocompleteAttribute: string = 'off';
+  @Input('autocomplete') autocompleteAttribute: string | null = 'off';
 
   /**
    * Whether the autocomplete is disabled. When disabled, the element will
