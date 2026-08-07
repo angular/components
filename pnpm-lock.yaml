@@ -218,8 +218,8 @@ importers:
         specifier: ^0.28.0
         version: 0.28.1
       firebase-tools:
-        specifier: 15.24.0
-        version: 15.24.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)
+        specifier: 15.26.0
+        version: 15.26.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       fs-extra:
         specifier: ^11.0.0
         version: 11.4.0
@@ -249,16 +249,16 @@ importers:
         version: 2.0.0
       karma:
         specifier: ^6.3.12
-        version: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+        version: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       karma-browserstack-launcher:
         specifier: ^1.6.0
-        version: 1.6.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0))(supports-color@11.0.0)
+        version: 1.6.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6))(supports-color@11.0.0)
       karma-jasmine:
         specifier: ^5.0.0
-        version: 5.1.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0))
+        version: 5.1.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6))
       karma-parallel:
         specifier: ^0.3.1
-        version: 0.3.1(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0))
+        version: 0.3.1(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6))
       karma-sourcemap-loader:
         specifier: ^0.4.0
         version: 0.4.0
@@ -290,8 +290,8 @@ importers:
         specifier: ^4.52.3
         version: 4.62.3
       rollup-plugin-dts:
-        specifier: 6.4.1
-        version: 6.4.1(rollup@4.62.3)(typescript@6.0.2)
+        specifier: 6.5.1
+        version: 6.5.1(rollup@4.62.3)(typescript@6.0.2)
       rollup-plugin-sourcemaps2:
         specifier: 0.5.8
         version: 0.5.8(@types/node@22.20.1)(rollup@4.62.3)
@@ -415,7 +415,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 22.2.0-next.0(2bb562e8cd4eb2c85f04c2391c0159df)
+        version: 22.2.0-next.0(37fbaf2cf2c3db22a7788ec330df5429)
       '@angular/cli':
         specifier: 'catalog:'
         version: 22.2.0-next.0(@types/node@22.20.1)(chokidar@5.0.0)(supports-color@11.0.0)
@@ -435,8 +435,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.24.0
-        version: 15.24.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)
+        specifier: 15.26.0
+        version: 15.26.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.3.0
@@ -445,7 +445,7 @@ importers:
         version: 7.0.0
       karma:
         specifier: ~6.4.4
-        version: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+        version: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       karma-chrome-launcher:
         specifier: ^3.1.1
         version: 3.2.0
@@ -457,13 +457,13 @@ importers:
         version: 2.1.3
       karma-jasmine:
         specifier: ^5.0.0
-        version: 5.1.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0))
+        version: 5.1.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6))
       light-server:
         specifier: ^2.9.1
-        version: 2.9.1(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+        version: 2.9.1(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       lighthouse:
         specifier: ^13.0.0
-        version: 13.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.1))(bufferutil@4.1.0)(supports-color@11.0.0)
+        version: 13.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.1))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       lighthouse-logger:
         specifier: ~2.0.0
         version: 2.0.2(supports-color@11.0.0)
@@ -475,7 +475,7 @@ importers:
         version: 7.0.0(supports-color@11.0.0)
       puppeteer-core:
         specifier: ^25.0.0
-        version: 25.4.0(bufferutil@4.1.0)
+        version: 25.4.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       sass:
         specifier: 1.102.0
         version: 1.102.0
@@ -905,7 +905,7 @@ packages:
       '@angular/compiler-cli': 22.2.0-next.0
 
   '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2af985ddb942b5928dfb730a6b8efaccd1798846':
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2af985ddb942b5928dfb730a6b8efaccd1798846}
+    resolution: {gitHosted: true, integrity: sha512-m1WZEDpVmV+rlxZoeZaW2kobdjwjJozZYqXVkZeMEyZxKd+P5tHFw/mUxWPk6mHZjDcqA4l8maTD2aXkq8z0iQ==, tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/2af985ddb942b5928dfb730a6b8efaccd1798846}
     version: 0.0.0-c279805293db7c28fe20709bc7ac3a3f3bbebb40
     hasBin: true
 
@@ -5507,8 +5507,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.24.0:
-    resolution: {integrity: sha512-2P5qd3O3YD7a7AaA89lt/zgRIgR7FGS0Ye7fW9z/sNt9/b6cbmI1TtQtYDlmJDUOh9nMk+72ll/gu4MlN/qY7Q==}
+  firebase-tools@15.26.0:
+    resolution: {integrity: sha512-5GlK9O7/FffndJ3XFk6fBPTBJH4lNWCxQDP9YoKFWDO85YiGOOpmYyr4lqSyCTkTeQpj1KI1vhPnd9aO6E73ww==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -8275,12 +8275,16 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
 
-  rollup-plugin-dts@6.4.1:
-    resolution: {integrity: sha512-l//F3Zf7ID5GoOfLfD8kroBjQKEKpy1qfhtAdnpibFZMffPaylrg1CoDC2vGkPeTeyxUe4bVFCln2EFuL7IGGg==}
+  rollup-plugin-dts@6.5.1:
+    resolution: {integrity: sha512-jODTXp3H7MK/Ur/ErtsrQ0G1GvaCmc3du+y5pNrdBMf6d7HlL2Nd/N6TkEr+f75CkUj01zEoEd7y2elH0eHi1Q==}
     engines: {node: '>=20'}
     peerDependencies:
-      rollup: ^3.29.4 || ^4
+      '@typescript/typescript6': ^6
+      rollup: ^3 || ^4
       typescript: 6.0.2
+    peerDependenciesMeta:
+      '@typescript/typescript6':
+        optional: true
 
   rollup-plugin-sourcemaps2@0.5.8:
     resolution: {integrity: sha512-c5BfiVbKAmaz+RoEhFF44Tg/X2QoLxEB8F7wS/eNWDJF/NKxi0SF7srN3Dg0RUnIcYLyCOwscket5Mr3BImMbg==}
@@ -9753,13 +9757,13 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@22.2.0-next.0(2bb562e8cd4eb2c85f04c2391c0159df)':
+  '@angular-devkit/build-angular@22.2.0-next.0(37fbaf2cf2c3db22a7788ec330df5429)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.0-next.0(chokidar@5.0.0)
-      '@angular-devkit/build-webpack': 0.2202.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
+      '@angular-devkit/build-webpack': 0.2202.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
       '@angular-devkit/core': 22.2.0-next.0(chokidar@5.0.0)
-      '@angular/build': 22.2.0-next.0(19886fc2bb553b8e902b009e24eb1af1)
+      '@angular/build': 22.2.0-next.0(39f3e51d25154a74208198644e15a616)
       '@angular/compiler-cli': 22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2)
       '@babel/core': 8.0.1
       '@babel/generator': 8.0.0
@@ -9807,7 +9811,7 @@ snapshots:
       typescript: 6.0.2
       webpack: 5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)
       webpack-dev-middleware: 8.1.0(tslib@2.8.1)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
-      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
+      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
       webpack-merge: 6.0.1
       webpack-subresource-integrity: 5.1.0(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
     optionalDependencies:
@@ -9817,7 +9821,7 @@ snapshots:
       '@angular/platform-server': 22.2.0-next.0(@angular/common@22.2.0-next.0(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/compiler@22.2.0-next.0)(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/common@22.2.0-next.0(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2)))(rxjs@6.6.7)
       '@angular/ssr': 22.2.0-next.0(5b7c0201218e1dfd6f44a4cec4100476)
       esbuild: 0.28.1
-      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - '@angular/compiler'
       - '@minify-html/node'
@@ -9850,12 +9854,12 @@ snapshots:
       - webpack-cli
       - yaml
 
-  '@angular-devkit/build-webpack@0.2202.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))':
+  '@angular-devkit/build-webpack@0.2202.0-next.0(chokidar@5.0.0)(webpack-dev-server@5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)))(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))':
     dependencies:
       '@angular-devkit/architect': 0.2202.0-next.0(chokidar@5.0.0)
       rxjs: 7.8.2
       webpack: 5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)
-      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
+      webpack-dev-server: 5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3))
     transitivePeerDependencies:
       - chokidar
 
@@ -9880,7 +9884,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular/build@22.2.0-next.0(19886fc2bb553b8e902b009e24eb1af1)':
+  '@angular/build@22.2.0-next.0(39f3e51d25154a74208198644e15a616)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2202.0-next.0(chokidar@5.0.0)
@@ -9919,7 +9923,7 @@ snapshots:
       '@angular/platform-server': 22.2.0-next.0(@angular/common@22.2.0-next.0(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/compiler@22.2.0-next.0)(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2))(@angular/platform-browser@22.2.0-next.0(@angular/common@22.2.0-next.0(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2))(rxjs@6.6.7))(@angular/compiler-cli@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(typescript@6.0.2))(@angular/core@22.2.0-next.0(@angular/compiler@22.2.0-next.0)(rxjs@6.6.7)(zone.js@0.16.2)))(rxjs@6.6.7)
       '@angular/ssr': 22.2.0-next.0(5b7c0201218e1dfd6f44a4cec4100476)
       istanbul-lib-instrument: 6.0.3(supports-color@11.0.0)
-      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       less: 4.8.1(supports-color@11.0.0)
       lmdb: 3.5.6
       postcss: 8.5.24
@@ -14543,7 +14547,7 @@ snapshots:
 
   engine.io-parser@5.2.3: {}
 
-  engine.io@6.6.9(bufferutil@4.1.0)(supports-color@11.0.0):
+  engine.io@6.6.9(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@types/cors': 2.8.19
       '@types/node': 22.20.1
@@ -15042,7 +15046,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.24.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0):
+  firebase-tools@15.26.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -15111,7 +15115,7 @@ snapshots:
       update-notifier-cjs: 5.1.7(encoding@0.1.13)
       winston: 3.19.0
       winston-transport: 4.9.0
-      ws: 7.5.13(bufferutil@4.1.0)
+      ws: 8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       yaml: 2.9.0
       zod: 4.4.3
     transitivePeerDependencies:
@@ -15304,7 +15308,7 @@ snapshots:
   gcp-metadata@8.1.2(supports-color@11.0.0):
     dependencies:
       gaxios: 7.3.0(supports-color@11.0.0)
-      google-logging-utils: 1.1.3
+      google-logging-utils: 1.2.0
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -15420,7 +15424,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -16395,11 +16399,11 @@ snapshots:
 
   kagekiri@2.0.0: {}
 
-  karma-browserstack-launcher@1.6.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0))(supports-color@11.0.0):
+  karma-browserstack-launcher@1.6.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6))(supports-color@11.0.0):
     dependencies:
       browserstack: 1.5.3(supports-color@11.0.0)
       browserstack-local: 1.5.13(supports-color@11.0.0)
-      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       q: 1.5.1
     transitivePeerDependencies:
       - supports-color
@@ -16424,15 +16428,15 @@ snapshots:
       is-wsl: 2.2.0
       which: 3.0.1
 
-  karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)):
+  karma-jasmine@5.1.0(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)):
     dependencies:
       jasmine-core: 4.6.1
-      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
 
-  karma-parallel@0.3.1(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)):
+  karma-parallel@0.3.1(karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)):
     dependencies:
       istanbul: 0.4.5
-      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)
+      karma: 6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6)
       lodash: 4.18.1
 
   karma-source-map-support@1.4.0:
@@ -16443,7 +16447,7 @@ snapshots:
     dependencies:
       graceful-fs: 4.2.11
 
-  karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0):
+  karma@6.4.4(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@colors/colors': 1.5.0
       body-parser: 1.20.6(supports-color@11.0.0)
@@ -16464,7 +16468,7 @@ snapshots:
       qjobs: 1.2.0
       range-parser: 1.3.0
       rimraf: 3.0.2
-      socket.io: 4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)
+      socket.io: 4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       source-map: 0.6.1
       tmp: 0.2.7
       ua-parser-js: 0.7.41
@@ -16541,7 +16545,7 @@ snapshots:
     dependencies:
       immediate: 3.0.6
 
-  light-server@2.9.1(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0):
+  light-server@2.9.1(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       commander: 6.2.1
       connect: 3.7.0(supports-color@11.0.0)
@@ -16556,7 +16560,7 @@ snapshots:
       serve-static: 1.14.2(supports-color@11.0.0)
       spdy: 4.0.2(supports-color@11.0.0)
       strip-json-comments: 3.1.1
-      ws: 7.5.13(bufferutil@4.1.0)
+      ws: 7.5.13(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -16572,7 +16576,7 @@ snapshots:
 
   lighthouse-stack-packs@1.12.3: {}
 
-  lighthouse@13.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.1))(bufferutil@4.1.0)(supports-color@11.0.0):
+  lighthouse@13.4.1(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.1))(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@paulirish/trace_engine': 0.0.65
       '@sentry/node': 10.69.0(@opentelemetry/core@2.10.0(@opentelemetry/api@1.9.1))(supports-color@11.0.0)
@@ -16591,13 +16595,13 @@ snapshots:
       lodash-es: 4.18.1
       lookup-closest-locale: 6.2.0
       open: 8.4.2
-      puppeteer-core: 25.4.0(bufferutil@4.1.0)
+      puppeteer-core: 25.4.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       robots-parser: 3.0.1
       speedline-core: 1.4.3
       third-party-web: 0.29.2
       tldts-icann: 7.4.9
       web-features: 3.34.2
-      ws: 7.5.13(bufferutil@4.1.0)
+      ws: 7.5.13(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       yargs: 17.7.3
       yargs-parser: 21.1.1
     transitivePeerDependencies:
@@ -17838,7 +17842,7 @@ snapshots:
     dependencies:
       escape-goat: 2.1.1
 
-  puppeteer-core@25.4.0(bufferutil@4.1.0):
+  puppeteer-core@25.4.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     dependencies:
       '@puppeteer/browsers': 3.0.6
       chromium-bidi: 17.0.2(devtools-protocol@0.0.1653615)
@@ -18186,7 +18190,7 @@ snapshots:
       '@rolldown/binding-win32-arm64-msvc': 1.2.0
       '@rolldown/binding-win32-x64-msvc': 1.2.0
 
-  rollup-plugin-dts@6.4.1(rollup@4.62.3)(typescript@6.0.2):
+  rollup-plugin-dts@6.5.1(rollup@4.62.3)(typescript@6.0.2):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -18195,7 +18199,7 @@ snapshots:
       rollup: 4.62.3
       typescript: 6.0.2
     optionalDependencies:
-      '@babel/code-frame': 7.29.7
+      '@babel/code-frame': 8.0.0
 
   rollup-plugin-sourcemaps2@0.5.8(@types/node@22.20.1)(rollup@4.62.3):
     dependencies:
@@ -18577,7 +18581,7 @@ snapshots:
     dependencies:
       no-case: 2.3.2
 
-  socket.io-adapter@2.5.8(bufferutil@4.1.0)(supports-color@11.0.0):
+  socket.io-adapter@2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       debug: 4.4.3(supports-color@11.0.0)
       ws: 8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6)
@@ -18593,14 +18597,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  socket.io@4.8.3(bufferutil@4.1.0)(supports-color@11.0.0):
+  socket.io@4.8.3(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       accepts: 1.3.8
       base64id: 2.0.0
       cors: 2.8.6
       debug: 4.4.3(supports-color@11.0.0)
-      engine.io: 6.6.9(bufferutil@4.1.0)(supports-color@11.0.0)
-      socket.io-adapter: 2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)
+      engine.io: 6.6.9(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+      socket.io-adapter: 2.5.8(bufferutil@4.1.0)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       socket.io-parser: 4.2.7(supports-color@11.0.0)
     transitivePeerDependencies:
       - bufferutil
@@ -19571,7 +19575,7 @@ snapshots:
     transitivePeerDependencies:
       - tslib
 
-  webpack-dev-server@5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)):
+  webpack-dev-server@5.2.6(bufferutil@4.1.0)(debug@4.4.3(supports-color@11.0.0))(supports-color@11.0.0)(tslib@2.8.1)(utf-8-validate@6.0.6)(webpack@5.109.2(esbuild@0.28.1)(lightningcss@1.33.0)(postcss@8.5.24)(uglify-js@3.19.3)):
     dependencies:
       '@types/bonjour': 3.5.13
       '@types/connect-history-api-fallback': 1.5.4
@@ -19818,9 +19822,10 @@ snapshots:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
 
-  ws@7.5.13(bufferutil@4.1.0):
+  ws@7.5.13(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     optionalDependencies:
       bufferutil: 4.1.0
+      utf-8-validate: 6.0.6
 
   ws@8.21.1(bufferutil@4.1.0)(utf-8-validate@6.0.6):
     optionalDependencies:
