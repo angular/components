@@ -13,15 +13,15 @@
 
   @return (
     base: (
-      datepicker-calendar-container-elevation-shadow:elevation.get-box-shadow(0),
       datepicker-calendar-container-shape: map.get($system, corner-large),
-      datepicker-calendar-container-touch-elevation-shadow:elevation.get-box-shadow(0),
       datepicker-calendar-container-touch-shape: map.get($system, corner-extra-large),
     ),
     color: (
       datepicker-calendar-body-label-text-color: map.get($system, on-surface),
       datepicker-calendar-container-background-color: map.get($system, surface-container-high),
+      datepicker-calendar-container-elevation-shadow:elevation.get-box-shadow(0),
       datepicker-calendar-container-text-color: map.get($system, on-surface),
+      datepicker-calendar-container-touch-elevation-shadow:elevation.get-box-shadow(0),
       datepicker-calendar-date-disabled-state-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
       datepicker-calendar-date-focus-state-background-color: m3-utils.color-with-opacity(

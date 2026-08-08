@@ -31,11 +31,11 @@
   @return (
     base: (
       sidenav-container-shape: 0,
-      sidenav-container-elevation-shadow: elevation.get-box-shadow(16),
       sidenav-container-width: auto,
     ),
     color: (
       sidenav-container-divider-color: map.get($system, outline),
+      sidenav-container-elevation-shadow: elevation.get-box-shadow(16),
       sidenav-container-background-color: map.get($system, surface),
       sidenav-container-text-color: map.get($system, on-surface),
       sidenav-content-background-color: map.get($system, background),
