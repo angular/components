@@ -17,7 +17,6 @@ $prefix: (mat, stepper);
 
   @return (
     base: (
-      stepper-header-error-state-icon-background-color: transparent,
       stepper-header-focus-state-layer-shape: map.get($system, corner-medium),
       stepper-header-hover-state-layer-shape: map.get($system, corner-medium),
     ),
@@ -27,6 +26,7 @@ $prefix: (mat, stepper);
       stepper-header-done-state-icon-foreground-color: map.get($system, on-primary),
       stepper-header-edit-state-icon-background-color: map.get($system, primary),
       stepper-header-edit-state-icon-foreground-color: map.get($system, on-primary),
+      stepper-header-error-state-icon-background-color: transparent,
       stepper-header-error-state-icon-foreground-color: map.get($system, error),
       stepper-header-error-state-label-text-color: map.get($system, error),
       stepper-header-focus-state-layer-color: m3-utils.color-with-opacity(
