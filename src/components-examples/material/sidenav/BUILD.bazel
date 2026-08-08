@@ -18,6 +18,7 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/@angular/router",
         "//:node_modules/@types/jasmine",
+        "//:node_modules/rxjs",
         "//src/cdk/layout",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
