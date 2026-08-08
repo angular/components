@@ -52,6 +52,7 @@ sass_library(
 sass_binary(
     name = "chip_css",
     src = "chip.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -65,6 +66,7 @@ sass_binary(
 sass_binary(
     name = "chip_set_css",
     src = "chip-set.scss",
+    layer = "angular-material",
     deps = ["//src/material/core/style:vendor_prefixes"],
 )
 

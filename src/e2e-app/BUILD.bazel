@@ -43,6 +43,7 @@ ng_project(
         "//src/cdk/scrolling",
         "//src/cdk/testing/tests:test_components",
         "//src/components-examples/private",
+        "//src/material/button",
         "//src/material/core",
         "//src/material/slider",
     ],
