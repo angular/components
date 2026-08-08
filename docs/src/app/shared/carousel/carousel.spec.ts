@@ -4,24 +4,22 @@ import {
   provideZoneChangeDetection,
   ViewChild,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {provideRouter} from '@angular/router';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Carousel, CarouselItem} from './carousel';
 
 describe('HorizontalCarousel', () => {
   let fixture: ComponentFixture<CarouselTestComponent>;
   let component: Carousel;
 
-  beforeEach(fakeAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), provideZoneChangeDetection()],
+      providers: [provideZoneChangeDetection()],
     });
     fixture = TestBed.createComponent(CarouselTestComponent);
     fixture.nativeElement.style.width = '1300px';
     fixture.detectChanges();
-    flush();
     component = fixture.componentInstance.carousel;
-  }));
+  });
 
   it('should not show prev nav arrow when instantiated', () => {
     const navPrevious = fixture.nativeElement.querySelector('.docs-carousel-nav-prev');
