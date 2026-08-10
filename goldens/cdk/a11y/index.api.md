@@ -220,7 +220,7 @@ export class FocusTrap {
     // (undocumented)
     protected _enabled: boolean;
     // (undocumented)
-    protected endAnchorListener: () => boolean;
+    protected endAnchorListener: () => void;
     focusFirstTabbableElement(options?: FocusOptions): boolean;
     focusFirstTabbableElementWhenReady(options?: FocusOptions): Promise<boolean>;
     focusInitialElement(options?: FocusOptions): boolean;
@@ -233,7 +233,7 @@ export class FocusTrap {
     // (undocumented)
     readonly _ngZone: NgZone;
     // (undocumented)
-    protected startAnchorListener: () => boolean;
+    protected startAnchorListener: () => void;
     protected toggleAnchors(enabled: boolean): void;
 }
 
