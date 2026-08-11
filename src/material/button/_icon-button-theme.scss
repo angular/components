@@ -87,10 +87,12 @@
       width: var(--mat-icon-button-state-layer-size);
       height: var(--mat-icon-button-state-layer-size);
       padding: calc(
-          var(--mat-icon-button-state-layer-size, #{$calculated-size}) -
-            var(--mat-icon-button-icon-size, #{$icon-size})
-        ) /
-        2;
+        (
+            var(--mat-icon-button-state-layer-size, #{$calculated-size}) -
+              var(--mat-icon-button-icon-size, #{$icon-size})
+          ) /
+          2
+      );
     }
   }
 }
