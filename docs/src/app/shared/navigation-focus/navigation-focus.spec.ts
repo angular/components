@@ -3,7 +3,7 @@ import {
   // tslint:disable-next-line:no-zone-dependencies
   NgZone,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {provideRouter, Router} from '@angular/router';
 import {NavigationFocusService} from './navigation-focus.service';
 import {NavigationFocus} from './navigation-focus';
@@ -14,9 +14,9 @@ describe('Navigation focus service', () => {
   let zone: NgZone;
   let fixture: ComponentFixture<NavigationFocusTest>;
 
-  const navigate = (url: string) => {
+  const navigate = async (url: string) => {
     zone.run(() => router.navigateByUrl(url));
-    tick(100);
+    await new Promise(resolve => setTimeout(resolve, 150));
   };
 
   beforeEach(() => {
@@ -83,39 +83,39 @@ describe('Navigation focus service', () => {
     expect(navigationFocusService.isNavigationWithinComponentView(previousUrl, newUrl)).toBeFalse();
   });
 
-  it('should focus on component then relinquish focus', fakeAsync(() => {
+  it('should focus on component then relinquish focus', async () => {
     const target1 = fixture.nativeElement.querySelector('#target1');
     const target2 = fixture.nativeElement.querySelector('#target2');
 
     // First navigation event doesn't trigger focus because it represents a hardnav.
     navigationFocusService.requestFocusOnNavigation(target1);
     navigationFocusService.requestFocusOnNavigation(target2);
-    navigate('/');
+    await navigate('/');
     expect(document.activeElement).not.toEqual(target1);
     expect(document.activeElement).not.toEqual(target2);
 
     // Most recent requester gets focus on the next nav.
-    navigate('/guides');
+    await navigate('/guides');
     expect(document.activeElement).toEqual(target2);
 
     // Falls back to the focusing the previous requester once the most recent one relinquishes.
     navigationFocusService.relinquishFocusOnNavigation(target2);
-    navigate('/cdk');
+    await navigate('/cdk');
     expect(document.activeElement).toEqual(target1);
-  }));
+  });
 
-  it('should not set focus when navigating to hash target', fakeAsync(() => {
+  it('should not set focus when navigating to hash target', async () => {
     const target1 = fixture.nativeElement.querySelector('#target1');
 
     // First navigation event doesn't trigger focus because it represents a hardnav.
     navigationFocusService.requestFocusOnNavigation(target1);
-    navigate('/');
+    await navigate('/');
     expect(document.activeElement).not.toEqual(target1);
 
     // Navigating to a hash target should not set focus on target1 even though it requested focus
-    navigate('/guides#hash');
+    await navigate('/guides#hash');
     expect(document.activeElement).not.toEqual(target1);
-  }));
+  });
 });
 
 @Component({
