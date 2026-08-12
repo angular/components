@@ -1,3 +1,25 @@
+<a name="22.2.0-next.1"></a>
+# 22.2.0-next.1 "silver-can" (2026-08-12)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c87e3a57e7](https://github.com/angular/components/commit/c87e3a57e7f90a93b003d1e5913b96904b8b8adf) | fix | **combobox:** empty aria-controls when the popup widget has no id ([#33635](https://github.com/angular/components/pull/33635)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [f3e6276c96](https://github.com/angular/components/commit/f3e6276c969f33e527b616ef8bf7b0404685721d) | fix | **a11y:** move focus to root if there are no focusable elements in focus trap ([#33654](https://github.com/angular/components/pull/33654)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c71383fe37](https://github.com/angular/components/commit/c71383fe37e7832a31930993ab6b4c15145cefae) | fix | **datepicker:** actions overflowing at some screen sizes with touch UI ([#33645](https://github.com/angular/components/pull/33645)) |
+| [e9760b396b](https://github.com/angular/components/commit/e9760b396b6713b4f06f17a2caf203e8a287a86d) | fix | **form-field:** update view when the control is swapped out ([#33636](https://github.com/angular/components/pull/33636)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9582c5f301](https://github.com/angular/components/commit/9582c5f301b8da23061f444de9083f358fafd630) | fix | tokens specified in wrong category ([#33660](https://github.com/angular/components/pull/33660)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.2"></a>
 # 22.1.2 "aluminum-can" (2026-08-12)
 ### aria
