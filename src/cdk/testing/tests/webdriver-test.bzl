@@ -1,7 +1,7 @@
 load("@rules_browsers//server_test:index.bzl", "server_test")
 load("//tools:defaults.bzl", "jasmine_test", "spec_bundle")
 
-def webdriver_test(name, deps, tags = [], **kwargs):
+def webdriver_test(name, deps, server, tags = [], **kwargs):
     spec_bundle(
         name = "%s_bundle" % name,
         deps = deps,
@@ -24,7 +24,7 @@ def webdriver_test(name, deps, tags = [], **kwargs):
 
     server_test(
         name = "%s_chromium" % name,
-        server = "//src/e2e-app:server",
+        server = server,
         test = ":%s_jasmine_test" % name,
         tags = tags + ["e2e"],
     )

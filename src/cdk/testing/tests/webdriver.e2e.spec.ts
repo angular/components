@@ -3,35 +3,18 @@ import {
   SeleniumWebDriverHarnessEnvironment,
   waitForAngularReady,
 } from '../../testing/selenium-webdriver';
+import {createE2eWebDriver} from '../../../e2e-app/e2e-setup';
 import * as webdriver from 'selenium-webdriver';
 import {crossEnvironmentSpecs} from './cross-environment-tests';
 import {MainComponentHarness} from './harnesses/main-component-harness';
-import {Options, setDefaultService, ServiceBuilder} from 'selenium-webdriver/chrome';
-import path from 'path';
-
-// Tests are flaky on CI unless we increase the timeout.
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10_000; // 10 seconds
-
-if (process.env['TEST_SERVER_PORT'] === undefined) {
-  console.error(`Test running outside of a "web_test" target. No browser found.`);
-  process.exit(1);
-}
-
-const projectRoot = path.resolve(__dirname, '../../../');
-const port = process.env['TEST_SERVER_PORT'];
-
-const chromeDriver = path.join(projectRoot, process.env['CHROMEDRIVER']!);
-const chromiumBin = path.join(projectRoot, process.env['CHROME_HEADLESS_BIN']!);
-
-setDefaultService(
-  new ServiceBuilder(chromeDriver).enableVerboseLogging().loggingTo('/tmp/test.txt').build(),
-);
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
 // browser-side script passed to `By.js`.
 declare const kagekiri: {
   querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>;
 };
+
+const {builder, port} = createE2eWebDriver();
 
 describe('WebDriverHarnessEnvironment', () => {
   let wd: webdriver.WebDriver;
@@ -47,12 +30,7 @@ describe('WebDriverHarnessEnvironment', () => {
   }
 
   beforeAll(async () => {
-    wd = await new webdriver.Builder()
-      .forBrowser('chrome')
-      .setChromeOptions(
-        new Options().setChromeBinaryPath(chromiumBin).addArguments('--no-sandbox').headless(),
-      )
-      .build();
+    wd = await builder.build();
 
     // Ideally we would refresh the page and wait for Angular to stabilize on each test.
     // We don't do it, because it causes Webdriver to eventually time out. Instead we go to
