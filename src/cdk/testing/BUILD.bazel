@@ -1,6 +1,5 @@
 load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
-load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite", "ts_project")
+load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite", "protractor_web_test_suite", "ts_project")
 load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
 
 package(default_visibility = ["//visibility:public"])
@@ -38,8 +37,10 @@ ng_web_test_suite(
     ],
 )
 
-e2e_test_suite(
+protractor_web_test_suite(
     name = "protractor_e2e_tests",
+    server = "//src/e2e-app:server",
+    tags = ["e2e"],
     deps = [
         "//src/cdk/testing/tests:e2e_test_sources",
     ],
@@ -47,6 +48,7 @@ e2e_test_suite(
 
 webdriver_test(
     name = "webdriver_e2e_tests",
+    server = "//src/e2e-app:server",
     deps = [
         "//src/cdk/testing/tests:webdriver_test_sources",
     ],

@@ -98,6 +98,7 @@ ts_project(
         "//:node_modules/@types/selenium-webdriver",
         "//src/cdk/testing",
         "//src/cdk/testing/selenium-webdriver",
+        "//src/e2e-app:e2e_setup",
     ],
 )
 

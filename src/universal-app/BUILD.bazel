@@ -3,11 +3,12 @@ load("@aspect_rules_js//js:defs.bzl", "js_binary", "js_run_binary")
 load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
+load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/components-examples:config.bzl", "ALL_EXAMPLES")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
-load("//tools:defaults.bzl", "http_server", "ng_project", "protractor_web_test_suite", "sass_binary", "ts_project")
+load("//tools:defaults.bzl", "http_server", "ng_project", "sass_binary", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -158,10 +159,18 @@ ts_project(
     name = "hydration_e2e_tests_sources",
     testonly = True,
     srcs = ["hydration.e2e.spec.ts"],
-    deps = ["//:node_modules/protractor"],
+    deps = [
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/selenium-webdriver",
+        "//src/cdk/testing/selenium-webdriver",
+        "//src/e2e-app:e2e_setup",
+    ],
 )
 
-protractor_web_test_suite(
+webdriver_test(
     name = "hydration_e2e_tests",
     server = ":server",
     tags = ["e2e"],
