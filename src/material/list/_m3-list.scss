@@ -18,12 +18,17 @@
   // Match spec, which has list-item-leading-icon-size of 24px.
   // Current version of tokens (0_161) has 18px.
   @return (
-    base: (),
+    base: (
+      list-active-indicator-shape: map.get($system, corner-full),
+      list-list-item-container-shape: map.get($system, corner-none),
+      list-list-item-leading-avatar-shape: map.get($system, corner-full),
+      list-list-item-leading-avatar-size: 40px,
+      list-list-item-leading-icon-size: 24px,
+      list-list-item-trailing-icon-size: 24px,
+    ),
     color: (
       list-active-indicator-color: map.get($system, secondary-container),
-      list-active-indicator-shape: map.get($system, corner-full),
       list-list-item-container-color: transparent,
-      list-list-item-container-shape: map.get($system, corner-none),
       list-list-item-disabled-label-text-color: map.get($system, on-surface),
       list-list-item-disabled-label-text-opacity: 0.3,
       list-list-item-disabled-leading-icon-color: map.get($system, on-surface),
@@ -40,14 +45,10 @@
       list-list-item-hover-state-layer-opacity: map.get($system, hover-state-layer-opacity),
       list-list-item-label-text-color: map.get($system, on-surface),
       list-list-item-leading-avatar-color: map.get($system, primary-container),
-      list-list-item-leading-avatar-shape: map.get($system, corner-full),
-      list-list-item-leading-avatar-size: 40px,
       list-list-item-leading-icon-color: map.get($system, on-surface-variant),
-      list-list-item-leading-icon-size: 24px,
       list-list-item-selected-trailing-icon-color: map.get($system, primary),
       list-list-item-supporting-text-color: map.get($system, on-surface-variant),
       list-list-item-trailing-icon-color: map.get($system, on-surface-variant),
-      list-list-item-trailing-icon-size: 24px,
       list-list-item-trailing-supporting-text-color: map.get($system, on-surface-variant),
       list-list-item-selected-container-color: null,
       list-list-item-hover-leading-icon-color: null,
