@@ -431,6 +431,9 @@ importers:
       '@types/node':
         specifier: ^22.14.1
         version: 22.20.1
+      '@types/selenium-webdriver':
+        specifier: ^3.0.17
+        version: 3.0.26
       '@types/shelljs':
         specifier: 0.10.0
         version: 0.10.0
@@ -470,15 +473,15 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
-      protractor:
-        specifier: ^7.0.0
-        version: 7.0.0(supports-color@11.0.0)
       puppeteer-core:
         specifier: ^25.0.0
         version: 25.5.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       sass:
         specifier: 1.102.0
         version: 1.102.0
+      selenium-webdriver:
+        specifier: ^3.6.0
+        version: 3.6.0
       shelljs:
         specifier: ^0.10.0
         version: 0.10.0

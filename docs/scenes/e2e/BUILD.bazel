@@ -1,0 +1,41 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
+load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
+load("//tools:defaults.bzl", "ts_project")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    deps = [
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
+        "//src:test-tsconfig",
+    ],
+)
+
+ts_project(
+    name = "e2e_test_sources",
+    testonly = True,
+    srcs = glob([
+        "screenshot.ts",
+        "src/**/*.ts",
+    ]),
+    tsconfig = ":tsconfig",
+    deps = [
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/selenium-webdriver",
+        "//src/e2e-app:e2e_setup",
+    ],
+)
+
+webdriver_test(
+    name = "e2e_tests",
+    server = "//docs/scenes:server",
+    tags = ["e2e"],
+    deps = [":e2e_test_sources"],
+)
