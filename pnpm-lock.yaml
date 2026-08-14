@@ -60,7 +60,7 @@ catalogs:
 
 overrides:
   typescript: 6.0.2
-  protobufjs: 8.7.1
+  protobufjs: 8.7.2
   '@nginfra/angular-linking>@babel/core': 8.0.1
 
 packageExtensionsChecksum: sha256-7cbDEhULaW/aaI9P05TJGFOe13X+o7KNiPsdlfS/GiQ=
@@ -218,8 +218,8 @@ importers:
         specifier: ^0.28.0
         version: 0.28.2
       firebase-tools:
-        specifier: 15.26.0
-        version: 15.26.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.27.0
+        version: 15.27.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       fs-extra:
         specifier: ^11.0.0
         version: 11.4.0
@@ -263,8 +263,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       magic-string:
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.2.0
+        version: 1.2.0
       marked:
         specifier: ^18.0.0
         version: 18.0.9
@@ -435,8 +435,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.26.0
-        version: 15.26.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.27.0
+        version: 15.27.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.3.0
@@ -739,6 +739,7 @@ packages:
   '@angular-devkit/build-angular@22.2.0-next.2':
     resolution: {integrity: sha512-kEgiPcKbaCQ8u8TiLVtuB+XFDaXxZS9jvXUb0De7t0Cnd86RExZ55RmlvirX1rKcrtZppEDophtHYjE2LFtkeQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    deprecated: Angular's Webpack support is deprecated. Use the esbuild and Vite-based "@angular/build" package instead.
     peerDependencies:
       '@angular/compiler-cli': ^22.0.0 || ^22.2.0-next.0
       '@angular/core': ^22.0.0 || ^22.2.0-next.0
@@ -911,6 +912,7 @@ packages:
   '@angular/platform-browser-dynamic@22.2.0-next.1':
     resolution: {integrity: sha512-TV7SHwhgFPL0vU0YQ9v0XRipvBEix9cjWig+ma2qAl5Mb7feqiXlE/j/xFZrLGGu+zrafd+LI2refSpAruLfNQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/platform-browser-dynamic is deprecated. Use `@angular/platform-browser` instead.'
     peerDependencies:
       '@angular/common': 22.2.0-next.1
       '@angular/compiler': 22.2.0-next.1
@@ -2916,6 +2918,7 @@ packages:
   '@ngtools/webpack@22.2.0-next.2':
     resolution: {integrity: sha512-gZ8wSSyh32F1XFTNjMYQGm1uPeusmdfoGCfbIxC8WGJvh+CoWlaKigAQIpXNe0DVmRB99xTRnUAr9EMkMEntKQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    deprecated: Angular's Webpack support is deprecated. Use the esbuild and Vite-based "@angular/build" package instead.
     peerDependencies:
       '@angular/compiler-cli': ^22.0.0 || ^22.2.0-next.0
       typescript: 6.0.2
@@ -3990,6 +3993,7 @@ packages:
   '@xmldom/xmldom@0.8.13':
     resolution: {integrity: sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==}
     engines: {node: '>=10.0.0'}
+    deprecated: this version has critical issues, please update to the latest version
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -5603,8 +5607,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.26.0:
-    resolution: {integrity: sha512-5GlK9O7/FffndJ3XFk6fBPTBJH4lNWCxQDP9YoKFWDO85YiGOOpmYyr4lqSyCTkTeQpj1KI1vhPnd9aO6E73ww==}
+  firebase-tools@15.27.0:
+    resolution: {integrity: sha512-gQMMPkv20hAuCUy596Z/GPA0YiwJEr6xEwvJnc+BeZnMlJVYZcl4OL8vvPNqDDcQmrXlNRNAP/qpyVc+5jkxTw==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -7077,6 +7081,9 @@ packages:
   magic-string@1.1.0:
     resolution: {integrity: sha512-kS3VHe0nEPST2saQV4Rbkchcd3UBRkVTQHo1D3h/ZTwFDhai/mfKkmtPAtD129EOI7K3HlHIsFOt0WrI2/oU9g==}
 
+  magic-string@1.2.0:
+    resolution: {integrity: sha512-ptco+HFxTLgjafSLim2LojBSwfg5feBjd+SqyiwdGkzC38UPdZy3zgrHMI2CoTf5fJL38tbHMYWVzIH8BxGqJw==}
+
   make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
     engines: {node: '>=8'}
@@ -8030,8 +8037,8 @@ packages:
     resolution: {integrity: sha512-E1sbAYg3aEbXrq0n1ojJkRHQJGE1kaE/O6GLA94y8rnJBfgvOPTOd1b9hOceQK1FFZI9qMh1vBERCyO2ifubcw==}
     engines: {node: '>=18'}
 
-  protobufjs@8.7.1:
-    resolution: {integrity: sha512-agdGHrXNTv0IrYscJPDou/PlEJk1c/hBZ9o/B5NH2i/nSPtPqacNxzgwf1CebXxFMjMrZH5sqv9uQuw96aGt/A==}
+  protobufjs@8.7.2:
+    resolution: {integrity: sha512-oTVHV+oelUBtiu5iTuTNNZ0eLYsXSMxry4cgr30mayNkgIZL6qZ0IOQVPuSWGcyAaXKl/XgqwWHIC3a0khYVBA==}
     engines: {node: '>=12.0.0'}
 
   protractor@7.0.0:
@@ -11545,7 +11552,7 @@ snapshots:
       lodash.snakecase: 4.1.1
       merge-stream: 2.0.0
       p-queue: 6.6.2
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
       retry-request: 8.0.4(supports-color@11.0.0)
       split-array-stream: 2.0.0
       stack-trace: 0.0.10
@@ -11559,7 +11566,7 @@ snapshots:
     dependencies:
       google-auth-library: 10.9.1(supports-color@11.0.0)
       p-retry: 4.6.2
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
       ws: 8.21.3(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       '@modelcontextprotocol/sdk': 1.30.0(supports-color@11.0.0)
@@ -11588,14 +11595,14 @@ snapshots:
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
       yargs: 17.7.3
 
   '@grpc/proto-loader@0.8.1':
     dependencies:
       lodash.camelcase: 4.3.0
       long: 5.3.2
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
       yargs: 17.7.3
 
   '@harperfast/extended-iterable@1.0.3':
@@ -15158,7 +15165,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.26.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  firebase-tools@15.27.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -15420,7 +15427,7 @@ snapshots:
   gcp-metadata@8.1.2(supports-color@11.0.0):
     dependencies:
       gaxios: 7.3.0(supports-color@11.0.0)
-      google-logging-utils: 1.1.3
+      google-logging-utils: 1.2.0
       json-bigint: 1.0.0
     transitivePeerDependencies:
       - supports-color
@@ -15536,7 +15543,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 3.0.8
+      minimatch: 3.1.5
       once: 1.4.0
       path-is-absolute: 1.0.1
 
@@ -15639,7 +15646,7 @@ snapshots:
       node-fetch: 3.3.2
       object-hash: 3.0.0
       proto3-json-serializer: 3.0.4
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
       retry-request: 8.0.4(supports-color@11.0.0)
       rimraf: 5.0.10
     transitivePeerDependencies:
@@ -15678,7 +15685,7 @@ snapshots:
   grpc-gcp@1.1.1:
     dependencies:
       '@grpc/grpc-js': 1.14.4
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
 
   gtoken@7.1.0(encoding@0.1.13)(supports-color@11.0.0):
     dependencies:
@@ -16931,6 +16938,10 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  magic-string@1.2.0:
+    dependencies:
+      '@jridgewell/sourcemap-codec': 1.5.5
+
   make-dir@3.1.0:
     dependencies:
       semver: 6.3.1
@@ -17857,9 +17868,9 @@ snapshots:
 
   proto3-json-serializer@3.0.4:
     dependencies:
-      protobufjs: 8.7.1
+      protobufjs: 8.7.2
 
-  protobufjs@8.7.1:
+  protobufjs@8.7.2:
     dependencies:
       long: 5.3.2
 
