@@ -53,23 +53,8 @@ TEST_CONFIG = COMMON_CONFIG + [
     ":ng-test-config",
 ]
 
-# Common dependencies of Angular CLI e2e tests
-E2E_CONFIG = COMMON_CONFIG + [
-    "@rules_browsers//browsers/chromium",
-    "@rules_browsers//browsers/firefox",
-    "//docs:ng-base-test-config",
-    ":ng-e2e-config",
-    "//docs:node_modules/jasmine-spec-reporter",
-]
-E2E_DEPS = [
-    "//docs:node_modules/@types/jasmine",
-    "//docs:node_modules/@types/node",
-    "//docs:node_modules/protractor",
-    "//docs:node_modules/webdriver-manager",
-]
-
 # buildifier: disable=unused-variable
-def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], **kwargs):
+def ng_app(name, project_name = None, deps = [], test_deps = [], **kwargs):
     """
     Macro for Angular applications, creating various targets aligning with the Angular CLI.
 
@@ -82,7 +67,6 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
       project_name: the Angular CLI project name, to the rule name
       deps: dependencies of the library
       test_deps: additional dependencies for tests
-      e2e_deps: additional dependencies for e2e tests
       **kwargs: extra args passed to main Angular CLI rules
     """
     srcs = native.glob(
@@ -94,8 +78,6 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
     )
 
     test_srcs = native.glob(["src/test.ts", "src/**/*.spec.ts"])
-
-    e2e_srcs = native.glob(["e2e/src/**/*.ts"])
 
     tags = kwargs.pop("tags", [])
 
@@ -112,14 +94,6 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
         srcs = [
             "karma.conf.js",
             "tsconfig.spec.json",
-        ],
-        visibility = ["//visibility:private"],
-    )
-    copy_to_bin(
-        name = "ng-e2e-config",
-        srcs = [
-            "e2e/tsconfig.json",
-            "e2e/protractor.conf.js",
         ],
         visibility = ["//visibility:private"],
     )
@@ -153,20 +127,6 @@ def ng_app(name, project_name = None, deps = [], test_deps = [], e2e_deps = [], 
         tags = tags,
         **kwargs
     )
-
-    # FUTURE:
-    # _architect_test(
-    #     project_name,
-    #     "e2e",
-    #     size = "large",
-    #     srcs = srcs + e2e_srcs + deps + e2e_deps + DEPS + E2E_DEPS + E2E_CONFIG,
-    #     args = [
-    #       "--no-webdriver-update",
-    #       "--port=0",
-    #     ],
-    #     tags = tags + ["e2e"],
-    #     **kwargs
-    # )
 
 def _architect_build(project_name, configuration = None, args = [], srcs = [], **kwargs):
     args = []

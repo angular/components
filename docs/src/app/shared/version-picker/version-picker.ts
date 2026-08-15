@@ -13,6 +13,8 @@ import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatTooltip} from '@angular/material/tooltip';
+import {of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {normalizedMaterialVersion} from '../normalized-version';
 
 const versionUrl = 'https://material.angular.dev/assets/versions.json';
@@ -37,7 +39,9 @@ export class VersionPicker {
   /** The currently running version of Material. */
   materialVersion = normalizedMaterialVersion;
   /** The possible versions of the doc site. */
-  docVersions = this._http.get<VersionInfo[]>(versionUrl);
+  docVersions = this._http
+    .get<VersionInfo[]>(versionUrl)
+    .pipe(catchError(() => of<VersionInfo[]>([])));
 
   /**
    * Updates the window location if the selected version is a different version.

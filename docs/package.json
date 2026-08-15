@@ -11,7 +11,6 @@
     "start:scenes": "ng serve scenes",
     "start:emulators": "firebase emulators:start",
     "test": "ng test",
-    "e2e": "ng e2e",
     "build": "ng build",
     "build:scenes": "ng build scenes",
     "build:sm": "ng build --configuration production --source-map",
@@ -21,7 +20,9 @@
     "publish-beta": "bash ./tools/deploy.sh stable beta",
     "test:audit:localhost": "node tools/audit-docs dist/material-angular-io/browser",
     "test:audit:bazel": "node tools/audit-docs $(bazel cquery --output=files //:build.production)",
-    "test:audit:ci": "node tools/audit-docs ../dist/material-angular-io/browser"
+    "test:audit:ci": "node tools/audit-docs ../dist/material-angular-io/browser",
+    "test:e2e": "bazel test //docs/e2e:e2e_tests",
+    "test:e2e:scenes": "bazel test //docs/scenes/e2e:e2e_tests"
   },
   "engines": {
     "node": "^20.11.1 || >=22.0.0",
@@ -60,6 +61,7 @@
     "@bazel/bazelisk": "^1.12.1",
     "@types/jasmine": "^6.0.0",
     "@types/node": "^22.14.1",
+    "@types/selenium-webdriver": "^3.0.17",
     "@types/shelljs": "0.10.0",
     "firebase-tools": "15.26.0",
     "jasmine-core": "^6.0.0",
@@ -73,9 +75,9 @@
     "lighthouse": "^13.0.0",
     "lighthouse-logger": "~2.0.0",
     "npm-run-all": "^4.1.5",
-    "protractor": "^7.0.0",
     "puppeteer-core": "^25.0.0",
     "sass": "1.102.0",
+    "selenium-webdriver": "^3.6.0",
     "shelljs": "^0.10.0",
     "ts-node": "10.9.2",
     "typescript": "6.0.2"

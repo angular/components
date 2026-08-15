@@ -94,7 +94,7 @@ export class AnalyticsService {
     gaWindow.gtag('config', environment.googleAnalyticsOverallDomainId);
     gaWindow.gtag('config', environment.googleAnalyticsMaterialId);
 
-    // skip `gtag` for Protractor e2e tests.
+    // skip `gtag` for e2e tests.
     if (window.name.includes('NG_DEFER_BOOTSTRAP')) {
       return;
     }
