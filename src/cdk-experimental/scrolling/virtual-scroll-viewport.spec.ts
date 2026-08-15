@@ -1,6 +1,6 @@
 import {CdkVirtualScrollViewport, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, ViewChild, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ScrollingModule as ExperimentalScrollingModule} from './scrolling-module';
 
 describe('CdkVirtualScrollViewport', () => {
@@ -15,8 +15,8 @@ describe('CdkVirtualScrollViewport', () => {
       viewport = testComponent.viewport;
     });
 
-    it('should render initial state for uniform items', fakeAsync(() => {
-      finishInit(fixture);
+    it('should render initial state for uniform items', async () => {
+      await finishInit(fixture);
 
       const contentWrapper = viewport.elementRef.nativeElement.querySelector(
         '.cdk-virtual-scroll-content-wrapper',
@@ -24,11 +24,11 @@ describe('CdkVirtualScrollViewport', () => {
       expect(contentWrapper.children.length)
         .withContext('should render 4 50px items to fill 200px space')
         .toBe(4);
-    }));
+    });
 
-    it('should render extra content if first item is smaller than average', fakeAsync(() => {
+    it('should render extra content if first item is smaller than average', async () => {
       testComponent.items = [50, 200, 200, 200, 200, 200];
-      finishInit(fixture);
+      await finishInit(fixture);
 
       const contentWrapper = viewport.elementRef.nativeElement.querySelector(
         '.cdk-virtual-scroll-content-wrapper',
@@ -38,17 +38,15 @@ describe('CdkVirtualScrollViewport', () => {
           'should render 4 items to fill 200px space based on 50px ' + 'estimate from first item',
         )
         .toBe(4);
-    }));
+    });
 
-    it('should throw if maxBufferPx is less than minBufferPx', fakeAsync(() => {
-      expect(() => {
-        testComponent.minBufferPx = 100;
-        testComponent.maxBufferPx = 99;
-        finishInit(fixture);
-      }).toThrowError(
+    it('should throw if maxBufferPx is less than minBufferPx', async () => {
+      testComponent.minBufferPx = 100;
+      testComponent.maxBufferPx = 99;
+      await expectAsync(finishInit(fixture)).toBeRejectedWithError(
         'CDK virtual scroll: maxBufferPx must be greater than or equal to minBufferPx',
       );
-    }));
+    });
 
     // TODO(mmalerba): Add test that it corrects the initial render if it didn't render enough,
     // once it actually does that.
@@ -56,14 +54,19 @@ describe('CdkVirtualScrollViewport', () => {
 });
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
-function finishInit(fixture: ComponentFixture<any>) {
+async function finishInit(fixture: ComponentFixture<any>) {
   // On the first cycle we render and measure the viewport.
   fixture.detectChanges();
-  flush();
+  await fixture.whenStable();
 
   // On the second cycle we render the items.
   fixture.detectChanges();
-  flush();
+  await fixture.whenStable();
+
+  // Flush the initial fake scroll event.
+  await new Promise(resolve => requestAnimationFrame(resolve));
+  await fixture.whenStable();
+  fixture.detectChanges();
 }
 
 @Component({
