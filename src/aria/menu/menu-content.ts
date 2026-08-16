@@ -18,8 +18,8 @@ import {DeferredContent} from '../private';
  * ```html
  * <div ngMenu #myMenu="ngMenu">
  *   <ng-template ngMenuContent>
- *     <div ngMenuItem>Lazy Item 1</div>
- *     <div ngMenuItem>Lazy Item 2</div>
+ *     <div ngMenuItem value="Lazy Item 1">Lazy Item 1</div>
+ *     <div ngMenuItem value="Lazy Item 2">Lazy Item 2</div>
  *   </ng-template>
  * </div>
  * ```
