@@ -161,7 +161,8 @@ mat-menu {
     color: token-utils.slot(menu-item-icon-color, $fallbacks);
   }
 
-  &[disabled] {
+  &[disabled],
+  &.mat-mdc-menu-item-disabled {
     cursor: default;
     opacity: 0.38;
 
