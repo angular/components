@@ -32,8 +32,8 @@ import type {MenuBar} from './menu-bar';
  *
  * ```html
  * <div ngMenu (itemSelected)="doAction()">
- *   <div ngMenuItem>Action Item</div>
- *   <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
+ *   <div ngMenuItem value="Action Item">Action Item</div>
+ *   <div ngMenuItem value="Submenu Trigger" [submenu]="anotherMenu">Submenu Trigger</div>
  * </div>
  * ```
  *
