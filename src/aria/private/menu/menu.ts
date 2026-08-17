@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
@@ -229,7 +230,7 @@ export class MenuPattern<V> {
     }
 
     this.hasBeenHovered.set(true);
-    const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
+    const item = this.inputs.items().find(i => i.element()?.contains(_getEventTarget(event)));
 
     if (!item) {
       return;
@@ -309,7 +310,7 @@ export class MenuPattern<V> {
 
   /** Handles click events for the menu. */
   onClick(event: MouseEvent) {
-    const relatedTarget = event.target as Node | null;
+    const relatedTarget = _getEventTarget<Node>(event);
     const item = this.inputs.items().find(i => i.element()?.contains(relatedTarget));
 
     if (item) {
@@ -552,7 +553,7 @@ export class MenuBarPattern<V> {
 
   /** Handles click events for the menu bar. */
   onClick(event: MouseEvent) {
-    const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
+    const item = this.inputs.items().find(i => i.element()?.contains(_getEventTarget(event)));
 
     if (!item) {
       return;
@@ -564,7 +565,7 @@ export class MenuBarPattern<V> {
 
   /** Handles mouseover events for the menu bar. */
   onMouseOver(event: MouseEvent) {
-    const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
+    const item = this.inputs.items().find(i => i.element()?.contains(_getEventTarget(event)));
 
     if (item) {
       this.goto(item, {focusElement: this.isFocused()});

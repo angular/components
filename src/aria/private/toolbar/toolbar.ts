@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {List, ListInputs} from '../behaviors/list/list';
@@ -139,7 +140,7 @@ export class ToolbarPattern<V> {
 
   /** Navigates to the widget targeted by a pointer event. */
   private _goto(e: MouseEvent) {
-    const item = this.inputs.getItem(e.target as Element);
+    const item = this.inputs.getItem(_getEventTarget(e) as Element);
 
     if (item) {
       this.listBehavior.goto(item);

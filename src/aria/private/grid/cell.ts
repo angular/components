@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {
   computed,
   signal,
@@ -125,7 +126,7 @@ export class GridCellPattern implements GridCell {
   onFocusIn(event: FocusEvent): void {
     this.isFocused.set(true);
 
-    const focusTarget = event.target as Element | null;
+    const focusTarget = _getEventTarget<Element>(event);
     const widget = this.inputs.getWidget(focusTarget);
     if (!widget) return;
 
@@ -135,7 +136,7 @@ export class GridCellPattern implements GridCell {
 
   /** Handles focusout events for the cell. */
   onFocusOut(event: FocusEvent): void {
-    const blurTarget = event.target as Element | null;
+    const blurTarget = _getEventTarget<Element>(event);
     const widget = this.inputs.getWidget(blurTarget);
 
     // Pass down focusout event to the widget.
