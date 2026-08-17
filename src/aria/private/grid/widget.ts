@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {KeyboardEventManager, Modifier} from '../behaviors/event-manager';
 import {
   SignalLike,
@@ -133,7 +134,7 @@ export class GridCellWidgetPattern {
     if (this.inputs.widgetType() === 'simple') return;
 
     // Set activate state if the focus is inside of widget.
-    const focusTarget = event.target as Element;
+    const focusTarget = _getEventTarget<Element>(event);
     if (this.widgetHost().contains(focusTarget) && this.widgetHost() !== focusTarget) {
       this.activate(event);
     }

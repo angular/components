@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {OptionPattern} from './option';
 import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
@@ -292,11 +293,12 @@ export class ListboxPattern<V> {
   }
 
   protected _getItem(e: PointerEvent) {
-    if (!e.target) {
+    const target = _getEventTarget<Element>(e);
+    if (!target) {
       return;
     }
 
-    const element = (e.target as Element).closest('[role="option"]');
+    const element = target.closest('[role="option"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }

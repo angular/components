@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {computed, signal, untracked} from '@angular/core';
+import {_getEventTarget} from '@angular/cdk/platform';
+import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ExpansionItem} from '../behaviors/expansion/expansion';
 
@@ -231,11 +232,11 @@ export class ComboboxPattern {
 
   /** Handles input events for the combobox. */
   onInput(event: Event) {
-    if (!(event.target instanceof HTMLInputElement)) return;
-    if (this.disabled() || this.readonly()) return;
+    const target = _getEventTarget(event);
+    if (!(target instanceof HTMLInputElement) || this.disabled() || this.readonly()) return;
 
     this.inputs.expanded.set(true);
-    this.value.set(event.target.value);
+    this.value.set(target.value);
     this.isDeleting.set(event instanceof InputEvent && !!event.inputType.match(/^delete/));
   }
 
