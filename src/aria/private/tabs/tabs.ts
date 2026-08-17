@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {
@@ -296,11 +297,12 @@ export class TabListPattern {
 
   /** Returns the tab item associated with the given pointer event. */
   private _getItem(e: PointerEvent) {
-    if (!e.target) {
+    const target = _getEventTarget<Element>(e);
+    if (!target) {
       return;
     }
 
-    const element = (e.target as Element).closest('[role="tab"]');
+    const element = target.closest('[role="tab"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }

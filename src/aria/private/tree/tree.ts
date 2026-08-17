@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {
   SignalLike,
   computed,
@@ -479,10 +480,11 @@ export class TreePattern<V> implements TreeInputs<V> {
 
   /** Retrieves the TreeItemPattern associated with a DOM event, if any. */
   protected _getItem(event: Event): TreeItemPattern<V> | undefined {
-    if (!event.target) {
+    const target = _getEventTarget<Element>(event);
+    if (!target) {
       return;
     }
-    const element = (event.target as Element).closest('[role="treeitem"]');
+    const element = target.closest('[role="treeitem"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }

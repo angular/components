@@ -154,6 +154,7 @@ describe('ComboboxPattern', () => {
 
       const deleteEvent = new InputEvent('input', {inputType: 'deleteContentBackward'});
       Object.defineProperty(deleteEvent, 'target', {value: element});
+      Object.defineProperty(deleteEvent, 'composedPath', {value: null});
       pattern.onInput(deleteEvent as Event);
 
       expect(pattern.isDeleting()).toBe(true);
