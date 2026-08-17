@@ -39,13 +39,13 @@ import {MENU_COMPONENT} from './menu-tokens';
  * </div>
  *
  * <div ngMenu #fileMenu="ngMenu">
- *   <div ngMenuItem>New</div>
- *   <div ngMenuItem>Open</div>
+ *   <div ngMenuItem value="New">New</div>
+ *   <div ngMenuItem value="Open">Open</div>
  * </div>
  *
  * <div ngMenu #editMenu="ngMenu">
- *   <div ngMenuItem>Cut</div>
- *   <div ngMenuItem>Copy</div>
+ *   <div ngMenuItem value="Cut">Cut</div>
+ *   <div ngMenuItem value="Copy">Copy</div>
  * </div>
  * ```
  *
