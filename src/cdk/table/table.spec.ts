@@ -688,6 +688,19 @@ describe('CdkTable', () => {
     );
   });
 
+  it('should throw a descriptive error (not a raw TypeError) for an unknown column in production mode', () => {
+    const originalNgDevMode = (globalThis as any).ngDevMode;
+    (globalThis as any).ngDevMode = false;
+
+    try {
+      expect(() =>
+        TestBed.createComponent(MissingColumnDefCdkTableApp).detectChanges(),
+      ).toThrowError(getTableUnknownColumnError('column_a').message);
+    } finally {
+      (globalThis as any).ngDevMode = originalNgDevMode;
+    }
+  });
+
   it('should pick up columns that are indirect descendants', () => {
     expect(() =>
       TestBed.createComponent(TableWithIndirectDescendantDefs).detectChanges(),

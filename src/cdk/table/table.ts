@@ -1287,10 +1287,10 @@ export class CdkTable<T>
   private _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
     const columnDefs = Array.from(rowDef?.columns || []).map(columnName => {
       const columnDef = this._columnDefsByName.get(columnName);
-      if (!columnDef && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      if (!columnDef) {
         throw getTableUnknownColumnError(columnName);
       }
-      return columnDef!;
+      return columnDef;
     });
     const stickyStartStates = columnDefs.map(columnDef => columnDef.sticky);
     const stickyEndStates = columnDefs.map(columnDef => columnDef.stickyEnd);
@@ -1415,11 +1415,11 @@ export class CdkTable<T>
     return Array.from(rowDef.columns, columnId => {
       const column = this._columnDefsByName.get(columnId);
 
-      if (!column && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      if (!column) {
         throw getTableUnknownColumnError(columnId);
       }
 
-      return rowDef.extractCellTemplate(column!);
+      return rowDef.extractCellTemplate(column);
     });
   }
 
