@@ -24,14 +24,14 @@ export class Grid implements OnDestroy {
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly enableSelection: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
+    readonly focusMode: _angular_core.InputSignal<"activedescendant" | "roving">;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     ngOnDestroy(): void;
     readonly _pattern: GridPattern;
     readonly rowWrap: _angular_core.InputSignal<"continuous" | "loop" | "nowrap">;
     scrollActiveCellIntoView(options?: ScrollIntoViewOptions): void;
-    readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
+    readonly selectionMode: _angular_core.InputSignal<"explicit" | "follow">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
@@ -61,7 +61,7 @@ export class GridCell implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     readonly _pattern: GridCellPattern;
-    readonly role: _angular_core.InputSignal<"gridcell" | "columnheader" | "rowheader">;
+    readonly role: _angular_core.InputSignal<"columnheader" | "gridcell" | "rowheader">;
     readonly rowIndex: _angular_core.InputSignal<number | undefined>;
     readonly rowSpan: _angular_core.InputSignal<number>;
     readonly selectable: _angular_core.InputSignal<boolean>;
@@ -79,10 +79,10 @@ export class GridCell implements OnInit, OnDestroy {
 export class GridCellWidget {
     constructor();
     activate(): void;
-    readonly activated: _angular_core.OutputEmitterRef<KeyboardEvent | FocusEvent | undefined>;
+    readonly activated: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
     readonly active: Signal<boolean>;
     deactivate(): void;
-    readonly deactivated: _angular_core.OutputEmitterRef<KeyboardEvent | FocusEvent | undefined>;
+    readonly deactivated: _angular_core.OutputEmitterRef<FocusEvent | KeyboardEvent | undefined>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly focusTarget: _angular_core.InputSignal<ElementResolver<HTMLElement>>;
@@ -91,7 +91,7 @@ export class GridCellWidget {
     readonly _pattern: GridCellWidgetPattern;
     protected readonly _tabIndex: Signal<number>;
     readonly tabindex: _angular_core.InputSignal<number | undefined>;
-    readonly widgetType: _angular_core.InputSignal<"simple" | "complex" | "editable">;
+    readonly widgetType: _angular_core.InputSignal<"complex" | "editable" | "simple">;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<GridCellWidget, "[ngGridCellWidget]", ["ngGridCellWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "widgetType": { "alias": "widgetType"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "focusTarget": { "alias": "focusTarget"; "required": false; "isSignal": true; }; "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; }, { "activated": "activated"; "deactivated": "deactivated"; }, never, never, true, never>;
     // (undocumented)

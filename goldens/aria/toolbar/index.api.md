@@ -20,7 +20,7 @@ export class Toolbar<V> implements OnDestroy {
     readonly _itemPatterns: _angular_core.Signal<ToolbarWidgetPattern<V>[]>;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
+    readonly orientation: _angular_core.InputSignal<"horizontal" | "vertical">;
     readonly _pattern: ToolbarPattern<V>;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
