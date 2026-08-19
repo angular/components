@@ -1,3 +1,12 @@
+<a name="22.1.3"></a>
+# 22.1.3 "hydrogen-harp" (2026-08-19)
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [72a496882](https://github.com/angular/components/commit/72a496882db5874e15ca9d4cb3e5b7bb6dc452e1) | fix | account for shadow dom in aria directives ([#33691](https://github.com/angular/components/pull/33691)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.2"></a>
 # 22.1.2 "aluminum-can" (2026-08-12)
 ### aria
