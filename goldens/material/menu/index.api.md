@@ -79,7 +79,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     // (undocumented)
     addItem(_item: MatMenuItem): void;
     _allItems: QueryList<MatMenuItem>;
-    readonly _animationDone: Subject<"void" | "enter">;
+    readonly _animationDone: Subject<"enter" | "void">;
     protected _animationsDisabled: boolean;
     ariaDescribedby: string;
     ariaLabel: string;

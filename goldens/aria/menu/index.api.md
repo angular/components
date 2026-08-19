@@ -23,10 +23,10 @@ export class Menu<V> implements OnDestroy {
     readonly itemSelected: _angular_core.OutputEmitterRef<V>;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly parent: _angular_core.WritableSignal<MenuTrigger<V> | MenuItem<V> | undefined>;
+    readonly parent: _angular_core.WritableSignal<MenuItem<V> | MenuTrigger<V> | undefined>;
     readonly _pattern: MenuPattern<V>;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly tabIndex: Signal<0 | -1>;
+    readonly tabIndex: Signal<-1 | 0>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
     readonly visible: Signal<boolean>;
@@ -86,7 +86,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     open(): void;
     readonly parent: Menu<V> | MenuBar<V> | null;
     readonly _pattern: MenuItemPattern<V>;
-    readonly role: _angular_core.InputSignal<"menuitem" | "menuitemradio" | "menuitemcheckbox">;
+    readonly role: _angular_core.InputSignal<"menuitem" | "menuitemcheckbox" | "menuitemradio">;
     readonly searchTerm: _angular_core.ModelSignal<string>;
     readonly submenu: _angular_core.InputSignal<Menu<V> | undefined>;
     readonly value: _angular_core.InputSignal<V>;

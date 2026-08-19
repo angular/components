@@ -57,7 +57,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
     readonly opened: OutputEmitterRef<void>;
     readonly options: InputSignal<readonly MatTimepickerOption<D>[] | null>;
     // (undocumented)
-    protected _options: Signal<readonly MatOption<any>[]>;
+    protected _options: Signal<readonly MatOption<D>[]>;
     readonly panelClass: InputSignal<string | string[] | undefined>;
     readonly panelId: string;
     // (undocumented)

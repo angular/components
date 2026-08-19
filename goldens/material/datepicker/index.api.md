@@ -580,7 +580,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     separator: string;
     setDescribedByIds(ids: string[]): void;
     _shouldHidePlaceholders(): boolean;
-    _shouldHideSeparator(): boolean | "" | null;
+    _shouldHideSeparator(): "" | boolean | null;
     get shouldLabelFloat(): boolean;
     // (undocumented)
     _startInput: MatStartDate<D>;

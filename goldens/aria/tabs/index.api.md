@@ -48,16 +48,16 @@ export class TabList implements OnInit, OnDestroy {
     readonly element: HTMLElement;
     // (undocumented)
     findTab(value?: string): Tab | undefined;
-    readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
+    readonly focusMode: _angular_core.InputSignal<"activedescendant" | "roving">;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     open(value: string): boolean;
-    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
+    readonly orientation: _angular_core.InputSignal<"horizontal" | "vertical">;
     readonly _pattern: TabListPattern;
     readonly selectedTab: _angular_core.ModelSignal<string | undefined>;
-    readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
+    readonly selectionMode: _angular_core.InputSignal<"explicit" | "follow">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly _tabPatterns: _angular_core.Signal<TabPattern[]>;
     readonly _tabsParent: Tabs;

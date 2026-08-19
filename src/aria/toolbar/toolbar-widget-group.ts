@@ -43,7 +43,7 @@ export class ToolbarWidgetGroup<V> {
   private readonly _toolbar = inject<Toolbar<V>>(Toolbar, {optional: true});
 
   /** The list of child widgets within the group. */
-  private readonly _widgets = contentChildren(ToolbarWidget, {descendants: true});
+  private readonly _widgets = contentChildren<ToolbarWidget<V>>(ToolbarWidget, {descendants: true});
 
   /** The parent Toolbar UIPattern. */
   private readonly _toolbarPattern = computed(() => this._toolbar?._pattern);

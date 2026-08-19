@@ -47,7 +47,7 @@ export class ComboboxPopup implements OnInit, OnDestroy {
     ngOnInit(): void;
     readonly _pattern: ComboboxPopupPattern;
     readonly popupId: _angular_core.Signal<string | undefined>;
-    readonly popupType: _angular_core.InputSignal<"listbox" | "tree" | "grid" | "dialog">;
+    readonly popupType: _angular_core.InputSignal<"dialog" | "grid" | "listbox" | "tree">;
     _registerWidget(widget: ComboboxWidget): void;
     _unregisterWidget(): void;
     readonly _widget: _angular_core.WritableSignal<ComboboxWidget | undefined>;

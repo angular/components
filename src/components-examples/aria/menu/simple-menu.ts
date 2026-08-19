@@ -65,7 +65,7 @@ export class SimpleMenuBar {}
   host: {class: 'example-menu-bar-item'},
 })
 export class SimpleMenuBarItem {
-  menuItem = inject(MenuItem);
+  menuItem = inject<MenuItem<string>>(MenuItem);
 
   constructor() {
     effect(() => this.menuItem.searchTerm.set(this.menuItem.value()));
@@ -78,7 +78,7 @@ export class SimpleMenuBarItem {
   host: {class: 'example-menu-item'},
 })
 export class SimpleMenuItem {
-  menuItem = inject(MenuItem);
+  menuItem = inject<MenuItem<string>>(MenuItem);
 
   constructor() {
     effect(() => this.menuItem.searchTerm.set(this.menuItem.value()));

@@ -93,7 +93,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     protected readonly dir: Directionality | null;
     focusFirstItem(focusOrigin?: FocusOrigin): void;
     focusLastItem(focusOrigin?: FocusOrigin): void;
-    _getTabIndex(): 0 | -1 | null;
+    _getTabIndex(): -1 | 0 | null;
     id: string;
     isInline: boolean;
     readonly items: QueryList<CdkMenuItem>;
@@ -333,7 +333,7 @@ export class MenuStack {
     hasInlineMenu(): boolean;
     readonly id: string;
     static inline(orientation: 'vertical' | 'horizontal'): MenuStack;
-    inlineMenuOrientation(): "vertical" | "horizontal" | null;
+    inlineMenuOrientation(): "horizontal" | "vertical" | null;
     isEmpty(): boolean;
     length(): number;
     peek(): MenuStackItem | undefined;
