@@ -1,3 +1,12 @@
+<a name="22.1.3"></a>
+# 22.1.3 "hydrogen-harp" (2026-08-19)
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [72a496882](https://github.com/angular/components/commit/72a496882db5874e15ca9d4cb3e5b7bb6dc452e1) | fix | account for shadow dom in aria directives ([#33691](https://github.com/angular/components/pull/33691)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.0-next.1"></a>
 # 22.2.0-next.1 "silver-can" (2026-08-12)
 ### aria
@@ -234,16 +243,16 @@
 ## Breaking Changes
 ### aria
 - The legacy combobox and autocomplete implementations have been removed. Use the new standalone combobox instead.
-  
+
   * feat(aria/combobox): promote simple-combobox to stable un-prefixed combobox
-  
+
   - Relocates public, private, and example directories to clean `combobox` entry points.
   - Renames internal layout symbols, selectors, and uppercase tokens (`SIMPLE_COMBOBOX_POPUP` -> `COMBOBOX_POPUP`).
   - Establishes full documentation extraction parity with the `json_api` Bazel rule target.
   - Standardizes the accompanying toolbar component showcase into the clean `aria-toolbar` path.
   - Re-routes dev-app navigation links and migrates public API golden records.
 - `SimpleCombobox` has been promoted to `Combobox`. All `simple-combobox` prefixed symbols, selectors, and tokens have been renamed to use the `combobox` prefix.
-  
+
   * refactor(aria/combobox): relocate and restructure autocomplete and toolbar examples
   Relocate the autocomplete examples to `src/components-examples/aria/autocomplete` and toolbar examples to `src/components-examples/aria/toolbar`.
   - Restore naming continuity with the historical codebase by stripping redundant prefixes from example filenames and component selectors.
@@ -264,7 +273,7 @@
 ### multiple
 - * A bunch of constructors that with rest arguments have been removed. If you were extending Material/CDK components, you may have to update your `super` calls accordingly.
 - Renames the values input/model to value in Combobox, Listbox, Tree, Menu, Toolbar, and Select. Users must update their templates to use the value property instead of values.
-  
+
   * refactor(multiple): update api goldens
 ### google-maps
 | Commit | Type | Description |
@@ -1976,7 +1985,7 @@ The Material 2 component styles have undergone minor adjustments to enhance cons
 | Commit | Type | Description |
 | -- | -- | -- |
 | [e52a369a1b](https://github.com/angular/components/commit/e52a369a1bef46cacfb7055f9c21585790228a30) | fix | infer first day of week from locale ([#30285](https://github.com/angular/components/pull/30285)) |
-### 
+###
 | Commit | Type | Description |
 | -- | -- | -- |
 | [f5abaa31a1](https://github.com/angular/components/commit/f5abaa31a173d075fe116fe6800c51958329e42f) | feat | add 404 page ([#902](https://github.com/angular/components/pull/902)) |
