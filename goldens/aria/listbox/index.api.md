@@ -21,19 +21,19 @@ export class Listbox<V> implements OnDestroy {
     readonly _collection: SortedCollection<Option_2<V>>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
+    readonly focusMode: _angular_core.InputSignal<"activedescendant" | "roving">;
     gotoFirst(): void;
     gotoIndex(index: number): void;
     readonly id: _angular_core.InputSignal<string>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
+    readonly orientation: _angular_core.InputSignal<"horizontal" | "vertical">;
     readonly _pattern: ListboxPattern<V>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
-    readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
+    readonly selectionMode: _angular_core.InputSignal<"explicit" | "follow">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     protected readonly textDirection: Signal<_angular_cdk_bidi.Direction>;

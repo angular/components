@@ -146,7 +146,7 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
 
   protected _panelTemplate = viewChild.required<TemplateRef<unknown>>('panelTemplate');
   protected _timeOptions: readonly MatTimepickerOption<D>[] = [];
-  protected _options = viewChildren(MatOption);
+  protected _options = viewChildren<MatOption<D>>(MatOption);
 
   private _keyManager = new ActiveDescendantKeyManager(this._options, this._injector)
     .withHomeAndEnd(true)

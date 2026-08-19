@@ -26,11 +26,11 @@ export class AccordionGroupPattern {
     readonly inputs: AccordionGroupInputs;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<AccordionTriggerPattern>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
     onFocus(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
     toggle(): void;
     validate(): string[];
 }
@@ -77,7 +77,7 @@ export class ComboboxPattern {
     constructor(inputs: ComboboxInputs);
     readonly activeDescendant: _angular_core.Signal<string | undefined>;
     readonly ariaReadonly: _angular_core.Signal<"true" | null>;
-    readonly autocomplete: _angular_core.Signal<"none" | "inline" | "list" | "both">;
+    readonly autocomplete: _angular_core.Signal<"both" | "inline" | "list" | "none">;
     click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
     readonly disabled: () => boolean;
     readonly element: () => HTMLElement;
@@ -100,7 +100,7 @@ export class ComboboxPattern {
     onInput(event: Event): void;
     onKeydown(event: KeyboardEvent): void;
     readonly popupId: _angular_core.Signal<string | undefined>;
-    readonly popupType: _angular_core.Signal<"listbox" | "tree" | "grid" | "dialog" | undefined>;
+    readonly popupType: _angular_core.Signal<"dialog" | "grid" | "listbox" | "tree" | undefined>;
     readonly readonly: () => boolean;
     readonly softDisabled: () => boolean;
     readonly value: WritableSignalLike<string>;
@@ -125,7 +125,7 @@ export class ComboboxPopupPattern {
     onFocusin(): void;
     onFocusout(event: FocusEvent): void;
     readonly popupId: () => string | undefined;
-    readonly popupType: () => "listbox" | "tree" | "grid" | "dialog";
+    readonly popupType: () => "dialog" | "grid" | "listbox" | "tree";
 }
 
 // @public (undocumented)
@@ -264,18 +264,18 @@ export class GridPattern {
     readonly isFocused: WritableSignalLike<boolean>;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly multiSelectable: SignalLike<boolean | undefined>;
-    readonly nextColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
+    readonly nextColKey: SignalLike<"ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
     onFocusIn(event: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     readonly pauseNavigation: SignalLike<boolean>;
-    readonly prevColKey: SignalLike<"ArrowRight" | "ArrowLeft">;
+    readonly prevColKey: SignalLike<"ArrowLeft" | "ArrowRight">;
     resetFocusEffect(): void;
     resetStateEffect(): void;
     restoreFocusEffect(): void;
     setDefaultStateEffect(): void;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     validate(): string[];
 }
 
@@ -326,14 +326,14 @@ export class ListboxPattern<V> {
     // (undocumented)
     readonly listBehavior: List<OptionPattern<V>, V>;
     multi: SignalLike<boolean>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     // (undocumented)
     onClick(event: PointerEvent): void;
     // (undocumented)
     onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
     readonly readonly: SignalLike<boolean>;
     setDefaultState(): void;
     setDefaultStateEffect(): void;
@@ -375,7 +375,7 @@ export class MenuBarPattern<V> {
     prev(): void;
     setDefaultState(): void;
     setDefaultStateEffect(): void;
-    readonly tabIndex: () => 0 | -1;
+    readonly tabIndex: () => -1 | 0;
     readonly typeaheadRegexp: RegExp;
 }
 
@@ -419,11 +419,11 @@ export class MenuItemPattern<V> implements ListItem<V> {
         first?: boolean;
         last?: boolean;
     }): void;
-    readonly role: () => "menuitem" | "menuitemradio" | "menuitemcheckbox";
+    readonly role: () => "menuitem" | "menuitemcheckbox" | "menuitemradio";
     readonly searchTerm: SignalLike<string>;
     readonly selectable: SignalLike<boolean>;
     readonly submenu: SignalLike<MenuPattern<V> | undefined>;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     readonly value: SignalLike<V>;
 }
 
@@ -465,7 +465,7 @@ export class MenuPattern<V> {
     setDefaultStateEffect(): void;
     readonly shouldFocus: SignalLike<boolean>;
     submit(item?: MenuItemPattern<V> | undefined): void;
-    readonly tabIndex: () => 0 | -1;
+    readonly tabIndex: () => -1 | 0;
     trigger(): void;
     readonly typeaheadRegexp: RegExp;
     validate(): string[];
@@ -526,7 +526,7 @@ export class OptionPattern<V> {
     readonly searchTerm: SignalLike<string>;
     readonly selectable: () => boolean;
     readonly selected: SignalLike<boolean | undefined>;
-    readonly tabIndex: SignalLike<0 | -1 | undefined>;
+    readonly tabIndex: SignalLike<-1 | 0 | undefined>;
     readonly value: SignalLike<V>;
 }
 
@@ -543,7 +543,7 @@ export function signal<T>(initialValue: T): WritableSignalLike<T>;
 export type SignalLike<T> = () => T;
 
 // @public
-export function sortDirectives(a: HasElement, b: HasElement): 1 | -1;
+export function sortDirectives(a: HasElement, b: HasElement): -1 | 1;
 
 // @public
 export class SortedCollection<T extends HasElement> {
@@ -589,17 +589,17 @@ export class TabListPattern {
     readonly inputs: TabListInputs;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<TabPattern>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
     onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
     readonly selectedTab: WritableSignalLike<TabPattern | undefined>;
     setDefaultState(): void;
     setDefaultStateEffect(): void;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
 }
 
 // @public
@@ -634,7 +634,7 @@ export class TabPattern {
     readonly inputs: TabInputs;
     open(): boolean;
     readonly selected: SignalLike<boolean>;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
 }
 
 // @public
@@ -664,7 +664,7 @@ export class ToolbarPattern<V> {
     setDefaultState(): void;
     setDefaultStateEffect(): void;
     readonly softDisabled: SignalLike<boolean>;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     validate(): string[];
 }
 
@@ -714,7 +714,7 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
     readonly searchTerm: () => string;
     readonly selectable: () => boolean;
     readonly selected: SignalLike<boolean>;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     readonly toolbar: () => ToolbarPattern<V>;
     readonly value: () => V;
 }
@@ -755,7 +755,7 @@ export class TreeItemPattern<V> implements TreeItem<V, TreeItemPattern<V>> {
     readonly selectable: SignalLike<boolean>;
     readonly selected: SignalLike<boolean | undefined>;
     readonly setsize: SignalLike<number>;
-    readonly tabIndex: SignalLike<0 | -1>;
+    readonly tabIndex: SignalLike<-1 | 0>;
     readonly tree: SignalLike<TreePattern<V>>;
     readonly value: SignalLike<V>;
     readonly visible: SignalLike<boolean>;
@@ -768,14 +768,14 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly activeItem: WritableSignalLike<TreeItemPattern<V> | undefined>;
     readonly children: SignalLike<TreeItemPattern<V>[]>;
     readonly clickManager: SignalLike<ClickEventManager<PointerEvent>>;
-    readonly collapseKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly collapseKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
     _collapseOrParent(opts?: SelectOptions): void;
     readonly currentType: SignalLike<'page' | 'step' | 'location' | 'date' | 'time' | 'true' | 'false'>;
     readonly disabled: SignalLike<boolean>;
     readonly dynamicSpaceKey: SignalLike<"" | " ">;
     readonly element: SignalLike<HTMLElement>;
     readonly expanded: () => boolean;
-    readonly expandKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly expandKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     _expandOrFirstChild(opts?: SelectOptions): void;
     readonly focusMode: SignalLike<'roving' | 'activedescendant'>;
     readonly followFocus: SignalLike<boolean>;
@@ -791,12 +791,12 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly level: () => number;
     readonly multi: SignalLike<boolean>;
     readonly nav: SignalLike<boolean>;
-    readonly nextKey: SignalLike<"ArrowRight" | "ArrowLeft" | "ArrowDown">;
+    readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
     onFocusIn(): void;
     onKeydown(event: KeyboardEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    readonly prevKey: SignalLike<"ArrowUp" | "ArrowRight" | "ArrowLeft">;
+    readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
     readonly selectionMode: SignalLike<'follow' | 'explicit'>;
     setDefaultState(): void;
     setDefaultStateEffect(): void;
