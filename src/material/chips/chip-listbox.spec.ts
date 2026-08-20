@@ -652,6 +652,26 @@ describe('MatChipListbox', () => {
             .toEqual('steak-0');
         });
 
+        it('should propagate null, not undefined, when the selected chip is deselected', () => {
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', SPACE);
+          fixture.detectChanges();
+
+          expect(fixture.componentInstance.control.value)
+            .withContext(`Expected control's value to be set to the new option.`)
+            .toEqual('steak-0');
+
+          dispatchKeyboardEvent(primaryActions[0], 'keydown', SPACE);
+          fixture.detectChanges();
+
+          expect(fixture.componentInstance.control.value)
+            .withContext(
+              `Expected control's value to be null after deselecting the only selected ` +
+                `chip, not undefined - consumers (e.g. Angular Signal Forms) treat a value of ` +
+                `undefined as "this field no longer exists" rather than "this field is empty".`,
+            )
+            .toEqual(null);
+        });
+
         it('should clear the selection when a nonexistent option value is selected', () => {
           const array = chips.toArray();
 
