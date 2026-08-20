@@ -172,9 +172,12 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
     constructor();
     _checkDisabled(event: Event): void;
     disabled: boolean;
+    disabledInteractive: boolean;
     disableRipple: boolean;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     readonly _focused: Subject<MatMenuItem>;
+    _getAriaDisabled(): boolean | null;
+    _getDisabled(): boolean | null;
     _getHostElement(): HTMLElement;
     getLabel(): string;
     _getTabIndex(): string;
@@ -184,7 +187,11 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
     _highlighted: boolean;
     readonly _hovered: Subject<MatMenuItem>;
     // (undocumented)
+    protected _isAnchor: boolean;
+    // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_disabledInteractive: unknown;
     // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)
@@ -200,7 +207,7 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
     _setTriggersSubmenu(triggersSubmenu: boolean): void;
     _triggersSubmenu: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, never, ["mat-icon, [matMenuItemIcon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { "role": { "alias": "role"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "disabledInteractive": { "alias": "disabledInteractive"; "required": false; }; "disableRipple": { "alias": "disableRipple"; "required": false; }; }, {}, never, ["mat-icon, [matMenuItemIcon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatMenuItem, never>;
 }

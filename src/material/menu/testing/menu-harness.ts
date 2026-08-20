@@ -170,8 +170,7 @@ export class MatMenuItemHarness extends ContentContainerComponentHarness<string>
 
   /** Whether the menu is disabled. */
   async isDisabled(): Promise<boolean> {
-    const disabled = (await this.host()).getAttribute('disabled');
-    return coerceBooleanProperty(await disabled);
+    return (await this.host()).hasClass('mat-mdc-menu-item-disabled');
   }
 
   /** Gets the text of the menu item. */

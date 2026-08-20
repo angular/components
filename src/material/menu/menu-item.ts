@@ -37,8 +37,10 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-mdc-menu-item-highlighted]': '_highlighted',
     '[class.mat-mdc-menu-item-submenu-trigger]': '_triggersSubmenu',
     '[attr.tabindex]': '_getTabIndex()',
-    '[attr.aria-disabled]': 'disabled',
-    '[attr.disabled]': 'disabled || null',
+    '[attr.aria-disabled]': '_getAriaDisabled()',
+    '[attr.disabled]': '_getDisabled()',
+    '[class.mat-mdc-menu-item-disabled]': 'disabled',
+    '[class.mat-mdc-menu-item-disabled-interactive]': 'disabledInteractive',
     '(click)': '_checkDisabled($event)',
     '(mouseenter)': '_handleMouseEnter()',
   },
@@ -47,6 +49,7 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
   imports: [MatRipple],
 })
 export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
+  protected _isAnchor: boolean;
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _document = inject(DOCUMENT);
   private _focusMonitor = inject(FocusMonitor);
@@ -58,6 +61,13 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
 
   /** Whether the menu item is disabled. */
   @Input({transform: booleanAttribute}) disabled: boolean = false;
+
+  /**
+   * Natively disabled menu items prevent focus and any pointer events from reaching the item.
+   * In some scenarios this might not be desirable, because it can prevent users from finding out
+   * why the item is disabled (e.g. via tooltip).
+   */
+  @Input({transform: booleanAttribute}) disabledInteractive: boolean = false;
 
   /** Whether ripples are disabled on the menu item. */
   @Input({transform: booleanAttribute}) disableRipple: boolean = false;
@@ -77,6 +87,7 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
   constructor() {
     inject(_CdkPrivateStyleLoader).load(_StructuralStylesLoader);
     this._parentMenu?.addItem?.(this);
+    this._isAnchor = this._elementRef.nativeElement.tagName === 'A';
   }
 
   /** Focuses the menu item. */
@@ -114,7 +125,21 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
 
   /** Used to set the `tabindex`. */
   _getTabIndex(): string {
-    return this.disabled ? '-1' : '0';
+    return this.disabled && !this.disabledInteractive ? '-1' : '0';
+  }
+
+  /** Gets the `aria-disabled` value for the menu item. */
+  _getAriaDisabled(): boolean | null {
+    if (this._isAnchor) {
+      return this.disabled || null;
+    }
+
+    return this.disabled && this.disabledInteractive ? true : null;
+  }
+
+  /** Gets the `disabled` attribute value for the menu item. */
+  _getDisabled(): boolean | null {
+    return this.disabledInteractive || !this.disabled ? null : true;
   }
 
   /** Returns the host DOM element. */
