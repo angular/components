@@ -189,6 +189,7 @@ export class MatChipGrid extends MatChipSet implements AfterContentInit, AfterVi
     protected _allowFocusEscape(): void;
     _blur(): void;
     readonly change: EventEmitter<MatChipGridChange>;
+    _change(): void;
     get chipBlurChanges(): Observable<MatChipEvent>;
     protected _chipInput?: MatChipTextControl;
     // (undocumented)
