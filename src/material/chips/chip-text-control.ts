@@ -12,7 +12,7 @@ export interface MatChipTextControl {
   id: string;
 
   /** The text control's placeholder text. */
-  placeholder: string;
+  placeholder: string | null | undefined;
 
   /** Whether the text control has browser focus. */
   focused: boolean;
