@@ -218,8 +218,8 @@ importers:
         specifier: ^0.28.0
         version: 0.28.2
       firebase-tools:
-        specifier: 15.27.0
-        version: 15.27.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.28.1
+        version: 15.28.1(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       fs-extra:
         specifier: ^11.0.0
         version: 11.4.0
@@ -263,8 +263,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       magic-string:
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.2.2
+        version: 1.2.2
       marked:
         specifier: ^18.0.0
         version: 18.0.9
@@ -438,8 +438,8 @@ importers:
         specifier: 0.10.0
         version: 0.10.0
       firebase-tools:
-        specifier: 15.27.0
-        version: 15.27.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
+        specifier: 15.28.1
+        version: 15.28.1(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6)
       jasmine-core:
         specifier: ^6.0.0
         version: 6.3.0
@@ -477,8 +477,8 @@ importers:
         specifier: ^25.0.0
         version: 25.5.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       sass:
-        specifier: 1.102.0
-        version: 1.102.0
+        specifier: 1.103.0
+        version: 1.103.0
       selenium-webdriver:
         specifier: ^3.6.0
         version: 3.6.0
@@ -5502,8 +5502,8 @@ packages:
     resolution: {integrity: sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==}
     engines: {node: '>=10'}
 
-  firebase-tools@15.27.0:
-    resolution: {integrity: sha512-gQMMPkv20hAuCUy596Z/GPA0YiwJEr6xEwvJnc+BeZnMlJVYZcl4OL8vvPNqDDcQmrXlNRNAP/qpyVc+5jkxTw==}
+  firebase-tools@15.28.1:
+    resolution: {integrity: sha512-5qbKmO0Am0++a335zzUe9/TFdM/dn6jGNKVp2JUcHwDrOK+5wU0LT/fGX+8rjQM8AwfzPp+eMowWX1uDGI+aQg==}
     engines: {node: '>=20.0.0 || >=22.0.0 || >=24.0.0'}
     hasBin: true
 
@@ -6976,8 +6976,8 @@ packages:
   magic-string@1.1.1:
     resolution: {integrity: sha512-qFemKPzc3ttrYVaMmnSkGtGc5nE6Ncl4bj7c9IE6C9OUIRXjf6PzJ+UZ1xhVIjYc7dolHq3qKzpAJPZUbvNj+A==}
 
-  magic-string@1.2.0:
-    resolution: {integrity: sha512-ptco+HFxTLgjafSLim2LojBSwfg5feBjd+SqyiwdGkzC38UPdZy3zgrHMI2CoTf5fJL38tbHMYWVzIH8BxGqJw==}
+  magic-string@1.2.2:
+    resolution: {integrity: sha512-veT/+7iXrXzT39XnEN4lOxtNl72dMgJ8Lp+5Bd6YcMSWpb0n0MjBM8Uuooi6jgJr8dhUW2swQgBmoZVMni5SVg==}
 
   make-dir@3.1.0:
     resolution: {integrity: sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==}
@@ -8353,6 +8353,11 @@ packages:
 
   sass@1.102.0:
     resolution: {integrity: sha512-NSOyTnaQF7rTAEOtI2fwb386vL+akyiQLBZu8Na7hXCb+umJy0GAqlcMIaqACZ6Z1VgTBS4K9PG6B3IdjHGJsw==}
+    engines: {node: '>=20.19.0'}
+    hasBin: true
+
+  sass@1.103.0:
+    resolution: {integrity: sha512-+QpdXUDw19lVqRDlYIyje1Lq/0gHsnNHIl4x1CqeUg13zRhaQN11UvTvouwHWLXc9Q3rQVT6oBhFGRYJ5Z8gHw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -14932,7 +14937,7 @@ snapshots:
       locate-path: 6.0.0
       path-exists: 4.0.0
 
-  firebase-tools@15.27.0(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
+  firebase-tools@15.28.1(@types/node@22.20.1)(bufferutil@4.1.0)(encoding@0.1.13)(supports-color@11.0.0)(utf-8-validate@6.0.6):
     dependencies:
       '@apphosting/common': 0.0.8
       '@electric-sql/pglite': 0.3.16
@@ -16705,7 +16710,7 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  magic-string@1.2.0:
+  magic-string@1.2.2:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
 
@@ -18183,6 +18188,14 @@ snapshots:
       webpack: 5.109.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.26)(uglify-js@3.19.3)
 
   sass@1.102.0:
+    dependencies:
+      chokidar: 5.0.0
+      immutable: 5.1.9
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.6.0
+
+  sass@1.103.0:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
