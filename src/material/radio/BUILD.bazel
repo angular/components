@@ -63,6 +63,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "radio.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         ":radio_common",
