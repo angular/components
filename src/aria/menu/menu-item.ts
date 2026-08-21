@@ -65,7 +65,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-menu-item-', true));
 
   /** The value of the menu item. */
-  readonly value = input.required<V>();
+  readonly value = input<V | undefined>(undefined);
 
   /** Whether the menu item is disabled. */
   readonly disabled = input<boolean>(false);

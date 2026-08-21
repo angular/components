@@ -345,9 +345,9 @@ export class ListboxPattern<V> {
 }
 
 // @public
-export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
+export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V | undefined> {
     items: SignalLike<MenuItemPattern<V>[]>;
-    itemSelected?: (value: V) => void;
+    itemSelected?: (value: V | undefined) => void;
     textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
@@ -365,7 +365,7 @@ export class MenuBarPattern<V> {
     readonly inputs: MenuBarInputs<V>;
     readonly isFocused: WritableSignalLike<boolean>;
     readonly keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
-    readonly listBehavior: List<MenuItemPattern<V>, V>;
+    readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
     next(): void;
     onClick(event: MouseEvent): void;
     onFocusIn(): void;
@@ -380,24 +380,25 @@ export class MenuBarPattern<V> {
 }
 
 // @public
-export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value'> {
+export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V | undefined>, 'value'> {
     expansionDelay: SignalLike<number>;
     id: SignalLike<string>;
     items: SignalLike<MenuItemPattern<V>[]>;
-    itemSelected?: (value: V) => void;
+    itemSelected?: (value: V | undefined) => void;
     parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
     textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 // @public
-export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
+export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable' | 'value'> {
     parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
     role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
     submenu: SignalLike<MenuPattern<V> | undefined>;
+    value?: SignalLike<V | undefined>;
 }
 
 // @public
-export class MenuItemPattern<V> implements ListItem<V> {
+export class MenuItemPattern<V> implements ListItem<V | undefined> {
     constructor(inputs: MenuItemInputs<V>);
     readonly active: SignalLike<boolean>;
     close(opts?: {
@@ -424,7 +425,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
     readonly selectable: SignalLike<boolean>;
     readonly submenu: SignalLike<MenuPattern<V> | undefined>;
     readonly tabIndex: SignalLike<-1 | 0>;
-    readonly value: SignalLike<V>;
+    readonly value: SignalLike<V | undefined>;
 }
 
 // @public
@@ -449,7 +450,7 @@ export class MenuPattern<V> {
     readonly isFocused: WritableSignalLike<boolean>;
     readonly keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     last(): void;
-    readonly listBehavior: List<MenuItemPattern<V>, V>;
+    readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
     next(): void;
     onClick(event: MouseEvent): void;
     onFocusIn(): void;
