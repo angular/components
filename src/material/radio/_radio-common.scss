@@ -31,6 +31,11 @@ $fallbacks: m3-radio.get-tokens();
     $size-token: token-utils.slot(radio-state-layer-size, $fallbacks);
     padding: calc((#{$size-token} - #{$_icon-size}) / 2);
 
+    .mdc-radio--disabled {
+      cursor: default;
+      pointer-events: none;
+    }
+
     @if ($is-interactive) {
       cursor: pointer;
 
