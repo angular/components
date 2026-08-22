@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:math';
 @use './m2-icon-button';
 @use './m3-icon-button';
 @use '../core/tokens/token-utils';
@@ -85,14 +84,12 @@
       --mdc-icon-button-state-layer-size: #{$calculated-size};
       --mat-icon-button-state-layer-size: #{$calculated-size};
 
-      // TODO: Switch calculated-size to "var(--mat-icon-button-state-layer-size)"
-      // Currently fails validation because the variable is "undefined"
-      // in the sass stack.
-      // TODO: Switch icon-size to "var(--mat-icon-button-icon-size)". Currently
-      // fails validation because the variable is "undefined" in the sass stack.
       width: var(--mat-icon-button-state-layer-size);
       height: var(--mat-icon-button-state-layer-size);
-      padding: math.div($calculated-size - $icon-size, 2);
+      padding: calc(
+        (var(--mat-icon-button-state-layer-size, #{$calculated-size}) -
+          var(--mat-icon-button-icon-size, #{$icon-size})) / 2
+      );
     }
   }
 }
