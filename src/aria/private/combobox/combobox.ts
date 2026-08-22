@@ -217,8 +217,8 @@ export class ComboboxPattern {
 
   /** Handles focus out events for the combobox. */
   onFocusout() {
-    this.closePopupOnFocusout();
     this.isFocused.set(false);
+    this.closePopupOnFocusout();
   }
 
   /** Closes the popup once focus has left both the combobox and the popup. */

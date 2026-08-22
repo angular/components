@@ -1257,6 +1257,9 @@ describe('Combobox', () => {
         .nativeElement as HTMLElement;
     };
 
+    const wait = (milliseconds: number) =>
+      new Promise(resolve => setTimeout(resolve, milliseconds));
+
     afterEach(async () => await runAccessibilityChecks(fixture.nativeElement));
 
     it('should auto-generate an ID on the widget when none is provided', async () => {
@@ -1275,6 +1278,45 @@ describe('Combobox', () => {
       await expand(ComboboxListboxGeneratedIdExample);
       expect(widgetElement.id).toMatch(/^ng-listbox-/);
       expect(comboboxElement.getAttribute('aria-controls')).toBe(widgetElement.id);
+    });
+
+    it('should close the popup once focus leaves it entirely, even when the trigger never regains focus', async () => {
+      await expand(ComboboxDialogExample);
+      const filterInput = widgetElement.querySelector('input') as HTMLInputElement;
+
+      comboboxElement.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: filterInput}),
+      );
+      filterInput.dispatchEvent(new FocusEvent('focusin', {bubbles: true})); // Focus enters popup
+      await wait(100);
+      expect(comboboxElement.getAttribute('aria-expanded')).toBe('true');
+
+      // Focus leaves the popup, never passing back through the trigger
+      filterInput.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: document.body}),
+      );
+      await wait(100);
+
+      expect(comboboxElement.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    it('should keep the popup open when focus moves from the widget back to the combobox', async () => {
+      await expand(ComboboxDialogExample);
+      const filterInput = widgetElement.querySelector('input') as HTMLInputElement;
+
+      comboboxElement.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: filterInput}),
+      );
+      filterInput.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await wait(100);
+
+      filterInput.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: comboboxElement}),
+      );
+      comboboxElement.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await wait(100);
+
+      expect(comboboxElement.getAttribute('aria-expanded')).toBe('true');
     });
   });
 });
