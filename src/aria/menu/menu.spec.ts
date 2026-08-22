@@ -1225,6 +1225,53 @@ describe('Menu Bar Pattern', () => {
       expect(document.activeElement).toBe(undo);
     });
   });
+
+  describe('Typeahead', () => {
+    beforeEach(async () => await setupMenu());
+
+    it('should close the open submenu when typeahead navigates to another menubar item', async () => {
+      const edit = getMenuBarItem('Edit');
+      const view = getMenuBarItem('View');
+
+      // Open the Edit menu.
+      await click(edit!);
+      expect(isExpanded('Edit')).toBeTrue();
+
+      // Typeahead to "View".
+      await keydown(edit!, 'v');
+      expect(document.activeElement).toBe(view);
+      expect(isExpanded('Edit')).toBeFalse();
+      expect(isExpanded('View')).toBeTrue();
+    });
+
+    it('should not open a submenu when typeahead navigates and no menu was previously open', async () => {
+      const file = getMenuBarItem('File');
+      const edit = getMenuBarItem('Edit');
+
+      // Typeahead to "Edit" without opening any menu first.
+      await keydown(file!, 'e');
+      expect(document.activeElement).toBe(edit);
+      expect(isExpanded('Edit')).toBeFalse();
+    });
+
+    it('should keep the open submenu intact when typeahead does not move focus', async () => {
+      const edit = getMenuBarItem('Edit');
+
+      // Open the Edit menu.
+      await click(edit!);
+      expect(isExpanded('Edit')).toBeTrue();
+
+      // Typeahead that matches the already-active item.
+      await keydown(edit!, 'e');
+      expect(document.activeElement).toBe(edit);
+      expect(isExpanded('Edit')).toBeTrue();
+
+      // Typeahead that matches no item.
+      await keydown(edit!, 'x');
+      expect(document.activeElement).toBe(edit);
+      expect(isExpanded('Edit')).toBeTrue();
+    });
+  });
 });
 
 @Component({
