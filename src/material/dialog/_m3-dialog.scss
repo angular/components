@@ -23,7 +23,9 @@
       dialog-container-small-max-width: calc(100vw - 32px),
       dialog-content-padding: 20px 24px,
       dialog-headline-padding: 6px 24px 13px,
-      dialog-with-actions-content-padding: 20px 24px 0,
+      // The block-end value reserves room for the touch targets of any controls at the end of
+      // the content, which would otherwise be scrollable overflow. See dialog.scss.
+      dialog-with-actions-content-padding: 20px 24px 8px,
     ),
     color: (
       dialog-container-color: map.get($system, surface),

@@ -191,8 +191,15 @@ $fallbacks: m3-dialog.get-tokens();
 
   // Note: we can achieve this with a `:has` selector, but it results in an
   // increased specificity which breaks a lot of internal clients.
+  //
+  // The block-end padding reserves room for the touch targets of the controls the content may
+  // contain. Buttons, checkboxes and radios center a 48px touch target on a 40px control and
+  // slide toggles center one on a 32px switch, so the target overhangs the control by up to
+  // 8px. Since this element scrolls, an overhanging target at the end of the content is
+  // scrollable overflow, and the dialog shows a scrollbar over content that fits. Reserving
+  // the overhang fixes it without shrinking the targets below their accessible size.
   .mat-mdc-dialog-container-with-actions & {
-    padding: token-utils.slot(dialog-with-actions-content-padding, $fallbacks, 20px 24px 0);
+    padding: token-utils.slot(dialog-with-actions-content-padding, $fallbacks, 20px 24px 8px);
   }
 
   .mat-mdc-dialog-container .mat-mdc-dialog-title + & {
