@@ -786,6 +786,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     // first tap from firing its click event or can cause the tooltip to open for clicks.
     if (!this._isTouchPlatform()) {
       this._addListener('mouseenter', (event: MouseEvent) => {
+        // Untrusted (test-dispatched) events skip the check. See `_isPointerOverTrigger`.
+        if (event.isTrusted && !this._isPointerOverTrigger(event)) {
+          return;
+        }
         this._setupPointerExitEventsIfNeeded();
         let point = undefined;
         if (event.x !== undefined && event.y !== undefined) {
@@ -812,6 +816,23 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
         }, this._defaultOptions?.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
       });
     }
+  }
+
+  /**
+   * Checks whether the pointer is visually over the trigger. A trigger can have a popover-based
+   * overlay nested inside it (e.g. an open `mat-select` panel), whose full-viewport backdrop is
+   * then a DOM descendant of the trigger. `mouseenter` fires on ancestors of whatever the
+   * pointer lands on, so without this check, hovering anywhere on the page would count as
+   * hovering the trigger while such a backdrop is open.
+   */
+  private _isPointerOverTrigger(event: MouseEvent): boolean {
+    const rect = this._elementRef.nativeElement.getBoundingClientRect();
+    return (
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom
+    );
   }
 
   private _setupPointerExitEventsIfNeeded() {
