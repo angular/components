@@ -11,6 +11,8 @@
   @return (
     base: (
       select-container-elevation-shadow: elevation.get-box-shadow(8),
+      select-divider-bottom-spacing: 0,
+      select-divider-top-spacing: 0
     ),
     color: private-get-color-palette-color-tokens($theme, primary),
     typography: (
