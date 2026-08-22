@@ -1042,6 +1042,30 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     });
 
+    it('should only treat the pointer as over the trigger when it is within its bounds', () => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
+      // Regression test for #32747. Test-dispatched events aren't trusted, so they can't
+      // exercise the `mouseenter` guard end-to-end; verify the geometry check it relies on.
+      const isPointerOverTrigger = (tooltipDirective as any)._isPointerOverTrigger.bind(
+        tooltipDirective,
+      );
+      const rect = buttonElement.getBoundingClientRect();
+
+      expect(isPointerOverTrigger(createMouseEvent('mouseenter', rect.left + 1, rect.top + 1)))
+        .withContext('point inside the trigger bounds should count as over the trigger')
+        .toBe(true);
+
+      expect(
+        isPointerOverTrigger(createMouseEvent('mouseenter', rect.right + 500, rect.bottom + 500)),
+      )
+        .withContext('point far outside the trigger bounds should not count as over the trigger')
+        .toBe(false);
+    });
+
     it('should not hide on mouseleave if the pointer goes from the trigger to the tooltip', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
