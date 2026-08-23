@@ -48,6 +48,13 @@ const GUIDES: GuideItem[] = [
     overview: 'Build a custom control that integrates with `<mat-form-field>`.',
   },
   {
+    id: 'wrapping-existing-form-field-controls',
+    name: 'Wrapping existing form field controls',
+    document: '/docs-content/guides/wrapping-existing-form-field-controls.md.html',
+    overview:
+      'Wrap Material inputs and selects in reusable components that work with Angular forms.',
+  },
+  {
     id: 'creating-a-custom-stepper-using-the-cdk-stepper',
     name: 'Custom stepper using the CdkStepper',
     document: '/docs-content/guides/creating-a-custom-stepper-using-the-cdk-stepper.md.html',
