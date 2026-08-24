@@ -790,6 +790,39 @@ describe('MatDrawer', () => {
     expect(scrollable.getElementRef().nativeElement).toBe(content.nativeElement);
   });
 
+  it('should not stay in the animating state if a transition does not start', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: false}},
+        // Ensure that the transitions aren't disabled if the machine has reduced motion enabled.
+        {
+          provide: MediaMatcher,
+          useValue: {
+            matchMedia: () => ({matches: false, addListener: () => {}, removeListener: () => {}}),
+          },
+        },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(BasicTestApp);
+    fixture.detectChanges();
+
+    const testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+    const drawer = fixture.debugElement.query(By.directive(MatDrawer))!;
+
+    // Wait for the container to enable the transitions.
+    await wait(250);
+
+    drawer.componentInstance.open();
+    drawer.componentInstance.close();
+    fixture.detectChanges();
+    await wait(100);
+    fixture.detectChanges();
+
+    expect(drawer.nativeElement.classList).not.toContain('mat-drawer-animating');
+    expect(testComponent.closeCount).toBe(1);
+  });
+
   describe('DOM position', () => {
     it('should project start drawer before the content', () => {
       const fixture = TestBed.createComponent(BasicTestApp);
@@ -923,43 +956,6 @@ describe('MatDrawer', () => {
     function getDrawerNodesArray(fixture: ComponentFixture<any>): HTMLElement[] {
       return Array.from(fixture.nativeElement.querySelector('.mat-drawer-container').childNodes);
     }
-  });
-
-  describe('with animations', () => {
-    beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [
-          {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: false}},
-          // Ensure that the transitions aren't disabled if the machine has reduced motion enabled.
-          {
-            provide: MediaMatcher,
-            useValue: {
-              matchMedia: () => ({matches: false, addListener: () => {}, removeListener: () => {}}),
-            },
-          },
-        ],
-      });
-    });
-
-    it('should not stay in the animating state if a transition does not start', async () => {
-      const fixture = TestBed.createComponent(BasicTestApp);
-      fixture.detectChanges();
-
-      const testComponent: BasicTestApp = fixture.debugElement.componentInstance;
-      const drawer = fixture.debugElement.query(By.directive(MatDrawer))!;
-
-      // Wait for the container to enable the transitions.
-      await wait(250);
-
-      drawer.componentInstance.open();
-      drawer.componentInstance.close();
-      fixture.detectChanges();
-      await wait(100);
-      fixture.detectChanges();
-
-      expect(drawer.nativeElement.classList).not.toContain('mat-drawer-animating');
-      expect(testComponent.closeCount).toBe(1);
-    });
   });
 });
 
