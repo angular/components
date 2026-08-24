@@ -7,7 +7,7 @@
  */
 
 import {Component, computed, signal, provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Combobox} from './combobox';
 import {ComboboxPopup} from './combobox-popup';
@@ -49,11 +49,11 @@ describe('Combobox Zone.js integration', () => {
     return options.find(option => option.textContent?.trim() === text) || null;
   }
 
-  it('should relay ArrowDown to the listbox and update active descendant', fakeAsync(() => {
+  it('should relay ArrowDown to the listbox and update active descendant', async () => {
     // Open the popup (sets active descendant to Alabama via default state)
     keydown('ArrowDown');
-    tick();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     // Check if expanded is true
     expect(inputElement.getAttribute('aria-expanded')).toBe('true');
@@ -63,12 +63,12 @@ describe('Combobox Zone.js integration', () => {
 
     // Press ArrowDown again to move to Alaska
     keydown('ArrowDown');
-    tick();
     fixture.detectChanges();
+    await fixture.whenStable();
 
     const alaska = getOption('Alaska')!;
     expect(inputElement.getAttribute('aria-activedescendant')).toBe(alaska.id);
-  }));
+  });
 });
 
 @Component({

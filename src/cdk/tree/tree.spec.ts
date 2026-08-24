@@ -19,7 +19,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {AsyncPipe} from '@angular/common';
 
 import {BehaviorSubject, Observable, combineLatest, of} from 'rxjs';
@@ -1407,13 +1407,13 @@ describe('CdkTree', () => {
         component = fixture.componentInstance;
       });
       describe(`when pressing 'b' with default configuration`, () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
           component.tree.nativeElement.dispatchEvent(
             createKeyboardEvent('keydown', undefined, 'b'),
           );
           fixture.detectChanges();
-          tick(1000);
-        }));
+          await wait(1000);
+        });
 
         it('focuses banana', () => {
           expect(document.activeElement)
@@ -1435,35 +1435,35 @@ describe('CdkTree', () => {
       });
 
       describe(`when pressing 'b' with typeahead label binding`, () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
           component.tree.nativeElement.dispatchEvent(
             createKeyboardEvent('keydown', undefined, 'b'),
           );
           fixture.detectChanges();
-          tick(1000);
-        }));
+          await wait(1000);
+        });
 
-        it('focuses banana', fakeAsync(() => {
+        it('focuses banana', async () => {
           component.tree.nativeElement.dispatchEvent(
             createKeyboardEvent('keydown', undefined, 'b'),
           );
           fixture.detectChanges();
-          tick(1000);
+          await wait(1000);
 
           expect(document.activeElement)
             .withContext('expecting banana to be focused')
             .toBe(component.treeNodes.get(1)?.nativeElement!);
-        }));
+        });
       });
 
       describe(`when pressing 'c'`, () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
           component.tree.nativeElement.dispatchEvent(
             createKeyboardEvent('keydown', undefined, 'c'),
           );
           fixture.detectChanges();
-          tick(1000);
-        }));
+          await wait(1000);
+        });
         it('does not move focus', () => {
           expect(document.activeElement)
             .withContext('expecting document body to be focused')
@@ -1472,13 +1472,13 @@ describe('CdkTree', () => {
       });
 
       describe(`when pressing 't'`, () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
           component.tree.nativeElement.dispatchEvent(
             createKeyboardEvent('keydown', undefined, 't'),
           );
           fixture.detectChanges();
-          tick(1000);
-        }));
+          await wait(1000);
+        });
         it('focuses focuses cherry', () => {
           expect(document.activeElement)
             .withContext('expecting cherry to be focused')
@@ -1630,6 +1630,10 @@ function getNodes(treeElement: Element): HTMLElement[] {
 
 function getExpandedNodes<T>(nodes: T[] | undefined, tree: CdkTree<T>): T[] {
   return nodes?.filter(node => tree.isExpanded(node)) ?? [];
+}
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 function expectFlatTreeToMatch(
