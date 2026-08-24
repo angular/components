@@ -105,6 +105,7 @@ ng_project(
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
+        "//src/cdk/layout",
         "//src/cdk/platform",
         "//src/cdk/scrolling",
         "//src/cdk/testing",

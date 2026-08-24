@@ -1,6 +1,7 @@
 import {A11yModule} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
+import {MediaMatcher} from '@angular/cdk/layout';
 import {CdkScrollable} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
@@ -927,7 +928,16 @@ describe('MatDrawer', () => {
   describe('with animations', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: false}}],
+        providers: [
+          {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: false}},
+          // Ensure that the transitions aren't disabled if the machine has reduced motion enabled.
+          {
+            provide: MediaMatcher,
+            useValue: {
+              matchMedia: () => ({matches: false, addListener: () => {}, removeListener: () => {}}),
+            },
+          },
+        ],
       });
     });
 

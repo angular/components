@@ -210,6 +210,9 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   /** Whether the drawer is currently animating. */
   private _isAnimating = false;
 
+  /** Opened state that the drawer had when it started animating. */
+  private _openedBeforeAnimating = false;
+
   /** Anchor node used to restore the drawer to its initial position. */
   private _anchor: Comment | null = null;
 
@@ -590,6 +593,10 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     this._getContent()?._drawerToggled(this);
 
     if (this._container?._transitionsEnabled) {
+      if (!this._isAnimating) {
+        this._openedBeforeAnimating = !isOpen;
+      }
+
       // Note: it's important to set this as early as possible,
       // otherwise the animation can look glitchy in some cases.
       this._setIsAnimating(true);
@@ -600,9 +607,13 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
       setTimeout(() => {
         this._animationStarted.next();
 
-        // No transition will run if the drawer was toggled back to its previous state before the
-        // browser had a chance to render it, in which case we have to end the animation ourselves.
-        if (this._isAnimating && this._elementRef.nativeElement.getAnimations().length === 0) {
+        // No transition will run if the drawer ended up back in the state it started animating
+        // from, in which case we have to end the animation ourselves.
+        if (
+          this._isAnimating &&
+          this.opened === this._openedBeforeAnimating &&
+          this._elementRef.nativeElement.getAnimations().length === 0
+        ) {
           this._setIsAnimating(false);
           this._animationEnd.next();
         }
