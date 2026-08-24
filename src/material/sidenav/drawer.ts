@@ -207,6 +207,9 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   /** Whether the view of the component has been attached. */
   private _isAttached = false;
 
+  /** Whether the drawer is currently animating. */
+  private _isAnimating = false;
+
   /** Anchor node used to restore the drawer to its initial position. */
   private _anchor: Comment | null = null;
 
@@ -594,7 +597,16 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
       // Previously we dispatched this in a `transitionrun` event, but it might not fire
       // if the element is hidden (see #32992). Since this event is load-bearing for the
       // margin calculations, we need it to fire consistently.
-      setTimeout(() => this._animationStarted.next());
+      setTimeout(() => {
+        this._animationStarted.next();
+
+        // No transition will run if the drawer was toggled back to its previous state before the
+        // browser had a chance to render it, in which case we have to end the animation ourselves.
+        if (this._isAnimating && this._elementRef.nativeElement.getAnimations().length === 0) {
+          this._setIsAnimating(false);
+          this._animationEnd.next();
+        }
+      });
     } else {
       // Simulate the animation events if animations are disabled.
       setTimeout(() => {
@@ -625,6 +637,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
 
   /** Toggles whether the drawer is currently animating. */
   private _setIsAnimating(isAnimating: boolean) {
+    this._isAnimating = isAnimating;
     this._elementRef.nativeElement.classList.toggle('mat-drawer-animating', isAnimating);
   }
 

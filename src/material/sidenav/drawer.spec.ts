@@ -923,6 +923,34 @@ describe('MatDrawer', () => {
       return Array.from(fixture.nativeElement.querySelector('.mat-drawer-container').childNodes);
     }
   });
+
+  describe('with animations', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: false}}],
+      });
+    });
+
+    it('should not stay in the animating state if a transition does not start', async () => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.detectChanges();
+
+      const testComponent: BasicTestApp = fixture.debugElement.componentInstance;
+      const drawer = fixture.debugElement.query(By.directive(MatDrawer))!;
+
+      // Wait for the container to enable the transitions.
+      await wait(250);
+
+      drawer.componentInstance.open();
+      drawer.componentInstance.close();
+      fixture.detectChanges();
+      await wait(100);
+      fixture.detectChanges();
+
+      expect(drawer.nativeElement.classList).not.toContain('mat-drawer-animating');
+      expect(testComponent.closeCount).toBe(1);
+    });
+  });
 });
 
 describe('MatDrawerContainer', () => {
