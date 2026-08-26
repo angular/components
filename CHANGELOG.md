@@ -1,3 +1,17 @@
+<a name="22.2.0-next.3"></a>
+# 22.2.0-next.3 "nickel-nanobot" (2026-08-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [6956699a1](https://github.com/angular/components/commit/6956699a1e01e3a57975fc8e309b6f926115d210) | fix | **table:** show a real error message instead of a crash when a table column is missing ([#33698](https://github.com/angular/components/pull/33698)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cacab5551](https://github.com/angular/components/commit/cacab5551ba8a4af365b0e99132ef21e87c3b3f5) | feat | **menu:** add disabledInteractive input to MatMenuItem ([#33693](https://github.com/angular/components/pull/33693)) |
+| [e0fd08c05](https://github.com/angular/components/commit/e0fd08c058132653a1fc740475aa194f6b73c969) | fix | **sidenav:** prevent drawer from getting stuck when toggled rapidly ([#33726](https://github.com/angular/components/pull/33726)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.4"></a>
 # 22.1.4 "nickel-nose" (2026-08-26)
 ### cdk
