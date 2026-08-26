@@ -54,8 +54,9 @@ export class ComboboxPopup implements OnInit, OnDestroy {
   readonly popupType = input<'listbox' | 'tree' | 'grid' | 'dialog'>('listbox');
 
   /** The popup pattern. */
-  readonly _pattern = new ComboboxPopupPattern({
+  readonly _pattern: ComboboxPopupPattern = new ComboboxPopupPattern({
     ...this,
+    combobox: computed(() => this.combobox()._pattern),
   });
 
   ngOnInit() {

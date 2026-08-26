@@ -79,6 +79,7 @@ export class ComboboxPattern {
     readonly ariaReadonly: _angular_core.Signal<"true" | null>;
     readonly autocomplete: _angular_core.Signal<"both" | "inline" | "list" | "none">;
     click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
+    closePopupOnFocusout(): void;
     readonly disabled: () => boolean;
     readonly element: () => HTMLElement;
     highlightEffect(): void;
@@ -109,6 +110,7 @@ export class ComboboxPattern {
 // @public
 export interface ComboboxPopupInputs {
     activeDescendant: SignalLike<string | undefined>;
+    combobox: SignalLike<ComboboxPattern | undefined>;
     controlTarget: SignalLike<HTMLElement | undefined>;
     popupId: SignalLike<string | undefined>;
     popupType: SignalLike<'listbox' | 'tree' | 'grid' | 'dialog'>;
@@ -118,6 +120,7 @@ export interface ComboboxPopupInputs {
 export class ComboboxPopupPattern {
     constructor(inputs: ComboboxPopupInputs);
     readonly activeDescendant: () => string | undefined;
+    readonly combobox: () => ComboboxPattern | undefined;
     readonly controlTarget: () => HTMLElement | undefined;
     // (undocumented)
     readonly inputs: ComboboxPopupInputs;
