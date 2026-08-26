@@ -1,3 +1,16 @@
+<a name="22.1.4"></a>
+# 22.1.4 "nickel-nose" (2026-08-26)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [86971d660](https://github.com/angular/components/commit/86971d6602a9fc35d3bcf68a68b03f0c8b793385) | fix | **table:** show a real error message instead of a crash when a table column is missing ([#33698](https://github.com/angular/components/pull/33698)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2ea6f0e72](https://github.com/angular/components/commit/2ea6f0e72f97e3afb9a4702c358a86397a5e52f7) | fix | **sidenav:** prevent drawer from getting stuck when toggled rapidly ([#33726](https://github.com/angular/components/pull/33726)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.3"></a>
 # 22.1.3 "hydrogen-harp" (2026-08-19)
 ### multiple
