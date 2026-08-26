@@ -26,11 +26,13 @@ describe('ComboboxPattern', () => {
     const controlTarget = document.createElement('div');
     const popupType = signal<'listbox' | 'tree' | 'grid' | 'dialog'>(inputs.popupType ?? 'listbox');
 
+    const combobox = signal<ComboboxPattern | undefined>(undefined);
     const popup = new ComboboxPopupPattern({
       popupType,
       controlTarget: signal(controlTarget),
       activeDescendant,
       popupId,
+      combobox,
     });
 
     const pattern = new ComboboxPattern({
@@ -44,6 +46,8 @@ describe('ComboboxPattern', () => {
       expanded,
       expandable: signal(true),
     });
+
+    combobox.set(pattern);
 
     return {
       pattern,
@@ -230,6 +234,31 @@ describe('ComboboxPattern', () => {
       pattern.inputs.popup()!.isFocused.set(true);
 
       pattern.onFocusout();
+      await wait(100);
+
+      expect(expanded()).toBe(true);
+    });
+
+    it('should close when focus leaves the popup', async () => {
+      const {pattern, expanded, popup} = setup();
+      expanded.set(true);
+      pattern.isFocused.set(false);
+      popup.isFocused.set(true);
+
+      popup.onFocusout(new FocusEvent('focusout'));
+      await wait(100);
+
+      expect(expanded()).toBe(false);
+    });
+
+    it('should remain open if focus moves back to the combobox', async () => {
+      const {pattern, expanded, popup} = setup();
+      expanded.set(true);
+      pattern.isFocused.set(false);
+      popup.isFocused.set(true);
+
+      popup.onFocusout(new FocusEvent('focusout'));
+      pattern.onFocusin();
       await wait(100);
 
       expect(expanded()).toBe(true);
