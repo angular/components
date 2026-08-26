@@ -68,7 +68,7 @@ export class SimpleMenuBarItem {
   menuItem = inject<MenuItem<string>>(MenuItem);
 
   constructor() {
-    effect(() => this.menuItem.searchTerm.set(this.menuItem.value()));
+    effect(() => this.menuItem.searchTerm.set(this.menuItem.value() ?? ''));
   }
 }
 
@@ -81,7 +81,7 @@ export class SimpleMenuItem {
   menuItem = inject<MenuItem<string>>(MenuItem);
 
   constructor() {
-    effect(() => this.menuItem.searchTerm.set(this.menuItem.value()));
+    effect(() => this.menuItem.searchTerm.set(this.menuItem.value() ?? ''));
   }
 }
 

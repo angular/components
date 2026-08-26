@@ -12,19 +12,22 @@ import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The inputs for the MenuBarPattern class. */
-export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
+export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V | undefined> {
   /** The menu items contained in the menu. */
   items: SignalLike<MenuItemPattern<V>[]>;
 
   /** Callback function triggered when a menu item is selected. */
-  itemSelected?: (value: V) => void;
+  itemSelected?: (value: V | undefined) => void;
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** The inputs for the MenuPattern class. */
-export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value'> {
+export interface MenuInputs<V> extends Omit<
+  ListInputs<MenuItemPattern<V>, V | undefined>,
+  'value'
+> {
   /** The unique ID of the menu. */
   id: SignalLike<string>;
 
@@ -35,7 +38,7 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
   parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
 
   /** Callback function triggered when a menu item is selected. */
-  itemSelected?: (value: V) => void;
+  itemSelected?: (value: V | undefined) => void;
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
@@ -60,7 +63,10 @@ export interface MenuTriggerInputs<V> {
 }
 
 /** The inputs for the MenuItemPattern class. */
-export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
+export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable' | 'value'> {
+  /** The value of the menu item. */
+  value?: SignalLike<V | undefined>;
+
   /** A reference to the parent menu or menu trigger. */
   parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
 
@@ -88,7 +94,7 @@ export class MenuPattern<V> {
   );
 
   /** Controls list behavior for the menu items. */
-  readonly listBehavior: List<MenuItemPattern<V>, V>;
+  readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
 
   /** Whether the menu or any of its child elements are currently focused. */
   readonly isFocused = signal(false);
@@ -179,7 +185,7 @@ export class MenuPattern<V> {
 
   constructor(readonly inputs: MenuInputs<V>) {
     this.id = inputs.id;
-    this.listBehavior = new List<MenuItemPattern<V>, V>({
+    this.listBehavior = new List<MenuItemPattern<V>, V | undefined>({
       ...inputs,
       value: signal([]),
     });
@@ -189,7 +195,10 @@ export class MenuPattern<V> {
   validate(): string[] {
     const violations: string[] = [];
 
-    const values = this.inputs.items().map(i => i.value());
+    const values = this.inputs
+      .items()
+      .map(i => i.value())
+      .filter((val): val is V => val !== undefined);
     const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
     if (duplicates.length > 0) {
       violations.push(`Duplicate value '${duplicates[0]}' detected inside ngMenu.`);
@@ -480,7 +489,7 @@ export class MenuPattern<V> {
 /** The menubar ui pattern class. */
 export class MenuBarPattern<V> {
   /** Controls list behavior for the menu items. */
-  readonly listBehavior: List<MenuItemPattern<V>, V>;
+  readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
 
   /** The tab index of the menu. */
   readonly tabIndex = () => this.listBehavior.tabIndex();
@@ -525,7 +534,7 @@ export class MenuBarPattern<V> {
   });
 
   constructor(readonly inputs: MenuBarInputs<V>) {
-    this.listBehavior = new List<MenuItemPattern<V>, V>(inputs);
+    this.listBehavior = new List<MenuItemPattern<V>, V | undefined>(inputs);
   }
 
   /** Sets the default state for the menubar. */
@@ -757,9 +766,9 @@ export class MenuTriggerPattern<V> {
 }
 
 /** The menu item ui pattern class. */
-export class MenuItemPattern<V> implements ListItem<V> {
+export class MenuItemPattern<V> implements ListItem<V | undefined> {
   /** The value of the menu item. */
-  readonly value: SignalLike<V>;
+  readonly value: SignalLike<V | undefined>;
 
   /** The unique ID of the menu item. */
   readonly id: SignalLike<string>;
@@ -813,7 +822,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
   constructor(readonly inputs: MenuItemInputs<V>) {
     this.id = inputs.id;
-    this.value = inputs.value;
+    this.value = inputs.value ?? signal(undefined);
     this.element = inputs.element;
     this.submenu = this.inputs.submenu;
     this.searchTerm = inputs.searchTerm;

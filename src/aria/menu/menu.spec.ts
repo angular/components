@@ -579,6 +579,34 @@ describe('Standalone Menu Pattern', () => {
       expect(consoleSpy).toHaveBeenCalledWith("Duplicate value 'item0' detected inside ngMenu.");
     });
 
+    it('should not warn when items inside ngMenu have no value', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuWithOptionalValues],
+      });
+      const optionalValuesFixture = TestBed.createComponent(MenuWithOptionalValues);
+      optionalValuesFixture.detectChanges();
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('should emit undefined on itemSelected when selecting an item without a value', async () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuWithOptionalValues],
+      });
+      const optionalValuesFixture = TestBed.createComponent(MenuWithOptionalValues);
+      optionalValuesFixture.detectChanges();
+      const instance = optionalValuesFixture.componentInstance;
+      spyOn(instance, 'itemSelected');
+
+      const items = optionalValuesFixture.debugElement.queryAll(By.directive(MenuItem));
+      const firstItem = items[0].nativeElement as HTMLElement;
+      firstItem.click();
+
+      expect(instance.itemSelected).toHaveBeenCalledWith(undefined);
+    });
+
     it('should warn when ngMenuItem is outside ngMenu or ngMenuBar', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
@@ -1371,6 +1399,20 @@ class ShuffledMenuBarExample {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuWithDuplicateValues {}
+
+@Component({
+  template: `
+    <div ngMenu (itemSelected)="itemSelected($event)">
+      <div ngMenuItem>Item 0</div>
+      <div ngMenuItem>Item 1</div>
+    </div>
+  `,
+  imports: [Menu, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuWithOptionalValues {
+  itemSelected(value: string | undefined) {}
+}
 
 @Component({
   template: `
