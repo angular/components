@@ -477,8 +477,8 @@ importers:
         specifier: ^25.0.0
         version: 25.8.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       sass:
-        specifier: 1.103.0
-        version: 1.103.0
+        specifier: 1.103.1
+        version: 1.103.1
       selenium-webdriver:
         specifier: ^3.6.0
         version: 3.6.0
@@ -742,6 +742,7 @@ packages:
   '@angular-devkit/build-angular@22.2.0-next.4':
     resolution: {integrity: sha512-FXrrBK0OP/KqHYVu6/umQZ5vecFToFo12Mrzuo203L51HoHTPRmNPD0c0Gcjr44m0ek0zxApJWEp5rz+IaFknA==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    deprecated: Angular's Webpack support is deprecated. Use the esbuild and Vite-based "@angular/build" package instead.
     peerDependencies:
       '@angular/compiler-cli': ^22.0.0 || ^22.2.0-next.0
       '@angular/core': ^22.0.0 || ^22.2.0-next.0
@@ -914,6 +915,7 @@ packages:
   '@angular/platform-browser-dynamic@22.2.0-next.3':
     resolution: {integrity: sha512-AZLM1eUK73xo6jxE9e6TopQhNPMjFyo4tI39QuD2065OldfRZR4kW+gVrs/OZ/TuLskz8r7+xKHlWmMCyTD9/w==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0}
+    deprecated: '@angular/platform-browser-dynamic is deprecated. Use `@angular/platform-browser` instead.'
     peerDependencies:
       '@angular/common': 22.2.0-next.3
       '@angular/compiler': 22.2.0-next.3
@@ -2763,6 +2765,7 @@ packages:
   '@ngtools/webpack@22.2.0-next.4':
     resolution: {integrity: sha512-6hlG34mRR8LPDbcBxsKTNW1PJXh5T16+1jZOujhyHGtxaEdoyo77Ml8AIh8C7XGRVK6GUNwge/qt8xw4voaDgg==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0.0, npm: ^6.11.0 || ^7.5.6 || >=8.0.0, yarn: '>= 1.13.0'}
+    deprecated: Angular's Webpack support is deprecated. Use the esbuild and Vite-based "@angular/build" package instead.
     peerDependencies:
       '@angular/compiler-cli': ^22.0.0 || ^22.2.0-next.0
       typescript: 6.0.2
@@ -8305,6 +8308,11 @@ packages:
 
   sass@1.103.0:
     resolution: {integrity: sha512-+QpdXUDw19lVqRDlYIyje1Lq/0gHsnNHIl4x1CqeUg13zRhaQN11UvTvouwHWLXc9Q3rQVT6oBhFGRYJ5Z8gHw==}
+    engines: {node: '>=20.19.0'}
+    hasBin: true
+
+  sass@1.103.1:
+    resolution: {integrity: sha512-9icZURbP51S6S0QGoyaeqk9uB06GNWxsFYWfH5RgpFgqK5FA8tJcM3AdVxrZEVJ7dz+L87nG95gBKf4VuaMHGw==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -18113,6 +18121,14 @@ snapshots:
       '@parcel/watcher': 2.6.0
 
   sass@1.103.0:
+    dependencies:
+      chokidar: 5.0.0
+      immutable: 5.1.9
+      source-map-js: 1.2.1
+    optionalDependencies:
+      '@parcel/watcher': 2.6.0
+
+  sass@1.103.1:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
