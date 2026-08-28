@@ -1,11 +1,4 @@
-import {
-  Component,
-  DebugElement,
-  Directive,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, DebugElement, Directive, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {waitForMicrotasks} from '../private/testing/test-helpers';
@@ -594,67 +587,25 @@ describe('Toolbar', () => {
     });
   });
 
-  describe('Selection', () => {
+  describe('Interactions', () => {
     beforeEach(async () => await setupToolbar());
 
-    it('should toggle the active item on Enter', async () => {
-      const item0 = getWidgetEl('item 0')!;
-      await click(item0);
-      await keydown('Enter');
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
-      await keydown('Enter');
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-    });
-
-    it('should toggle the active item on Space', async () => {
-      const item0 = getWidgetEl('item 0')!;
-      await click(item0);
-      await keydown(' ');
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
-      await keydown(' ');
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-    });
-
-    it('should toggle the active item on click', async () => {
-      const item0 = getWidgetEl('item 0')!;
-      await click(item0);
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-      await click(item0);
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
-    });
-
-    it('should be able to select multiple items in the toolbar', async () => {
-      const item0 = getWidgetEl('item 0')!;
-      const item1 = getWidgetEl('item 1')!;
-      await click(item0);
-      await click(item1);
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-      expect(item1.getAttribute('aria-pressed')).toBe('true');
-    });
-
-    it('should not be able to select multiple items in a group', async () => {
-      const item2 = getWidgetEl('item 2')!;
-      const item3 = getWidgetEl('item 3')!;
-      await click(item2);
-      await click(item3);
-      expect(item2.getAttribute('aria-pressed')).toBe('false');
-      expect(item3.getAttribute('aria-pressed')).toBe('true');
-    });
-
-    it('should not select disabled items', async () => {
-      fixture.componentInstance.widgets[1].disabled.set(true);
-      await fixture.whenStable();
+    it('should set active item on click', async () => {
       const item1 = getWidgetEl('item 1')!;
       await click(item1);
-      expect(item1.getAttribute('aria-pressed')).toBe('false');
+      expect(document.activeElement).toBe(item1);
     });
 
-    it('should not select items in a disabled group', async () => {
-      fixture.componentInstance.groups[0].disabled.set(true);
-      await fixture.whenStable();
-      const item2 = getWidgetEl('item 2')!;
-      await click(item2);
-      expect(item2.getAttribute('aria-pressed')).toBe('false');
+    it('should not intercept Enter or Space key events for toolbar-level selection', async () => {
+      const item0 = getWidgetEl('item 0')!;
+      await click(item0);
+      expect(document.activeElement).toBe(item0);
+
+      await keydown('Enter');
+      expect(document.activeElement).toBe(item0);
+
+      await keydown(' ');
+      expect(document.activeElement).toBe(item0);
     });
   });
 
@@ -719,17 +670,6 @@ describe('Toolbar', () => {
       await setupToolbar();
     });
 
-    it('should warn when duplicate values are detected inside ngToolbar', () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [ToolbarWithDuplicateValues],
-      });
-      const duplicateFixture = TestBed.createComponent(ToolbarWithDuplicateValues);
-      duplicateFixture.detectChanges();
-
-      expect(consoleSpy).toHaveBeenCalledWith("Duplicate value 'item0' detected inside ngToolbar.");
-    });
-
     it('should warn when ngToolbarWidgetGroup is outside ngToolbar', () => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
@@ -741,6 +681,72 @@ describe('Toolbar', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'ngToolbarWidgetGroup must be placed inside an ngToolbar container.',
       );
+    });
+  });
+
+  describe('Form controls and embedded widgets', () => {
+    let formFixture: ComponentFixture<ToolbarWithFormControlsExample>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [ToolbarWithFormControlsExample],
+        providers: [provideFakeDirectionality('ltr')],
+      });
+      formFixture = TestBed.createComponent(ToolbarWithFormControlsExample);
+      fixture = formFixture as any;
+      await formFixture.whenStable();
+    });
+
+    it('should not move toolbar focus on ArrowUp/ArrowDown on select in horizontal toolbar', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      await click(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await down(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await up(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+    });
+
+    it('should navigate across toolbar on ArrowRight / ArrowLeft from select', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      const buttons = formFixture.debugElement
+        .queryAll(By.css('button'))
+        .map(de => de.nativeElement as HTMLElement);
+
+      await click(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await right(selectEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await right(inputEl);
+      expect(document.activeElement).toBe(buttons[1]); // Italic button
+
+      await left(buttons[1]);
+      expect(document.activeElement).toBe(inputEl);
+
+      await left(inputEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await left(selectEl);
+      expect(document.activeElement).toBe(buttons[0]); // Bold button
+    });
+
+    it('should not move toolbar focus on ArrowUp/ArrowDown on number input in horizontal toolbar', async () => {
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      await click(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await down(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await up(inputEl);
+      expect(document.activeElement).toBe(inputEl);
     });
   });
 });
@@ -756,44 +762,26 @@ describe('Toolbar', () => {
     >
       <button
         ngToolbarWidget
-        #item0="ngToolbarWidget"
-        [aria-pressed]="item0.selected()"
-        [disabled]="widgets[0].disabled()"
-        value="item 0">item 0</button>
+        [disabled]="widgets[0].disabled()">item 0</button>
 
       <button
         ngToolbarWidget
-        #item1="ngToolbarWidget"
-        [aria-pressed]="item1.selected()"
-        [disabled]="widgets[1].disabled()"
-        value="item 1">item 1</button>
+        [disabled]="widgets[1].disabled()">item 1</button>
 
       <div ngToolbarWidgetGroup [disabled]="groups[0].disabled()">
         <button
           ngToolbarWidget
-          #item2="ngToolbarWidget"
-          [aria-pressed]="item2.selected()"
-          [disabled]="widgets[2].disabled()"
-          value="item 2">item 2</button>
+          [disabled]="widgets[2].disabled()">item 2</button>
         <button
           ngToolbarWidget
-          #item3="ngToolbarWidget"
-          [aria-pressed]="item3.selected()"
-          [disabled]="widgets[3].disabled()"
-          value="item 3">item 3</button>
+          [disabled]="widgets[3].disabled()">item 3</button>
         <button
           ngToolbarWidget
-          #item4="ngToolbarWidget"
-          [aria-pressed]="item4.selected()"
-          [disabled]="widgets[4].disabled()"
-          value="item 4">item 4</button>
+          [disabled]="widgets[4].disabled()">item 4</button>
       </div>
       <button
         ngToolbarWidget
-        #item5="ngToolbarWidget"
-        [aria-pressed]="item5.selected()"
-        [disabled]="widgets[5].disabled()"
-        value="item 5">item 5</button>
+        [disabled]="widgets[5].disabled()">item 5</button>
     </div>
   `,
   imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup],
@@ -819,22 +807,19 @@ class ToolbarExample {
 
 @Directive({
   selector: 'button[toolbar-button]',
-  hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
+  hostDirectives: [{directive: ToolbarWidget, inputs: ['disabled']}],
   host: {
     type: 'button',
     class: 'example-button material-symbols-outlined',
-    '[aria-label]': 'widget.value()',
   },
 })
-export class SimpleToolbarButton {
-  widget = inject(ToolbarWidget);
-}
+export class SimpleToolbarButton {}
 
 @Component({
   template: `
     <div ngToolbar>
-      <button toolbar-button value="undo">undo</button>
-      <button toolbar-button value="redo">redo</button>
+      <button toolbar-button>undo</button>
+      <button toolbar-button>redo</button>
     </div>
   `,
   imports: [Toolbar, SimpleToolbarButton],
@@ -846,7 +831,7 @@ class WrappedToolbarExample {}
   template: `
     <div ngToolbar>
       @for (item of items(); track item) {
-        <button ngToolbarWidget [value]="item.value">{{item.value}}</button>
+        <button ngToolbarWidget>{{item.value}}</button>
       }
     </div>
   `,
@@ -859,18 +844,6 @@ class ShuffledToolbarExample {
 
 @Component({
   template: `
-    <div ngToolbar>
-      <button ngToolbarWidget value="item0">Item 0</button>
-      <button ngToolbarWidget value="item0">Item 0 Copy</button>
-    </div>
-  `,
-  imports: [Toolbar, ToolbarWidget],
-  changeDetection: ChangeDetectionStrategy.Eager,
-})
-class ToolbarWithDuplicateValues {}
-
-@Component({
-  template: `
     <div ngToolbarWidgetGroup>
       Widget Group Content
     </div>
@@ -879,3 +852,20 @@ class ToolbarWithDuplicateValues {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarGroupOutsideToolbar {}
+
+@Component({
+  template: `
+    <div ngToolbar>
+      <button ngToolbarWidget>Bold</button>
+      <select ngToolbarWidget aria-label="Font family">
+        <option value="sans-serif">Sans-Serif</option>
+        <option value="serif">Serif</option>
+      </select>
+      <input ngToolbarWidget type="number" value="16" aria-label="Font size" />
+      <button ngToolbarWidget>Italic</button>
+    </div>
+  `,
+  imports: [Toolbar, ToolbarWidget],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ToolbarWithFormControlsExample {}

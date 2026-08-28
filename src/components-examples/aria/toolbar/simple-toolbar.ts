@@ -2,52 +2,97 @@ import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {ToolbarWidget} from '@angular/aria/toolbar';
 import {Dir, Directionality} from '@angular/cdk/bidi';
-import {afterRenderEffect, Component, Directive, inject, signal, viewChild} from '@angular/core';
+import {
+  afterRenderEffect,
+  booleanAttribute,
+  Component,
+  computed,
+  Directive,
+  inject,
+  input,
+  signal,
+  viewChild,
+} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
 @Directive({
   selector: 'button[toolbar-button]',
   standalone: true,
-  hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
+  hostDirectives: [{directive: ToolbarWidget, inputs: ['disabled']}],
   host: {
     type: 'button',
     class: 'example-button material-symbols-outlined',
-    '[aria-label]': 'widget.value()',
   },
 })
-export class SimpleToolbarButton {
-  widget = inject(ToolbarWidget);
-}
+export class SimpleToolbarButton {}
 
 @Directive({
   selector: 'button[toolbar-toggle-button]',
   standalone: true,
-  hostDirectives: [{directive: ToolbarWidget, inputs: ['value']}],
+  hostDirectives: [{directive: ToolbarWidget, inputs: ['disabled']}],
   host: {
     type: 'button',
     class: 'example-button material-symbols-outlined',
-    '[aria-pressed]': 'widget.selected()',
-    '[aria-label]': 'widget.value()',
+    '[attr.aria-pressed]': 'pressed()',
+    '(click)': 'toggle()',
   },
 })
 export class SimpleToolbarToggleButton {
-  widget = inject(ToolbarWidget);
+  readonly pressed = signal(false);
+
+  toggle() {
+    this.pressed.set(!this.pressed());
+  }
+}
+
+@Directive({
+  selector: '[toolbar-radio-group], [role="radiogroup"]',
+  standalone: true,
+})
+export class SimpleToolbarRadioGroup {
+  readonly selected = signal<SimpleToolbarRadioButton | null>(null);
+
+  select(button: SimpleToolbarRadioButton) {
+    this.selected.set(button);
+  }
 }
 
 @Directive({
   selector: 'button[toolbar-radio-button]',
   standalone: true,
-  hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
+  hostDirectives: [{directive: ToolbarWidget, inputs: ['disabled']}],
   host: {
     role: 'radio',
     type: 'button',
     class: 'example-button material-symbols-outlined',
-    '[aria-checked]': 'widget.selected()',
-    '[aria-label]': 'widget.value()',
+    '[attr.aria-checked]': 'checked()',
+    '(click)': 'select()',
   },
 })
 export class SimpleToolbarRadioButton {
-  widget = inject(ToolbarWidget);
+  private readonly _group = inject(SimpleToolbarRadioGroup, {optional: true});
+  readonly checkedInput = input<boolean, unknown>(false, {
+    alias: 'checked',
+    transform: booleanAttribute,
+  });
+
+  private readonly _selfChecked = signal<boolean | null>(null);
+
+  readonly checked = computed(() => {
+    if (this._group) {
+      const selected = this._group.selected();
+      if (selected !== null) {
+        return selected === this;
+      }
+      return this.checkedInput();
+    }
+    return this._selfChecked() ?? this.checkedInput();
+  });
+
+  select() {
+    this._selfChecked.set(true);
+    this._group?.select(this);
+  }
 }
 
 @Component({

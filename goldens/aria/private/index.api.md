@@ -642,20 +642,29 @@ export class TabPattern {
 }
 
 // @public
-export type ToolbarInputs<V> = Omit<ListInputs<ToolbarWidgetPattern<V>, V>, 'multi' | 'typeaheadDelay' | 'selectionMode' | 'focusMode'> & {
-    getItem: (e: Element) => ToolbarWidgetPattern<V> | undefined;
+export type ToolbarInputs = {
+    element: SignalLike<HTMLElement | undefined>;
+    activeItem: WritableSignalLike<ToolbarWidgetPattern | undefined>;
+    items: SignalLike<ToolbarWidgetPattern[]>;
+    softDisabled: SignalLike<boolean>;
+    disabled: SignalLike<boolean>;
+    orientation: SignalLike<'vertical' | 'horizontal'>;
+    textDirection: SignalLike<'rtl' | 'ltr'>;
+    wrap: SignalLike<boolean>;
+    getItem: (e: Element) => ToolbarWidgetPattern | undefined;
 };
 
 // @public
-export class ToolbarPattern<V> {
-    constructor(inputs: ToolbarInputs<V>);
+export class ToolbarPattern {
+    constructor(inputs: ToolbarInputs);
     readonly activeDescendant: SignalLike<string | undefined>;
-    readonly activeItem: () => ToolbarWidgetPattern<V> | undefined;
+    readonly activeItem: () => ToolbarWidgetPattern | undefined;
     readonly disabled: SignalLike<boolean>;
+    readonly focusManager: ListFocus<ToolbarWidgetPattern>;
     readonly hasBeenInteracted: WritableSignalLike<boolean>;
     // (undocumented)
-    readonly inputs: ToolbarInputs<V>;
-    readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
+    readonly inputs: ToolbarInputs;
+    readonly navigationBehavior: ListNavigation<ToolbarWidgetPattern>;
     onClick(event: MouseEvent): void;
     // (undocumented)
     onFocusIn(): void;
@@ -663,64 +672,50 @@ export class ToolbarPattern<V> {
     // (undocumented)
     onPointerdown(event: PointerEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
-    // (undocumented)
-    select(): void;
     setDefaultState(): void;
     setDefaultStateEffect(): void;
     readonly softDisabled: SignalLike<boolean>;
     readonly tabIndex: SignalLike<-1 | 0>;
-    validate(): string[];
 }
 
 // @public
-export interface ToolbarWidgetGroupInputs<T extends ListItem<V>, V> {
+export interface ToolbarWidgetGroupInputs {
     disabled: SignalLike<boolean>;
-    items: SignalLike<T[]>;
-    multi: SignalLike<boolean>;
-    toolbar: SignalLike<ToolbarPattern<V> | undefined>;
+    items: SignalLike<ToolbarWidgetPattern[]>;
+    toolbar: SignalLike<ToolbarPattern | undefined>;
 }
 
 // @public
-export class ToolbarWidgetGroupPattern<T extends ListItem<V>, V> {
-    constructor(inputs: ToolbarWidgetGroupInputs<T, V>);
+export class ToolbarWidgetGroupPattern {
+    constructor(inputs: ToolbarWidgetGroupInputs);
     readonly disabled: () => boolean;
     // (undocumented)
-    readonly element: () => undefined;
-    // (undocumented)
-    readonly inputs: ToolbarWidgetGroupInputs<T, V>;
-    readonly multi: () => boolean;
-    // (undocumented)
-    readonly searchTerm: () => string;
-    // (undocumented)
-    readonly selectable: () => boolean;
-    readonly toolbar: () => ToolbarPattern<V> | undefined;
-    // (undocumented)
-    readonly value: () => V;
+    readonly inputs: ToolbarWidgetGroupInputs;
+    readonly toolbar: () => ToolbarPattern | undefined;
 }
 
 // @public
-export interface ToolbarWidgetInputs<V> extends Omit<ListItem<V>, 'searchTerm' | 'index' | 'selectable'> {
-    group: SignalLike<ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined>;
-    toolbar: SignalLike<ToolbarPattern<V>>;
+export interface ToolbarWidgetInputs {
+    disabled: SignalLike<boolean>;
+    element: SignalLike<HTMLElement | undefined>;
+    group: SignalLike<ToolbarWidgetGroupPattern | undefined>;
+    id: SignalLike<string>;
+    toolbar: SignalLike<ToolbarPattern>;
 }
 
 // @public (undocumented)
-export class ToolbarWidgetPattern<V> implements ListItem<V> {
-    constructor(inputs: ToolbarWidgetInputs<V>);
+export class ToolbarWidgetPattern implements ListFocusItem, ListNavigationItem {
+    constructor(inputs: ToolbarWidgetInputs);
     readonly active: SignalLike<boolean>;
     readonly disabled: () => boolean;
     readonly element: () => HTMLElement | undefined;
-    readonly group: () => ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined;
+    readonly group: () => ToolbarWidgetGroupPattern | undefined;
     readonly id: () => string;
     readonly index: SignalLike<number>;
     // (undocumented)
-    readonly inputs: ToolbarWidgetInputs<V>;
-    readonly searchTerm: () => string;
-    readonly selectable: () => boolean;
-    readonly selected: SignalLike<boolean>;
+    readonly inputs: ToolbarWidgetInputs;
     readonly tabIndex: SignalLike<-1 | 0>;
-    readonly toolbar: () => ToolbarPattern<V>;
-    readonly value: () => V;
+    readonly toolbar: () => ToolbarPattern;
 }
 
 // @public
