@@ -438,7 +438,6 @@ export class MenuPattern<V> {
     _clearTimeouts(): void;
     close(): void;
     closeAll(): void;
-    _closeTimeout: any;
     collapse(): void;
     readonly disabled: () => boolean;
     readonly dynamicSpaceKey: SignalLike<"" | " ">;
@@ -450,6 +449,7 @@ export class MenuPattern<V> {
     // (undocumented)
     readonly inputs: MenuInputs<V>;
     readonly isFocused: WritableSignalLike<boolean>;
+    readonly items: () => MenuItemPattern<V>[];
     readonly keydownManager: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     last(): void;
     readonly listBehavior: List<MenuItemPattern<V>, V>;
@@ -460,7 +460,6 @@ export class MenuPattern<V> {
     onKeydown(event: KeyboardEvent): void;
     onMouseOut(event: MouseEvent): void;
     onMouseOver(event: MouseEvent): void;
-    _openTimeout: any;
     prev(): void;
     readonly role: () => string;
     readonly root: SignalLike<MenuTriggerPattern<V> | MenuBarPattern<V> | MenuPattern<V> | undefined>;

@@ -99,11 +99,14 @@ export class MenuPattern<V> {
   /** Whether the menu trigger has been hovered. */
   readonly hasBeenHovered = signal(false);
 
+  /** Items currently inside the menu. */
+  readonly items = () => this.inputs.items();
+
   /** Timeout used to open sub-menus on hover. */
-  _openTimeout: any;
+  private _openTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /** Timeout used to close sub-menus on hover out. */
-  _closeTimeout: any;
+  private _closeTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /** The tab index of the menu. */
   readonly tabIndex = () => this.listBehavior.tabIndex();
@@ -237,7 +240,7 @@ export class MenuPattern<V> {
     }
 
     const parent = this.inputs.parent();
-    const activeItem = this?.inputs.activeItem();
+    const activeItem = this.inputs.activeItem();
 
     if (parent instanceof MenuItemPattern) {
       const grandparent = parent.inputs.parent();
@@ -680,7 +683,11 @@ export class MenuTriggerPattern<V> {
   pendingFocusEffect(): void {
     const menu = this.inputs.menu();
     const intent = this.pendingFocus();
-    if (menu && intent) {
+    const items = menu?.items();
+
+    // We check the items so that we don't try calling into
+    // `first/last` until the items are actually available.
+    if (menu && intent && items?.length) {
       if (intent === 'first') {
         menu.first();
       } else if (intent === 'last') {
