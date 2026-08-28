@@ -701,6 +701,7 @@ export class ToolbarWidgetGroupPattern<T extends ListItem<V>, V> {
 // @public
 export interface ToolbarWidgetInputs<V> extends Omit<ListItem<V>, 'searchTerm' | 'index' | 'selectable'> {
     group: SignalLike<ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined>;
+    selectable?: SignalLike<boolean>;
     toolbar: SignalLike<ToolbarPattern<V>>;
 }
 

@@ -48,11 +48,12 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     readonly _pattern: ToolbarWidgetPattern<V>;
+    readonly selectable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly selected: () => boolean;
     readonly _toolbarPattern: _angular_core.Signal<ToolbarPattern<V>>;
     readonly value: _angular_core.InputSignal<V>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidget<any>, "[ngToolbarWidget]", ["ngToolbarWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidget<any>, "[ngToolbarWidget]", ["ngToolbarWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<ToolbarWidget<any>, never>;
 }

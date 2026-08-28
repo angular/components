@@ -597,22 +597,24 @@ describe('Toolbar', () => {
   describe('Selection', () => {
     beforeEach(async () => await setupToolbar());
 
-    it('should toggle the active item on Enter', async () => {
-      const item0 = getWidgetEl('item 0')!;
-      await click(item0);
+    it('should toggle the active item in a group on Enter', async () => {
+      const item2 = getWidgetEl('item 2')!;
+      await click(item2);
+      expect(item2.getAttribute('aria-pressed')).toBe('true');
       await keydown('Enter');
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
+      expect(item2.getAttribute('aria-pressed')).toBe('false');
       await keydown('Enter');
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
+      expect(item2.getAttribute('aria-pressed')).toBe('true');
     });
 
-    it('should toggle the active item on Space', async () => {
-      const item0 = getWidgetEl('item 0')!;
-      await click(item0);
+    it('should toggle the active item in a group on Space', async () => {
+      const item2 = getWidgetEl('item 2')!;
+      await click(item2);
+      expect(item2.getAttribute('aria-pressed')).toBe('true');
       await keydown(' ');
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
+      expect(item2.getAttribute('aria-pressed')).toBe('false');
       await keydown(' ');
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
+      expect(item2.getAttribute('aria-pressed')).toBe('true');
     });
 
     it('should toggle the active item on click', async () => {
@@ -741,6 +743,87 @@ describe('Toolbar', () => {
       expect(consoleSpy).toHaveBeenCalledWith(
         'ngToolbarWidgetGroup must be placed inside an ngToolbar container.',
       );
+    });
+  });
+
+  describe('Form controls and embedded widgets (Issue #33684)', () => {
+    let formFixture: ComponentFixture<ToolbarWithFormControlsExample>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [ToolbarWithFormControlsExample],
+        providers: [provideFakeDirectionality('ltr')],
+      });
+      formFixture = TestBed.createComponent(ToolbarWithFormControlsExample);
+      fixture = formFixture as any;
+      await formFixture.whenStable();
+    });
+
+    it('should not move toolbar focus on ArrowUp/ArrowDown on select in horizontal toolbar', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      await click(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await down(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await up(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+    });
+
+    it('should navigate across toolbar on ArrowRight / ArrowLeft from select', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      const buttons = formFixture.debugElement
+        .queryAll(By.css('button'))
+        .map(de => de.nativeElement as HTMLElement);
+
+      await click(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await right(selectEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await right(inputEl);
+      expect(document.activeElement).toBe(buttons[1]); // Italic button
+
+      await left(buttons[1]);
+      expect(document.activeElement).toBe(inputEl);
+
+      await left(inputEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await left(selectEl);
+      expect(document.activeElement).toBe(buttons[0]); // Bold button
+    });
+
+    it('should not move toolbar focus on ArrowUp/ArrowDown on number input in horizontal toolbar', async () => {
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      await click(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await down(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await up(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+    });
+
+    it('should not mark form control widgets with selectable false as selected upon click', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      const toolbarInstance = formFixture.debugElement
+        .query(By.directive(Toolbar))
+        .injector.get(Toolbar);
+
+      await click(selectEl);
+      expect(toolbarInstance.value()).toEqual([]);
+
+      await click(inputEl);
+      expect(toolbarInstance.value()).toEqual([]);
     });
   });
 });
@@ -879,3 +962,23 @@ class ToolbarWithDuplicateValues {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class ToolbarGroupOutsideToolbar {}
+
+@Component({
+  template: `
+    <div ngToolbar aria-label="Text Formatting Tools" [orientation]="orientation()">
+      <button ngToolbarWidget value="bold" aria-label="Bold">Bold</button>
+      <select ngToolbarWidget [selectable]="false" value="font-family" aria-label="Font Family">
+        <option value="sans-serif">Sans Serif</option>
+        <option value="serif">Serif</option>
+        <option value="monospace">Monospace</option>
+      </select>
+      <input ngToolbarWidget [selectable]="false" type="number" value="font-size" aria-label="Font Size" [defaultValue]="16">
+      <button ngToolbarWidget value="italic" aria-label="Italic">Italic</button>
+    </div>
+  `,
+  imports: [Toolbar, ToolbarWidget],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ToolbarWithFormControlsExample {
+  orientation = signal<'vertical' | 'horizontal'>('horizontal');
+}

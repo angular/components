@@ -55,6 +55,27 @@ function clickItem(item: ToolbarWidgetPattern<string>, mods?: ModifierKeys) {
   } as unknown as PointerEvent;
 }
 
+function keyEvent(key: string, target?: Element): KeyboardEvent {
+  const event = createKeyboardEvent('keydown', 0, key);
+  if (target) {
+    Object.defineProperty(event, 'target', {value: target, configurable: true});
+    Object.defineProperty(event, 'composedPath', {value: () => [target], configurable: true});
+  }
+  return event;
+}
+
+function pointerdownEvent(target: Element) {
+  let defaultPrevented = false;
+  return {
+    target,
+    composedPath: () => [target],
+    defaultPrevented: () => defaultPrevented,
+    preventDefault: () => {
+      defaultPrevented = true;
+    },
+  } as unknown as PointerEvent & {defaultPrevented: () => boolean};
+}
+
 function getToolbarPattern(
   inputs: Partial<{
     [K in keyof TestInputs]: TestInputs[K] extends WritableSignalLike<infer T> ? T : never;
@@ -96,8 +117,12 @@ function getWidgetPattern(
   value: string,
   toolbar: ToolbarPattern<string>,
   group?: ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string>,
+  options?: {
+    element?: HTMLElement;
+    selectable?: SignalLike<boolean>;
+  },
 ): TestWidget {
-  const element = signal(document.createElement('button'));
+  const element = signal(options?.element ?? document.createElement('button'));
   const widget = new ToolbarWidgetPattern<string>({
     id: signal(`widget-${value}`),
     element,
@@ -105,6 +130,7 @@ function getWidgetPattern(
     value: signal(value),
     group: signal(group),
     toolbar: signal(toolbar),
+    selectable: options?.selectable,
   });
   return widget as TestWidget;
 }
@@ -1296,22 +1322,28 @@ describe('Toolbar Pattern', () => {
   });
 
   describe('Selection', () => {
-    it('should toggle the active item on Enter (selection)', () => {
+    it('should toggle the active item in a group on Enter (selection)', () => {
       const {toolbar} = getPatterns();
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      // Navigate to item 2 (in group 0)
+      toolbar.onKeydown(right());
+      toolbar.onKeydown(right());
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
       toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      expect(getItem(toolbar, 'item 2').selected()).toBeTrue();
       toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
     });
 
-    it('should toggle the active item on Space (selection)', () => {
+    it('should toggle the active item in a group on Space (selection)', () => {
       const {toolbar} = getPatterns();
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      // Navigate to item 2 (in group 0)
+      toolbar.onKeydown(right());
+      toolbar.onKeydown(right());
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
       toolbar.onKeydown(space());
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
+      expect(getItem(toolbar, 'item 2').selected()).toBeTrue();
       toolbar.onKeydown(space());
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
     });
 
     it('should toggle the active item on click (selection)', () => {
@@ -1323,19 +1355,18 @@ describe('Toolbar Pattern', () => {
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
     });
 
-    it('should be able to select multiple items in the toolbar (selection)', () => {
-      const {toolbar} = getPatterns();
+    it('should be able to select multiple items via click (selection)', () => {
+      const {toolbar, items} = getPatterns();
       expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
       expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
 
       // Select first item
-      toolbar.onKeydown(enter());
+      toolbar.onClick(clickItem(items[0]));
       expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
       expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
 
-      // Navigate to and select second item
-      toolbar.onKeydown(right());
-      toolbar.onKeydown(space());
+      // Select second item
+      toolbar.onClick(clickItem(items[1]));
       expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
       expect(getItem(toolbar, 'item 1').selected()).toBeTrue();
     });
@@ -1363,12 +1394,8 @@ describe('Toolbar Pattern', () => {
       const {toolbar, items} = getPatterns();
       items[1].inputs.disabled.set(true);
 
-      // Navigate to disabled item
-      toolbar.onKeydown(right());
-      expect(toolbar.activeItem()?.value()).toBe('item 1');
-
-      // Try to select disabled item
-      toolbar.onKeydown(enter());
+      // Try to click disabled item
+      toolbar.onClick(clickItem(items[1]));
       expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
     });
 
@@ -1395,31 +1422,130 @@ describe('Toolbar Pattern', () => {
       expect(toolbar.activeItem()?.value()).toBe('item 0'); // Should reset to item 0
     });
 
-    it('should NOT set default state if keyboard interacted', () => {
+    it('should not set default state if already interacted', () => {
       const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[0]);
-      toolbar.onKeydown(right()); // Interaction (ArrowRight moves to item 1)
-
+      toolbar.inputs.activeItem.set(items[1]); // Set to item 1
+      toolbar.onKeydown(right()); // Mark interacted
       toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1 (interacted)
+      expect(toolbar.activeItem()?.value()).toBe('item 2'); // Retains navigation target
+    });
+  });
+
+  describe('Form Controls & Composite Widgets Support (Generic Handling)', () => {
+    describe('Pointerdown event handling', () => {
+      it('should mark interacted without preventDefault', () => {
+        const {toolbar} = getPatterns();
+        const divEl = document.createElement('div');
+        const event = pointerdownEvent(divEl);
+        toolbar.onPointerdown(event);
+        expect(event.defaultPrevented()).toBeFalse();
+        expect(toolbar.hasBeenInteracted()).toBeTrue();
+      });
     });
 
-    it('should NOT set default state if pointer interacted', () => {
-      const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[1]);
-      toolbar.onPointerdown(clickItem(items[1])); // Interaction
+    describe('Standalone widget keyboard navigation (horizontal)', () => {
+      let toolbar: ToolbarPattern<string>;
+      let selectEl: HTMLSelectElement;
+      let selectWidget: TestWidget;
+      let inputEl: HTMLInputElement;
+      let inputWidget: TestWidget;
+      let nextWidget: TestWidget;
 
-      toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
+      beforeEach(() => {
+        selectEl = document.createElement('select');
+        inputEl = document.createElement('input');
+        inputEl.type = 'number';
+
+        const items = signal<TestItem[]>([]);
+        const setup = getToolbarPattern({orientation: 'horizontal'}, items);
+        toolbar = setup.toolbar;
+
+        selectWidget = getWidgetPattern('select-widget', toolbar, undefined, {
+          element: selectEl,
+        });
+        inputWidget = getWidgetPattern('number-widget', toolbar, undefined, {
+          element: inputEl,
+        });
+        nextWidget = getWidgetPattern('button-next', toolbar);
+
+        items.set([selectWidget, inputWidget, nextWidget]);
+        toolbar.setDefaultState();
+      });
+
+      it('should NOT move toolbar focus on ArrowUp / ArrowDown for standalone widgets', () => {
+        expect(toolbar.activeItem()?.value()).toBe('select-widget');
+
+        toolbar.onKeydown(keyEvent('ArrowDown', selectEl));
+        expect(toolbar.activeItem()?.value()).toBe('select-widget');
+
+        toolbar.onKeydown(keyEvent('ArrowUp', selectEl));
+        expect(toolbar.activeItem()?.value()).toBe('select-widget');
+      });
+
+      it('should move toolbar focus on ArrowRight / ArrowLeft across standalone widgets', () => {
+        toolbar.onKeydown(keyEvent('ArrowRight', selectEl));
+        expect(toolbar.activeItem()?.value()).toBe('number-widget');
+
+        toolbar.onKeydown(keyEvent('ArrowRight', inputEl));
+        expect(toolbar.activeItem()?.value()).toBe('button-next');
+
+        toolbar.onKeydown(keyEvent('ArrowLeft', nextWidget.element()));
+        expect(toolbar.activeItem()?.value()).toBe('number-widget');
+      });
+
+      it('should navigate to first/last on Home/End', () => {
+        toolbar.onKeydown(keyEvent('End', selectEl));
+        expect(toolbar.activeItem()?.value()).toBe('button-next');
+
+        toolbar.onKeydown(keyEvent('Home', nextWidget.element()));
+        expect(toolbar.activeItem()?.value()).toBe('select-widget');
+      });
+
+      it('should NOT select widget when selectable is false', () => {
+        const nonSelectableWidget = getWidgetPattern('non-sel', toolbar, undefined, {
+          selectable: signal(false),
+        });
+        expect(nonSelectableWidget.selectable()).toBeFalse();
+
+        toolbar.onClick(clickItem(nonSelectableWidget));
+        expect(nonSelectableWidget.selected()).toBeFalse();
+        expect(toolbar.listBehavior.inputs.value()).toEqual([]);
+      });
     });
 
-    it('should NOT set default state if focus-in occurred', () => {
-      const {toolbar, items} = getPatterns();
-      toolbar.inputs.activeItem.set(items[1]);
-      toolbar.onFocusIn(); // Interaction
+    describe('Non-selectable widgets inside widget group', () => {
+      it('should NOT toggle on Space or Enter when selectable is false in group', () => {
+        const items = signal<TestItem[]>([]);
+        const setup = getToolbarPattern({orientation: 'horizontal'}, items);
+        const toolbar = setup.toolbar;
 
-      toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
+        const group = new ToolbarWidgetGroupPattern<TestWidget, string>({
+          disabled: signal(false),
+          multi: signal(false),
+          toolbar: () => toolbar,
+          items: signal([]),
+        });
+
+        const widget1 = getWidgetPattern('w1', toolbar, group, {selectable: signal(false)});
+        const widget2 = getWidgetPattern('w2', toolbar, group, {selectable: signal(true)});
+        (group.inputs.items as any).set([widget1, widget2]);
+        items.set([widget1, widget2]);
+        toolbar.setDefaultState();
+
+        expect(toolbar.activeItem()?.value()).toBe('w1');
+        toolbar.onKeydown(space());
+        expect(widget1.selected()).toBeFalse();
+
+        toolbar.onKeydown(enter());
+        expect(widget1.selected()).toBeFalse();
+
+        // Navigate to selectable widget2 in group
+        toolbar.onKeydown(right());
+        expect(toolbar.activeItem()?.value()).toBe('w2');
+
+        toolbar.onKeydown(enter());
+        expect(widget2.selected()).toBeTrue();
+      });
     });
   });
 });

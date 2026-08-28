@@ -84,6 +84,9 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   /** The value associated with the widget. */
   readonly value = input.required<V>();
 
+  /** Whether the widget is selectable. Complex widgets (e.g. select, input, combobox) can set this to false. */
+  readonly selectable = input(true, {transform: booleanAttribute});
+
   /** Whether the widget is currently active (focused). */
   readonly active = computed(() => this._pattern.active());
 
@@ -101,6 +104,7 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
     toolbar: this._toolbarPattern,
     id: this.id,
     value: this.value,
+    selectable: this.selectable,
     element: () => this.element,
   });
 

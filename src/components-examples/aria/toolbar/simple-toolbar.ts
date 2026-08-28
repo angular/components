@@ -71,6 +71,7 @@ export class SimpleToolbarRadioButton {
            ngCombobox
            #combobox="ngCombobox"
            ngToolbarWidget
+           [selectable]="false"
            [(value)]="value"
            [(expanded)]="popupExpanded"
            (click)="origin.focus()">

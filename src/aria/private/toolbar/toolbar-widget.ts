@@ -21,6 +21,9 @@ export interface ToolbarWidgetInputs<V> extends Omit<
 
   /** A reference to the parent widget group. */
   group: SignalLike<ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined>;
+
+  /** Whether the widget is selectable. Defaults to true. */
+  selectable?: SignalLike<boolean>;
 }
 
 export class ToolbarWidgetPattern<V> implements ListItem<V> {
@@ -49,7 +52,7 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
   readonly value = () => this.inputs.value();
 
   /** Whether the widget is selectable. */
-  readonly selectable = () => true; // Unused because toolbar does not support selection.
+  readonly selectable = () => (this.inputs.selectable ? this.inputs.selectable() : true);
 
   /** The position of the widget within the toolbar. */
   readonly index = computed(() => this.toolbar().inputs.items().indexOf(this) ?? -1);

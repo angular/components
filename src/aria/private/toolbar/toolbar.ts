@@ -82,16 +82,25 @@ export class ToolbarPattern<V> {
   /** The keydown event manager for the toolbar. */
   private readonly _keydown = computed(() => {
     const manager = new KeyboardEventManager();
+    const activeItem = this.inputs.activeItem();
 
-    return manager
+    manager
       .on(this._nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
       .on(this._prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
-      .on(this._altNextKey, () => this._groupNext(), {ignoreRepeat: false})
-      .on(this._altPrevKey, () => this._groupPrev(), {ignoreRepeat: false})
-      .on(' ', () => this.select())
-      .on('Enter', () => this.select())
       .on('Home', () => this.listBehavior.first())
       .on('End', () => this.listBehavior.last());
+
+    if (activeItem?.group()) {
+      manager
+        .on(this._altNextKey, () => this._groupNext(), {ignoreRepeat: false})
+        .on(this._altPrevKey, () => this._groupPrev(), {ignoreRepeat: false});
+    }
+
+    if (activeItem?.selectable() && activeItem?.group()) {
+      manager.on(' ', () => this.select()).on('Enter', () => this.select());
+    }
+
+    return manager;
   });
 
   /** Navigates to the next widget in a widget group. */
@@ -144,15 +153,25 @@ export class ToolbarPattern<V> {
 
     if (item) {
       this.listBehavior.goto(item);
-      this.select();
+      if (item.selectable()) {
+        this.select();
+      }
     }
   }
 
   select() {
-    const group = this.inputs.activeItem()?.group();
+    const activeItem = this.inputs.activeItem();
+    if (!activeItem || !activeItem.selectable()) {
+      return;
+    }
+    const group = activeItem.group();
 
     if (!group?.multi()) {
-      group?.inputs.items().forEach(i => this.listBehavior.deselect(i));
+      group?.inputs.items().forEach(i => {
+        if (i !== activeItem) {
+          this.listBehavior.deselect(i);
+        }
+      });
     }
 
     this.listBehavior.toggle();
@@ -193,7 +212,6 @@ export class ToolbarPattern<V> {
 
   onPointerdown(event: PointerEvent) {
     this.hasBeenInteracted.set(true);
-    event.preventDefault();
   }
 
   onFocusIn() {
@@ -202,7 +220,7 @@ export class ToolbarPattern<V> {
 
   /** Handles click events for the toolbar. */
   onClick(event: MouseEvent) {
-    if (this.disabled() || (event as PointerEvent).pointerType === '') return;
+    if (this.disabled()) return;
     this._goto(event);
   }
 
