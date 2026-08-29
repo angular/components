@@ -1,5 +1,6 @@
 import {Component, signal, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MATERIAL_ANIMATIONS} from '../core';
 import {MatContextMenuTrigger} from './context-menu-trigger';
 import {MatMenu} from './menu';
 import {MatMenuItem} from './menu-item';
@@ -7,6 +8,10 @@ import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/privat
 
 describe('context menu trigger', () => {
   let fixture: ComponentFixture<ContextMenuTest>;
+
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
 
   function getTrigger(): HTMLElement {
     return fixture.nativeElement.querySelector('.area');
@@ -21,6 +26,9 @@ describe('context menu trigger', () => {
   }
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
+    });
     fixture = TestBed.createComponent(ContextMenuTest);
     fixture.detectChanges();
   });
@@ -32,16 +40,16 @@ describe('context menu trigger', () => {
     expect(getMenu()).toBeTruthy();
   });
 
-  it('should close the menu when clicking outside the trigger', fakeAsync(() => {
+  it('should close the menu when clicking outside the trigger', async () => {
     dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
     fixture.detectChanges();
     expect(getMenu()).toBeTruthy();
 
     document.body.click();
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(getMenu()).toBe(null);
-  }));
+  });
 
   it('should reposition the menu when right-clicking within the area', () => {
     dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
@@ -57,43 +65,43 @@ describe('context menu trigger', () => {
     expect(menuRect.left).toBe(50);
   });
 
-  it('should ignore the first auxclick after opening', fakeAsync(() => {
+  it('should ignore the first auxclick after opening', async () => {
     dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
     fixture.detectChanges();
     expect(getMenu()).toBeTruthy();
 
     dispatchMouseEvent(document.body, 'auxclick');
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(getMenu()).toBeTruthy();
 
     dispatchMouseEvent(document.body, 'auxclick');
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(getMenu()).toBe(null);
-  }));
+  });
 
-  it('should close on `contextmenu` events outside the trigger', fakeAsync(() => {
+  it('should close on `contextmenu` events outside the trigger', async () => {
     dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
     fixture.detectChanges();
     expect(getMenu()).toBeTruthy();
 
     dispatchMouseEvent(document.body, 'contextmenu');
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(getMenu()).toBe(null);
-  }));
+  });
 
-  it('should not close on `contextmenu` events from inside the menu', fakeAsync(() => {
+  it('should not close on `contextmenu` events from inside the menu', async () => {
     dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
     fixture.detectChanges();
     expect(getMenu()).toBeTruthy();
 
     dispatchMouseEvent(getMenu()!, 'contextmenu');
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(getMenu()).toBeTruthy();
-  }));
+  });
 
   it('should set aria-controls on the trigger while the menu is open', () => {
     expect(getTrigger().getAttribute('aria-controls')).toBe(null);
@@ -124,7 +132,7 @@ describe('context menu trigger', () => {
     scroller.remove();
   });
 
-  it('should emit events when the menu is opened and closed', fakeAsync(() => {
+  it('should emit events when the menu is opened and closed', async () => {
     const {opened, closed} = fixture.componentInstance;
     expect(opened).toHaveBeenCalledTimes(0);
     expect(closed).toHaveBeenCalledTimes(0);
@@ -136,21 +144,21 @@ describe('context menu trigger', () => {
 
     document.body.click();
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(opened).toHaveBeenCalledTimes(1);
     expect(closed).toHaveBeenCalledTimes(1);
-  }));
+  });
 
-  it('should close the menu if the trigger is destroyed', fakeAsync(() => {
+  it('should close the menu if the trigger is destroyed', async () => {
     dispatchMouseEvent(getTrigger(), 'contextmenu', 10, 10);
     fixture.detectChanges();
     expect(getMenu()).toBeTruthy();
 
     fixture.componentInstance.showTrigger.set(false);
     fixture.detectChanges();
-    flush();
+    await wait(50);
     expect(getMenu()).toBe(null);
-  }));
+  });
 
   it('should not open when clicking on a disabled context menu trigger', () => {
     fixture.componentInstance.disabled.set(true);

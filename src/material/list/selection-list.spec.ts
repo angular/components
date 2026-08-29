@@ -1339,6 +1339,7 @@ describe('MatSelectionList with forms', () => {
         .toBe(false);
     });
 
+    // TODO: this seems tricky to switch away from `fakeAsync` for some reason.
     it('should remove a selected option from the value on destroy', fakeAsync(() => {
       listOptions[1].selected = true;
       listOptions[2].selected = true;
