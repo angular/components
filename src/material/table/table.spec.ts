@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -179,14 +179,13 @@ describe('MatTable', () => {
     ]);
   });
 
-  it('should apply custom sticky CSS class to sticky cells', fakeAsync(() => {
+  it('should apply custom sticky CSS class to sticky cells', async () => {
     let fixture = TestBed.createComponent(StickyTableApp);
     fixture.detectChanges();
-    flushMicrotasks();
 
     const stuckCellElement = fixture.nativeElement.querySelector('table th')!;
     expect(stuckCellElement.classList).toContain('mat-mdc-table-sticky');
-  }));
+  });
 
   // Note: needs to be fakeAsync so it catches the error.
   it('should not throw when a row definition is on an ng-container', fakeAsync(() => {
@@ -259,12 +258,10 @@ describe('MatTable', () => {
       ]);
     });
 
-    it('should update the page index when switching to a smaller data set from a page', fakeAsync(() => {
+    it('should update the page index when switching to a smaller data set from a page', () => {
       // Add 20 rows so we can switch pages.
       for (let i = 0; i < 20; i++) {
         component.underlyingDataSource.addData();
-        fixture.detectChanges();
-        tick();
         fixture.detectChanges();
       }
 
@@ -275,20 +272,18 @@ describe('MatTable', () => {
       // Switch to a smaller data set.
       dataSource.data = [{a: 'a_0', b: 'b_0', c: 'c_0'}];
       fixture.detectChanges();
-      tick();
-      fixture.detectChanges();
 
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_0', 'b_0', 'c_0'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
-    }));
+    });
 
-    it('should be able to filter the table contents', fakeAsync(() => {
+    it('should be able to filter the table contents', async () => {
       // Change filter to a_1, should match one row
       dataSource.filter = 'a_1';
-      flushMicrotasks(); // Resolve promise that updates paginator's length
+      await fixture.whenStable(); // Resolve promise that updates paginator's length
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(1);
       expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
@@ -302,7 +297,6 @@ describe('MatTable', () => {
 
       // Change filter to '  A_2  ', should match one row (ignores case and whitespace)
       dataSource.filter = '  A_2  ';
-      flushMicrotasks();
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(1);
       expect(dataSource.filteredData[0]).toBe(dataSource.data[1]);
@@ -314,7 +308,6 @@ describe('MatTable', () => {
 
       // Change filter to empty string, should match all rows
       dataSource.filter = '';
-      flushMicrotasks();
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(3);
       expect(dataSource.filteredData[0]).toBe(dataSource.data[0]);
@@ -348,7 +341,6 @@ describe('MatTable', () => {
         return dataStr.indexOf(filter) != -1;
       };
       dataSource.filter = 'zebra';
-      flushMicrotasks();
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
@@ -358,26 +350,24 @@ describe('MatTable', () => {
 
       // Change the filter to a falsy value that might come in from the view.
       dataSource.filter = 0 as unknown as string;
-      flushMicrotasks();
       fixture.detectChanges();
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
-    }));
+    });
 
-    it('should not match concatenated words', fakeAsync(() => {
+    it('should not match concatenated words', () => {
       // Set the value to the last character of the first
       // column plus the first character of the second column.
       dataSource.filter = '1b';
-      flushMicrotasks();
       fixture.detectChanges();
       expect(dataSource.filteredData.length).toBe(0);
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
-    }));
+    });
 
     it('should be able to sort the table contents', () => {
       // Activate column A sort
@@ -510,13 +500,14 @@ describe('MatTable', () => {
       ]);
     });
 
-    it('should be able to page the table contents', fakeAsync(() => {
+    it('should be able to page the table contents', async () => {
       // Add 100 rows, should only display first 5 since page length is 5
       for (let i = 0; i < 100; i++) {
         component.underlyingDataSource.addData();
       }
       fixture.detectChanges();
-      flushMicrotasks(); // Resolve promise that updates paginator's length
+      await fixture.whenStable();
+
       expectTableToMatchContent(tableElement, [
         ['Column A', 'Column B', 'Column C'],
         ['a_1', 'b_1', 'c_1'],
@@ -539,7 +530,7 @@ describe('MatTable', () => {
         ['a_10', 'b_10', 'c_10'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
-    }));
+    });
 
     it('should sort strings with numbers larger than MAX_SAFE_INTEGER correctly', () => {
       const large = '9563256840123535';

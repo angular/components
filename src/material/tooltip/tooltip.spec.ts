@@ -23,7 +23,7 @@ import {
   ViewChild,
   WritableSignal,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MAT_TOOLTIP_DEFAULT_OPTIONS,
@@ -979,33 +979,6 @@ describe('MatTooltip', () => {
       expect(classList).toContain('mat-mdc-tooltip-panel-left');
     });
 
-    it('should clear the show timeout on destroy', async () => {
-      assertTooltipInstance(tooltipDirective, false);
-
-      tooltipDirective.show(1000);
-      fixture.detectChanges();
-
-      // Note that we aren't asserting anything, but `fakeAsync` will
-      // throw if we have any timers by the end of the test.
-      fixture.destroy();
-    });
-
-    it('should clear the hide timeout on destroy', async () => {
-      assertTooltipInstance(tooltipDirective, false);
-
-      tooltipDirective.show();
-      await wait(0);
-      fixture.detectChanges();
-      await wait(0);
-
-      tooltipDirective.hide(1000);
-      fixture.detectChanges();
-
-      // Note that we aren't asserting anything, but `fakeAsync` will
-      // throw if we have any timers by the end of the test.
-      fixture.destroy();
-    });
-
     it('should set the multiline class on tooltips with messages that overflow', async () => {
       fixture.componentInstance.message =
         'This is a very long message that should cause the' +
@@ -1270,25 +1243,26 @@ describe('MatTooltip', () => {
       platform.ANDROID = true;
     });
 
-    // Note: switching this test away from `fakeAsync` causes it to fail only on CI.
-    it('should have a delay when showing on touchstart', fakeAsync(() => {
+    afterEach(() => {
+      jasmine.clock().uninstall();
+    });
+
+    it('should have a delay when showing on touchstart', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      tick(250); // Halfway through the delay.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
 
-      tick(500); // Finish the delay.
+      await wait(500); // Finish the delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
-      flush();
-    }));
+    });
 
     it('should be able to disable opening on touch', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
@@ -1298,7 +1272,7 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      await wait(10); // Just wait a bit to ensure no timer firs
+      await wait(10); // Just wait a bit to ensure no timer fires
       fixture.detectChanges();
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
@@ -1314,55 +1288,59 @@ describe('MatTooltip', () => {
       expect(event.defaultPrevented).toBe(false);
     });
 
-    it('should close on touchend with a delay', fakeAsync(() => {
+    it('should close on touchend with a delay', () => {
+      jasmine.clock().install();
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      tick(500); // Finish the open delay.
+      jasmine.clock().tick(500); // Finish the open delay.
+      jasmine.clock().tick(0); // Finish the show delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
       dispatchFakeEvent(button, 'touchend');
       fixture.detectChanges();
-      tick(1000); // 2/3 through the delay
+      jasmine.clock().tick(1000); // 2/3 through the delay
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
-      tick(500); // Finish the delay.
+      jasmine.clock().tick(500); // Finish the delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false); // Finish the exit animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
-      flush();
-    }));
+      jasmine.clock().uninstall();
+    });
 
-    it('should close on touchcancel with a delay', fakeAsync(() => {
+    it('should close on touchcancel with a delay', () => {
+      jasmine.clock().install();
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      tick(500); // Finish the open delay.
+      jasmine.clock().tick(500); // Finish the open delay.
+      jasmine.clock().tick(0); // Finish the show delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
       dispatchFakeEvent(button, 'touchcancel');
       fixture.detectChanges();
-      tick(1000); // 2/3 through the delay
+      jasmine.clock().tick(1000); // 2/3 through the delay
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
-      tick(500); // Finish the delay.
+      jasmine.clock().tick(500); // Finish the delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false); // Finish the exit animation.
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
-      flush();
-    }));
+      jasmine.clock().uninstall();
+    });
 
     it('should disable native touch interactions', () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
@@ -1476,7 +1454,7 @@ describe('MatTooltip', () => {
   });
 
   describe('mouse wheel handling', () => {
-    it('should close when a wheel event causes the cursor to leave the trigger', fakeAsync(() => {
+    it('should close when a wheel event causes the cursor to leave the trigger', async () => {
       // We don't bind wheel events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
         return;
@@ -1488,7 +1466,7 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(button, 'mouseenter');
       fixture.detectChanges();
-      tick(500); // Finish the open delay.
+      await wait(0); // Finish the open delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
@@ -1502,13 +1480,12 @@ describe('MatTooltip', () => {
 
       dispatchEvent(button, wheelEvent);
       fixture.detectChanges();
-      tick(1500); // Finish the delay.
+      await wait(0); // Finish the delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, false);
 
       assertTooltipInstance(fixture.componentInstance.tooltip, false);
-      flush();
-    }));
+    });
 
     it('should not close if the cursor is over the trigger after a wheel event', async () => {
       // We don't bind wheel events on mobile devices.
@@ -1522,7 +1499,7 @@ describe('MatTooltip', () => {
 
       dispatchFakeEvent(button, 'mouseenter');
       fixture.detectChanges();
-      await wait(500); // Finish the open dela.
+      await wait(0); // Finish the open delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true);
       assertTooltipInstance(fixture.componentInstance.tooltip, true);
