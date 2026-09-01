@@ -898,6 +898,29 @@ describe('MatTabGroup', () => {
         'Child 3',
       ]);
     });
+
+    it('should emit selectedTabChange in the same task as selectedIndexChange', async () => {
+      const fixture = TestBed.createComponent(TabGroupWithBoundIndex);
+      fixture.detectChanges();
+
+      const tabGroup = fixture.componentInstance.tabGroup;
+      const emissions: string[] = [];
+
+      tabGroup.selectedIndexChange.subscribe(() => emissions.push('selectedIndexChange'));
+      tabGroup.selectedTabChange.subscribe(() => emissions.push('selectedTabChange'));
+
+      fixture.componentInstance.selectedIndex = 2;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      // Flush the microtask queue. Both events should have been delivered by now. If
+      // `selectedTabChange` is delivered in a later task, an index that has since been
+      // superseded can be handed to the app, which can push a stale value back into
+      // `selectedIndex` and cause an endless toggle.
+      await Promise.resolve();
+
+      expect(emissions).toEqual(['selectedIndexChange', 'selectedTabChange']);
+    });
   });
 
   describe('nested tabs', () => {
@@ -1649,3 +1672,19 @@ class TabsWithAlignConfig {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class TabsWithAlignCenter {}
+
+@Component({
+  template: `
+    <mat-tab-group [selectedIndex]="selectedIndex">
+      <mat-tab label="One">One</mat-tab>
+      <mat-tab label="Two">Two</mat-tab>
+      <mat-tab label="Three">Three</mat-tab>
+    </mat-tab-group>
+  `,
+  imports: [MatTabsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TabGroupWithBoundIndex {
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
+  selectedIndex = 0;
+}
