@@ -148,15 +148,17 @@
   $icon-offset: token-utils.slot($icon-offset-token, $fallbacks, true);
 
   @if ($with-icon-horizontal-padding-token) {
-    // stylelint-disable-next-line selector-class-pattern
-    &:has(.material-icons, mat-icon, [matButtonIcon]) {
+    // stylelint-disable selector-class-pattern
+    &:has(.material-icons, .material-symbols-outlined, .material-symbols-rounded,
+      .material-symbols-sharp, mat-icon, [matButtonIcon]) {
       padding: 0 token-utils.slot($with-icon-horizontal-padding-token, $fallbacks, true);
     }
+    // stylelint-enable selector-class-pattern
   }
 
   // MDC expects button icons to contain this HTML content:
   // ```html
-  //   <span class="mdc-button__icon material-icons">favorite</span>
+  //   <span class="mdc-button__icon material-symbols-outlined">favorite</span>
   // ```
   // However, Angular Material expects a `mat-icon` instead. The following
   // styles will lay out the icons appropriately.
