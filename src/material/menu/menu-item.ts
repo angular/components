@@ -163,7 +163,10 @@ export class MatMenuItem implements FocusableOption, AfterViewInit, OnDestroy {
   /** Gets the label to be used when determining whether the option should be focused. */
   getLabel(): string {
     const clone = this._elementRef.nativeElement.cloneNode(true) as HTMLElement;
-    const icons = clone.querySelectorAll('mat-icon, .material-icons');
+    const icons = clone.querySelectorAll(
+      'mat-icon, .material-icons, .material-symbols-outlined, ' +
+        '.material-symbols-rounded, .material-symbols-sharp',
+    );
 
     // Strip away icons, so they don't show up in the text.
     for (let i = 0; i < icons.length; i++) {

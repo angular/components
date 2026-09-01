@@ -76,12 +76,17 @@ $indicator-offset: calc(#{$border-width} + 2px);
   // ```
   // However, Angular Material expects a `mat-icon` instead. The following
   // mixin will style the icons appropriately.
-  // stylelint-disable-next-line selector-class-pattern
-  .mat-icon, .material-icons {
+  // stylelint-disable selector-class-pattern
+  .mat-icon,
+  .material-icons,
+  .material-symbols-outlined,
+  .material-symbols-rounded,
+  .material-symbols-sharp {
     transition: transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);
     fill: currentColor;
     will-change: transform;
   }
+  // stylelint-enable selector-class-pattern
 
   .mat-focus-indicator::before {
     margin: calc(#{$indicator-offset} * -1);
@@ -214,16 +219,28 @@ $indicator-offset: calc(#{$border-width} + 2px);
   // uses the same template as button.
   [dir='rtl'] & .mdc-button__label + .mat-icon,
   [dir='rtl'] & .mdc-button__label + .material-icons,
+  [dir='rtl'] & .mdc-button__label + .material-symbols-outlined,
+  [dir='rtl'] & .mdc-button__label + .material-symbols-rounded,
+  [dir='rtl'] & .mdc-button__label + .material-symbols-sharp,
   > .mat-icon,
-  > .material-icons {
+  > .material-icons,
+  > .material-symbols-outlined,
+  > .material-symbols-rounded,
+  > .material-symbols-sharp {
     margin-left: -8px;
     margin-right: 12px;
   }
 
   .mdc-button__label + .mat-icon,
   .mdc-button__label + .material-icons,
+  .mdc-button__label + .material-symbols-outlined,
+  .mdc-button__label + .material-symbols-rounded,
+  .mdc-button__label + .material-symbols-sharp,
   [dir='rtl'] & > .mat-icon,
-  [dir='rtl'] & > .material-icons {
+  [dir='rtl'] & > .material-icons,
+  [dir='rtl'] & > .material-symbols-outlined,
+  [dir='rtl'] & > .material-symbols-rounded,
+  [dir='rtl'] & > .material-symbols-sharp {
     margin-left: 12px;
     margin-right: -8px;
   }

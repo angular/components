@@ -132,7 +132,8 @@ mat-menu {
 
   @include button-common.reset;
 
-  $icons-selector: '.material-icons, mat-icon, [matButtonIcon]';
+  $icons-selector: '.material-icons, .material-symbols-outlined, .material-symbols-rounded, ' +
+    '.material-symbols-sharp, mat-icon, [matButtonIcon]';
 
   [dir='rtl'] & {
     padding-left: token-utils.slot(menu-item-trailing-spacing, $fallbacks);
