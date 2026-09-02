@@ -1,3 +1,17 @@
+<a name="22.1.5"></a>
+# 22.1.5 "platinum-parachute" (2026-09-02)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9a63c20b0](https://github.com/angular/components/commit/9a63c20b0ce854f81f71d464733eba706adb69c7) | fix | **combobox:** popup not closing when focus leaves it ([#33697](https://github.com/angular/components/pull/33697)) |
+| [9ff8a7c42](https://github.com/angular/components/commit/9ff8a7c429155a4b7c4d70b190ec8e5df1f9ec4a) | fix | **menu:** focus not moved into menu if items are delayed ([#33743](https://github.com/angular/components/pull/33743)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bef29a201](https://github.com/angular/components/commit/bef29a201aae3963509213a144aef98bb2ad9cf4) | fix | add forms to cdk peer dependencies ([#33666](https://github.com/angular/components/pull/33666)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.4"></a>
 # 22.1.4 "nickel-nose" (2026-08-26)
 ### cdk
