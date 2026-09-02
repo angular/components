@@ -16,7 +16,7 @@ import {
   contentChildren,
   afterRenderEffect,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern, reportViolations} from '../private';
+import {ToolbarWidgetGroupPattern, reportViolations} from '../private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidget} from './toolbar-widget';
 import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
@@ -32,7 +32,7 @@ import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
   exportAs: 'ngToolbarWidgetGroup',
   providers: [{provide: TOOLBAR_WIDGET_GROUP, useExisting: ToolbarWidgetGroup}],
 })
-export class ToolbarWidgetGroup<V> {
+export class ToolbarWidgetGroup {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -40,10 +40,10 @@ export class ToolbarWidgetGroup<V> {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Toolbar. */
-  private readonly _toolbar = inject<Toolbar<V>>(Toolbar, {optional: true});
+  private readonly _toolbar = inject<Toolbar>(Toolbar, {optional: true});
 
   /** The list of child widgets within the group. */
-  private readonly _widgets = contentChildren<ToolbarWidget<V>>(ToolbarWidget, {descendants: true});
+  private readonly _widgets = contentChildren<ToolbarWidget>(ToolbarWidget, {descendants: true});
 
   /** The parent Toolbar UIPattern. */
   private readonly _toolbarPattern = computed(() => this._toolbar?._pattern);
@@ -54,11 +54,8 @@ export class ToolbarWidgetGroup<V> {
   /** The list of toolbar items within the group. */
   private readonly _itemPatterns = () => this._widgets().map(w => w._pattern);
 
-  /** Whether the group allows multiple widgets to be selected. */
-  readonly multi = input(false, {transform: booleanAttribute});
-
   /** The ToolbarWidgetGroup UIPattern. */
-  readonly _pattern = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V>({
+  readonly _pattern = new ToolbarWidgetGroupPattern({
     ...this,
     items: this._itemPatterns,
     toolbar: this._toolbarPattern,

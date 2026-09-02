@@ -7,45 +7,75 @@
  */
 
 import {_getEventTarget} from '@angular/cdk/platform';
-import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
+import {
+  computed,
+  signal,
+  SignalLike,
+  WritableSignalLike,
+} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager} from '../behaviors/event-manager';
-import {List, ListInputs} from '../behaviors/list/list';
+import {ListFocus} from '../behaviors/list-focus/list-focus';
+import {ListNavigation} from '../behaviors/list-navigation/list-navigation';
 import {ToolbarWidgetPattern} from './toolbar-widget';
 
 /** Represents the required inputs for a toolbar. */
-export type ToolbarInputs<V> = Omit<
-  ListInputs<ToolbarWidgetPattern<V>, V>,
-  'multi' | 'typeaheadDelay' | 'selectionMode' | 'focusMode'
-> & {
+export type ToolbarInputs = {
+  /** The html element that should receive focus. */
+  element: SignalLike<HTMLElement | undefined>;
+
+  /** The active item. */
+  activeItem: WritableSignalLike<ToolbarWidgetPattern | undefined>;
+
+  /** The items in the toolbar. */
+  items: SignalLike<ToolbarWidgetPattern[]>;
+
+  /** Whether disabled items in the toolbar should be focusable. */
+  softDisabled: SignalLike<boolean>;
+
+  /** Whether the toolbar is disabled. */
+  disabled: SignalLike<boolean>;
+
+  /** Whether the toolbar is vertically or horizontally oriented. */
+  orientation: SignalLike<'vertical' | 'horizontal'>;
+
+  /** The direction that text is read based on the users locale. */
+  textDirection: SignalLike<'rtl' | 'ltr'>;
+
+  /** Whether focus should wrap when navigating. */
+  wrap: SignalLike<boolean>;
+
   /** A function that returns the toolbar item associated with a given element. */
-  getItem: (e: Element) => ToolbarWidgetPattern<V> | undefined;
+  getItem: (e: Element) => ToolbarWidgetPattern | undefined;
 };
 
 /** Controls the state of a toolbar. */
-export class ToolbarPattern<V> {
-  /** The list behavior for the toolbar. */
-  readonly listBehavior: List<ToolbarWidgetPattern<V>, V>;
+export class ToolbarPattern {
+  /** Controls focus for the toolbar. */
+  readonly focusManager: ListFocus<ToolbarWidgetPattern>;
+
+  /** Controls navigation for the toolbar. */
+  readonly navigationBehavior: ListNavigation<ToolbarWidgetPattern>;
 
   /** Whether the toolbar has been interacted with. */
   readonly hasBeenInteracted = signal(false);
 
-  /** Whether the tablist is vertically or horizontally oriented. */
+  /** Whether the toolbar is vertically or horizontally oriented. */
   readonly orientation: SignalLike<'vertical' | 'horizontal'>;
 
   /** Whether disabled items in the group should be focusable. */
   readonly softDisabled: SignalLike<boolean>;
 
   /** Whether the toolbar is disabled. */
-  readonly disabled = computed(() => this.listBehavior.disabled());
+  readonly disabled = computed(() => this.focusManager.isListDisabled());
 
-  /** The tab index of the toolbar (if using activedescendant). */
-  readonly tabIndex = computed(() => this.listBehavior.tabIndex());
+  /** The tab index of the toolbar. */
+  readonly tabIndex = computed(() => this.focusManager.getListTabIndex());
 
-  /** The id of the current active widget (if using activedescendant). */
-  readonly activeDescendant = computed(() => this.listBehavior.activeDescendant());
+  /** The id of the current active widget. */
+  readonly activeDescendant = computed(() => this.focusManager.getActiveDescendant());
 
   /** The currently active item in the toolbar. */
-  readonly activeItem = () => this.listBehavior.inputs.activeItem();
+  readonly activeItem = () => this.inputs.activeItem();
 
   /** The key used to navigate to the previous widget. */
   private readonly _prevKey = computed(() => {
@@ -82,30 +112,35 @@ export class ToolbarPattern<V> {
   /** The keydown event manager for the toolbar. */
   private readonly _keydown = computed(() => {
     const manager = new KeyboardEventManager();
+    const activeItem = this.inputs.activeItem();
 
-    return manager
-      .on(this._nextKey, () => this.listBehavior.next(), {ignoreRepeat: false})
-      .on(this._prevKey, () => this.listBehavior.prev(), {ignoreRepeat: false})
-      .on(this._altNextKey, () => this._groupNext(), {ignoreRepeat: false})
-      .on(this._altPrevKey, () => this._groupPrev(), {ignoreRepeat: false})
-      .on(' ', () => this.select())
-      .on('Enter', () => this.select())
-      .on('Home', () => this.listBehavior.first())
-      .on('End', () => this.listBehavior.last());
+    manager
+      .on(this._nextKey, () => this.navigationBehavior.next(), {ignoreRepeat: false})
+      .on(this._prevKey, () => this.navigationBehavior.prev(), {ignoreRepeat: false})
+      .on('Home', () => this.navigationBehavior.first())
+      .on('End', () => this.navigationBehavior.last());
+
+    if (activeItem?.group()) {
+      manager
+        .on(this._altNextKey, () => this._groupNext(), {ignoreRepeat: false})
+        .on(this._altPrevKey, () => this._groupPrev(), {ignoreRepeat: false});
+    }
+
+    return manager;
   });
 
   /** Navigates to the next widget in a widget group. */
   private _groupNext() {
     const currGroup = this.inputs.activeItem()?.group();
-    const nextGroup = this.listBehavior.navigationBehavior.peekNext()?.group();
+    const nextGroup = this.navigationBehavior.peekNext()?.group();
 
     if (!currGroup) {
       return;
     }
 
     if (currGroup !== nextGroup) {
-      this.listBehavior.goto(
-        this.listBehavior.navigationBehavior.peekFirst({
+      this.navigationBehavior.goto(
+        this.navigationBehavior.peekFirst({
           items: currGroup.inputs.items(),
         })!,
       );
@@ -113,21 +148,21 @@ export class ToolbarPattern<V> {
       return;
     }
 
-    this.listBehavior.next();
+    this.navigationBehavior.next();
   }
 
   /** Navigates to the previous widget in a widget group. */
   private _groupPrev() {
     const currGroup = this.inputs.activeItem()?.group();
-    const nextGroup = this.listBehavior.navigationBehavior.peekPrev()?.group();
+    const nextGroup = this.navigationBehavior.peekPrev()?.group();
 
     if (!currGroup) {
       return;
     }
 
     if (currGroup !== nextGroup) {
-      this.listBehavior.goto(
-        this.listBehavior.navigationBehavior.peekLast({
+      this.navigationBehavior.goto(
+        this.navigationBehavior.peekLast({
           items: currGroup.inputs.items(),
         })!,
       );
@@ -135,7 +170,7 @@ export class ToolbarPattern<V> {
       return;
     }
 
-    this.listBehavior.prev();
+    this.navigationBehavior.prev();
   }
 
   /** Navigates to the widget targeted by a pointer event. */
@@ -143,45 +178,24 @@ export class ToolbarPattern<V> {
     const item = this.inputs.getItem(_getEventTarget(e) as Element);
 
     if (item) {
-      this.listBehavior.goto(item);
-      this.select();
+      this.navigationBehavior.goto(item);
     }
   }
 
-  select() {
-    const group = this.inputs.activeItem()?.group();
-
-    if (!group?.multi()) {
-      group?.inputs.items().forEach(i => this.listBehavior.deselect(i));
-    }
-
-    this.listBehavior.toggle();
-  }
-
-  constructor(readonly inputs: ToolbarInputs<V>) {
+  constructor(readonly inputs: ToolbarInputs) {
     this.orientation = inputs.orientation;
     this.softDisabled = inputs.softDisabled;
 
-    this.listBehavior = new List({
+    this.focusManager = new ListFocus({
       ...inputs,
-      multi: () => true,
       focusMode: () => 'roving',
-      selectionMode: () => 'explicit',
-      typeaheadDelay: () => 0, // Toolbar widgets do not support typeahead.
     });
-  }
 
-  /** Returns a set of violations */
-  validate(): string[] {
-    const violations: string[] = [];
-
-    const values = this.inputs.items().map(w => w.value());
-    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
-    if (duplicates.length > 0) {
-      violations.push(`Duplicate value '${duplicates[0]}' detected inside ngToolbar.`);
-    }
-
-    return violations;
+    this.navigationBehavior = new ListNavigation({
+      ...inputs,
+      focusMode: () => 'roving',
+      focusManager: this.focusManager,
+    });
   }
 
   /** Handles keydown events for the toolbar. */
@@ -193,7 +207,6 @@ export class ToolbarPattern<V> {
 
   onPointerdown(event: PointerEvent) {
     this.hasBeenInteracted.set(true);
-    event.preventDefault();
   }
 
   onFocusIn() {
@@ -209,11 +222,10 @@ export class ToolbarPattern<V> {
   /**
    * Sets the toolbar to its default initial state.
    *
-   * Sets the active index to the selected widget if one exists and is focusable.
-   * Otherwise, sets the active index to the first focusable widget.
+   * Sets the active index to the first focusable widget.
    */
   setDefaultState() {
-    const firstItem = this.listBehavior.navigationBehavior.peekFirst({
+    const firstItem = this.navigationBehavior.peekFirst({
       items: this.inputs.items(),
     });
 

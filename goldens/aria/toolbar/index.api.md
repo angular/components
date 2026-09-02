@@ -12,62 +12,58 @@ import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export class Toolbar<V> implements OnDestroy {
+export class Toolbar implements OnDestroy {
     constructor();
-    readonly _collection: SortedCollection<ToolbarWidget<V>>;
+    readonly _collection: SortedCollection<ToolbarWidget>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly _itemPatterns: _angular_core.Signal<ToolbarWidgetPattern<V>[]>;
+    readonly _itemPatterns: _angular_core.Signal<ToolbarWidgetPattern[]>;
     // (undocumented)
     ngOnDestroy(): void;
     readonly orientation: _angular_core.InputSignal<"horizontal" | "vertical">;
-    readonly _pattern: ToolbarPattern<V>;
+    readonly _pattern: ToolbarPattern;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
-    readonly value: _angular_core.ModelSignal<V[]>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Toolbar<any>, "[ngToolbar]", ["ngToolbar"], { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; }, { "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Toolbar, "[ngToolbar]", ["ngToolbar"], { "orientation": { "alias": "orientation"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<Toolbar<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<Toolbar, never>;
 }
 
 // @public
-export const TOOLBAR_WIDGET_GROUP: InjectionToken<ToolbarWidgetGroup<unknown>>;
+export const TOOLBAR_WIDGET_GROUP: InjectionToken<ToolbarWidgetGroup>;
 
 // @public
-export class ToolbarWidget<V> implements OnInit, OnDestroy {
+export class ToolbarWidget implements OnInit, OnDestroy {
     readonly active: _angular_core.Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly _group: ToolbarWidgetGroup<V> | null;
+    readonly _group: ToolbarWidgetGroup | null;
     readonly hardDisabled: _angular_core.Signal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    readonly _pattern: ToolbarWidgetPattern<V>;
-    readonly selected: () => boolean;
-    readonly _toolbarPattern: _angular_core.Signal<ToolbarPattern<V>>;
-    readonly value: _angular_core.InputSignal<V>;
+    readonly _pattern: ToolbarWidgetPattern;
+    readonly _toolbarPattern: _angular_core.Signal<ToolbarPattern>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidget<any>, "[ngToolbarWidget]", ["ngToolbarWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidget, "[ngToolbarWidget]", ["ngToolbarWidget"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ToolbarWidget<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ToolbarWidget, never>;
 }
 
 // @public
-export class ToolbarWidgetGroup<V> {
+export class ToolbarWidgetGroup {
     constructor();
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    readonly _pattern: ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V>;
+    readonly _pattern: ToolbarWidgetGroupPattern;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidgetGroup<any>, "[ngToolbarWidgetGroup]", ["ngToolbarWidgetGroup"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "multi": { "alias": "multi"; "required": false; "isSignal": true; }; }, {}, ["_widgets"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ToolbarWidgetGroup, "[ngToolbarWidgetGroup]", ["ngToolbarWidgetGroup"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["_widgets"], never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ToolbarWidgetGroup<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<ToolbarWidgetGroup, never>;
 }
 
 // (No @packageDocumentation comment for this package)

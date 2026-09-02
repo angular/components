@@ -32,10 +32,10 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
  *
  * The `ngToolbarWidget` directive should be applied to any native HTML element that acts
  * as an interactive widget within an `ngToolbar` or `ngToolbarWidgetGroup`. It enables
- * keyboard navigation and selection within the toolbar.
+ * keyboard navigation within the toolbar.
  *
  * ```html
- * <button ngToolbarWidget value="action-id" [disabled]="isDisabled">
+ * <button ngToolbarWidget [disabled]="isDisabled">
  *   Perform Action
  * </button>
  * ```
@@ -56,7 +56,7 @@ import type {ToolbarWidgetGroup} from './toolbar-widget-group';
     '[id]': '_pattern.id()',
   },
 })
-export class ToolbarWidget<V> implements OnInit, OnDestroy {
+export class ToolbarWidget implements OnInit, OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -64,13 +64,13 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Toolbar. */
-  private readonly _toolbar = inject<Toolbar<V>>(Toolbar);
+  private readonly _toolbar = inject<Toolbar>(Toolbar);
 
   /** A unique identifier for the widget. */
   readonly id = input(inject(_IdGenerator).getId('ng-toolbar-widget-', true));
 
   /** The parent Toolbar UIPattern. */
-  readonly _toolbarPattern = computed<ToolbarPattern<V>>(() => this._toolbar._pattern);
+  readonly _toolbarPattern = computed<ToolbarPattern>(() => this._toolbar._pattern);
 
   /** Whether the widget is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
@@ -79,28 +79,20 @@ export class ToolbarWidget<V> implements OnInit, OnDestroy {
   readonly hardDisabled = computed(() => this._pattern.disabled() && !this._toolbar.softDisabled());
 
   /** The optional ToolbarWidgetGroup this widget belongs to. */
-  readonly _group = inject<ToolbarWidgetGroup<V>>(TOOLBAR_WIDGET_GROUP, {optional: true});
-
-  /** The value associated with the widget. */
-  readonly value = input.required<V>();
+  readonly _group = inject<ToolbarWidgetGroup>(TOOLBAR_WIDGET_GROUP, {optional: true});
 
   /** Whether the widget is currently active (focused). */
   readonly active = computed(() => this._pattern.active());
 
-  /** Whether the widget is selected (only relevant in a selection group). */
-  readonly selected = () => this._pattern.selected();
-
-  private readonly _groupPattern: SignalLike<
-    ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined
-  > = () => this._group?._pattern;
+  private readonly _groupPattern: SignalLike<ToolbarWidgetGroupPattern | undefined> = () =>
+    this._group?._pattern;
 
   /** The ToolbarWidget UIPattern. */
-  readonly _pattern = new ToolbarWidgetPattern<V>({
+  readonly _pattern = new ToolbarWidgetPattern({
     ...this,
     group: this._groupPattern,
     toolbar: this._toolbarPattern,
     id: this.id,
-    value: this.value,
     element: () => this.element,
   });
 
