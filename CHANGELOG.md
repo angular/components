@@ -1,3 +1,24 @@
+<a name="22.2.0-next.4"></a>
+# 22.2.0-next.4 "platinum-piano" (2026-09-02)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [de579cc34](https://github.com/angular/components/commit/de579cc349fe9159aa5882b45734868d1ee6d0f3) | fix | **combobox:** popup not closing when focus leaves it ([#33697](https://github.com/angular/components/pull/33697)) |
+| [46b918eda](https://github.com/angular/components/commit/46b918edaf1f7f79d3e7b05b730275d2697647c0) | fix | **menu:** focus not moved into menu if items are delayed ([#33743](https://github.com/angular/components/pull/33743)) |
+| [cd9c7da8b](https://github.com/angular/components/commit/cd9c7da8b6caf503cf1c0b1de1e7e861077abefb) | fix | **menu:** make MenuItem value optional ([#33715](https://github.com/angular/components/pull/33715)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5d64e397b](https://github.com/angular/components/commit/5d64e397b47e722e6ec8cd9eed69cd032766f656) | feat | **icon:** add material symbol classes automatically ([#33750](https://github.com/angular/components/pull/33750)) |
+| [d33df3168](https://github.com/angular/components/commit/d33df316812be211a460cbbcc22bae4e8a3a6c47) | fix | **menu:** allow focus to land on disabledInteractive items ([#33749](https://github.com/angular/components/pull/33749)) |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9ed16f1ac](https://github.com/angular/components/commit/9ed16f1ac9a1abc6d7676662d292b8e44fabdc47) | fix | add forms to cdk peer dependencies ([#33666](https://github.com/angular/components/pull/33666)) |
+| [ab16b1fb9](https://github.com/angular/components/commit/ab16b1fb906475b938a49580ef3b2888d1611bfb) | fix | include material symbols in selectors ([#33754](https://github.com/angular/components/pull/33754)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.5"></a>
 # 22.1.5 "platinum-parachute" (2026-09-02)
 ### aria
