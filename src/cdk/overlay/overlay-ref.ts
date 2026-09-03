@@ -37,6 +37,13 @@ export function isElement(value: any): value is Element {
   return value && (value as Element).nodeType === 1;
 }
 
+const attachedOverlays = new Set<OverlayRef>();
+
+/** Gets all overlays that are currently attached. */
+export function getAttachedOverlays(): OverlayRef[] {
+  return Array.from(attachedOverlays);
+}
+
 /**
  * Reference to an overlay that has been created with the Overlay service.
  * Used to manipulate or dispose of said overlay.
@@ -142,6 +149,7 @@ export class OverlayRef implements PortalOutlet {
     this._updateStackingOrder();
     this._updateElementSize();
     this._updateElementDirection();
+    attachedOverlays.add(this);
 
     if (this._scrollStrategy) {
       this._scrollStrategy.enable();
@@ -248,6 +256,7 @@ export class OverlayRef implements PortalOutlet {
     this._detachContentWhenEmpty();
     this._locationChanges.unsubscribe();
     this._outsideClickDispatcher.remove(this);
+    attachedOverlays.delete(this);
     return detachmentResult;
   }
 
@@ -284,6 +293,7 @@ export class OverlayRef implements PortalOutlet {
     this._detachments.complete();
     this._completeDetachContent();
     this._disposed = true;
+    attachedOverlays.delete(this);
   }
 
   /** Whether the overlay has attached content. */
