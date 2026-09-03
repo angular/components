@@ -13,7 +13,8 @@ $fallbacks: m3-icon-button.get-tokens();
   box-sizing: border-box;
   border: none;
   outline: none;
-  background-color: transparent;
+  background-color: token-utils.slot(
+      icon-button-container-color, $fallbacks, $fallback: transparent);
   fill: currentColor;
   text-decoration: none;
   cursor: pointer;
@@ -59,7 +60,38 @@ $fallbacks: m3-icon-button.get-tokens();
   @include button-base.mat-private-button-disabled {
     color: token-utils.slot(icon-button-disabled-icon-color, $fallbacks);
   }
-;
+
+  &.mat-mdc-icon-button-filled {
+    background-color: token-utils.slot(icon-button-filled-container-color, $fallbacks);
+    color: token-utils.slot(icon-button-filled-icon-color, $fallbacks);
+
+    @include button-base.mat-private-button-ripple(
+        icon-button-filled-ripple-color, icon-button-filled-state-layer-color,
+        icon-button-filled-disabled-state-layer-color,
+        icon-button-filled-hover-state-layer-opacity, icon-button-filled-focus-state-layer-opacity,
+        icon-button-filled-pressed-state-layer-opacity, $fallbacks);
+
+    @include button-base.mat-private-button-disabled {
+      background-color: token-utils.slot(icon-button-filled-disabled-container-color, $fallbacks);
+      color: token-utils.slot(icon-button-filled-disabled-icon-color, $fallbacks);
+    }
+  }
+
+  &.mat-mdc-icon-button-tonal {
+    background-color: token-utils.slot(icon-button-tonal-container-color, $fallbacks);
+    color: token-utils.slot(icon-button-tonal-icon-color, $fallbacks);
+
+    @include button-base.mat-private-button-ripple(
+        icon-button-tonal-ripple-color, icon-button-tonal-state-layer-color,
+        icon-button-tonal-disabled-state-layer-color,
+        icon-button-tonal-hover-state-layer-opacity, icon-button-tonal-focus-state-layer-opacity,
+        icon-button-tonal-pressed-state-layer-opacity, $fallbacks);
+
+    @include button-base.mat-private-button-disabled {
+      background-color: token-utils.slot(icon-button-tonal-disabled-container-color, $fallbacks);
+      color: token-utils.slot(icon-button-tonal-disabled-icon-color, $fallbacks);
+    }
+  }
 
   img,
   svg {
