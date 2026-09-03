@@ -6,8 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {AfterContentInit, Directive, EventEmitter, inject, OnDestroy, Output} from '@angular/core';
+import {
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  inject,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import {ESCAPE, hasModifierKey, LEFT_ARROW, RIGHT_ARROW, TAB} from '../keycodes';
+import {_getEventTarget} from '../platform';
 import {takeUntil} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU} from './menu-interface';
@@ -38,6 +47,7 @@ import {CdkMenuBase} from './menu-base';
   ],
 })
 export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy {
+  private readonly _elementRef: ElementRef<HTMLElement> = inject(ElementRef);
   private _parentTrigger = inject(MENU_TRIGGER, {optional: true});
 
   /** Event emitted when the menu is closed. */
@@ -71,6 +81,14 @@ export class CdkMenu extends CdkMenuBase implements AfterContentInit, OnDestroy 
    */
   _handleKeyEvent(event: KeyboardEvent) {
     const keyManager = this.keyManager;
+
+    // Now that menu overlays can be inlined, need to verify triggering on own events.
+    const element = this._elementRef.nativeElement;
+    const target = _getEventTarget(event) as HTMLElement;
+    if (target !== element && target.parentElement !== element) {
+      return;
+    }
+
     switch (event.keyCode) {
       case LEFT_ARROW:
       case RIGHT_ARROW:
