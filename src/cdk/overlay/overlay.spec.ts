@@ -29,6 +29,7 @@ import {
   PositionStrategy,
   ScrollStrategy,
   createOverlayRef,
+  getAttachedOverlays,
 } from './index';
 
 describe('Overlay', () => {
@@ -476,6 +477,28 @@ describe('Overlay', () => {
     overlayRef.dispose();
     overlayRef.attach(componentPortal);
     expect(document.querySelector('.cdk-overlay-pane')).toBeFalsy();
+  });
+
+  it('should track when an overlay is attached and detached', () => {
+    const overlayRef = createOverlayRef(injector);
+    expect(getAttachedOverlays()).toEqual([]);
+
+    overlayRef.attach(componentPortal);
+    expect(getAttachedOverlays()).toEqual([overlayRef]);
+
+    overlayRef.detach();
+    expect(getAttachedOverlays()).toEqual([]);
+  });
+
+  it('should track when an overlay is attached and disposed', () => {
+    const overlayRef = createOverlayRef(injector);
+    expect(getAttachedOverlays()).toEqual([]);
+
+    overlayRef.attach(componentPortal);
+    expect(getAttachedOverlays()).toEqual([overlayRef]);
+
+    overlayRef.dispose();
+    expect(getAttachedOverlays()).toEqual([]);
   });
 
   describe('positioning', () => {
