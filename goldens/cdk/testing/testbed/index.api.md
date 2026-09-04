@@ -5,19 +5,23 @@
 ```ts
 
 import { ComponentFixture } from '@angular/core/testing';
+import { DirectiveFixture } from '@angular/core/testing';
+
+// @public
+export type Fixture<T = unknown> = ComponentFixture<T> | DirectiveFixture<T>;
 
 // @public
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
-    protected constructor(rawRootElement: Element, _fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions);
+    protected constructor(rawRootElement: Element, _fixture: Fixture, options?: TestbedHarnessEnvironmentOptions);
     protected createEnvironment(element: Element): HarnessEnvironment<Element>;
     protected createTestElement(element: Element): TestElement;
-    static documentRootLoader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
+    static documentRootLoader(fixture: Fixture, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
     forceStabilize(): Promise<void>;
     protected getAllRawElements(selector: string): Promise<Element[]>;
     protected getDocumentRoot(): Element;
     static getNativeElement(el: TestElement): Element;
-    static harnessForFixture<T extends ComponentHarness>(fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>, options?: TestbedHarnessEnvironmentOptions): Promise<T>;
-    static loader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
+    static harnessForFixture<T extends ComponentHarness>(fixture: Fixture, harnessType: ComponentHarnessConstructor<T>, options?: TestbedHarnessEnvironmentOptions): Promise<T>;
+    static loader(fixture: Fixture, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
     waitForTasksOutsideAngular(): Promise<void>;
 }
 
