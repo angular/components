@@ -52,6 +52,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "icon.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/material/core/style:vendor_prefixes",

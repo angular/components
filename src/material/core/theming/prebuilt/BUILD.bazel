@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 sass_binary(
     name = "indigo-pink-theme",
     src = "indigo-pink.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core:core_sass",
         "//src/material/core/m2:m2_sass",
@@ -16,6 +17,7 @@ sass_binary(
 sass_binary(
     name = "deeppurple-amber-theme",
     src = "deeppurple-amber.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core:core_sass",
         "//src/material/core/m2:m2_sass",
@@ -27,6 +29,7 @@ sass_binary(
 sass_binary(
     name = "pink-bluegrey-theme",
     src = "pink-bluegrey.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core:core_sass",
         "//src/material/core/m2:m2_sass",
@@ -38,6 +41,7 @@ sass_binary(
 sass_binary(
     name = "purple-green-theme",
     src = "purple-green.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core:core_sass",
         "//src/material/core/m2:m2_sass",
@@ -49,6 +53,7 @@ sass_binary(
 sass_binary(
     name = "rose_red",
     src = "rose-red.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core/theming:_palettes",
         "//src/material/core/tokens:system",
@@ -58,6 +63,7 @@ sass_binary(
 sass_binary(
     name = "azure_blue",
     src = "azure-blue.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core/theming:_palettes",
         "//src/material/core/tokens:system",
@@ -67,6 +73,7 @@ sass_binary(
 sass_binary(
     name = "cyan_orange",
     src = "cyan-orange.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core/theming:_palettes",
         "//src/material/core/tokens:system",
@@ -76,6 +83,7 @@ sass_binary(
 sass_binary(
     name = "magenta_violet",
     src = "magenta-violet.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core/theming:_palettes",
         "//src/material/core/tokens:system",
