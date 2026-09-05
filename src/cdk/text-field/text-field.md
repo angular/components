@@ -5,14 +5,18 @@ The `text-field` package provides useful utilities for working with text input f
 
 The `cdkTextareaAutosize` directive can be applied to any `<textarea>` to make it automatically
 resize to fit its content. The minimum and maximum number of rows to expand to can be set via the
-`cdkAutosizeMinRows` and `cdkAutosizeMaxRows` properties respectively.
-
-The resize logic can be triggered programmatically by calling `resizeToFitContent`. This method
-takes an optional boolean parameter `force` that defaults to `false`. Passing true will force the
-`<textarea>` to resize even if its text content has not changed, this can be useful if the styles
-affecting the `<textarea>` have changed.
+`cdkAutosizeMinRows` and `cdkAutosizeMaxRows` properties respectively. No programmatic resize logic
+is required when the textarea only needs to react to content changes.
 
 <!-- example(text-field-autosize-textarea) -->
+
+The resize logic can also be triggered programmatically by calling `resizeToFitContent`. This method
+takes an optional boolean parameter `force` that defaults to `false`. Passing true will force the
+`<textarea>` to resize even if its text content has not changed, which is useful if styles affecting
+the `<textarea>` have changed. In the following example, changing the font size through the
+`mat-select` triggers a forced resize.
+
+<!-- example(text-field-autosize-textarea-programmatic) -->
 
 ### Monitoring the autofill state of an `<input>`
 
