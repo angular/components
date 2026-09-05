@@ -11,7 +11,7 @@ import {TestBed} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {CalendarSystem, DateTime, FixedOffsetZone, Settings} from 'luxon';
 import {LuxonDateModule} from './index';
-import {MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
+import {LuxonDateAdapter, MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
 
 const JAN = 1,
   FEB = 2,
@@ -760,12 +760,13 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
   let adapter: DateAdapter<DateTime>;
 
   beforeEach(() => {
+    // The zone parameter is specified to test that the useUtc parameter has precedence over the zone setting.
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
       providers: [
         {
           provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
-          useValue: {useUtc: true, firstDayOfWeek: 1},
+          useValue: {useUtc: true, firstDayOfWeek: 1, zone: 'Europe/Budapest'},
         },
       ],
     });
@@ -789,7 +790,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
     });
 
     it('should parse dates to UTC', () => {
-      const date = adapter.parse('1/2/2017', 'LL/dd/yyyy')!;
+      const date = adapter.parse('1/2/2017', 'L/d/yyyy')!;
       expect(date.toISO()).toBe(date.toUTC().toISO());
     });
 
@@ -831,6 +832,93 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defa
       expect(adapter.today().toLocaleString()).toBe(
         DateTime.local({outputCalendar: calendarExample}).toLocaleString(),
       );
+    });
+  });
+});
+
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS zone override', () => {
+  let adapter: DateAdapter<DateTime>;
+
+  const zone = 'UTC-12';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {firstDayOfWeek: 1, zone},
+        },
+      ],
+    });
+
+    adapter = TestBed.inject(DateAdapter);
+  });
+
+  describe(`use ${zone} zone`, () => {
+    it('should create Luxon date in specified zone', () => {
+      const date = adapter.createDate(2017, 0, 5);
+      expect(date.zone.name).toEqual(zone);
+      expect(date.toISO()).toEqual(DateTime.local(2017, JAN, 5, {zone}).toISO());
+    });
+
+    it('should create today in specified zone', () => {
+      const today = adapter.today();
+      expect(today.zone.name).toEqual(zone);
+    });
+
+    it('should parse dates to specified zone', () => {
+      const date = adapter.parse('1/2/2017', 'L/d/yyyy')!;
+      expect(date.zone.name).toEqual(zone);
+      expect(date.toISO()).toBe(DateTime.local(2017, JAN, 2, {zone}).toISO());
+    });
+
+    it('should return date when deserializing in specified zone', () => {
+      const date = adapter.deserialize('1985-04-12T23:20:50.52Z')!;
+      expect(date.zone.name).toEqual(zone);
+      expect(date.toISO()).toBe('1985-04-12T11:20:50.520-12:00');
+    });
+  });
+});
+
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS zone override programmatically', () => {
+  let adapter: LuxonDateAdapter;
+
+  const zone = 'UTC-12';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {firstDayOfWeek: 1, zone},
+        },
+      ],
+    });
+
+    adapter = TestBed.inject(DateAdapter) as LuxonDateAdapter;
+  });
+
+  describe(`use ${zone} zone`, () => {
+    it('should return correct zone after setting zone programmatically', () => {
+      const date = adapter.createDate(2017, 0, 5);
+      expect(date.zone.name).toEqual(zone);
+
+      const newZone = 'UTC-6';
+      adapter.setZone(newZone);
+
+      const dateAfterZoneChange = adapter.createDate(2017, 0, 5);
+      expect(dateAfterZoneChange.zone.name).toEqual(newZone);
+
+      const today = adapter.today();
+      expect(today.zone.name).toEqual(newZone);
+
+      const parsedDate = adapter.parse('1/2/2017', 'L/d/yyyy')!;
+      expect(parsedDate.zone.name).toEqual(newZone);
+
+      const deserializedDate = adapter.deserialize('1985-04-12T23:20:50.52Z')!;
+      expect(deserializedDate.zone.name).toEqual(newZone);
     });
   });
 });
