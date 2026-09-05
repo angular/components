@@ -175,8 +175,8 @@ $fallbacks: m3-slider.get-tokens();
   left: -24px;
   outline: none;
   position: absolute;
-  height: 48px;
-  width: 48px;
+  height: token-utils.slot(slider-thumb-height, $fallbacks);
+  width: token-utils.slot(slider-thumb-width, $fallbacks);
   pointer-events: none;
 
   .mdc-slider--discrete & {
@@ -299,7 +299,7 @@ $fallbacks: m3-slider.get-tokens();
   outline: none;
   vertical-align: middle;
   cursor: pointer;
-  height: 48px;
+  height: token-utils.slot(slider-thumb-height, $fallbacks);
   margin: 0 $mat-slider-horizontal-margin;
   position: relative;
   touch-action: pan-y;
@@ -317,6 +317,10 @@ $fallbacks: m3-slider.get-tokens();
     .mdc-slider__input {
       cursor: auto;
     }
+  }
+
+  &[hidden] {
+    height: token-utils.slot(slider-thumb-height, $fallbacks);
   }
 
   .mdc-slider__thumb,
