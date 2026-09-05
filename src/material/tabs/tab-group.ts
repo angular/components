@@ -282,7 +282,7 @@ export class MatTabGroup
 
   /** Event emitted when the tab selection has changed. */
   @Output() readonly selectedTabChange: EventEmitter<MatTabChangeEvent> =
-    new EventEmitter<MatTabChangeEvent>(true);
+    new EventEmitter<MatTabChangeEvent>();
 
   private _groupId: string;
 
@@ -332,7 +332,6 @@ export class MatTabGroup
       const isFirstRun = this._selectedIndex == null;
 
       if (!isFirstRun) {
-        this.selectedTabChange.emit(this._createChangeEvent(indexToSelect));
         // Preserve the height so page doesn't scroll up during tab change.
         // Fixes https://stackblitz.com/edit/mat-tabs-scroll-page-top-on-tab-change
         const wrapper = this._tabBodyWrapper.nativeElement;
@@ -346,6 +345,7 @@ export class MatTabGroup
 
         if (!isFirstRun) {
           this.selectedIndexChange.emit(indexToSelect);
+          this.selectedTabChange.emit(this._createChangeEvent(indexToSelect));
           // Clear the min-height, this was needed during tab change to avoid
           // unnecessary scrolling.
           this._tabBodyWrapper.nativeElement.style.minHeight = '';
