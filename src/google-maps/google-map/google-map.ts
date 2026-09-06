@@ -6,6 +6,10 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+// We need this to ensure that the type reference is present in the generated .d.ts
+// that we publish to npm. Internally this is removed during import.
+/// <reference types="google.maps" preserve="true" />
+
 import {
   Component,
   ElementRef,
