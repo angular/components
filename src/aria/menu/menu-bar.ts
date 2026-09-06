@@ -39,13 +39,13 @@ import {MENU_COMPONENT} from './menu-tokens';
  * </div>
  *
  * <div ngMenu #fileMenu="ngMenu">
- *   <div ngMenuItem>New</div>
- *   <div ngMenuItem>Open</div>
+ *   <div ngMenuItem value="New">New</div>
+ *   <div ngMenuItem value="Open">Open</div>
  * </div>
  *
  * <div ngMenu #editMenu="ngMenu">
- *   <div ngMenuItem>Cut</div>
- *   <div ngMenuItem>Copy</div>
+ *   <div ngMenuItem value="Cut">Cut</div>
+ *   <div ngMenuItem value="Copy">Copy</div>
  * </div>
  * ```
  *
@@ -106,7 +106,7 @@ export class MenuBar<V> implements OnDestroy {
   private readonly _itemPatterns = computed(() => this._items().map(i => i._pattern));
 
   /** A callback function triggered when a menu item is selected. */
-  readonly itemSelected = output<V>();
+  readonly itemSelected = output<V | undefined>();
 
   constructor() {
     this._pattern = new MenuBarPattern({
@@ -116,7 +116,7 @@ export class MenuBar<V> implements OnDestroy {
       focusMode: () => 'roving',
       orientation: () => 'horizontal',
       selectionMode: () => 'explicit',
-      itemSelected: (value: V) => this.itemSelected.emit(value),
+      itemSelected: (value: V | undefined) => this.itemSelected.emit(value),
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
     });

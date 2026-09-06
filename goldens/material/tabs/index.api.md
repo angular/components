@@ -446,9 +446,7 @@ export class MatTabLink extends InkBarItem implements AfterViewInit, OnDestroy, 
 // @public
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
     constructor();
-    // (undocumented)
-    get animationDuration(): string;
-    set animationDuration(value: string | number);
+    animationDuration: string;
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
     color: ThemePalette;
@@ -471,6 +469,8 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     protected _itemSelected(): void;
     // (undocumented)
     _nextPaginator: ElementRef<HTMLElement>;
+    // (undocumented)
+    static ngAcceptInputType_animationDuration: string | number;
     // (undocumented)
     static ngAcceptInputType_disableRipple: unknown;
     // (undocumented)

@@ -9,6 +9,7 @@ import { ComboboxPattern } from '@angular/aria/private';
 import { ComboboxPopupPattern } from '@angular/aria/private';
 import { DeferredContentAware } from '@angular/aria/private';
 import * as i1 from '@angular/aria/private';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -24,16 +25,20 @@ export class Combobox extends DeferredContentAware implements OnInit {
     ngOnInit(): void;
     readonly _pattern: ComboboxPattern;
     readonly _popup: _angular_core.WritableSignal<ComboboxPopup | undefined>;
+    readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     _registerPopup(popup: ComboboxPopup): void;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     _unregisterPopup(): void;
     readonly value: _angular_core.ModelSignal<string>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox, "[ngCombobox]", ["ngCombobox"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "inlineSuggestion": { "alias": "inlineSuggestion"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; "value": "valueChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Combobox, "[ngCombobox]", ["ngCombobox"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "readonly": { "alias": "readonly"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "alwaysExpanded": { "alias": "alwaysExpanded"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "inlineSuggestion": { "alias": "inlineSuggestion"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; "value": "valueChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Combobox, never>;
 }
+
+// @public
+export const COMBOBOX_POPUP: InjectionToken<ComboboxPopup>;
 
 // @public
 export class ComboboxPopup implements OnInit, OnDestroy {
@@ -46,7 +51,7 @@ export class ComboboxPopup implements OnInit, OnDestroy {
     ngOnInit(): void;
     readonly _pattern: ComboboxPopupPattern;
     readonly popupId: _angular_core.Signal<string | undefined>;
-    readonly popupType: _angular_core.InputSignal<"listbox" | "tree" | "grid" | "dialog">;
+    readonly popupType: _angular_core.InputSignal<"dialog" | "grid" | "listbox" | "tree">;
     _registerWidget(widget: ComboboxWidget): void;
     _unregisterWidget(): void;
     readonly _widget: _angular_core.WritableSignal<ComboboxWidget | undefined>;

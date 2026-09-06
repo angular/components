@@ -9,7 +9,7 @@
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {A, ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {A, ENTER, SPACE, DOWN_ARROW, UP_ARROW, hasModifierKey} from '@angular/cdk/keycodes';
 import {_getFocusedElementPierceShadowDom} from '@angular/cdk/platform';
 import {
   AfterViewInit,
@@ -365,6 +365,18 @@ export class MatSelectionList
   _handleKeydown(event: KeyboardEvent) {
     const activeItem = this._keyManager.activeItem;
 
+    if (activeItem && (event.keyCode === DOWN_ARROW || event.keyCode === UP_ARROW)) {
+      const focusedElement = _getFocusedElementPierceShadowDom();
+      const isOptionFocused = this._items
+        .toArray()
+        .some(item => item._elementRef.nativeElement === focusedElement);
+      if (!isOptionFocused) {
+        event.preventDefault();
+        activeItem.focus();
+        return;
+      }
+    }
+
     if (
       (event.keyCode === ENTER || event.keyCode === SPACE) &&
       !this._keyManager.isTyping() &&
@@ -399,10 +411,6 @@ export class MatSelectionList
 
   /** Handles focusin events within the list. */
   private _handleFocusin = (event: FocusEvent) => {
-    if (this.disabled) {
-      return;
-    }
-
     const activeIndex = this._items
       .toArray()
       .findIndex(item => item._elementRef.nativeElement.contains(event.target as HTMLElement));
@@ -432,7 +440,7 @@ export class MatSelectionList
       .withHomeAndEnd()
       .withTypeAhead()
       .withWrap()
-      .skipPredicate(() => this.disabled);
+      .skipPredicate(() => false);
 
     // Set the initial focus.
     this._resetActiveOption();
@@ -455,7 +463,15 @@ export class MatSelectionList
    * @param index Index of the active option. If set to -1, no option will be active.
    */
   private _setActiveOption(index: number) {
-    this._items.forEach((item, itemIndex) => item._setTabindex(itemIndex === index ? 0 : -1));
+    this._items.forEach((item, itemIndex) => {
+      let tabindex = -1;
+
+      if (!this.disabled && itemIndex === index) {
+        tabindex = 0;
+      }
+
+      item._setTabindex(tabindex);
+    });
     this._keyManager.updateActiveItem(index);
   }
 
@@ -465,7 +481,9 @@ export class MatSelectionList
    */
   private _resetActiveOption() {
     if (this.disabled) {
-      this._setActiveOption(-1);
+      const activeItem = this._items.find(item => item.selected) || this._items.first;
+      const index = activeItem ? this._items.toArray().indexOf(activeItem) : -1;
+      this._setActiveOption(index);
       return;
     }
 

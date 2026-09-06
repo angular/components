@@ -149,7 +149,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   readonly element: HTMLElement = inject(ElementRef).nativeElement;
 
   /** The parent listbox this option belongs to. */
-  protected readonly listbox: CdkListbox<T> = inject(CdkListbox);
+  protected readonly listbox = inject<CdkListbox<T>>(CdkListbox);
 
   /** Emits when the option is destroyed. */
   protected destroyed = new Subject<void>();

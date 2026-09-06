@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {ProgressBarMode, MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatSliderModule} from '@angular/material/slider';
 import {FormsModule} from '@angular/forms';
@@ -15,7 +15,7 @@ import {MatCardModule} from '@angular/material/card';
   imports: [MatCardModule, MatRadioModule, FormsModule, MatSliderModule, MatProgressBarModule],
 })
 export class ProgressBarConfigurableExample {
-  mode: ProgressBarMode = 'determinate';
-  value = 50;
-  bufferValue = 75;
+  mode = signal<ProgressBarMode>('determinate');
+  value = signal(50);
+  bufferValue = signal(75);
 }

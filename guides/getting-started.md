@@ -48,10 +48,10 @@ import {MatSlideToggle} from '@angular/material/slide-toggle';
 @Component({
   imports: [MatSlideToggle],
 })
-class AppComponent {}
+class App {}
 ```
 
-Add the `<mat-slide-toggle>` tag to the `app.component.html` like so:
+Add the `<mat-slide-toggle>` tag to the `app.html` like so:
 
 ```html
 <mat-slide-toggle>Toggle me!</mat-slide-toggle>

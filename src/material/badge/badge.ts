@@ -22,6 +22,7 @@ import {
   ViewEncapsulation,
   DOCUMENT,
   AfterViewInit,
+  InjectionToken,
 } from '@angular/core';
 import {_animationsDisabled, ThemePalette} from '../core';
 import {_CdkPrivateStyleLoader, _VisuallyHiddenLoader} from '@angular/cdk/private';
@@ -39,6 +40,24 @@ export type MatBadgePosition =
 
 /** Allowed size options for matBadgeSize */
 export type MatBadgeSize = 'small' | 'medium' | 'large';
+
+/** Object that can be used to configure the default options for the badge component. */
+export interface MatBadgeConfig {
+  /** Default position for badges. */
+  position?: MatBadgePosition;
+
+  /** Default size for badges. */
+  size?: MatBadgeSize;
+
+  /** Default color to apply to all badges. */
+  color?: ThemePalette;
+
+  /** Whether badges should overlap by default. */
+  overlap?: boolean;
+}
+
+/** Injection token that can be used to configure the default options for the badge component. */
+export const MAT_BADGE_CONFIG = new InjectionToken<MatBadgeConfig>('MAT_BADGE_CONFIG');
 
 const BADGE_CONTENT_CLASS = 'mat-badge-content';
 
@@ -93,10 +112,10 @@ export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
     this._setColor(value);
     this._color = value;
   }
-  private _color: ThemePalette = 'primary';
+  private _color: ThemePalette;
 
   /** Whether the badge should overlap its contents or not */
-  @Input({alias: 'matBadgeOverlap', transform: booleanAttribute}) overlap: boolean = true;
+  @Input({alias: 'matBadgeOverlap', transform: booleanAttribute}) overlap: boolean;
 
   /** Whether the badge is disabled. */
   @Input({alias: 'matBadgeDisabled', transform: booleanAttribute}) disabled: boolean = false;
@@ -105,7 +124,7 @@ export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
    * Position the badge should reside.
    * Accepts any combination of 'above'|'below' and 'before'|'after'
    */
-  @Input('matBadgePosition') position: MatBadgePosition = 'above after';
+  @Input('matBadgePosition') position: MatBadgePosition;
 
   /** The content for the badge */
   @Input('matBadge')
@@ -128,7 +147,7 @@ export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
   private _description!: string;
 
   /** Size of the badge. Can be 'small', 'medium', or 'large'. */
-  @Input('matBadgeSize') size: MatBadgeSize = 'medium';
+  @Input('matBadgeSize') size: MatBadgeSize;
 
   /** Whether the badge is hidden. */
   @Input({alias: 'matBadgeHidden', transform: booleanAttribute}) hidden: boolean = false;
@@ -148,9 +167,15 @@ export class MatBadge implements OnInit, AfterViewInit, OnDestroy {
   private _document = inject(DOCUMENT);
 
   constructor() {
+    const config = inject(MAT_BADGE_CONFIG, {optional: true});
     const styleLoader = inject(_CdkPrivateStyleLoader);
     styleLoader.load(_MatBadgeStyleLoader);
     styleLoader.load(_VisuallyHiddenLoader);
+
+    this._color = config?.color || 'primary';
+    this.overlap = config?.overlap ?? true;
+    this.position = config?.position || 'above after';
+    this.size = config?.size || 'medium';
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       const nativeElement = this._elementRef.nativeElement;

@@ -11,3 +11,4 @@ export {StepperLazyContentExample} from './stepper-lazy-content/stepper-lazy-con
 export {StepperResponsiveExample} from './stepper-responsive/stepper-responsive-example';
 export {StepperHeaderPositionExample} from './stepper-header-position/stepper-header-position-example';
 export {StepperAnimationsExample} from './stepper-animations/stepper-animations-example';
+export {StepperSignalFormsExample} from './stepper-signal-forms/stepper-signal-forms-example';

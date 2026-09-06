@@ -333,6 +333,9 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
 }
 
 // @public
+export function getAttachedOverlays(): OverlayRef[];
+
+// @public
 export class GlobalPositionStrategy implements PositionStrategy {
     apply(): void;
     // (undocumented)
@@ -437,7 +440,6 @@ export class OverlayContainer implements OnDestroy {
 
 // @public
 export interface OverlayDefaultConfig {
-    // (undocumented)
     usePopover?: boolean;
 }
 

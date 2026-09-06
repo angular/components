@@ -16,14 +16,7 @@ import {
   signal,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable, combineLatest, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
@@ -331,7 +324,7 @@ describe('CdkTable', () => {
     });
   });
 
-  it('should render no rows when the data is null', fakeAsync(() => {
+  it('should render no rows when the data is null', () => {
     setupTableTestApp(NullDataCdkTableApp);
     fixture.detectChanges();
 
@@ -339,7 +332,7 @@ describe('CdkTable', () => {
 
     // Emits that the data rows are changed even when the result is empty.
     expect(component.contentChangedCount).toBe(1);
-  }));
+  });
 
   it('should be able to render multiple header and footer rows', () => {
     setupTableTestApp(MultipleHeaderFooterRowsCdkTableApp);
@@ -353,7 +346,7 @@ describe('CdkTable', () => {
     ]);
   });
 
-  it('should be able to project a caption', fakeAsync(() => {
+  it('should be able to project a caption', () => {
     setupTableTestApp(NativeHtmlTableWithCaptionApp);
     fixture.detectChanges();
 
@@ -361,9 +354,9 @@ describe('CdkTable', () => {
 
     expect(caption).toBeTruthy();
     expect(tableElement.firstElementChild).toBe(caption);
-  }));
+  });
 
-  it('should be able to project colgroup and col', fakeAsync(() => {
+  it('should be able to project colgroup and col', () => {
     setupTableTestApp(NativeHtmlTableWithColgroupAndCol);
     fixture.detectChanges();
 
@@ -373,7 +366,7 @@ describe('CdkTable', () => {
     expect(colgroupsAndCols[0].childNodes[0]).toBe(colgroupsAndCols[1]);
     expect(colgroupsAndCols[2].parentNode!.nodeName.toLowerCase()).toBe('table');
     expect(colgroupsAndCols.map(e => e.nodeName.toLowerCase())).toEqual(['colgroup', 'col', 'col']);
-  }));
+  });
 
   it('should not throw if `renderRows` is called too early', () => {
     // Note that we don't call `detectChanges` here, because we're testing specifically
@@ -820,13 +813,12 @@ describe('CdkTable', () => {
       }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
     }));
 
-    it('should fail when multiple rows match data without multiTemplateDataRows', fakeAsync(() => {
+    it('should fail when multiple rows match data without multiTemplateDataRows', () => {
       let whenFixture = TestBed.createComponent(WhenRowMultipleDefaultsCdkTableApp);
       expect(() => {
         whenFixture.detectChanges();
-        flush();
       }).toThrowError(getTableMultipleDefaultRowDefsError().message);
-    }));
+    });
 
     describe('with multiTemplateDataRows', () => {
       it('should be able to render multiple rows per data object', () => {
@@ -991,7 +983,7 @@ describe('CdkTable', () => {
         dataRows = getRows(tableElement);
       });
 
-      it('should stick and unstick headers in flex layout', waitForAsync(async () => {
+      it('should stick and unstick headers in flex layout', async () => {
         component.stickyHeaders = ['header-1', 'header-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1038,9 +1030,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick and unstick footers in flex layout', waitForAsync(async () => {
+      it('should stick and unstick footers in flex layout', async () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1087,9 +1079,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick the correct footer row', waitForAsync(async () => {
+      it('should stick the correct footer row', async () => {
         component.stickyFooters = ['footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1098,9 +1090,9 @@ describe('CdkTable', () => {
         expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
         expectStickyBorderClass(footerRows[2], {bottom: true});
         expectNoStickyStyles([footerRows[0], footerRows[1]]);
-      }));
+      });
 
-      it('should stick and unstick left columns in flex layout', waitForAsync(async () => {
+      it('should stick and unstick left columns in flex layout', async () => {
         component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1168,9 +1160,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick and unstick right columns in flex layout', waitForAsync(async () => {
+      it('should stick and unstick right columns in flex layout', async () => {
         component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1238,9 +1230,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should reverse directions for sticky columns in rtl', waitForAsync(async () => {
+      it('should reverse directions for sticky columns in rtl', async () => {
         component.dir = 'rtl';
         component.stickyStartColumns = ['column-1', 'column-2'];
         component.stickyEndColumns = ['column-5', 'column-6'];
@@ -1282,9 +1274,9 @@ describe('CdkTable', () => {
         expectStickyBorderClass(footerCells[4], {left: true});
         expectStickyStyles(footerCells[5], '1', {left: '0px'});
         expectStickyBorderClass(footerCells[5]);
-      }));
+      });
 
-      it('should stick and unstick combination of sticky header, footer, and columns in flex layout', waitForAsync(async () => {
+      it('should stick and unstick combination of sticky header, footer, and columns in flex layout', async () => {
         component.stickyHeaders = ['header-1'];
         component.stickyFooters = ['footer-3'];
         component.stickyStartColumns = ['column-1'];
@@ -1363,7 +1355,7 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
     });
 
     describe('on native table layout', () => {
@@ -1379,7 +1371,7 @@ describe('CdkTable', () => {
         dataRows = getRows(tableElement);
       });
 
-      it('should stick and unstick headers in native layout', waitForAsync(async () => {
+      it('should stick and unstick headers in native layout', async () => {
         component.stickyHeaders = ['header-1', 'header-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1431,9 +1423,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick and unstick footers in native layout', waitForAsync(async () => {
+      it('should stick and unstick footers in native layout', async () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1485,9 +1477,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick tfoot when all rows are stuck', waitForAsync(async () => {
+      it('should stick tfoot when all rows are stuck', async () => {
         const tfoot = tableElement.querySelector('tfoot');
         component.stickyFooters = ['footer-1'];
         fixture.changeDetectorRef.markForCheck();
@@ -1507,9 +1499,9 @@ describe('CdkTable', () => {
         fixture.detectChanges();
         await new Promise(r => setTimeout(r));
         expectNoStickyStyles([tfoot]);
-      }));
+      });
 
-      it('should stick and unstick left columns in native layout', waitForAsync(async () => {
+      it('should stick and unstick left columns in native layout', async () => {
         component.stickyStartColumns = ['column-1', 'column-3'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1577,9 +1569,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick and unstick right columns in native layout', waitForAsync(async () => {
+      it('should stick and unstick right columns in native layout', async () => {
         component.stickyEndColumns = ['column-4', 'column-6'];
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1647,9 +1639,9 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
 
-      it('should stick and unstick combination of sticky header, footer, and columns in native layout', waitForAsync(async () => {
+      it('should stick and unstick combination of sticky header, footer, and columns in native layout', async () => {
         component.stickyHeaders = ['header-1'];
         component.stickyFooters = ['footer-3'];
         component.stickyStartColumns = ['column-1'];
@@ -1738,7 +1730,7 @@ describe('CdkTable', () => {
         });
         expect(component.mostRecentStickyColumnsUpdate).toEqual({sizes: []});
         expect(component.mostRecentStickyEndColumnsUpdate).toEqual({sizes: []});
-      }));
+      });
     });
   });
 
@@ -2006,19 +1998,20 @@ describe('CdkTable', () => {
   });
 
   describe('virtual scrolling', () => {
-    function createVirtualScroll<T>(component: Type<T>): {
+    async function createVirtualScroll<T>(component: Type<T>): Promise<{
       fixture: ComponentFixture<T>;
       table: HTMLTableElement;
-    } {
+    }> {
       const fixture = TestBed.createComponent(component);
 
       // Init logic copied from the virtual scroll tests.
       fixture.detectChanges();
-      flush();
+      await fixture.whenStable();
       fixture.detectChanges();
-      flush();
-      tick(16);
-      flush();
+      await fixture.whenStable();
+
+      await new Promise(resolve => requestAnimationFrame(resolve));
+      await fixture.whenStable();
       fixture.detectChanges();
 
       return {
@@ -2027,38 +2020,38 @@ describe('CdkTable', () => {
       };
     }
 
-    function triggerScroll(
+    async function triggerScroll(
       fixture: ComponentFixture<{viewport: CdkVirtualScrollViewport}>,
       offset: number,
     ) {
       const viewport = fixture.componentInstance.viewport;
       viewport.scrollToOffset(offset);
       dispatchFakeEvent(viewport.scrollable!.getElementRef().nativeElement, 'scroll');
-      tick(16);
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
 
-    it('should not render the full data set when using virtual scrolling', fakeAsync(() => {
-      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
+    it('should not render the full data set when using virtual scrolling', async () => {
+      const {fixture, table} = await createVirtualScroll(TableWithVirtualScroll);
       expect(fixture.componentInstance.dataSource.data.length).toBeGreaterThan(2000);
       expect(getRows(table).length).toBe(10);
-    }));
+    });
 
-    it('should maintain a limited amount of data as the user is scrolling', fakeAsync(() => {
-      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
+    it('should maintain a limited amount of data as the user is scrolling', async () => {
+      const {fixture, table} = await createVirtualScroll(TableWithVirtualScroll);
       expect(getRows(table).length).toBe(10);
 
-      triggerScroll(fixture, 500);
+      await triggerScroll(fixture, 500);
       expect(getRows(table).length).toBe(13);
 
-      triggerScroll(fixture, 500);
+      await triggerScroll(fixture, 500);
       expect(getRows(table).length).toBe(13);
 
-      triggerScroll(fixture, 1000);
+      await triggerScroll(fixture, 1000);
       expect(getRows(table).length).toBe(12);
-    }));
+    });
 
-    it('should update the table data as the user is scrolling', fakeAsync(() => {
-      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
+    it('should update the table data as the user is scrolling', async () => {
+      const {fixture, table} = await createVirtualScroll(TableWithVirtualScroll);
 
       expectTableToMatchContent(table, [
         ['Column A', 'Column B', 'Column C'],
@@ -2075,7 +2068,7 @@ describe('CdkTable', () => {
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
 
-      triggerScroll(fixture, 1000);
+      await triggerScroll(fixture, 1000);
 
       expectTableToMatchContent(table, [
         ['Column A', 'Column B', 'Column C'],
@@ -2093,22 +2086,22 @@ describe('CdkTable', () => {
         ['a_29', 'b_29', 'c_29'],
         ['Footer A', 'Footer B', 'Footer C'],
       ]);
-    }));
+    });
 
-    it('should update the position of sticky cells as the user is scrolling', fakeAsync(() => {
-      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
+    it('should update the position of sticky cells as the user is scrolling', async () => {
+      const {fixture, table} = await createVirtualScroll(TableWithVirtualScroll);
       const assertStickyOffsets = (position: number) => {
         getHeaderCells(table).forEach(cell => expect(cell.style.top).toBe(`${position * -1}px`));
         getFooterCells(table).forEach(cell => expect(cell.style.bottom).toBe(`${position}px`));
       };
 
       assertStickyOffsets(0);
-      triggerScroll(fixture, 1000);
+      await triggerScroll(fixture, 1000);
       assertStickyOffsets(884);
-    }));
+    });
 
-    it('should force tables with virtual scrolling to have a fixed layout', fakeAsync(() => {
-      const {fixture, table} = createVirtualScroll(TableWithVirtualScroll);
+    it('should force tables with virtual scrolling to have a fixed layout', async () => {
+      const {fixture, table} = await createVirtualScroll(TableWithVirtualScroll);
       expect(fixture.componentInstance.isFixedLayout()).toBe(true);
       expect(table.classList).toContain('cdk-table-fixed-layout');
 
@@ -2116,15 +2109,15 @@ describe('CdkTable', () => {
       fixture.detectChanges();
 
       expect(table.classList).toContain('cdk-table-fixed-layout');
-    }));
+    });
 
-    it('should throw if multiple row templates are used with virtual scrolling', fakeAsync(() => {
-      expect(() => {
-        createVirtualScroll(TableWithVirtualScrollAndMultipleDefinitions);
-      }).toThrowError(
+    it('should throw if multiple row templates are used with virtual scrolling', async () => {
+      await expectAsync(
+        createVirtualScroll(TableWithVirtualScrollAndMultipleDefinitions),
+      ).toBeRejectedWithError(
         /Conditional row definitions via the `when` input are not supported when virtual scrolling is enabled/,
       );
-    }));
+    });
   });
 });
 

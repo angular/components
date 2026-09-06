@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 
@@ -12,5 +12,5 @@ import {MatSidenavModule} from '@angular/material/sidenav';
   imports: [MatSidenavModule, MatButtonModule],
 })
 export class SidenavAutosizeExample {
-  showFiller = false;
+  showFiller = signal(false);
 }

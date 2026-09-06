@@ -46,9 +46,9 @@ const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
     '[attr.role]': '_config.role',
     '[attr.aria-modal]': '_config.ariaModal',
     '[attr.aria-label]': '_config.ariaLabel',
-    '(animationstart)': '_handleAnimationEvent(true, $event.animationName)',
-    '(animationend)': '_handleAnimationEvent(false, $event.animationName)',
-    '(animationcancel)': '_handleAnimationEvent(false, $event.animationName)',
+    '(animationstart)': '_handleAnimationEvent(true, $event.animationName, $event.target)',
+    '(animationend)': '_handleAnimationEvent(false, $event.animationName, $event.target)',
+    '(animationcancel)': '_handleAnimationEvent(false, $event.animationName, $event.target)',
   },
   imports: [CdkPortalOutlet],
 })
@@ -125,8 +125,8 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
 
   private _simulateAnimation(name: typeof ENTER_ANIMATION | typeof EXIT_ANIMATION) {
     this._ngZone.run(() => {
-      this._handleAnimationEvent(true, name);
-      setTimeout(() => this._handleAnimationEvent(false, name));
+      this._handleAnimationEvent(true, name, this._elementRef.nativeElement);
+      setTimeout(() => this._handleAnimationEvent(false, name, this._elementRef.nativeElement));
     });
   }
 
@@ -139,15 +139,21 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
     super._trapFocus({preventScroll: true});
   }
 
-  protected _handleAnimationEvent(isStart: boolean, animationName: string) {
-    const isEnter = animationName === ENTER_ANIMATION;
-    const isExit = animationName === EXIT_ANIMATION;
+  protected _handleAnimationEvent(
+    isStart: boolean,
+    animationName: string,
+    target: EventTarget | null,
+  ) {
+    if (target === this._elementRef.nativeElement) {
+      const isEnter = animationName === ENTER_ANIMATION;
+      const isExit = animationName === EXIT_ANIMATION;
 
-    if (isEnter || isExit) {
-      this._animationStateChanged.emit({
-        toState: isEnter ? 'visible' : 'hidden',
-        phase: isStart ? 'start' : 'done',
-      });
+      if (isEnter || isExit) {
+        this._animationStateChanged.emit({
+          toState: isEnter ? 'visible' : 'hidden',
+          phase: isStart ? 'start' : 'done',
+        });
+      }
     }
   }
 }

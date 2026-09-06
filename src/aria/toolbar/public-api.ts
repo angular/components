@@ -9,3 +9,4 @@
 export {Toolbar} from './toolbar';
 export {ToolbarWidget} from './toolbar-widget';
 export {ToolbarWidgetGroup} from './toolbar-widget-group';
+export {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';

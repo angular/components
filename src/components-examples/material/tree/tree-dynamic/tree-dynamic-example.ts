@@ -1,4 +1,4 @@
-import {Component, Service, inject, signal} from '@angular/core';
+import {Component, Service, WritableSignal, inject, signal} from '@angular/core';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -9,7 +9,7 @@ interface DynamicNode {
   name: string;
   level: number;
   expandable: boolean;
-  isLoading: ReturnType<typeof signal<boolean>>;
+  isLoading: WritableSignal<boolean>;
   children?: DynamicNode[];
 }
 
@@ -63,12 +63,9 @@ export class DynamicDatabase {
 })
 export class TreeDynamicExample {
   private _database = inject(DynamicDatabase);
-
-  dataSource = this._database.initialData();
-
-  childrenAccessor = (node: DynamicNode) => node.children ?? [];
-
-  hasChild = (_: number, node: DynamicNode) => node.expandable;
+  readonly dataSource = signal(this._database.initialData());
+  readonly childrenAccessor = (node: DynamicNode) => node.children ?? [];
+  readonly hasChild = (_: number, node: DynamicNode) => node.expandable;
 
   /**
    * Load children on node expansion.
@@ -93,6 +90,7 @@ export class TreeDynamicExample {
         this._database.createNode(name, node.level + 1, this._database.isExpandable(name)),
       );
       node.isLoading.set(false);
+      this.dataSource.set([...this.dataSource()]);
     }, 1000);
   }
 }

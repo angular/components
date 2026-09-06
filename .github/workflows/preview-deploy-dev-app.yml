@@ -8,6 +8,7 @@
 name: Deploying dev-app to Firebase previews
 
 on:
+  # zizmor: ignore[dangerous-triggers] - {Trigger is safe as workflow does not checkout untrusted code}
   workflow_run:
     workflows: ['Build dev-app for deployment']
     types: [completed]
@@ -25,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Configure Firebase deploy target
         run: |
@@ -33,7 +34,7 @@ jobs:
           npx -y firebase-tools@latest target:clear --project ${{env.PREVIEW_PROJECT}} hosting dev-app
           npx -y firebase-tools@latest target:apply --project ${{env.PREVIEW_PROJECT}} hosting dev-app ${{env.PREVIEW_SITE}}
 
-      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@ba726e7bca0b08b125ccc6f93c233749e1213c17
+      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@f826089a718c89f9ce3d6a0d3e155fbc0fb4a3de # main
         with:
           github-token: '${{secrets.GITHUB_TOKEN}}'
           workflow-artifact-name: 'dev-app'

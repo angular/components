@@ -21,7 +21,7 @@ import {
 import {_supportsShadowDom} from '../../platform';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDrag} from './drag';
-import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig} from './config';
+import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DragStartDelay} from './config';
 import {DragRef, Point} from '../drag-ref';
 import {
   createComponent,
@@ -1337,7 +1337,7 @@ describe('Standalone CdkDrag', () => {
     let currentTime = 0;
 
     const fixture = createComponent(StandaloneDraggable);
-    fixture.componentInstance.dragStartDelay = '500';
+    fixture.componentInstance.dragStartDelay = '500' as any;
     fixture.detectChanges();
     const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
@@ -1880,8 +1880,8 @@ class StandaloneDraggable {
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
   releasedSpy = jasmine.createSpy('released spy');
-  boundary: string | HTMLElement | undefined;
-  dragStartDelay: number | string | {touch: number; mouse: number} | undefined;
+  boundary!: string | HTMLElement;
+  dragStartDelay!: DragStartDelay;
   constrainPosition:
     | ((
         userPointerPosition: Point,
@@ -1890,9 +1890,9 @@ class StandaloneDraggable {
         pickupPositionInElement: Point,
       ) => Point)
     | undefined;
-  freeDragPosition?: {x: number; y: number};
+  freeDragPosition!: {x: number; y: number};
   dragDisabled = signal(false);
-  dragLockAxis = signal<DragAxis | undefined>(undefined);
+  dragLockAxis = signal<DragAxis | null>(null);
   scale = 1;
 }
 
@@ -2067,7 +2067,7 @@ class DraggableWithAlternateRoot {
   @ViewChild('dragElement') dragElement!: ElementRef<HTMLElement>;
   @ViewChild('dragRoot') dragRoot!: ElementRef<HTMLElement>;
   @ViewChild(CdkDrag) dragInstance!: CdkDrag;
-  rootElementSelector: string | undefined;
+  rootElementSelector!: string;
 }
 
 @Component({

@@ -41,8 +41,21 @@ export class FocusTrap {
   private _hasAttached = false;
 
   // Event listeners for the anchors. Need to be regular functions so that we can unbind them later.
-  protected startAnchorListener = () => this.focusLastTabbableElement();
-  protected endAnchorListener = () => this.focusFirstTabbableElement();
+  protected startAnchorListener = () => {
+    const isSuccess = this.focusLastTabbableElement();
+
+    if (!isSuccess && this._checker.isFocusable(this._element)) {
+      this._element.focus();
+    }
+  };
+
+  protected endAnchorListener = () => {
+    const isSuccess = this.focusFirstTabbableElement();
+
+    if (!isSuccess && this._checker.isFocusable(this._element)) {
+      this._element.focus();
+    }
+  };
 
   /** Whether the focus trap is active. */
   get enabled(): boolean {
@@ -166,7 +179,7 @@ export class FocusTrap {
   private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
     // Contains the deprecated version of selector, for temporary backwards comparability.
     const markers = this._element.querySelectorAll(
-      `[cdk-focus-region-${bound}], ` + `[cdkFocusRegion${bound}], ` + `[cdk-focus-${bound}]`,
+      `[cdk-focus-region-${bound}], [cdkFocusRegion${bound}], [cdk-focus-${bound}]`,
     ) as NodeListOf<HTMLElement>;
 
     if (typeof ngDevMode === 'undefined' || ngDevMode) {

@@ -1,6 +1,6 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {
@@ -442,8 +442,8 @@ describe('MatRadio', () => {
     });
 
     it('should have a focus indicator', () => {
-      const radioRippleNativeElements = radioNativeElements.map(
-        element => element.querySelector('.mat-radio-ripple')!,
+      const radioRippleNativeElements = radioNativeElements.map(element =>
+        element.querySelector('.mat-radio-ripple')!,
       );
 
       expect(
@@ -610,17 +610,17 @@ describe('MatRadio', () => {
       expect(groupNgModel.touched).toBe(true);
     });
 
-    it('should write to the radio button based on ngModel', fakeAsync(() => {
+    it('should write to the radio button based on ngModel', async () => {
       testComponent.modelValue = 'chocolate';
       fixture.changeDetectorRef.markForCheck();
 
       fixture.detectChanges();
-      tick();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(innerRadios[1].nativeElement.checked).toBe(true);
       expect(radioInstances[1].checked).toBe(true);
-    }));
+    });
 
     it('should update the ngModel value when selecting a radio button', () => {
       dispatchFakeEvent(innerRadios[1].nativeElement, 'change');

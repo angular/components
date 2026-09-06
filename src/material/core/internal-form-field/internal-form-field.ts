@@ -14,8 +14,7 @@ import {Component, Input, ViewEncapsulation} from '@angular/core';
  * @docs-private
  */
 @Component({
-  // Use a `div` selector to match the old markup closer.
-  selector: 'div[mat-internal-form-field]',
+  selector: '[mat-internal-form-field]',
   template: '<ng-content></ng-content>',
   styleUrl: 'internal-form-field.css',
   encapsulation: ViewEncapsulation.None,

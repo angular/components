@@ -6,7 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {Directive, ElementRef, inject, input, OnDestroy, OnInit, signal} from '@angular/core';
+import {
+  afterNextRender,
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import {_IdGenerator} from '@angular/cdk/a11y';
 import {COMBOBOX_POPUP} from './combobox-tokens';
 
 /**
@@ -28,6 +38,7 @@ export class ComboboxWidget implements OnInit, OnDestroy {
   /** The element that the popup widget is attached to. */
   private readonly _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private readonly _popup = inject(COMBOBOX_POPUP);
+  private readonly _idGenerator = inject(_IdGenerator);
 
   /** A reference to the popup widget element. */
   readonly element = this._elementRef.nativeElement;
@@ -53,6 +64,16 @@ export class ComboboxWidget implements OnInit, OnDestroy {
     this._observer.observe(el, {
       attributes: true,
       attributeFilter: ['id'],
+    });
+
+    afterNextRender(() => {
+      // Imperative, not a host binding: the element's id may already be owned by another
+      // directive (e.g. Listbox, Tree, Grid), so this can't collide with it.
+      if (!el.id) {
+        el.id = this._idGenerator.getId('ng-combobox-widget-', true);
+      }
+      // Set synchronously; the MutationObserver above only fires on the next microtask.
+      this.popupId.set(el.id);
     });
   }
 

@@ -224,6 +224,59 @@ describe('SelectionModel', () => {
     });
   });
 
+  describe('bulk actions', () => {
+    let model: SelectionModel<number>;
+
+    beforeEach(() => (model = new SelectionModel(true)));
+
+    it('should be able to bulk select values', () => {
+      const changedSpy = jasmine.createSpy('changed spy');
+
+      model.changed.subscribe(changedSpy);
+      model.bulk.select([1, 2]);
+
+      expect(model.selected.length).toBe(2);
+      expect(model.isSelected(1)).toBe(true);
+      expect(model.isSelected(2)).toBe(true);
+      expect(changedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should be able to bulk deselect values', () => {
+      model.bulk.select([1, 2]);
+      expect(model.selected.length).toBe(2);
+      expect(model.isSelected(1)).toBe(true);
+      expect(model.isSelected(2)).toBe(true);
+
+      const changedSpy = jasmine.createSpy('changed spy');
+      model.changed.subscribe(changedSpy);
+      model.bulk.deselect([1, 2]);
+
+      expect(model.selected.length).toBe(0);
+      expect(model.isSelected(1)).toBe(false);
+      expect(model.isSelected(2)).toBe(false);
+      expect(changedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should be able to bulk set the selection', () => {
+      model.bulk.setSelection([1, 2]);
+      expect(model.selected.length).toBe(2);
+      expect(model.isSelected(1)).toBe(true);
+      expect(model.isSelected(2)).toBe(true);
+
+      model.bulk.setSelection([2]);
+      expect(model.selected.length).toBe(1);
+      expect(model.isSelected(1)).toBe(false);
+      expect(model.isSelected(2)).toBe(true);
+
+      model.bulk.setSelection([3, 4]);
+      expect(model.selected.length).toBe(2);
+      expect(model.isSelected(1)).toBe(false);
+      expect(model.isSelected(2)).toBe(false);
+      expect(model.isSelected(3)).toBe(true);
+      expect(model.isSelected(4)).toBe(true);
+    });
+  });
+
   it('should be able to determine whether it is empty', () => {
     let model = new SelectionModel();
 

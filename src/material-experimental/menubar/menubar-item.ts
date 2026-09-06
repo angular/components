@@ -11,7 +11,12 @@ import {CdkMenuItem} from '@angular/cdk/menu';
 
 /** Removes all icons from within the given element. */
 function removeIcons(element: Element) {
-  for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
+  const icons = element.querySelectorAll(
+    'mat-icon, .material-icons, .material-symbols-outlined, ' +
+      '.material-symbols-rounded, .material-symbols-sharp',
+  );
+
+  for (const icon of Array.from(icons)) {
     icon.remove();
   }
 }

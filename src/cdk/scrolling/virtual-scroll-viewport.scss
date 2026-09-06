@@ -47,6 +47,10 @@ cdk-virtual-scroll-viewport {
   overflow: auto;
   will-change: scroll-position;
   contain: strict;
+
+  // Prevent browser behaviors from interfering with virtual scrolling.
+  overflow-anchor: none;
+  scroll-behavior: auto;
 }
 
 // Wrapper element for the rendered content. This element will be transformed to push the rendered
@@ -59,7 +63,6 @@ cdk-virtual-scroll-viewport {
 
   // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
   // viewport's `scrollHeight` when the spacer's transform changes.
-
   [dir='rtl'] & {
     right: 0;
     left: auto;
@@ -86,7 +89,6 @@ cdk-virtual-scroll-viewport {
 
   // Note: We can't put `will-change: transform;` here because it causes Safari to not update the
   // viewport's `scrollHeight` when the spacer's transform changes.
-
   [dir='rtl'] & {
     transform-origin: 100% 0;
   }

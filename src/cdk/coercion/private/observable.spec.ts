@@ -1,6 +1,5 @@
 import {Observable, ReplaySubject} from 'rxjs';
 import {coerceObservable} from './observable';
-import {fakeAsync} from '@angular/core/testing';
 
 describe('coerceObservable', () => {
   it('should return the Observable, if an Observable is passed in', () => {
@@ -13,12 +12,12 @@ describe('coerceObservable', () => {
     expect(coerceObservable(observable)).toBe(observable);
   });
 
-  it('should wrap non-Observables in Observables', fakeAsync(() => {
+  it('should wrap non-Observables in Observables', () => {
     const observable = coerceObservable(3);
     let emittedValue = 0;
     observable.subscribe(value => {
       emittedValue = value;
     });
     expect(emittedValue).toBe(3);
-  }));
+  });
 });

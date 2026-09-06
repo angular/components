@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {signal, WritableSignalLike} from '../behaviors/signal-like/signal-like';
+import {signal, SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {MenuPattern, MenuBarPattern, MenuItemPattern, MenuTriggerPattern} from './menu';
 import {createKeyboardEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
@@ -1009,6 +1009,100 @@ describe('Menu Bar Pattern', () => {
         menubar.setDefaultStateEffect();
         expect(menubar.inputs.activeItem()).toBeUndefined(); // Should stay undefined
       });
+    });
+  });
+
+  describe('MenuItemPattern with optional value', () => {
+    it('should default value to undefined when omitted', () => {
+      const item = new MenuItemPattern({
+        id: signal('item-1'),
+        disabled: signal(false),
+        searchTerm: signal('Item'),
+        parent: signal(undefined),
+        element: signal(document.createElement('div')),
+        submenu: signal(undefined),
+        role: signal('menuitem'),
+      });
+
+      expect(item.value()).toBeUndefined();
+    });
+
+    function createTestMenu(items: SignalLike<MenuItemPattern<any>[]>) {
+      return new MenuPattern({
+        id: signal('menu-1'),
+        items,
+        parent: signal(undefined),
+        textDirection: signal('ltr'),
+        expansionDelay: signal(100),
+        disabled: signal(false),
+        activeItem: signal(undefined),
+        typeaheadDelay: signal(500),
+        wrap: signal(true),
+        softDisabled: signal(true),
+        multi: signal(false),
+        focusMode: signal('activedescendant'),
+        orientation: signal('vertical'),
+        selectionMode: signal('explicit'),
+        element: signal(document.createElement('div')),
+      });
+    }
+
+    it('should not report duplicate violations for items without a value', () => {
+      const items = signal<MenuItemPattern<any>[]>([]);
+      const menu = createTestMenu(items);
+
+      items.set([
+        new MenuItemPattern({
+          id: signal('item-1'),
+          disabled: signal(false),
+          searchTerm: signal('Item 1'),
+          parent: signal(menu),
+          element: signal(document.createElement('div')),
+          submenu: signal(undefined),
+          role: signal('menuitem'),
+        }),
+        new MenuItemPattern({
+          id: signal('item-2'),
+          disabled: signal(false),
+          searchTerm: signal('Item 2'),
+          parent: signal(menu),
+          element: signal(document.createElement('div')),
+          submenu: signal(undefined),
+          role: signal('menuitem'),
+        }),
+      ]);
+
+      expect(menu.validate()).toEqual([]);
+    });
+
+    it('should report duplicate violations for items with the same defined value', () => {
+      const items = signal<MenuItemPattern<any>[]>([]);
+      const menu = createTestMenu(items);
+
+      items.set([
+        new MenuItemPattern({
+          id: signal('item-1'),
+          value: signal('copy'),
+          disabled: signal(false),
+          searchTerm: signal('Copy'),
+          parent: signal(menu),
+          element: signal(document.createElement('div')),
+          submenu: signal(undefined),
+          role: signal('menuitem'),
+        }),
+        new MenuItemPattern({
+          id: signal('item-2'),
+          value: signal('copy'),
+          disabled: signal(false),
+          searchTerm: signal('Copy Again'),
+          parent: signal(menu),
+          element: signal(document.createElement('div')),
+          submenu: signal(undefined),
+          role: signal('menuitem'),
+        }),
+      ]);
+
+      expect(menu.validate()).toEqual(["Duplicate value 'copy' detected inside ngMenu."]);
     });
   });
 });

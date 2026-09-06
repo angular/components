@@ -12,6 +12,7 @@ import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/observers';
@@ -68,7 +69,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _floatingLabel: MatFormFieldFloatingLabel | undefined;
     get floatLabel(): FloatLabelType;
     set floatLabel(value: FloatLabelType);
-    _forceDisplayInfixLabel(): boolean | 0;
+    _forceDisplayInfixLabel(): 0 | boolean;
     // (undocumented)
     _formFieldControl: MatFormFieldControl<any>;
     getConnectedOverlayOrigin(): ElementRef;

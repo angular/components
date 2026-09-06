@@ -67,6 +67,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {_getEventTarget} from '@angular/cdk/platform';
+import {FORM_FIELD} from '@angular/forms/signals';
 import {
   _animationsDisabled,
   _countGroupLabelsBeforeOption,
@@ -595,6 +596,7 @@ export class MatSelect
     const parentFormGroup = inject(FormGroupDirective, {optional: true});
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     const defaultPopoverConfig = inject(OVERLAY_DEFAULT_CONFIG, {optional: true});
+    const formField = inject(FORM_FIELD, {optional: true, self: true});
 
     if (this.ngControl) {
       // Note: we provide the value accessor through here, instead of
@@ -610,7 +612,7 @@ export class MatSelect
 
     this._errorStateTracker = new _ErrorStateTracker(
       defaultErrorStateMatcher,
-      this.ngControl,
+      formField || this.ngControl,
       parentFormGroup,
       parentForm,
       this.stateChanges,

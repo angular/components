@@ -6,9 +6,13 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
+
+// @public
+export const ACCORDION_GROUP: InjectionToken<AccordionGroup>;
 
 // @public
 export class AccordionContent {

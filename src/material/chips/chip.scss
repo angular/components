@@ -204,23 +204,28 @@ $fallbacks: m3-chip.get-tokens();
   // Moved out into variables, because the selectors are too long.
   $with-graphic: '.mdc-evolution-chip--with-primary-graphic';
   $with-trailing: '.mdc-evolution-chip--with-trailing-action';
+  $with-leading: '.mdc-evolution-chip--with-leading-action';
 
-  .mat-mdc-standard-chip#{$with-trailing} & {
+  .mat-mdc-standard-chip#{$with-trailing} &,
+  .mat-mdc-standard-chip#{$with-leading} & {
     padding-left: $_trailing-action-padding;
     padding-right: $_trailing-action-padding;
   }
 
-  .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} & {
+  .mat-mdc-standard-chip#{$with-graphic}#{$with-trailing} &,
+  .mat-mdc-standard-chip#{$with-graphic}#{$with-leading} & {
     padding-left: $_trailing-action-padding;
     padding-right: $_trailing-action-padding;
   }
 
-  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} &,
+  .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-leading} & {
     padding-left: $_avatar-trailing-padding;
     padding-right: $_avatar-trailing-padding;
   }
 
-  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} & {
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-trailing} &,
+  [dir='rtl'] .mdc-evolution-chip--with-avatar#{$with-graphic}#{$with-leading} & {
     padding-left: $_avatar-trailing-padding;
     padding-right: $_avatar-trailing-padding;
   }

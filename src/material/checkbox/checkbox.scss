@@ -44,6 +44,9 @@ $fallbacks: m3-checkbox.get-tokens();
 
     label {
       cursor: default;
+    }
+
+    .mat-internal-form-field-label {
       color: token-utils.slot(checkbox-disabled-label-color, $fallbacks);
 
       @include cdk.high-contrast {
@@ -54,7 +57,7 @@ $fallbacks: m3-checkbox.get-tokens();
 
   // The MDC styles result in extra padding if the label is present but empty. To fix this we hide
   // the label when it is empty.
-  label:empty {
+  .mat-internal-form-field-label:empty {
     display: none;
   }
 

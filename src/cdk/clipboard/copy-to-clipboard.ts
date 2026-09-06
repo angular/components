@@ -49,7 +49,8 @@ export class CdkCopyToClipboard implements OnDestroy {
 
   /**
    * How many times to attempt to copy the text. This may be necessary for longer text, because
-   * the browser needs time to fill an intermediate textarea element and copy the content.
+   * the browser needs time to fill an intermediate textarea element and copy the content. Attempts
+   * are cappted out at 50.
    */
   @Input('cdkCopyToClipboardAttempts') attempts: number = 1;
 
@@ -78,6 +79,9 @@ export class CdkCopyToClipboard implements OnDestroy {
 
   /** Copies the current text to the clipboard. */
   copy(attempts: number = this.attempts): void {
+    // Avoid triggering an infinite loop if a large number of attempts is passed in.
+    attempts = Math.min(attempts, 50);
+
     if (attempts > 1) {
       let remainingAttempts = attempts;
       const pending = this._clipboard.beginCopy(this.text);

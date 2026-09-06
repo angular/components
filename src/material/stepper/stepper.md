@@ -101,6 +101,12 @@ are completed.
   </mat-step>
 </mat-stepper>
 ```
+
+#### Using Signal Forms
+The stepper also supports passing in a Signal Forms field as the `stepControl`:
+
+<!-- example(stepper-signal-forms) -->
+
 ### Types of steps
 
 #### Optional step

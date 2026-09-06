@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 import {MatInputModule} from '@angular/material/input';
@@ -15,7 +15,7 @@ import {MatButtonModule} from '@angular/material/button';
 })
 export class TimepickerLocaleExample {
   private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
-  value = new Date(2024, 0, 1, 13, 45, 0);
+  value = signal(new Date(2024, 0, 1, 13, 45, 0));
 
   protected switchLocale() {
     this._adapter.setLocale('bg-BG');

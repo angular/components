@@ -13,6 +13,7 @@ import {
   ToolbarConfigurableExample,
   ToolbarRtlExample,
   ToolbarHardDisabledExample,
+  ToolbarSelectAndComboboxExample,
 } from '@angular/components-examples/aria/toolbar';
 
 @Component({
@@ -23,6 +24,7 @@ import {
     ToolbarConfigurableExample,
     ToolbarRtlExample,
     ToolbarHardDisabledExample,
+    ToolbarSelectAndComboboxExample,
   ],
   styleUrl: './toolbar-demo.css',
   encapsulation: ViewEncapsulation.None,

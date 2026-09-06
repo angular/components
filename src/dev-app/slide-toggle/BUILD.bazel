@@ -13,6 +13,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//src/material/button",
+        "//src/material/icon",
         "//src/material/slide-toggle",
     ],
 )

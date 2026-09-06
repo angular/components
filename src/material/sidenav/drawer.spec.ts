@@ -751,6 +751,32 @@ describe('MatDrawer', () => {
 
       expect(content.hasAttribute('inert')).toBe(false);
     });
+
+    it('should toggle `inert` on the content if the `mode` changes', async () => {
+      testComponent.mode = 'over';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      lastFocusableElement.focus();
+
+      const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+      expect(content.hasAttribute('inert')).toBe(false);
+
+      drawer.open();
+      fixture.detectChanges();
+      await wait(100);
+      fixture.detectChanges();
+      expect(content.getAttribute('inert')).toBe('true');
+
+      testComponent.mode = 'side';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(content.hasAttribute('inert')).toBe(false);
+
+      testComponent.mode = 'over';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      expect(content.getAttribute('inert')).toBe('true');
+    });
   });
 
   it('should mark the drawer content as scrollable', () => {

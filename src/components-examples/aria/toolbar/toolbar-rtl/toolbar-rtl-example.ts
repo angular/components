@@ -5,6 +5,7 @@ import {
   ToolbarCombobox,
   SimpleToolbarButton,
   SimpleToolbarRadioButton,
+  SimpleToolbarRadioGroup,
   SimpleToolbarToggleButton,
 } from '../simple-toolbar';
 
@@ -21,6 +22,7 @@ import {
     ToolbarCombobox,
     SimpleToolbarButton,
     SimpleToolbarRadioButton,
+    SimpleToolbarRadioGroup,
     SimpleToolbarToggleButton,
   ],
 })

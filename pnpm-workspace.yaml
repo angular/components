@@ -18,23 +18,23 @@ packages:
   - src/youtube-player
 
 catalog:
-  '@angular-devkit/build-angular': 22.0.0-rc.2
-  '@angular-devkit/core': 22.0.0-rc.2
-  '@angular-devkit/schematics': 22.0.0-rc.2
-  '@angular/build': 22.0.0-rc.2
-  '@angular/cli': 22.0.0-rc.2
-  '@angular/common': 22.0.0-rc.2
-  '@angular/compiler-cli': 22.0.0-rc.2
-  '@angular/compiler': 22.0.0-rc.2
-  '@angular/core': 22.0.0-rc.2
-  '@angular/ssr': 22.0.0-rc.2
-  '@angular/forms': 22.0.0-rc.2
-  '@angular/localize': 22.0.0-rc.2
-  '@angular/platform-browser': 22.0.0-rc.2
-  '@angular/platform-browser-dynamic': 22.0.0-rc.2
-  '@angular/platform-server': 22.0.0-rc.2
-  '@angular/router': 22.0.0-rc.2
-  '@schematics/angular': 22.0.0-rc.2
+  '@angular-devkit/build-angular': 22.2.0-next.6
+  '@angular-devkit/core': 22.2.0-next.6
+  '@angular-devkit/schematics': 22.2.0-next.6
+  '@angular/build': 22.2.0-next.6
+  '@angular/cli': 22.2.0-next.6
+  '@angular/common': 22.2.0-next.5
+  '@angular/compiler-cli': 22.2.0-next.5
+  '@angular/compiler': 22.2.0-next.5
+  '@angular/core': 22.2.0-next.5
+  '@angular/ssr': 22.2.0-next.6
+  '@angular/forms': 22.2.0-next.5
+  '@angular/localize': 22.2.0-next.5
+  '@angular/platform-browser': 22.2.0-next.5
+  '@angular/platform-browser-dynamic': 22.2.0-next.5
+  '@angular/platform-server': 22.2.0-next.5
+  '@angular/router': 22.2.0-next.5
+  '@schematics/angular': 22.2.0-next.6
   'rxjs': ^6.6.7
 
 # The minimum age of a release to be considered for dependency installation.
@@ -49,6 +49,8 @@ minimumReleaseAgeExclude:
   - 'ng-packagr'
 overrides:
   typescript: 6.0.2
+  protobufjs: 8.8.0
+  '@nginfra/angular-linking>@babel/core': 8.0.1
 packageExtensions:
   dgeni-packages:
     dependencies:
@@ -81,6 +83,10 @@ packageExtensions:
 engineStrict: false
 hoist: false
 autoInstallPeers: false
+
+# Avoid prompting for confirmation when pnpm determines node_modules needs to be purged and recreated.
+confirmModulesPurge: false
+
 allowBuilds:
   '@firebase/util': false
   '@google/genai': false

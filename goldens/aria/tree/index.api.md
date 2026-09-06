@@ -15,20 +15,20 @@ export class Tree<V> implements OnDestroy {
     constructor();
     readonly activeDescendant: Signal<string | undefined>;
     readonly _collection: SortedCollection<TreeItem<V>>;
-    readonly currentType: _angular_core.InputSignal<"page" | "step" | "location" | "date" | "time" | "true" | "false">;
+    readonly currentType: _angular_core.InputSignal<"date" | "false" | "location" | "page" | "step" | "time" | "true">;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
-    readonly focusMode: _angular_core.InputSignal<"roving" | "activedescendant">;
+    readonly focusMode: _angular_core.InputSignal<"activedescendant" | "roving">;
     readonly id: _angular_core.InputSignal<string>;
     readonly multi: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly nav: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly orientation: _angular_core.InputSignal<"vertical" | "horizontal">;
+    readonly orientation: _angular_core.InputSignal<"horizontal" | "vertical">;
     readonly _pattern: TreePattern<V>;
     // (undocumented)
     scrollActiveItemIntoView(options?: ScrollIntoViewOptions): void;
-    readonly selectionMode: _angular_core.InputSignal<"follow" | "explicit">;
+    readonly selectionMode: _angular_core.InputSignal<"explicit" | "follow">;
     readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly tabIndex: _angular_core.InputSignalWithTransform<number | undefined, string | number | undefined>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
@@ -56,7 +56,7 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    readonly parent: _angular_core.InputSignal<TreeItemGroup<V> | Tree<V>>;
+    readonly parent: _angular_core.InputSignal<Tree<V> | TreeItemGroup<V>>;
     _pattern: TreeItemPattern<V>;
     // (undocumented)
     _register(group: TreeItemGroup<V>): void;

@@ -123,6 +123,10 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     }
   }
 
+  _drawerModeChanged() {
+    this._updateInert();
+  }
+
   private _updateInert() {
     const newValue = this._container._isShowingBackdrop();
 
@@ -194,6 +198,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _renderer = inject(Renderer2);
   private readonly _interactivityChecker = inject(InteractivityChecker);
   private _doc = inject(DOCUMENT);
+  private _isAnimating = false;
   _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
 
   private _focusTrap: FocusTrap | null = null;
@@ -235,6 +240,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     this._mode = value;
     this._updateFocusTrapState();
     this._modeChanged.next();
+    this._getContent()?._drawerModeChanged();
   }
   private _mode: MatDrawerMode = 'over';
 
@@ -445,9 +451,16 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
       case 'first-tabbable':
         afterNextRender(
           () => {
-            const hasMovedFocus = this._focusTrap!.focusInitialElement();
+            // If we try to capture focus mid-animation, we can end up shifting the page,
+            // if the drawer starts off from the end so prevent scrolling in this case.
+            // This should mostly happen in edge cases where the drawer is toggled rapidly.
+            const focusOptions: FocusOptions | undefined = this._isAnimating
+              ? {preventScroll: true}
+              : undefined;
+
+            const hasMovedFocus = this._focusTrap!.focusInitialElement(focusOptions);
             if (!hasMovedFocus && typeof element.focus === 'function') {
-              element.focus();
+              element.focus(focusOptions);
             }
           },
           {injector: this._injector},
@@ -579,23 +592,25 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     }
 
     this._opened.set(isOpen);
-    (this._container?._content || this._container?._userContent)?._drawerToggled(this);
+    this._getContent()?._drawerToggled(this);
 
     if (this._container?._transitionsEnabled) {
-      // Note: it's important to set this as early as possible,
-      // otherwise the animation can look glitchy in some cases.
-      this._setIsAnimating(true);
+      if (this._isAnimating) {
+        this._setIsAnimating(false);
+        this._simulateAnimation();
+      } else {
+        // Note: it's important to set this as early as possible,
+        // otherwise the animation can look glitchy in some cases.
+        this._setIsAnimating(true);
 
-      // Previously we dispatched this in a `transitionrun` event, but it might not fire
-      // if the element is hidden (see #32992). Since this event is load-bearing for the
-      // margin calculations, we need it to fire consistently.
-      setTimeout(() => this._animationStarted.next());
+        // Previously we dispatched this in a `transitionrun` event, but it might not fire
+        // if the element is hidden (see #32992). Since this event is load-bearing for the
+        // margin calculations, we need it to fire consistently.
+        setTimeout(() => this._animationStarted.next());
+      }
     } else {
       // Simulate the animation events if animations are disabled.
-      setTimeout(() => {
-        this._animationStarted.next();
-        this._animationEnd.next();
-      });
+      this._simulateAnimation();
     }
 
     this._elementRef.nativeElement.classList.toggle('mat-drawer-opened', isOpen);
@@ -613,9 +628,24 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     });
   }
 
+  /** Gets the current content element. */
+  private _getContent() {
+    return this._container?._content || this._container?._userContent;
+  }
+
   /** Toggles whether the drawer is currently animating. */
   private _setIsAnimating(isAnimating: boolean) {
-    this._elementRef.nativeElement.classList.toggle('mat-drawer-animating', isAnimating);
+    if (isAnimating !== this._isAnimating) {
+      this._isAnimating = isAnimating;
+      this._elementRef.nativeElement.classList.toggle('mat-drawer-animating', isAnimating);
+    }
+  }
+
+  private _simulateAnimation() {
+    setTimeout(() => {
+      this._animationStarted.next();
+      this._animationEnd.next();
+    });
   }
 
   _getWidth(): number {

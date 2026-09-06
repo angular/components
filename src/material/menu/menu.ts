@@ -292,7 +292,9 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
     this._keyManager = new FocusKeyManager(this._directDescendantItems)
       .withWrap()
       .withTypeAhead()
-      .withHomeAndEnd();
+      .withHomeAndEnd()
+      .skipPredicate(item => item.disabled && !item.disabledInteractive);
+
     this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
 
     // If a user manually (programmatically) focuses a menu item, we need to reflect that focus

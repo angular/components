@@ -7,7 +7,7 @@ import {
   ViewChildren,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {CdkMenu} from './menu';
@@ -522,20 +522,19 @@ describe('MenuTrigger', () => {
     });
   });
 
-  it('should focus the first item when opening on click', fakeAsync(() => {
+  it('should focus the first item when opening on click', () => {
     const fixture = TestBed.createComponent(TriggersWithSameMenuDifferentMenuBars);
     fixture.detectChanges();
 
     fixture.componentInstance.nativeTriggers.first.nativeElement.click();
     fixture.detectChanges();
-    tick();
 
     const firstItem =
       fixture.componentInstance.nativeMenus.first.nativeElement.querySelector('.cdk-menu-item');
 
     expect(firstItem).toBeTruthy();
     expect(document.activeElement).toBe(firstItem);
-  }));
+  });
 });
 
 @Component({

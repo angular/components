@@ -1634,6 +1634,28 @@ describe('MatMenu', () => {
 
       expect(ripple.disabled).toBe(true);
     });
+
+    it('should set disabled interactive classes and attributes', () => {
+      const fixture = TestBed.createComponent(DisabledInteractiveMenuItem);
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+
+      const items = fixture.debugElement.queryAll(By.css('.mat-mdc-menu-item'));
+      const disabledNativeItem = items[0].nativeElement;
+      const disabledInteractiveItem = items[1].nativeElement;
+
+      expect(disabledNativeItem.hasAttribute('disabled')).toBe(true);
+      expect(disabledNativeItem.getAttribute('aria-disabled')).toBeNull();
+      expect(disabledNativeItem.classList).toContain('mat-mdc-menu-item-disabled');
+      expect(disabledNativeItem.classList).not.toContain('mat-mdc-menu-item-disabled-interactive');
+
+      expect(disabledInteractiveItem.hasAttribute('disabled')).toBe(false);
+      expect(disabledInteractiveItem.getAttribute('aria-disabled')).toBe('true');
+      expect(disabledInteractiveItem.classList).toContain('mat-mdc-menu-item-disabled');
+      expect(disabledInteractiveItem.classList).toContain('mat-mdc-menu-item-disabled-interactive');
+    });
   });
 
   describe('close event', () => {
@@ -2551,6 +2573,22 @@ class SimpleMenuOnPush extends SimpleMenu {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisabledMenu {
+  @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
+}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item disabled> Native disabled </button>
+      <button mat-menu-item disabled [disabledInteractive]="true"> Disabled Interactive </button>
+    </mat-menu>
+  `,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class DisabledInteractiveMenuItem {
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
 }
 

@@ -1,7 +1,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "outDir": "../dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
@@ -12,6 +11,7 @@
     "importHelpers": true,
     "target": "ES2022",
     "typeRoots": ["node_modules/@types"],
+    "types": ["jasmine"],
     "lib": ["es2018", "dom"],
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -44,7 +44,6 @@
   },
   "exclude": ["src/assets", "dist", "bazel-*"],
   "angularCompilerOptions": {
-    "fullTemplateTypeCheck": true,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,

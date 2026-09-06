@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatRippleModule} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -15,10 +15,10 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   imports: [MatCheckboxModule, FormsModule, MatFormFieldModule, MatInputModule, MatRippleModule],
 })
 export class RippleOverviewExample {
-  centered = false;
-  disabled = false;
-  unbounded = false;
+  centered = signal(false);
+  disabled = signal(false);
+  unbounded = signal(false);
 
-  radius!: number;
-  color!: string;
+  radius = signal<number>(0);
+  color = signal('');
 }

@@ -136,16 +136,15 @@ export class Listbox<V> implements OnDestroy {
   /** The ID of the active descendant in the listbox. */
   readonly activeDescendant: Signal<string | undefined>;
 
-  constructor() {
-    // Map directives to their patterns for the ListboxPattern
-    const orderedItemPatterns = computed(() =>
-      this._collection.orderedItems().map(option => option._pattern),
-    );
+  private readonly _orderedItemPatterns = computed(() =>
+    this._collection.orderedItems().map(option => option._pattern),
+  );
 
+  constructor() {
     const inputs = {
       ...this,
       id: this.id,
-      items: orderedItemPatterns,
+      items: this._orderedItemPatterns,
       activeItem: signal(undefined),
       textDirection: this.textDirection,
       element: () => this._elementRef.nativeElement,
@@ -209,5 +208,15 @@ export class Listbox<V> implements OnDestroy {
   /** Navigates to the first item in the listbox. */
   gotoFirst() {
     this._pattern.listBehavior.first();
+  }
+
+  /** Navigates to an item at a specific index in the listbox. */
+  gotoIndex(index: number) {
+    const patterns = this._orderedItemPatterns();
+    const item = patterns[Math.min(Math.max(index, 0), patterns.length - 1)];
+
+    if (item) {
+      this._pattern.listBehavior.goto(item);
+    }
   }
 }

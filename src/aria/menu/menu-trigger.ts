@@ -30,8 +30,8 @@ import type {Menu} from './menu';
  * <button ngMenuTrigger [menu]="myMenu">Open Menu</button>
  *
  * <div ngMenu #myMenu="ngMenu">
- *   <div ngMenuItem>Item 1</div>
- *   <div ngMenuItem>Item 2</div>
+ *   <div ngMenuItem value="Item 1">Item 1</div>
+ *   <div ngMenuItem value="Item 2">Item 2</div>
  * </div>
  * ```
  *

@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 
 import {DEFAULT_OPTIONS, GoogleMap} from '../google-map/google-map';
 import {MapMarker} from '../map-marker/map-marker';
@@ -51,6 +51,7 @@ describe('DeprecatedMapMarkerClusterer', () => {
     (window as any).MarkerClusterer = undefined;
   });
 
+  // We can't test this one easily without `fakeAsync`.
   it('throws an error if the clustering library has not been loaded', fakeAsync(() => {
     (window as any).MarkerClusterer = undefined;
     markerClustererConstructorSpy = createDeprecatedMarkerClustererConstructorSpy(
@@ -64,9 +65,10 @@ describe('DeprecatedMapMarkerClusterer', () => {
     }).toThrowError(/MarkerClusterer class not found, cannot construct a marker cluster/);
   }));
 
-  it('initializes a Google Map Marker Clusterer', fakeAsync(() => {
+  it('initializes a Google Map Marker Clusterer', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith(mapSpy, [], {
       ariaLabelFn: undefined,
@@ -88,9 +90,9 @@ describe('DeprecatedMapMarkerClusterer', () => {
       zIndex: undefined,
       zoomOnClick: undefined,
     });
-  }));
+  });
 
-  it('sets marker clusterer inputs', fakeAsync(() => {
+  it('sets marker clusterer inputs', async () => {
     fixture.componentInstance.ariaLabelFn = (testString: string) => testString;
     fixture.componentInstance.averageCenter = true;
     fixture.componentInstance.batchSize = 1;
@@ -109,7 +111,8 @@ describe('DeprecatedMapMarkerClusterer', () => {
     fixture.componentInstance.zoomOnClick = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith(mapSpy, [], {
       ariaLabelFn: jasmine.any(Function),
@@ -131,11 +134,12 @@ describe('DeprecatedMapMarkerClusterer', () => {
       zIndex: 6,
       zoomOnClick: true,
     });
-  }));
+  });
 
-  it('sets marker clusterer options', fakeAsync(() => {
+  it('sets marker clusterer options', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
     const options: MarkerClustererOptions = {
       enableRetinaIcons: true,
       gridSize: 1337,
@@ -145,12 +149,15 @@ describe('DeprecatedMapMarkerClusterer', () => {
     fixture.componentInstance.options = options;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
+    await fixture.whenStable();
+    await wait(50);
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(jasmine.objectContaining(options));
-  }));
+  });
 
-  it('gives precedence to specific inputs over options', fakeAsync(() => {
+  it('gives precedence to specific inputs over options', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
     const options: MarkerClustererOptions = {
       enableRetinaIcons: true,
       gridSize: 1337,
@@ -170,25 +177,29 @@ describe('DeprecatedMapMarkerClusterer', () => {
     fixture.componentInstance.options = options;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.setOptions).toHaveBeenCalledWith(
       jasmine.objectContaining(expectedOptions),
     );
-  }));
+  });
 
-  it('sets Google Maps Markers in the MarkerClusterer', fakeAsync(() => {
+  it('sets Google Maps Markers in the MarkerClusterer', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
       anyMarkerMatcher,
       anyMarkerMatcher,
     ]);
-  }));
+  });
 
-  it('updates Google Maps Markers in the Marker Clusterer', fakeAsync(() => {
+  it('updates Google Maps Markers in the Marker Clusterer', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
       anyMarkerMatcher,
@@ -198,7 +209,8 @@ describe('DeprecatedMapMarkerClusterer', () => {
     fixture.componentInstance.state = 'state2';
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
     expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
@@ -207,7 +219,8 @@ describe('DeprecatedMapMarkerClusterer', () => {
     fixture.componentInstance.state = 'state0';
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([], true);
     expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith(
@@ -215,11 +228,12 @@ describe('DeprecatedMapMarkerClusterer', () => {
       true,
     );
     expect(markerClustererSpy.repaint).toHaveBeenCalledTimes(2);
-  }));
+  });
 
-  it('exposes marker clusterer methods', fakeAsync(() => {
+  it('exposes marker clusterer methods', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
     const markerClustererComponent = fixture.componentInstance.markerClusterer;
 
     markerClustererComponent.fitMapToMarkers(5);
@@ -286,11 +300,12 @@ describe('DeprecatedMapMarkerClusterer', () => {
 
     markerClustererSpy.getZoomOnClick.and.returnValue(true);
     expect(markerClustererComponent.getZoomOnClick()).toBe(true);
-  }));
+  });
 
-  it('initializes marker clusterer event handlers', fakeAsync(() => {
+  it('initializes marker clusterer event handlers', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addListener).toHaveBeenCalledWith(
       'clusteringbegin',
@@ -301,8 +316,12 @@ describe('DeprecatedMapMarkerClusterer', () => {
       jasmine.any(Function),
     );
     expect(markerClustererSpy.addListener).toHaveBeenCalledWith('click', jasmine.any(Function));
-  }));
+  });
 });
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 @Component({
   selector: 'test-app',

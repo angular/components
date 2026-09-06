@@ -10,6 +10,7 @@ import {
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule, MatBadgePosition, MatBadgeSize} from './index';
 import {ThemePalette} from '../core';
+import {MAT_BADGE_CONFIG, MatBadgeConfig} from './badge';
 
 describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
@@ -265,6 +266,31 @@ describe('MatBadge', () => {
         .toBeFalse();
     });
   });
+
+  it('should be able to specify default values through DI', () => {
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: MAT_BADGE_CONFIG,
+          useValue: {
+            color: 'accent',
+            overlap: false,
+            position: 'below before',
+            size: 'large',
+          } satisfies MatBadgeConfig,
+        },
+      ],
+    });
+
+    const fixture = TestBed.createComponent(SimpleBadge);
+    fixture.detectChanges();
+    const badge = fixture.componentInstance.badgeInstance;
+
+    expect(badge.color).toBe('accent');
+    expect(badge.overlap).toBe(false);
+    expect(badge.position).toBe('below before');
+    expect(badge.size).toBe('large');
+  });
 });
 
 /** Test component that contains a MatBadge. */
@@ -333,9 +359,20 @@ class PreExistingBadge {}
 class NestedBadge {}
 
 @Component({
-  template: `
-    <ng-template matBadge="1">Notifications</ng-template>`,
+  template: `<ng-template matBadge="1">Notifications</ng-template>`,
   imports: [MatBadgeModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class BadgeOnTemplate {}
+
+@Component({
+  template: `
+    <button matBadge="Hello">
+      home
+    </button>
+  `,
+  imports: [MatBadgeModule],
+})
+class SimpleBadge {
+  @ViewChild(MatBadge) badgeInstance!: MatBadge;
+}

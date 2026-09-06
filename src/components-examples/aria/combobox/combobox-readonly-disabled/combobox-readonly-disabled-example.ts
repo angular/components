@@ -11,7 +11,7 @@ import {Listbox, Option} from '@angular/aria/listbox';
 import {afterRenderEffect, Component, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title Disabled readonly combobox. */
+/** @title Disabled combobox. */
 @Component({
   selector: 'combobox-readonly-disabled-example',
   templateUrl: 'combobox-readonly-disabled-example.html',

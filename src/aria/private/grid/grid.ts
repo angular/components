@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {SignalLike, computed, signal, untracked} from '../behaviors/signal-like/signal-like';
 import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {NavOptions, Grid, GridInputs as GridBehaviorInputs} from '../behaviors/grid';
@@ -146,7 +147,7 @@ export class GridPattern {
     // Navigation without selection.
     if (!this.inputs.enableSelection()) {
       manager.on(e => {
-        const cell = this.inputs.getCell(e.target as Element);
+        const cell = this.inputs.getCell(_getEventTarget(e));
         if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
         this.gridBehavior.gotoCell(cell);
@@ -156,7 +157,7 @@ export class GridPattern {
     // Navigation with selection.
     if (this.inputs.enableSelection()) {
       manager.on(e => {
-        const cell = this.inputs.getCell(e.target as Element);
+        const cell = this.inputs.getCell(_getEventTarget(e));
         if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
         this.gridBehavior.gotoCell(cell, {
@@ -169,7 +170,7 @@ export class GridPattern {
       // Selection with modifier keys.
       if (this.inputs.multi()) {
         manager.on([Modifier.Ctrl, Modifier.Meta], e => {
-          const cell = this.inputs.getCell(e.target as Element);
+          const cell = this.inputs.getCell(_getEventTarget(e));
           if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
           this.gridBehavior.gotoCell(cell, {toggle: true});
@@ -233,7 +234,7 @@ export class GridPattern {
     this.hasBeenInteracted.set(true);
 
     // Cell that receives focus.
-    const cell = this.inputs.getCell(event.target as Element | null);
+    const cell = this.inputs.getCell(_getEventTarget(event));
     if (!cell || !this.gridBehavior.focusBehavior.isFocusable(cell)) return;
 
     // Pass down the focusin event to the cell.
@@ -249,7 +250,7 @@ export class GridPattern {
   /** Handles focusout events on the grid. */
   onFocusOut(event: FocusEvent) {
     // Pass down focusout event to the cell that loses focus.
-    const blurTarget = event.target as Element | null;
+    const blurTarget = _getEventTarget<Element>(event);
     const cell = this.inputs.getCell(blurTarget);
 
     // Pass down the focusout event to the cell.

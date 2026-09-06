@@ -96,6 +96,14 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     get hideToggle(): boolean;
     set hideToggle(value: boolean);
     readonly _inputChanges: Subject<{
+        readonly closed?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly opened?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly destroyed?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly expandedChange?: i0.SimpleChange<EventEmitter<boolean>> | undefined;
+        readonly id?: i0.SimpleChange<string> | undefined;
+        expanded?: i0.SimpleChange<boolean> | undefined;
+        disabled?: i0.SimpleChange<boolean> | undefined;
+        ngOnInit?: i0.SimpleChange<() => void> | undefined;
         hideToggle?: i0.SimpleChange<boolean> | undefined;
         togglePosition?: i0.SimpleChange<MatAccordionTogglePosition> | undefined;
         readonly afterExpand?: i0.SimpleChange<EventEmitter<void>> | undefined;
@@ -115,14 +123,6 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
         ngOnChanges?: i0.SimpleChange<(changes: /*elided*/ any) => void> | undefined;
         ngOnDestroy?: i0.SimpleChange<() => void> | undefined;
         _containsFocus?: i0.SimpleChange<() => boolean> | undefined;
-        readonly closed?: i0.SimpleChange<EventEmitter<void>> | undefined;
-        readonly opened?: i0.SimpleChange<EventEmitter<void>> | undefined;
-        readonly destroyed?: i0.SimpleChange<EventEmitter<void>> | undefined;
-        readonly expandedChange?: i0.SimpleChange<EventEmitter<boolean>> | undefined;
-        readonly id?: i0.SimpleChange<string> | undefined;
-        expanded?: i0.SimpleChange<boolean> | undefined;
-        disabled?: i0.SimpleChange<boolean> | undefined;
-        ngOnInit?: i0.SimpleChange<() => void> | undefined;
     }>;
     _lazyContent: MatExpansionPanelContent;
     // (undocumented)

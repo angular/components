@@ -15,6 +15,10 @@
 
   @return (
     base: (
+      slider-active-track-shape: map.get($system, corner-full),
+      slider-handle-shape: map.get($system, corner-full),
+      slider-inactive-track-shape: map.get($system, corner-full),
+      slider-with-tick-marks-container-shape: map.get($system, corner-full),
       slider-value-indicator-opacity: 1,
       slider-value-indicator-padding: 0,
       slider-value-indicator-width: $indicator-size,
@@ -35,7 +39,6 @@
     ),
     color: (
       slider-active-track-color: map.get($system, primary),
-      slider-active-track-shape: map.get($system, corner-full),
       slider-disabled-active-track-color: map.get($system, on-surface),
       slider-disabled-handle-color: map.get($system, on-surface),
       slider-disabled-inactive-track-color: map.get($system, on-surface),
@@ -43,17 +46,14 @@
       slider-focus-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 20%),
       slider-handle-color: map.get($system, primary),
       slider-handle-elevation: elevation.get-box-shadow(map.get($system, level1)),
-      slider-handle-shape: map.get($system, corner-full),
       slider-hover-handle-color: map.get($system, primary),
       slider-hover-state-layer-color: m3-utils.color-with-opacity(map.get($system, primary), 5%),
       slider-inactive-track-color: map.get($system, surface-variant),
-      slider-inactive-track-shape: map.get($system, corner-full),
       slider-label-container-color: map.get($system, primary),
       slider-label-label-text-color: map.get($system, on-primary),
       slider-ripple-color: map.get($system, primary),
       slider-with-overlap-handle-outline-color: map.get($system, on-primary),
       slider-with-tick-marks-active-container-color: map.get($system, on-primary),
-      slider-with-tick-marks-container-shape: map.get($system, corner-full),
       slider-with-tick-marks-disabled-container-color: map.get($system, on-surface),
       slider-with-tick-marks-inactive-container-color: map.get($system, on-surface-variant),
     ),

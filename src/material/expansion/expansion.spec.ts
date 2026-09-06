@@ -5,14 +5,7 @@ import {
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
@@ -34,7 +27,7 @@ describe('MatExpansionPanel', () => {
     });
   }));
 
-  it('should expand and collapse the panel', fakeAsync(() => {
+  it('should expand and collapse the panel', async () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
     fixture.detectChanges();
@@ -44,10 +37,10 @@ describe('MatExpansionPanel', () => {
     fixture.componentInstance.expanded = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
 
     expect(headerEl.classList).toContain('mat-expanded');
-  }));
+  });
 
   it('should add strong focus indication', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
@@ -234,12 +227,12 @@ describe('MatExpansionPanel', () => {
     expect(wrapper.hasAttribute('inert')).toBe(true);
   });
 
-  it('should restore focus to header if focused element is inside panel on close', fakeAsync(() => {
+  it('should restore focus to header if focused element is inside panel on close', async () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(250);
+    await wait(300);
 
     const button = fixture.debugElement.query(By.css('button'))!.nativeElement;
     const header = fixture.debugElement.query(By.css('mat-expansion-panel-header'))!.nativeElement;
@@ -252,17 +245,17 @@ describe('MatExpansionPanel', () => {
     fixture.componentInstance.expanded = false;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(250);
+    await wait(300);
 
     expect(document.activeElement).withContext('Expected header to be focused.').toBe(header);
-  }));
+  });
 
-  it('should not change focus origin if origin not specified', fakeAsync(() => {
+  it('should not change focus origin if origin not specified', async () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.componentInstance.expanded = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(250);
+    await wait(300);
 
     const header = fixture.debugElement.query(By.css('mat-expansion-panel-header'))!;
     const headerInstance = header.componentInstance;
@@ -270,13 +263,13 @@ describe('MatExpansionPanel', () => {
     headerInstance.focus('mouse');
     headerInstance.focus();
     fixture.detectChanges();
-    tick(250);
+    await wait(300);
 
     expect(header.nativeElement.classList).toContain('cdk-focused');
     expect(header.nativeElement.classList).toContain('cdk-mouse-focused');
-  }));
+  });
 
-  it('should not override the panel margin if it is not inside an accordion', fakeAsync(() => {
+  it('should not override the panel margin if it is not inside an accordion', async () => {
     const fixture = TestBed.createComponent(PanelWithCustomMargin);
     fixture.detectChanges();
 
@@ -292,7 +285,7 @@ describe('MatExpansionPanel', () => {
     fixture.componentInstance.expanded = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    tick(250);
+    await wait(300);
 
     styles = getComputedStyle(panel.nativeElement);
 
@@ -301,7 +294,7 @@ describe('MatExpansionPanel', () => {
     expect(styles.marginBottom).toBe('13px');
     expect(styles.marginLeft).toBe('37px');
     expect(styles.marginRight).toBe('37px');
-  }));
+  });
 
   it('should be able to hide the toggle', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
@@ -352,7 +345,7 @@ describe('MatExpansionPanel', () => {
     expect(fixture.componentInstance.expanded).toBe(false);
   });
 
-  it('should emit events for body expanding and collapsing animations', fakeAsync(() => {
+  it('should emit events for body expanding and collapsing animations', async () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.detectChanges();
     let afterExpand = 0;
@@ -363,17 +356,17 @@ describe('MatExpansionPanel', () => {
     fixture.componentInstance.expanded = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
     expect(afterExpand).toBe(1);
     expect(afterCollapse).toBe(0);
 
     fixture.componentInstance.expanded = false;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
     expect(afterExpand).toBe(1);
     expect(afterCollapse).toBe(1);
-  }));
+  });
 
   it('should be able to set the default options through the injection token', () => {
     TestBed.resetTestingModule().configureTestingModule({
@@ -543,6 +536,10 @@ describe('MatExpansionPanel', () => {
     });
   });
 });
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 @Component({
   template: `

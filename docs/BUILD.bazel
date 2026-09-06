@@ -3,6 +3,7 @@ load("@bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@rules_angular//src/architect:ng_config.bzl", "ng_config")
 load("//docs:defs.bzl", "ng_app")
+load("//tools:defaults.bzl", "http_server")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -45,6 +46,17 @@ ng_app(
 alias(
     name = "serve",
     actual = ":build.serve",
+)
+
+http_server(
+    name = "server",
+    testonly = True,
+    additional_root_paths = [
+        "_main/docs/dist/browser",
+    ],
+    deps = [
+        ":build.production",
+    ],
 )
 
 js_library(

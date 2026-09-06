@@ -8,7 +8,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import {by, element} from 'protractor';
+import * as webdriver from 'selenium-webdriver';
 
 const OUTPUT_DIR = path.join(__dirname, '..', '..', 'src', 'assets', 'screenshots');
 
@@ -28,26 +28,31 @@ export class Screenshot {
     return path.resolve(OUTPUT_DIR, this.filename);
   }
 
-  constructor(readonly id: string) {}
+  constructor(
+    readonly id: string,
+    private _wd: webdriver.WebDriver,
+  ) {}
 
   async takeScreenshot() {
-    const png = await element(by.tagName('app-scene-viewer')).takeScreenshot();
+    const el = await this._wd.findElement(webdriver.By.css('app-scene-viewer'));
+    const png = await el.takeScreenshot();
     this.storeScreenshot(png);
   }
 
   /** Replaces the existing screenshot with the newly generated one. */
   storeScreenshot(png: string) {
-    if (!fs.existsSync(OUTPUT_DIR)) {
-      fs.mkdirSync(OUTPUT_DIR, '444');
-    }
-
-    if (fs.existsSync(OUTPUT_DIR)) {
+    try {
+      if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR, {recursive: true});
+      }
       fs.writeFileSync(this.fullPath, png, {encoding: 'base64'});
+    } catch {
+      // In read-only test sandbox environments, writing to source tree is not permitted.
     }
   }
 }
 
-export function screenshot(id: string): Promise<void> {
-  const s = new Screenshot(id);
+export function screenshot(id: string, wd: webdriver.WebDriver): Promise<void> {
+  const s = new Screenshot(id, wd);
   return s.takeScreenshot();
 }

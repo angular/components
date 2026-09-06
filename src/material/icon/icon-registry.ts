@@ -146,7 +146,7 @@ export class MatIconRegistry implements OnDestroy {
    * specified. The default 'material-icons' value assumes that the material icon font has been
    * loaded as described at https://google.github.io/material-design-icons/#icon-font-for-the-web
    */
-  private _defaultFontSetClass = ['material-icons', 'mat-ligature-font'];
+  private _defaultFontSetClass: string[] | undefined;
 
   constructor(
     @Optional() private _httpClient: HttpClient,
@@ -325,6 +325,7 @@ export class MatIconRegistry implements OnDestroy {
    * have a fontSet input value, and is not loading an icon by name or URL.
    */
   getDefaultFontSetClass(): string[] {
+    this._defaultFontSetClass ??= inferDefaultFontSetClass(this._document);
     return this._defaultFontSetClass;
   }
 
@@ -738,4 +739,42 @@ function iconKey(namespace: string, name: string) {
 
 function isSafeUrlWithOptions(value: any): value is SafeResourceUrlWithIconOptions {
   return !!(value.url && value.options);
+}
+
+/** Infers which font classes to apply by default based on the fonts that have been loaded. */
+function inferDefaultFontSetClass(document: Document): string[] {
+  let materialSymbolsVariantion: 'outlined' | 'rounded' | 'sharp' | null = null;
+  let hasLegacyMaterialIcons = false;
+
+  // Note that this approach only detects the fonts that are link tags at the time of calling
+  // so we may miss some fonts that are loaded later. That should be a minority and the logic
+  // below still falls back to the old behavior if that happens.
+  if (document.fonts && typeof document.fonts.forEach === 'function') {
+    document.fonts.forEach(({family}) => {
+      if (family.includes('Material Icons')) {
+        hasLegacyMaterialIcons = true;
+      }
+
+      if (family.includes('Material Symbols Rounded')) {
+        materialSymbolsVariantion = 'rounded';
+      } else if (family.includes('Material Symbols Sharp')) {
+        materialSymbolsVariantion = 'sharp';
+      } else if (family.includes('Material Symbols')) {
+        // This should mostly catch `Material Symbols Outlined`,
+        // but we keep it a bit broader just in case.
+        materialSymbolsVariantion = 'outlined';
+      }
+    });
+  }
+
+  return [
+    // Ideally we would add both `material-symbols-*` and `material-icons` if we detect both fonts,
+    // however this ends up being very breaking internally, because some apps were loading both
+    // without setting the correct class. We play it safe here so we can at least handle the class
+    // automatically for new apps.
+    materialSymbolsVariantion && !hasLegacyMaterialIcons
+      ? `material-symbols-${materialSymbolsVariantion}`
+      : 'material-icons',
+    'mat-ligature-font',
+  ];
 }

@@ -1,5 +1,5 @@
-<button matButton="elevated" (click)="isOptional = !isOptional">
-  {{!isOptional ? 'Enable optional steps' : 'Disable optional steps'}}
+<button matButton="elevated" (click)="isOptional.set(!isOptional())">
+  {{!isOptional() ? 'Enable optional steps' : 'Disable optional steps'}}
 </button>
 
 <mat-stepper linear #stepper>
@@ -16,7 +16,7 @@
     </form>
   </mat-step>
   <!-- #docregion optional -->
-  <mat-step [stepControl]="secondFormGroup" [optional]="isOptional">
+  <mat-step [stepControl]="secondFormGroup" [optional]="isOptional()">
   <!-- #enddocregion optional -->
     <form [formGroup]="secondFormGroup">
       <ng-template matStepLabel>Fill out your address</ng-template>

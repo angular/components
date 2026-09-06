@@ -9,6 +9,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -63,7 +64,7 @@ export class CdkStep implements OnChanges {
     _showError(): boolean;
     get state(): StepState;
     set state(value: StepState);
-    stepControl: AbstractControl;
+    stepControl: StepControl;
     stepLabel: CdkStepLabel;
     // (undocumented)
     _stepper: CdkStepper;
@@ -180,6 +181,9 @@ export const STEP_STATE: {
 
 // @public
 export type StepContentPositionState = 'previous' | 'current' | 'next';
+
+// @public
+export type StepControl = AbstractControl | Field<unknown>;
 
 // @public
 export const STEPPER_GLOBAL_OPTIONS: InjectionToken<StepperOptions>;

@@ -17,11 +17,11 @@ $prefix: (mat, stepper);
 
   @return (
     base: (
-      stepper-header-error-state-icon-background-color: transparent,
       stepper-header-focus-state-layer-shape: map.get($system, corner-medium),
       stepper-header-hover-state-layer-shape: map.get($system, corner-medium),
     ),
     color: (
+      stepper-header-error-state-icon-background-color: transparent,
       stepper-container-color: map.get($system, surface),
       stepper-header-done-state-icon-background-color: map.get($system, primary),
       stepper-header-done-state-icon-foreground-color: map.get($system, on-primary),

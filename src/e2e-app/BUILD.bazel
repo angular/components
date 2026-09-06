@@ -1,6 +1,6 @@
 load("@aspect_rules_esbuild//esbuild:defs.bzl", "esbuild")
 load("@npm//:defs.bzl", "npm_link_all_packages")
-load("//tools:defaults.bzl", "http_server", "ng_project", "sass_binary")
+load("//tools:defaults.bzl", "http_server", "ng_project", "sass_binary", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -20,11 +20,25 @@ exports_files([
     "devserver-configure.js",
 ])
 
+ts_project(
+    name = "e2e_setup",
+    testonly = True,
+    srcs = ["e2e-setup.ts"],
+    deps = [
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/selenium-webdriver",
+    ],
+)
+
 ng_project(
     name = "e2e-app",
     testonly = True,
     srcs = glob(
         ["**/*.ts"],
+        exclude = ["e2e-setup.ts"],
     ),
     assets = glob(
         [

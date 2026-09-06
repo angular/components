@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {computed, signal, untracked} from '@angular/core';
+import {_getEventTarget} from '@angular/cdk/platform';
+import {KeyboardEventManager, ClickEventManager, Modifier} from '../behaviors/event-manager';
 import {SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
 import {ExpansionItem} from '../behaviors/expansion/expansion';
 
@@ -31,6 +32,9 @@ export interface ComboboxInputs extends ExpansionItem {
   /** Whether the combobox is disabled. */
   disabled: SignalLike<boolean>;
 
+  /** Whether the combobox is readonly. */
+  readonly: SignalLike<boolean>;
+
   /** Whether the combobox is soft disabled. */
   softDisabled?: SignalLike<boolean>;
 }
@@ -48,6 +52,9 @@ export class ComboboxPattern {
 
   /** Whether the combobox is disabled. */
   readonly disabled = () => this.inputs.disabled();
+
+  /** Whether the combobox is readonly. */
+  readonly readonly = () => this.inputs.readonly();
 
   /** Whether the combobox is soft disabled. */
   readonly softDisabled = () => this.inputs.softDisabled?.() ?? true;
@@ -97,17 +104,30 @@ export class ComboboxPattern {
       this.element().tagName.toLowerCase() === 'textarea',
   );
 
+  /** The aria-readonly attribute value for non-editable comboboxes. */
+  readonly ariaReadonly = computed(() => (this.readonly() && !this.isEditable() ? 'true' : null));
+
+  /** The native readonly attribute value for editable comboboxes. */
+  readonly nativeReadonly = computed(() =>
+    (this.readonly() || this.disabled()) && this.isEditable() ? '' : null,
+  );
+
+  /** The native disabled attribute value for hard-disabled comboboxes. */
+  readonly nativeDisabled = computed(() => (this.disabled() && !this.softDisabled() ? '' : null));
+
   /** The keydown event manager for the combobox. */
   // TODO(tjshiu): Allow combo keys in combobox (#33101).
   keydown = computed(() => {
     const manager = new KeyboardEventManager();
 
     if (!this.isExpanded()) {
-      manager.on('ArrowDown', () => this.inputs.expanded.set(true));
+      if (!this.readonly()) {
+        manager.on('ArrowDown', () => this.inputs.expanded.set(true));
 
-      if (!this.isEditable()) {
-        manager.on('Enter', () => this.inputs.expanded.set(true));
-        manager.on(' ', () => this.inputs.expanded.set(true));
+        if (!this.isEditable()) {
+          manager.on('Enter', () => this.inputs.expanded.set(true));
+          manager.on(' ', () => this.inputs.expanded.set(true));
+        }
       }
 
       return manager;
@@ -134,7 +154,6 @@ export class ComboboxPattern {
       .on(Modifier.Shift, 'ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
       .on('Home', e => this.keyboardEventRelay.set(e))
       .on('End', e => this.keyboardEventRelay.set(e))
-      .on('Enter', e => this.keyboardEventRelay.set(e))
       .on('PageUp', e => this.keyboardEventRelay.set(e))
       .on('PageDown', e => this.keyboardEventRelay.set(e))
       .on('Escape', () => {
@@ -143,7 +162,11 @@ export class ComboboxPattern {
         }
       });
 
-    if (!this.isEditable()) {
+    if (!this.readonly()) {
+      manager.on('Enter', e => this.keyboardEventRelay.set(e));
+    }
+
+    if (!this.isEditable() && !this.readonly()) {
       manager
         .on(' ', e => this.keyboardEventRelay.set(e))
         .on([Modifier.Ctrl, Modifier.Meta], 'a', e => this.keyboardEventRelay.set(e))
@@ -162,7 +185,7 @@ export class ComboboxPattern {
   click = computed(() => {
     const manager = new ClickEventManager<PointerEvent>();
 
-    if (this.isEditable()) return manager;
+    if (this.isEditable() || this.readonly()) return manager;
 
     manager.on(() => this.inputs.expanded.update(v => !v));
 
@@ -193,17 +216,31 @@ export class ComboboxPattern {
   }
 
   /** Handles focus out events for the combobox. */
-  onFocusout(event: FocusEvent) {
+  onFocusout() {
     this.isFocused.set(false);
+    this.closePopupOnFocusout();
+  }
+
+  /** Closes the popup once focus has left both the combobox and the popup. */
+  closePopupOnFocusout() {
+    // Give focus some time to move before we check it.
+    setTimeout(() => {
+      const comboboxFocused = this.isFocused();
+      const popupFocused = !!this.inputs.popup()?.isFocused();
+
+      if (!this.inputs.alwaysExpanded() && !comboboxFocused && !popupFocused) {
+        this.inputs.expanded.set(false);
+      }
+    });
   }
 
   /** Handles input events for the combobox. */
   onInput(event: Event) {
-    if (!(event.target instanceof HTMLInputElement)) return;
-    if (this.disabled()) return;
+    const target = _getEventTarget(event);
+    if (!(target instanceof HTMLInputElement) || this.disabled() || this.readonly()) return;
 
     this.inputs.expanded.set(true);
-    this.value.set(event.target.value);
+    this.value.set(target.value);
     this.isDeleting.set(event instanceof InputEvent && !!event.inputType.match(/^delete/));
   }
 
@@ -216,7 +253,7 @@ export class ComboboxPattern {
     const isFocused = untracked(() => this.isFocused());
     const isExpanded = this.isExpanded();
 
-    if (!inlineSuggestion || !isFocused || !isExpanded || isDeleting) return;
+    if (!inlineSuggestion || !isFocused || !isExpanded || isDeleting || this.readonly()) return;
 
     const inputEl = this.element() as HTMLInputElement;
     const isHighlightable = inlineSuggestion.toLowerCase().startsWith(value.toLowerCase());
@@ -235,21 +272,13 @@ export class ComboboxPattern {
     // Reset isDeleting when the user navigates, so that the highlight effect can run again.
     this.isDeleting.set(false);
 
-    const popup = untracked(() => this.inputs.popup());
-    const popupExpanded = untracked(() => this.isExpanded());
-    if (popupExpanded) {
-      popup?.controlTarget()?.dispatchEvent(event);
-    }
-  }
-
-  /** Closes the popup when focus leaves the combobox and popup. */
-  closePopupOnBlurEffect() {
-    const expanded = this.isExpanded();
-    const comboboxFocused = this.isFocused();
-    const popupFocused = !!this.inputs.popup()?.isFocused();
-    if (expanded && !this.inputs.alwaysExpanded() && !comboboxFocused && !popupFocused) {
-      this.inputs.expanded.set(false);
-    }
+    untracked(() => {
+      const popup = this.inputs.popup();
+      if (this.isExpanded()) {
+        const relayedEvent = new KeyboardEvent(event.type, event);
+        popup?.controlTarget()?.dispatchEvent(relayedEvent);
+      }
+    });
   }
 }
 
@@ -266,6 +295,9 @@ export interface ComboboxPopupInputs {
 
   /** The ID of the popup. */
   popupId: SignalLike<string | undefined>;
+
+  /** A reference to the parent combobox. */
+  combobox: SignalLike<ComboboxPattern | undefined>;
 }
 
 /** Controls the state of a simple combobox popup. */
@@ -281,6 +313,9 @@ export class ComboboxPopupPattern {
 
   /** The ID of the popup. */
   readonly popupId = () => this.inputs.popupId();
+
+  /** A reference to the parent combobox. */
+  readonly combobox = () => this.inputs.combobox();
 
   /** Whether the popup is focused. */
   readonly isFocused = signal(false);
@@ -298,5 +333,6 @@ export class ComboboxPopupPattern {
     if (this.controlTarget()?.contains(focusTarget)) return;
 
     this.isFocused.set(false);
+    this.combobox()?.closePopupOnFocusout();
   }
 }
