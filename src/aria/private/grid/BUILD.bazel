@@ -18,6 +18,7 @@ ts_project(
         "//src/aria/private/behaviors/list-navigation",
         "//src/aria/private/behaviors/signal-like",
         "//src/aria/private/utils",
+        "//src/cdk/platform",
     ],
 )
 

@@ -6,6 +6,7 @@ describe('ComboboxPattern', () => {
   function setup(
     inputs: Partial<{
       disabled: boolean;
+      readonly: boolean;
       alwaysExpanded: boolean;
       inlineSuggestion: string;
       popupType: 'listbox' | 'tree' | 'grid' | 'dialog';
@@ -16,6 +17,7 @@ describe('ComboboxPattern', () => {
     const expanded = signal(false);
     const alwaysExpanded = signal(inputs.alwaysExpanded ?? false);
     const disabled = signal(inputs.disabled ?? false);
+    const readonly = signal(inputs.readonly ?? false);
     const inlineSuggestion = signal<string | undefined>(inputs.inlineSuggestion);
 
     // Mock a generic popup pattern
@@ -24,11 +26,13 @@ describe('ComboboxPattern', () => {
     const controlTarget = document.createElement('div');
     const popupType = signal<'listbox' | 'tree' | 'grid' | 'dialog'>(inputs.popupType ?? 'listbox');
 
+    const combobox = signal<ComboboxPattern | undefined>(undefined);
     const popup = new ComboboxPopupPattern({
       popupType,
       controlTarget: signal(controlTarget),
       activeDescendant,
       popupId,
+      combobox,
     });
 
     const pattern = new ComboboxPattern({
@@ -38,9 +42,12 @@ describe('ComboboxPattern', () => {
       popup: signal(popup),
       inlineSuggestion,
       disabled,
+      readonly,
       expanded,
       expandable: signal(true),
     });
+
+    combobox.set(pattern);
 
     return {
       pattern,
@@ -50,9 +57,14 @@ describe('ComboboxPattern', () => {
       alwaysExpanded,
       inlineSuggestion,
       disabled,
+      readonly,
       popup,
       controlTarget,
     };
+  }
+
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
   }
 
   describe('Aria-autocomplete calculation', () => {
@@ -115,7 +127,7 @@ describe('ComboboxPattern', () => {
       pattern.onFocusin();
       expect(pattern.isFocused()).toBe(true);
 
-      pattern.onFocusout(new FocusEvent('focusout'));
+      pattern.onFocusout();
       expect(pattern.isFocused()).toBe(false);
     });
   });
@@ -146,6 +158,7 @@ describe('ComboboxPattern', () => {
 
       const deleteEvent = new InputEvent('input', {inputType: 'deleteContentBackward'});
       Object.defineProperty(deleteEvent, 'target', {value: element});
+      Object.defineProperty(deleteEvent, 'composedPath', {value: null});
       pattern.onInput(deleteEvent as Event);
 
       expect(pattern.isDeleting()).toBe(true);
@@ -202,23 +215,52 @@ describe('ComboboxPattern', () => {
   });
 
   describe('Blur behavior', () => {
-    it('should close when focus leaves both combobox and popup', () => {
+    it('should close when focus leaves both combobox and popup', async () => {
       const {pattern, expanded} = setup();
       expanded.set(true);
       pattern.isFocused.set(false);
       pattern.inputs.popup()!.isFocused.set(false);
 
-      pattern.closePopupOnBlurEffect();
+      pattern.onFocusout();
+      await wait(100);
+
       expect(expanded()).toBe(false);
     });
 
-    it('should remain open if popup is focused', () => {
+    it('should remain open if popup is focused', async () => {
       const {pattern, expanded} = setup();
       expanded.set(true);
       pattern.isFocused.set(false);
       pattern.inputs.popup()!.isFocused.set(true);
 
-      pattern.closePopupOnBlurEffect();
+      pattern.onFocusout();
+      await wait(100);
+
+      expect(expanded()).toBe(true);
+    });
+
+    it('should close when focus leaves the popup', async () => {
+      const {pattern, expanded, popup} = setup();
+      expanded.set(true);
+      pattern.isFocused.set(false);
+      popup.isFocused.set(true);
+
+      popup.onFocusout(new FocusEvent('focusout'));
+      await wait(100);
+
+      expect(expanded()).toBe(false);
+    });
+
+    it('should remain open if focus moves back to the combobox', async () => {
+      const {pattern, expanded, popup} = setup();
+      expanded.set(true);
+      pattern.isFocused.set(false);
+      popup.isFocused.set(true);
+
+      popup.onFocusout(new FocusEvent('focusout'));
+      pattern.onFocusin();
+      await wait(100);
+
       expect(expanded()).toBe(true);
     });
   });
@@ -269,6 +311,18 @@ describe('ComboboxPattern', () => {
       Object.defineProperty(shiftHome, 'shiftKey', {value: true});
       pattern.onKeydown(shiftHome);
       expect(pattern.keyboardEventRelay()).toBe(shiftHome);
+    });
+  });
+
+  describe('Readonly', () => {
+    it('should ignore input when readonly', () => {
+      const {pattern, expanded, value} = setup({readonly: true});
+      const inputEl = document.createElement('input');
+      inputEl.value = 'abc';
+      pattern.onInput({target: inputEl} as unknown as Event);
+
+      expect(expanded()).toBe(false);
+      expect(value()).toBe('');
     });
   });
 });

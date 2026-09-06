@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatIconModule} from '@angular/material/icon';
@@ -22,7 +22,6 @@ interface ExampleFlatNode {
   styleUrls: ['tree-legacy-keyboard-interface-example.css'],
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
   providers: [NOOP_TREE_KEY_MANAGER_FACTORY_PROVIDER],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeLegacyKeyboardInterfaceExample {
   treeControl = new FlatTreeControl<ExampleFlatNode>(

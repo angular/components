@@ -4,6 +4,7 @@
   "compilerOptions": {
     "outDir": "./dist/packages/all",
     "rootDir": "./",
+    "stableTypeOrdering": true,
     "experimentalDecorators": true,
     "module": "esnext",
     "moduleResolution": "bundler",

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
@@ -33,10 +33,10 @@ export class SelectInitialValueExample {
     {value: 'chevrolet', viewValue: 'Chevrolet'},
     {value: 'dodge', viewValue: 'Dodge'},
   ];
-  selectedFood = this.foods[2].value;
-  selectedCar = this.cars[0].value;
+  selectedFood = signal(this.foods[2].value);
+  selectedCar = signal(this.cars[0].value);
 
   selectCar(event: Event) {
-    this.selectedCar = (event.target as HTMLSelectElement).value;
+    this.selectedCar.set((event.target as HTMLSelectElement).value);
   }
 }

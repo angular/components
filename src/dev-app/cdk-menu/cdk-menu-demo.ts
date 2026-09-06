@@ -16,7 +16,7 @@ import {
   CdkMenuStandaloneMenuExample,
   CdkMenuStandaloneStatefulMenuExample,
 } from '@angular/components-examples/cdk/menu';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   templateUrl: 'cdk-menu-demo.html',
@@ -30,7 +30,6 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     CdkMenuContextExample,
     CdkMenuNestedContextExample,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkMenuDemo {
   customPosition = [

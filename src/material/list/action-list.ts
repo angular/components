@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatListBase} from './list-base';
 
 @Component({
@@ -19,7 +19,6 @@ import {MatListBase} from './list-base';
   },
   styleUrl: 'list.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [{provide: MatListBase, useExisting: MatActionList}],
 })
 export class MatActionList extends MatListBase {

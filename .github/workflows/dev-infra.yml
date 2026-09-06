@@ -1,6 +1,7 @@
 name: DevInfra
 
 on:
+  # zizmor: ignore[dangerous-triggers] - {Trigger is safe as workflow does not checkout untrusted code}
   pull_request_target:
     types: [opened, synchronize, reopened]
   issues:
@@ -15,21 +16,21 @@ jobs:
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
-      - uses: angular/dev-infra/github-actions/labeling/pull-request@ba726e7bca0b08b125ccc6f93c233749e1213c17
+      - uses: angular/dev-infra/github-actions/labeling/pull-request@f826089a718c89f9ce3d6a0d3e155fbc0fb4a3de # main
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
   post_approval_changes:
     if: github.event_name == 'pull_request_target'
     runs-on: ubuntu-latest
     steps:
-      - uses: angular/dev-infra/github-actions/post-approval-changes@ba726e7bca0b08b125ccc6f93c233749e1213c17
+      - uses: angular/dev-infra/github-actions/post-approval-changes@f826089a718c89f9ce3d6a0d3e155fbc0fb4a3de # main
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
   issue_labels:
     if: github.event_name == 'issues'
     runs-on: ubuntu-latest
     steps:
-      - uses: angular/dev-infra/github-actions/labeling/issue@ba726e7bca0b08b125ccc6f93c233749e1213c17
+      - uses: angular/dev-infra/github-actions/labeling/issue@f826089a718c89f9ce3d6a0d3e155fbc0fb4a3de # main
         with:
           angular-robot-key: ${{ secrets.ANGULAR_ROBOT_PRIVATE_KEY }}
           google-generative-ai-key: ${{ secrets.GOOGLE_GENERATIVE_AI_KEY }}

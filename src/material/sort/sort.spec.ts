@@ -2,7 +2,7 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchMouseEvent, wrappedErrorMessage} from '@angular/cdk/testing/private';
 import {Component, ElementRef, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTableModule} from '../table';
 import {By} from '@angular/platform-browser';
 import {Observable} from 'rxjs';
@@ -43,13 +43,13 @@ describe('MatSort', () => {
       expect(sortables.size).toBe(0);
     });
 
-    it('should mark itself as initialized', fakeAsync(() => {
+    it('should mark itself as initialized', async () => {
       let isMarkedInitialized = false;
       component.matSort.initialized.subscribe(() => (isMarkedInitialized = true));
 
-      tick();
+      await fixture.whenStable();
       expect(isMarkedInitialized).toBeTruthy();
-    }));
+    });
 
     it('should use the column definition if used within a cdk table', () => {
       const cdkTableMatSortAppFixture = TestBed.createComponent(CdkTableMatSortApp);
@@ -209,7 +209,7 @@ describe('MatSort', () => {
       expect(sortHeaderElement.getAttribute('aria-sort')).toBe('none');
     });
 
-    it('should not render the arrow if sorting is disabled for that column', fakeAsync(() => {
+    it('should not render the arrow if sorting is disabled for that column', async () => {
       const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
 
       // Switch sorting to a different column before asserting.
@@ -217,24 +217,24 @@ describe('MatSort', () => {
       fixture.componentInstance.disabledColumnSort = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(sortHeaderElement.querySelector('.mat-sort-header-arrow')).toBeFalsy();
-    }));
+    });
 
-    it('should render the arrow if a disabled column is being sorted by', fakeAsync(() => {
+    it('should render the arrow if a disabled column is being sorted by', async () => {
       const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
 
       component.sort('defaultA');
       fixture.componentInstance.disabledColumnSort = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
-      tick();
+      await fixture.whenStable();
       fixture.detectChanges();
 
       expect(sortHeaderElement.querySelector('.mat-sort-header-arrow')).toBeTruthy();
-    }));
+    });
 
     it('should have a focus indicator', () => {
       const headerNativeElement = fixture.debugElement.query(
@@ -336,7 +336,7 @@ describe('MatSort', () => {
     let fixture: ComponentFixture<MatSortWithoutExplicitInputs>;
     let component: MatSortWithoutExplicitInputs;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [
           {
@@ -347,7 +347,7 @@ describe('MatSort', () => {
           },
         ],
       });
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MatSortWithoutExplicitInputs);
@@ -368,7 +368,7 @@ describe('MatSort', () => {
   describe('with default arrowPosition', () => {
     let fixture: ComponentFixture<MatSortWithoutInputs>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [
           {
@@ -380,7 +380,7 @@ describe('MatSort', () => {
           },
         ],
       });
-    }));
+    });
 
     beforeEach(() => {
       fixture = TestBed.createComponent(MatSortWithoutInputs);

@@ -16,8 +16,9 @@ import {
   model,
   OnDestroy,
   OnInit,
+  afterRenderEffect,
 } from '@angular/core';
-import {MenuItemPattern} from '../private';
+import {MenuItemPattern, reportViolations} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {MENU_COMPONENT} from './menu-tokens';
 import type {Menu} from './menu';
@@ -31,12 +32,10 @@ import type {MenuBar} from './menu-bar';
  *
  * ```html
  * <div ngMenu (itemSelected)="doAction()">
- *   <div ngMenuItem>Action Item</div>
- *   <div ngMenuItem [submenu]="anotherMenu">Submenu Trigger</div>
+ *   <div ngMenuItem value="Action Item">Action Item</div>
+ *   <div ngMenuItem value="Submenu Trigger" [submenu]="anotherMenu">Submenu Trigger</div>
  * </div>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
@@ -45,7 +44,7 @@ import type {MenuBar} from './menu-bar';
   selector: '[ngMenuItem]',
   exportAs: 'ngMenuItem',
   host: {
-    'role': 'menuitem',
+    '[attr.role]': '_pattern.role()',
     '(focusin)': '_pattern.onFocusIn()',
     '[attr.tabindex]': '_pattern.tabIndex()',
     '[attr.data-active]': 'active()',
@@ -66,13 +65,16 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   readonly id = input(inject(_IdGenerator).getId('ng-menu-item-', true));
 
   /** The value of the menu item. */
-  readonly value = input.required<V>();
+  readonly value = input<V | undefined>(undefined);
 
   /** Whether the menu item is disabled. */
   readonly disabled = input<boolean>(false);
 
   /** The search term associated with the menu item. */
   readonly searchTerm = model<string>('');
+
+  /** The role of the menu item. */
+  readonly role = input<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>('menuitem');
 
   /** A reference to the parent menu or menubar. */
   readonly parent = inject<Menu<V> | MenuBar<V>>(MENU_COMPONENT, {optional: true});
@@ -98,10 +100,24 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     searchTerm: this.searchTerm,
     parent: computed(() => this.parent?._pattern),
     submenu: computed(() => this.submenu()?._pattern),
+    role: this.role,
   });
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations: string[] = [];
+          if (!this.parent) {
+            violations.push('ngMenuItem must be placed inside an ngMenu or ngMenuBar container.');
+          }
+          reportViolations(violations, this.element);
+        },
+      });
+    }
   }
 
   ngOnInit() {

@@ -20,7 +20,6 @@ import {
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -54,7 +53,6 @@ import {DateRange} from './date-selection-model';
   templateUrl: 'year-view.html',
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatCalendarBody],
 })
 export class MatYearView<D> implements AfterContentInit, OnDestroy {

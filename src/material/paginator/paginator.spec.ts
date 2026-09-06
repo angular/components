@@ -7,7 +7,7 @@ import {
   inject,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {ThemePalette} from '../core';
 import {MatSelect} from '../select';
 import {By} from '@angular/platform-browser';
@@ -205,16 +205,15 @@ describe('MatPaginator', () => {
     expect(getLastButton(fixture)).withContext('Expected last button to be rendered.').toBeTruthy();
   });
 
-  it('should mark itself as initialized', fakeAsync(() => {
+  it('should mark itself as initialized', () => {
     const fixture = createComponent(MatPaginatorApp);
     const component = fixture.componentInstance;
     const paginator = component.paginator;
     let isMarkedInitialized = false;
     paginator.initialized.subscribe(() => (isMarkedInitialized = true));
 
-    tick();
     expect(isMarkedInitialized).toBeTruthy();
-  }));
+  });
 
   it('should not allow a negative pageSize', () => {
     const fixture = createComponent(MatPaginatorApp);

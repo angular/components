@@ -1,7 +1,7 @@
 @if (shouldRun) {
   <mat-sidenav-container class="example-container">
-    <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="events.push('open!')"
-                (closed)="events.push('close!')">
+    <mat-sidenav #sidenav mode="side" [(opened)]="opened" (opened)="trackEvent('open!')"
+                (closed)="trackEvent('close!')">
       Sidenav content
     </mat-sidenav>
 
@@ -10,7 +10,7 @@
       <p><button matButton (click)="sidenav.toggle()">sidenav.toggle()</button></p>
       <p>Events:</p>
       <div class="example-events">
-        @for (e of events; track e) {
+        @for (e of events(); track $index) {
           <div>{{e}}</div>
         }
       </div>

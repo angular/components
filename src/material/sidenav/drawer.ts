@@ -22,7 +22,6 @@ import {
   AfterContentInit,
   afterNextRender,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -45,7 +44,7 @@ import {
   signal,
 } from '@angular/core';
 import {merge, Observable, Subject} from 'rxjs';
-import {debounceTime, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
+import {debounceTime, delay, filter, map, mapTo, startWith, take, takeUntil} from 'rxjs/operators';
 import {_animationsDisabled} from '../core';
 
 /**
@@ -89,7 +88,6 @@ export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_
     '[style.margin-right.px]': '_container._contentMargins.right',
     '[class.mat-drawer-content-hidden]': '_shouldBeHidden()',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -101,12 +99,49 @@ export const MAT_DRAWER_CONTAINER = new InjectionToken<MatDrawerContainer>('MAT_
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
   private _platform = inject(Platform);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _element = inject<ElementRef<HTMLElement>>(ElementRef);
+  private _ngZone = inject(NgZone);
+  private _isInert = false;
   _container = inject(MatDrawerContainer);
 
   ngAfterContentInit() {
-    this._container._contentMarginChanges.subscribe(() => {
-      this._changeDetectorRef.markForCheck();
-    });
+    this._container._contentMarginChanges.subscribe(() => this._changeDetectorRef.markForCheck());
+  }
+
+  _drawerToggled(drawer: MatDrawer) {
+    if (drawer.opened) {
+      // If the drawer is being opened, we need to wait until the animation is done before marking
+      // the content is inert, because the drawer moves focus during the animation. We add a delay
+      // to be safe.
+      this._ngZone.runOutsideAngular(() => {
+        drawer._animationEnd.pipe(delay(50), take(1)).subscribe(() => this._updateInert());
+      });
+    } else {
+      // When the drawer is closing, we need to remove `inert` immediately so
+      // the elements that focus is being restored to can become focusable.
+      this._updateInert();
+    }
+  }
+
+  _drawerModeChanged() {
+    this._updateInert();
+  }
+
+  private _updateInert() {
+    const newValue = this._container._isShowingBackdrop();
+
+    if (newValue !== this._isInert) {
+      const element = this._element.nativeElement;
+      this._isInert = newValue;
+
+      // This can be called right before we attempt to move focus. Set the value
+      // directly, instead of waiting on change detection, because the timing is tight.
+      if (newValue) {
+        element.setAttribute('inert', 'true');
+      } else {
+        element.removeAttribute('inert');
+      }
+    }
   }
 
   /** Determines whether the content element should be hidden from the user. */
@@ -151,7 +186,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     // reference. Updates tabIndex of drawer/container to default to null if in side mode.
     '[attr.tabIndex]': '(mode !== "side") ? "-1" : null',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkScrollable],
 })
@@ -164,6 +198,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _renderer = inject(Renderer2);
   private readonly _interactivityChecker = inject(InteractivityChecker);
   private _doc = inject(DOCUMENT);
+  private _isAnimating = false;
   _container? = inject<MatDrawerContainer>(MAT_DRAWER_CONTAINER, {optional: true});
 
   private _focusTrap: FocusTrap | null = null;
@@ -205,6 +240,7 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     this._mode = value;
     this._updateFocusTrapState();
     this._modeChanged.next();
+    this._getContent()?._drawerModeChanged();
   }
   private _mode: MatDrawerMode = 'over';
 
@@ -363,11 +399,18 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Focuses the provided element. If the element is not focusable, it will add a tabIndex
-   * attribute to forcefully focus it. The attribute is removed after focus is moved.
-   * @param element The element to focus.
+   * Focuses the first element that matches the given selector within the focus trap.
+   * @param selector The CSS selector for the element to set focus to.
    */
-  private _forceFocus(element: HTMLElement, options?: FocusOptions) {
+  private _focusByCssSelector(selector: string, options?: FocusOptions) {
+    const element = this._elementRef.nativeElement.querySelector(selector) as HTMLElement | null;
+
+    if (!element) {
+      return;
+    }
+
+    // If the element isn't focusable, force focus to it by
+    // setting a tabindex, focusing it and then clear it.
     if (!this._interactivityChecker.isFocusable(element)) {
       element.tabIndex = -1;
       // The tabindex attribute should be removed to avoid navigating to that element again
@@ -382,20 +425,8 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
         const cleanupMousedown = this._renderer.listen(element, 'mousedown', callback);
       });
     }
-    element.focus(options);
-  }
 
-  /**
-   * Focuses the first element that matches the given selector within the focus trap.
-   * @param selector The CSS selector for the element to set focus to.
-   */
-  private _focusByCssSelector(selector: string, options?: FocusOptions) {
-    let elementToFocus = this._elementRef.nativeElement.querySelector(
-      selector,
-    ) as HTMLElement | null;
-    if (elementToFocus) {
-      this._forceFocus(elementToFocus, options);
-    }
+    element.focus(options);
   }
 
   /**
@@ -420,9 +451,16 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
       case 'first-tabbable':
         afterNextRender(
           () => {
-            const hasMovedFocus = this._focusTrap!.focusInitialElement();
+            // If we try to capture focus mid-animation, we can end up shifting the page,
+            // if the drawer starts off from the end so prevent scrolling in this case.
+            // This should mostly happen in edge cases where the drawer is toggled rapidly.
+            const focusOptions: FocusOptions | undefined = this._isAnimating
+              ? {preventScroll: true}
+              : undefined;
+
+            const hasMovedFocus = this._focusTrap!.focusInitialElement(focusOptions);
             if (!hasMovedFocus && typeof element.focus === 'function') {
-              element.focus();
+              element.focus(focusOptions);
             }
           },
           {injector: this._injector},
@@ -554,22 +592,25 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     }
 
     this._opened.set(isOpen);
+    this._getContent()?._drawerToggled(this);
 
     if (this._container?._transitionsEnabled) {
-      // Note: it's important to set this as early as possible,
-      // otherwise the animation can look glitchy in some cases.
-      this._setIsAnimating(true);
+      if (this._isAnimating) {
+        this._setIsAnimating(false);
+        this._simulateAnimation();
+      } else {
+        // Note: it's important to set this as early as possible,
+        // otherwise the animation can look glitchy in some cases.
+        this._setIsAnimating(true);
 
-      // Previously we dispatched this in a `transitionrun` event, but it might not fire
-      // if the element is hidden (see #32992). Since this event is load-bearing for the
-      // margin calculations, we need it to fire consistently.
-      setTimeout(() => this._animationStarted.next());
+        // Previously we dispatched this in a `transitionrun` event, but it might not fire
+        // if the element is hidden (see #32992). Since this event is load-bearing for the
+        // margin calculations, we need it to fire consistently.
+        setTimeout(() => this._animationStarted.next());
+      }
     } else {
       // Simulate the animation events if animations are disabled.
-      setTimeout(() => {
-        this._animationStarted.next();
-        this._animationEnd.next();
-      });
+      this._simulateAnimation();
     }
 
     this._elementRef.nativeElement.classList.toggle('mat-drawer-opened', isOpen);
@@ -587,9 +628,24 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     });
   }
 
+  /** Gets the current content element. */
+  private _getContent() {
+    return this._container?._content || this._container?._userContent;
+  }
+
   /** Toggles whether the drawer is currently animating. */
   private _setIsAnimating(isAnimating: boolean) {
-    this._elementRef.nativeElement.classList.toggle('mat-drawer-animating', isAnimating);
+    if (isAnimating !== this._isAnimating) {
+      this._isAnimating = isAnimating;
+      this._elementRef.nativeElement.classList.toggle('mat-drawer-animating', isAnimating);
+    }
+  }
+
+  private _simulateAnimation() {
+    setTimeout(() => {
+      this._animationStarted.next();
+      this._animationEnd.next();
+    });
   }
 
   _getWidth(): number {
@@ -665,7 +721,6 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
     'class': 'mat-drawer-container',
     '[class.mat-drawer-container-explicit-backdrop]': '_backdropOverride',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     {
@@ -927,7 +982,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * is properly hidden.
    */
   private _watchDrawerToggle(drawer: MatDrawer): void {
-    //
     drawer._animationStarted.pipe(takeUntil(this._drawers.changes)).subscribe(() => {
       this.updateContentMargins();
       this._changeDetectorRef.markForCheck();

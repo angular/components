@@ -8,22 +8,15 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-  viewChild,
-} from '@angular/core';
+import {afterRenderEffect, Component, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 
-/** @title Disabled readonly combobox. */
+/** @title Disabled combobox. */
 @Component({
   selector: 'combobox-readonly-disabled-example',
   templateUrl: 'combobox-readonly-disabled-example.html',
   styleUrl: '../combobox-select/combobox-select-example.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxReadonlyDisabledExample {
   readonly listbox = viewChild(Listbox);

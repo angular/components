@@ -76,7 +76,7 @@ describe('MatMenu', () => {
     window.scroll(0, 0);
   });
 
-  it('should aria-controls the menu panel', () => {
+  it('should set aria-controls on the menu panel', () => {
     const fixture = TestBed.createComponent(SimpleMenu);
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
@@ -1149,6 +1149,20 @@ describe('MatMenu', () => {
     expect(Math.floor(panelRect.bottom)).toBe(viewportHeight);
   });
 
+  it('should close the menu when it is cleared from the trigger', async () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    await wait(200);
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.menu = null;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeFalsy();
+  });
+
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', () => {
       const fixture = TestBed.createComponent(SimpleLazyMenu);
@@ -1619,6 +1633,28 @@ describe('MatMenu', () => {
       const ripple = items[2].query(By.css('.mat-ripple'))!.injector.get<MatRipple>(MatRipple);
 
       expect(ripple.disabled).toBe(true);
+    });
+
+    it('should set disabled interactive classes and attributes', () => {
+      const fixture = TestBed.createComponent(DisabledInteractiveMenuItem);
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+
+      const items = fixture.debugElement.queryAll(By.css('.mat-mdc-menu-item'));
+      const disabledNativeItem = items[0].nativeElement;
+      const disabledInteractiveItem = items[1].nativeElement;
+
+      expect(disabledNativeItem.hasAttribute('disabled')).toBe(true);
+      expect(disabledNativeItem.getAttribute('aria-disabled')).toBeNull();
+      expect(disabledNativeItem.classList).toContain('mat-mdc-menu-item-disabled');
+      expect(disabledNativeItem.classList).not.toContain('mat-mdc-menu-item-disabled-interactive');
+
+      expect(disabledInteractiveItem.hasAttribute('disabled')).toBe(false);
+      expect(disabledInteractiveItem.getAttribute('aria-disabled')).toBe('true');
+      expect(disabledInteractiveItem.classList).toContain('mat-mdc-menu-item-disabled');
+      expect(disabledInteractiveItem.classList).toContain('mat-mdc-menu-item-disabled-interactive');
     });
   });
 
@@ -2520,7 +2556,6 @@ class SimpleMenu {
 
 @Component({
   template: SIMPLE_MENU_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, FakeIcon],
   selector: 'simple-menu-on-push',
 })
@@ -2538,6 +2573,22 @@ class SimpleMenuOnPush extends SimpleMenu {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DisabledMenu {
+  @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
+}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item disabled> Native disabled </button>
+      <button mat-menu-item disabled [disabledInteractive]="true"> Disabled Interactive </button>
+    </mat-menu>
+  `,
+  imports: [MatMenuTrigger, MatMenu, MatMenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class DisabledInteractiveMenuItem {
+  @ViewChild(MatMenuTrigger) trigger!: MatMenuTrigger;
   @ViewChild('triggerEl', {read: ElementRef}) triggerEl!: ElementRef<HTMLElement>;
 }
 
@@ -2892,7 +2943,6 @@ class SimpleMenuWithRepeaterInLazyContent {
       </ng-template>
     </mat-menu>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatMenuTrigger, MatMenu, MatMenuItem, MatMenuContent],
 })
 class LazyMenuWithOnPush {

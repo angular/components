@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 
@@ -12,6 +12,6 @@ import {MatRadioModule} from '@angular/material/radio';
   imports: [MatRadioModule, FormsModule],
 })
 export class RadioNgModelExample {
-  favoriteSeason = '';
+  favoriteSeason = signal('');
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
 }

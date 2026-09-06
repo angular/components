@@ -61,6 +61,9 @@ $default-border-radius: 4px;
     'mat-focus-indicator-border-radius': $border-radius,
     'mat-focus-indicator-border-color': $border-color,
     'mat-focus-indicator-display': $display,
+    // This isn't used for styling the actual focus indicator, but can
+    // be used to hide conflicting indicators when strong focus is enabled.
+    'mat-focus-indicator-fallback-border-style': none,
   );
 
   @if (&) {

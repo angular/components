@@ -6,12 +6,17 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import * as webdriver from 'selenium-webdriver';
+import {createE2eWebDriver} from '../../../../src/e2e-app/e2e-setup';
 import {AppPage} from './app.po';
 import {screenshot} from '../screenshot';
+
+const {builder, port} = createE2eWebDriver();
 
 describe('screenshot scenes for each component', () => {
   // These tests simply serve as a convenient way to take snapshots of different pages,
   // they are not actually testing anything
+  let wd: webdriver.WebDriver;
   let page: AppPage;
 
   const components = [
@@ -53,14 +58,22 @@ describe('screenshot scenes for each component', () => {
     'tree',
   ];
 
+  beforeAll(async () => {
+    wd = await builder.build();
+  });
+
+  afterAll(async () => {
+    await wd.quit();
+  });
+
   beforeEach(() => {
-    page = new AppPage();
+    page = new AppPage(wd, `http://localhost:${port}`);
   });
 
   for (const comp of components) {
     it(`screenshot for ${comp} scene`, async () => {
       await page.navigateTo(comp);
-      await screenshot(comp);
+      await screenshot(comp, wd);
     });
   }
 });

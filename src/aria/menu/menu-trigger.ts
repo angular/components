@@ -30,12 +30,10 @@ import type {Menu} from './menu';
  * <button ngMenuTrigger [menu]="myMenu">Open Menu</button>
  *
  * <div ngMenu #myMenu="ngMenu">
- *   <div ngMenuItem>Item 1</div>
- *   <div ngMenuItem>Item 2</div>
+ *   <div ngMenuItem value="Item 1">Item 1</div>
+ *   <div ngMenuItem value="Item 2">Item 2</div>
  * </div>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
@@ -91,6 +89,12 @@ export class MenuTrigger<V> {
 
   constructor() {
     effect(() => this.menu()?.parent.set(this));
+    effect(() => this._pattern.pendingFocusEffect());
+
+    // Automatically prevent form submission.
+    if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {
+      this.element.setAttribute('type', 'button');
+    }
   }
 
   /** Opens the menu focusing on the first menu item. */

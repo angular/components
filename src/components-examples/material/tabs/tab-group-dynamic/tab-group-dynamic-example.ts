@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -24,19 +24,19 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   ],
 })
 export class TabGroupDynamicExample {
-  tabs = ['First', 'Second', 'Third'];
+  tabs = signal(['First', 'Second', 'Third']);
   selected = new FormControl(0);
 
   addTab(selectAfterAdding: boolean) {
-    this.tabs.push('New');
+    this.tabs.update(tabs => [...tabs, 'New']);
 
     if (selectAfterAdding) {
-      this.selected.setValue(this.tabs.length - 1);
+      this.selected.setValue(this.tabs().length - 1);
     }
   }
 
   removeTab(index: number) {
-    this.tabs.splice(index, 1);
+    this.tabs.update(tabs => tabs.filter((_, i) => i !== index));
     this.selected.setValue(index);
   }
 }

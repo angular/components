@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import type {MarkerClusterer, Renderer, Algorithm} from './map-marker-clusterer-types';
 
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
@@ -46,6 +46,7 @@ describe('MapMarkerClusterer', () => {
     (window as any).markerClusterer = undefined;
   });
 
+  // We can't test this easily without `fakeAsync`.
   it('throws an error if the clustering library has not been loaded', fakeAsync(() => {
     (window as any).markerClusterer = undefined;
     markerClustererConstructorSpy = createMarkerClustererConstructorSpy(
@@ -59,9 +60,10 @@ describe('MapMarkerClusterer', () => {
     }).toThrowError(/MarkerClusterer class not found, cannot construct a marker cluster/);
   }));
 
-  it('initializes a Google Map Marker Clusterer', fakeAsync(() => {
+  it('initializes a Google Map Marker Clusterer', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith({
       map: mapSpy,
@@ -69,13 +71,14 @@ describe('MapMarkerClusterer', () => {
       algorithm: undefined,
       onClusterClick: jasmine.any(Function),
     });
-  }));
+  });
 
-  it('sets marker clusterer inputs', fakeAsync(() => {
+  it('sets marker clusterer inputs', async () => {
     fixture.componentInstance.algorithm = {name: 'custom'} as any;
     fixture.componentInstance.renderer = {render: () => null!};
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith({
       map: mapSpy,
@@ -83,13 +86,14 @@ describe('MapMarkerClusterer', () => {
       renderer: fixture.componentInstance.renderer,
       onClusterClick: jasmine.any(Function),
     });
-  }));
+  });
 
-  it('recreates the clusterer if the options change', fakeAsync(() => {
+  it('recreates the clusterer if the options change', async () => {
     fixture.componentInstance.algorithm = {name: 'custom1'} as any;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith({
       map: mapSpy,
@@ -101,7 +105,8 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.algorithm = {name: 'custom2'} as any;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererConstructorSpy).toHaveBeenCalledWith({
       map: mapSpy,
@@ -109,21 +114,23 @@ describe('MapMarkerClusterer', () => {
       renderer: undefined,
       onClusterClick: jasmine.any(Function),
     });
-  }));
+  });
 
-  it('sets Google Maps Markers in the MarkerClusterer', fakeAsync(() => {
+  it('sets Google Maps Markers in the MarkerClusterer', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
       anyMarkerMatcher,
       anyMarkerMatcher,
     ]);
-  }));
+  });
 
-  it('updates Google Maps Markers in the Marker Clusterer', fakeAsync(() => {
+  it('updates Google Maps Markers in the Marker Clusterer', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([
       anyMarkerMatcher,
@@ -133,7 +140,8 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.state = 'state2';
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
     expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
@@ -142,7 +150,8 @@ describe('MapMarkerClusterer', () => {
     fixture.componentInstance.state = 'state0';
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([], true);
     expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith(
@@ -150,30 +159,37 @@ describe('MapMarkerClusterer', () => {
       true,
     );
     expect(markerClustererSpy.render).toHaveBeenCalledTimes(2);
-  }));
+  });
 
-  it('initializes event handlers on the map related to clustering', fakeAsync(() => {
+  it('initializes event handlers on the map related to clustering', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(mapSpy.addListener).toHaveBeenCalledWith('clusteringbegin', jasmine.any(Function));
     expect(mapSpy.addListener).not.toHaveBeenCalledWith('clusteringend', jasmine.any(Function));
-  }));
+  });
 
-  it('emits to clusterClick when the `onClusterClick` callback is invoked', fakeAsync(() => {
+  it('emits to clusterClick when the `onClusterClick` callback is invoked', async () => {
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(fixture.componentInstance.onClusterClick).not.toHaveBeenCalled();
 
     const callback = markerClustererConstructorSpy.calls.mostRecent().args[0].onClusterClick;
     callback({}, {}, {});
     fixture.detectChanges();
-    flush();
+    await fixture.whenStable();
+    await wait(50);
 
     expect(fixture.componentInstance.onClusterClick).toHaveBeenCalledTimes(1);
-  }));
+  });
 });
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 @Component({
   selector: 'test-app',

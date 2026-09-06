@@ -25,7 +25,6 @@ import {DeferredContent} from '../private';
  * </div>
  * ```
  *
- * @developerPreview 21.0
  * @see [Accordion](guide/aria/accordion)
  */
 @Directive({

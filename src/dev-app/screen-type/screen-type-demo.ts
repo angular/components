@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 import {BreakpointObserver, BreakpointState, Breakpoints, LayoutModule} from '@angular/cdk/layout';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -18,7 +18,6 @@ import {Observable} from 'rxjs';
   templateUrl: 'screen-type-demo.html',
   styleUrl: 'screen-type-demo.css',
   imports: [AsyncPipe, LayoutModule, MatGridListModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScreenTypeDemo {
   isHandset!: Observable<BreakpointState>;

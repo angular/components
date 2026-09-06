@@ -10,7 +10,6 @@ import {ENTER} from '../../keycodes';
 import {_supportsShadowDom} from '../../platform';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -27,7 +26,6 @@ import {TestSubComponent} from './test-sub-component';
   selector: 'test-main',
   templateUrl: 'test-main-component.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TestShadowBoundary, TestSubComponent, FormsModule, ReactiveFormsModule],
 })
 export class TestMainComponent implements OnDestroy {

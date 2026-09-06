@@ -1,4 +1,5 @@
 load("//docs:defs.bzl", "ng_app")
+load("//tools:defaults.bzl", "http_server")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -9,5 +10,21 @@ ng_app(
         "//docs:node_modules/@angular/components-examples",
         "//docs:node_modules/@stackblitz/sdk",
         "//docs:node_modules/luxon",
+    ],
+)
+
+alias(
+    name = "serve",
+    actual = ":build.serve",
+)
+
+http_server(
+    name = "server",
+    testonly = True,
+    additional_root_paths = [
+        "_main/docs/scenes/dist/browser",
+    ],
+    deps = [
+        ":build.production",
     ],
 )

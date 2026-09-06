@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   EventEmitter,
@@ -59,7 +58,6 @@ declare const MarkerClusterer: typeof MarkerClustererInstance;
 @Component({
   selector: 'deprecated-map-marker-clusterer',
   exportAs: 'mapMarkerClusterer',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<ng-content/>',
   encapsulation: ViewEncapsulation.None,
 })

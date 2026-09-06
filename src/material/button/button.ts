@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@angular/core';
+import {Component, Input, ViewEncapsulation} from '@angular/core';
 import {MatButtonAppearance, MatButtonBase} from './button-base';
 
 /**
@@ -38,7 +38,6 @@ const APPEARANCE_CLASSES: Map<MatButtonAppearance, readonly string[]> = new Map(
   },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatButton extends MatButtonBase {
   /** Appearance of the button. */

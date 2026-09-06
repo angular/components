@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatDividerModule} from '@angular/material/divider';
 
 /**
@@ -8,6 +8,5 @@ import {MatDividerModule} from '@angular/material/divider';
   selector: 'divider-harness-example',
   templateUrl: 'divider-harness-example.html',
   imports: [MatDividerModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DividerHarnessExample {}

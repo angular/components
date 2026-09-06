@@ -1,4 +1,4 @@
-load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
+load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
 load(
     "//tools:defaults.bzl",
     "extract_tokens",
@@ -146,11 +146,20 @@ ts_project(
     name = "e2e_test_sources",
     testonly = True,
     srcs = glob(["**/*.e2e.spec.ts"]),
-    deps = ["//:node_modules/protractor"],
+    deps = [
+        "//:node_modules/@bazel/runfiles",
+        "//:node_modules/@types/jasmine",
+        "//:node_modules/@types/node",
+        "//:node_modules/@types/selenium-webdriver",
+        "//:node_modules/selenium-webdriver",
+        "//src/cdk/testing/selenium-webdriver",
+        "//src/e2e-app:e2e_setup",
+    ],
 )
 
-e2e_test_suite(
+webdriver_test(
     name = "e2e_tests",
+    server = "//src/e2e-app:server",
     deps = [
         ":e2e_test_sources",
     ],

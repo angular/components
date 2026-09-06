@@ -6,9 +6,13 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
+
+// @public
+export const ACCORDION_GROUP: InjectionToken<AccordionGroup>;
 
 // @public
 export class AccordionContent {
@@ -50,13 +54,14 @@ export class AccordionPanel {
     toggle(): void;
     readonly visible: _angular_core.Signal<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionPanel, "[ngAccordionPanel]", ["ngAccordionPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, ["_accordionContent"], never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<AccordionPanel, never>;
 }
 
 // @public
 export class AccordionTrigger implements OnInit, OnDestroy {
+    constructor();
     readonly active: _angular_core.Signal<boolean>;
     collapse(): void;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;

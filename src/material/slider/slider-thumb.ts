@@ -8,7 +8,6 @@
 
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -45,7 +44,6 @@ import {Platform} from '@angular/cdk/platform';
   host: {
     'class': 'mdc-slider__thumb mat-mdc-slider-visual-thumb',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER_VISUAL_THUMB, useExisting: MatSliderVisualThumb}],
   imports: [MatRipple],

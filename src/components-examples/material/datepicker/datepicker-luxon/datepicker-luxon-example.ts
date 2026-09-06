@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -23,7 +23,6 @@ import {DateTime} from 'luxon';
     FormsModule,
     ReactiveFormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerLuxonExample {
   // Datepicker takes Luxon `DateTime` objects instead of `Date` objects.

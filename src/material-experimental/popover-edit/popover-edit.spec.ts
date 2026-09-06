@@ -1,7 +1,7 @@
 import {DataSource} from '@angular/cdk/collections';
 import {DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {Component, Directive, ElementRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule, NgForm} from '@angular/forms';
 import {MatTableModule} from '@angular/material/table';
 import {BehaviorSubject} from 'rxjs';
@@ -82,13 +82,13 @@ abstract class BaseTestComponent {
     element.name = form.value['name'];
   }
 
-  triggerHoverState(rowIndex = 0) {
+  async triggerHoverState(rowIndex = 0) {
     const row = getRows(this.table.nativeElement)[rowIndex];
     row.dispatchEvent(new Event('mouseover', {bubbles: true}));
     row.dispatchEvent(new Event('mousemove', {bubbles: true}));
 
     // Wait for the mouse hover debounce in edit-event-dispatcher.
-    tick(41);
+    await wait(200);
   }
 
   getRows() {
@@ -123,12 +123,12 @@ abstract class BaseTestComponent {
     this.getOpenButton(rowIndex)!.click();
   }
 
-  openLens(rowIndex = 0, cellIndex = 1) {
+  async openLens(rowIndex = 0, cellIndex = 1) {
     this.focusEditCell(rowIndex, cellIndex);
     this.getEditCell(rowIndex, cellIndex).dispatchEvent(
       new KeyboardEvent('keydown', {bubbles: true, key: 'Enter'}),
     );
-    flush();
+    await wait(10);
   }
 
   getEditPane() {
@@ -301,38 +301,38 @@ describe('Material Popover Edit', () => {
       let component: BaseTestComponent;
       let fixture: ComponentFixture<BaseTestComponent>;
 
-      beforeEach(fakeAsync(() => {
+      beforeEach(async () => {
         fixture = TestBed.createComponent(componentClass);
         component = fixture.componentInstance;
         fixture.detectChanges();
-        tick(10);
+        await wait(50);
         fixture.detectChanges();
-      }));
+      });
 
       describe('row hover content', () => {
-        it('makes the first and last rows focusable but invisible', fakeAsync(() => {
+        it('makes the first and last rows focusable but invisible', () => {
           const rows = component.getRows();
 
           expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.FOCUSABLE);
           expect(component.hoverContentStateForRow(rows.length - 1)).toBe(
             HoverContentState.FOCUSABLE,
           );
-        }));
+        });
 
-        it('shows and hides on-hover content only after a delay', fakeAsync(() => {
+        it('shows and hides on-hover content only after a delay', async () => {
           const [row0, row1] = component.getRows();
           row0.dispatchEvent(new Event('mouseover', {bubbles: true}));
           row0.dispatchEvent(new Event('mousemove', {bubbles: true}));
 
           expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.FOCUSABLE);
 
-          tick(20);
+          await wait(20);
           row0.dispatchEvent(new Event('mousemove', {bubbles: true}));
-          tick(20);
+          await wait(20);
 
           expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.FOCUSABLE);
 
-          tick(31);
+          await wait(50);
 
           expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.ON);
 
@@ -342,111 +342,111 @@ describe('Material Popover Edit', () => {
           expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.ON);
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.OFF);
 
-          tick(41);
+          await wait(100);
 
           expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.FOCUSABLE);
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.ON);
-        }));
+        });
 
-        it('shows hover content for the focused row and makes the rows above and below focusable', fakeAsync(() => {
+        it('shows hover content for the focused row and makes the rows above and below focusable', async () => {
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(4)).toBe(HoverContentState.FOCUSABLE);
 
           component.focusEditCell(2);
-          tick(1);
+          await wait(50);
 
           expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.ON);
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.FOCUSABLE);
           expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.FOCUSABLE);
 
           component.focusEditCell(4);
-          tick(1);
+          await wait(50);
 
           expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(4)).toBe(HoverContentState.ON);
           expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.FOCUSABLE);
 
           component.getEditCell(4).blur();
-          tick(1);
+          await wait(50);
 
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(4)).toBe(HoverContentState.FOCUSABLE);
-        }));
+        });
 
         it(
           'shows hover content for the editing row and makes the rows above and below ' +
             'focusable unless focus is in a different table row in which case it takes priority',
-          fakeAsync(() => {
+          async () => {
             expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.OFF);
             expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
             expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.OFF);
             expect(component.hoverContentStateForRow(4)).toBe(HoverContentState.FOCUSABLE);
 
-            component.openLens(2);
-            tick(1);
+            await component.openLens(2);
+            await wait(50);
 
             expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.ON);
             expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.FOCUSABLE);
             expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.FOCUSABLE);
 
             component.focusEditCell(4);
-            tick(1);
+            await wait(50);
 
             expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
             expect(component.hoverContentStateForRow(4)).toBe(HoverContentState.ON);
             expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.FOCUSABLE);
-          }),
+          },
         );
       });
 
       describe('triggering edit', () => {
-        it('opens edit from on-hover button', fakeAsync(() => {
-          component.triggerHoverState();
+        it('opens edit from on-hover button', async () => {
+          await component.triggerHoverState();
           component.clickOpenButton();
 
           expect(component.lensIsOpen()).toBe(true);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('opens edit from Enter on focued cell', fakeAsync(() => {
+        it('opens edit from Enter on focued cell', async () => {
           // Uses Enter to open the lens.
-          component.openLens();
+          await component.openLens();
 
           expect(component.lensIsOpen()).toBe(true);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('does not trigger edit when disabled', fakeAsync(() => {
+        it('does not trigger edit when disabled', async () => {
           component.nameEditDisabled = true;
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // Uses Enter to open the lens.
-          component.openLens();
+          await component.openLens();
 
           expect(component.lensIsOpen()).toBe(false);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('sets aria label and role dialog on the popup', fakeAsync(() => {
+        it('sets aria label and role dialog on the popup', async () => {
           component.nameEditAriaLabel = 'Label of name!!';
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
           // Uses Enter to open the lens.
-          component.openLens();
+          await component.openLens();
           fixture.detectChanges();
 
           expect(component.lensIsOpen()).toBe(true);
           const dialogElem = component.getEditPane()!;
           expect(dialogElem.getAttribute('aria-label')).toBe('Label of name!!');
           expect(dialogElem.getAttribute('role')).toBe('dialog');
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
       });
 
       describe('focus manipulation', () => {
@@ -537,54 +537,54 @@ describe('Material Popover Edit', () => {
                 .querySelectorAll('input, button, .cdk-focus-trap-anchor'),
             ) as HTMLElement[];
 
-          it('keeps focus within the lens by default', fakeAsync(() => {
+          it('keeps focus within the lens by default', async () => {
             // Open the name lens which has the default behavior.
-            component.openLens();
+            await component.openLens();
 
             const focusableElements = getFocusablePaneElements();
 
             // Focus the last element (end focus trap anchor).
             focusableElements[focusableElements.length - 1].focus();
-            flush();
+            await fixture.whenStable();
 
             // Focus should have moved to the top of the lens.
             expect(document.activeElement).toBe(focusableElements[1]);
             expect(component.lensIsOpen()).toBe(true);
-            clearLeftoverTimers();
-          }));
+            await clearLeftoverTimers();
+          });
 
-          it('moves focus to the next cell when focus leaves end of lens with matPopoverEditTabOut', fakeAsync(() => {
+          it('moves focus to the next cell when focus leaves end of lens with matPopoverEditTabOut', async () => {
             // Open the weight lens which has tab out behavior.
-            component.openLens(0, 2);
+            await component.openLens(0, 2);
 
             const focusableElements = getFocusablePaneElements();
 
             // Focus the last element (end focus trap anchor).
             focusableElements[focusableElements.length - 1].focus();
-            flush();
+            await fixture.whenStable();
 
             // Focus should have moved to the next editable cell.
             expect(document.activeElement).toBe(component.getEditCell(1, 1));
             expect(component.lensIsOpen()).toBe(false);
-            clearLeftoverTimers();
-          }));
+            await clearLeftoverTimers();
+          });
 
           it(`moves focus to the previous cell when focus leaves end of lens with
-matPopoverEditTabOut`, fakeAsync(() => {
+matPopoverEditTabOut`, async () => {
             // Open the weight lens which has tab out behavior.
-            component.openLens(0, 2);
+            await component.openLens(0, 2);
 
             const focusableElements = getFocusablePaneElements();
 
             // Focus the first (start focus trap anchor).
             focusableElements[0].focus();
-            flush();
+            await fixture.whenStable();
 
             // Focus should have moved to the next editable cell.
             expect(document.activeElement).toBe(component.getEditCell(0, 1));
             expect(component.lensIsOpen()).toBe(false);
-            clearLeftoverTimers();
-          }));
+            await clearLeftoverTimers();
+          });
         });
       });
 
@@ -593,15 +593,15 @@ matPopoverEditTabOut`, fakeAsync(() => {
           expect(Math.floor(actual)).toBe(Math.floor(expected));
         }
 
-        it('shows a lens with the value from the table', fakeAsync(() => {
-          component.openLens();
+        it('shows a lens with the value from the table', async () => {
+          await component.openLens();
 
           expect(component.getInput()!.value).toBe('Hydrogen');
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('positions the lens at the top left corner and spans the full width of the cell', fakeAsync(() => {
-          component.openLens();
+        it('positions the lens at the top left corner and spans the full width of the cell', async () => {
+          await component.openLens();
           fixture.detectChanges();
 
           const paneRect = component.getEditPane()!.getBoundingClientRect();
@@ -610,10 +610,10 @@ matPopoverEditTabOut`, fakeAsync(() => {
           expectPixelsToEqual(paneRect.width, cellRect.width);
           expectPixelsToEqual(paneRect.left, cellRect.left);
           expectPixelsToEqual(paneRect.top, cellRect.top);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('adjusts the positioning of the lens based on colspan', fakeAsync(() => {
+        it('adjusts the positioning of the lens based on colspan', async () => {
           const cellRects = getCells(getRows(component.table.nativeElement)[0]).map(cell =>
             cell.getBoundingClientRect(),
           );
@@ -622,7 +622,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
           fixture.changeDetectorRef.markForCheck();
           fixture.detectChanges();
 
-          component.openLens();
+          await component.openLens();
           fixture.detectChanges();
 
           let paneRect = component.getEditPane()!.getBoundingClientRect();
@@ -651,11 +651,11 @@ matPopoverEditTabOut`, fakeAsync(() => {
           // TODO: This was commented out after switching from the legacy table to the current
           // MDC-based table. This failed by being inaccurate by several pixels.
           // expectPixelsToEqual(paneRect.right, cellRects[2].right);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('updates the form and submits, closing the lens', fakeAsync(() => {
-          component.openLens();
+        it('updates the form and submits, closing the lens', async () => {
+          await component.openLens();
 
           component.getInput()!.value = 'Hydragon';
           component.getInput()!.dispatchEvent(new Event('input'));
@@ -665,11 +665,11 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
           expect(component.getEditCell().firstChild!.textContent!.trim()).toBe('Hydragon');
           expect(component.lensIsOpen()).toBe(false);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('does not close the lens on submit when form is invalid', fakeAsync(() => {
-          component.openLens();
+        it('does not close the lens on submit when form is invalid', async () => {
+          await component.openLens();
 
           component.getInput()!.value = '';
           component.getInput()!.dispatchEvent(new Event('input'));
@@ -677,15 +677,15 @@ matPopoverEditTabOut`, fakeAsync(() => {
           component.clickSubmitButton();
 
           expect(component.lensIsOpen()).toBe(true);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
         it(
           'closes lens on submit when form is invalid with ' +
             'matEditControlIgnoreSubmitUnlessValid = false',
-          fakeAsync(() => {
+          async () => {
             component.ignoreSubmitUnlessValid = false;
-            component.openLens();
+            await component.openLens();
 
             component.getInput()!.value = '';
             component.getInput()!.dispatchEvent(new Event('input'));
@@ -693,21 +693,21 @@ matPopoverEditTabOut`, fakeAsync(() => {
             component.clickSubmitButton();
 
             expect(component.lensIsOpen()).toBe(false);
-            clearLeftoverTimers();
-          }),
+            await clearLeftoverTimers();
+          },
         );
 
-        it('closes the lens on close', fakeAsync(() => {
-          component.openLens();
+        it('closes the lens on close', async () => {
+          await component.openLens();
 
           component.clickCloseButton();
 
           expect(component.lensIsOpen()).toBe(false);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('closes and reopens a lens with modified value persisted', fakeAsync(() => {
-          component.openLens();
+        it('closes and reopens a lens with modified value persisted', async () => {
+          await component.openLens();
 
           component.getInput()!.value = 'Hydragon';
           component.getInput()!.dispatchEvent(new Event('input'));
@@ -718,15 +718,15 @@ matPopoverEditTabOut`, fakeAsync(() => {
           expect(component.getEditCell().firstChild!.textContent!.trim()).toBe('Hydrogen');
           expect(component.lensIsOpen()).toBe(false);
 
-          component.openLens();
+          await component.openLens();
           fixture.detectChanges();
 
           expect(component.getInput()!.value).toBe('Hydragon');
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('resets the lens to original value', fakeAsync(() => {
-          component.openLens();
+        it('resets the lens to original value', async () => {
+          await component.openLens();
           fixture.detectChanges();
 
           component.getInput()!.value = 'Hydragon';
@@ -735,11 +735,11 @@ matPopoverEditTabOut`, fakeAsync(() => {
           component.clickRevertButton();
 
           expect(component.getInput()!.value).toBe('Hydrogen');
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('resets the lens to previously submitted value', fakeAsync(() => {
-          component.openLens();
+        it('resets the lens to previously submitted value', async () => {
+          await component.openLens();
 
           component.getInput()!.value = 'Hydragon';
           component.getInput()!.dispatchEvent(new Event('input'));
@@ -747,7 +747,7 @@ matPopoverEditTabOut`, fakeAsync(() => {
           component.clickSubmitButton();
           fixture.detectChanges();
 
-          component.openLens();
+          await component.openLens();
           fixture.detectChanges();
 
           component.getInput()!.value = 'Hydragon X';
@@ -756,11 +756,11 @@ matPopoverEditTabOut`, fakeAsync(() => {
           component.clickRevertButton();
 
           expect(component.getInput()!.value).toBe('Hydragon');
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('closes the lens on escape', fakeAsync(() => {
-          component.openLens();
+        it('closes the lens on escape', async () => {
+          await component.openLens();
 
           const event = new KeyboardEvent('keydown', {bubbles: true, key: 'Escape'});
 
@@ -769,11 +769,11 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
           expect(component.lensIsOpen()).toBe(false);
           expect(event.preventDefault).toHaveBeenCalled();
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('does not close the lens on escape with a modifier key', fakeAsync(() => {
-          component.openLens();
+        it('does not close the lens on escape with a modifier key', async () => {
+          await component.openLens();
 
           const event = new KeyboardEvent('keydown', {bubbles: true, key: 'Escape'});
           Object.defineProperty(event, 'altKey', {get: () => true});
@@ -783,20 +783,20 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
           expect(component.lensIsOpen()).toBe(true);
           expect(event.preventDefault).not.toHaveBeenCalled();
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('does not close the lens on click within lens', fakeAsync(() => {
-          component.openLens();
+        it('does not close the lens on click within lens', async () => {
+          await component.openLens();
 
           component.getInput()!.dispatchEvent(new Event('click', {bubbles: true}));
 
           expect(component.lensIsOpen()).toBe(true);
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('closes the lens on outside click', fakeAsync(() => {
-          component.openLens();
+        it('closes the lens on outside click', async () => {
+          await component.openLens();
 
           component.getInput()!.value = 'Hydragon';
           component.getInput()!.dispatchEvent(new Event('input'));
@@ -805,14 +805,14 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
           expect(component.lensIsOpen()).toBe(false);
           expect(component.getEditCell().firstChild!.textContent!.trim()).toBe('Hydrogen');
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
         it(
           'submits the lens on outside click with ' + 'matEditControlClickOutBehavior = "submit"',
-          fakeAsync(() => {
+          async () => {
             component.clickOutBehavior = 'submit';
-            component.openLens();
+            await component.openLens();
 
             component.getInput()!.value = 'Hydragon';
             component.getInput()!.dispatchEvent(new Event('input'));
@@ -821,15 +821,15 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
             expect(component.lensIsOpen()).toBe(false);
             expect(component.getEditCell().firstChild!.textContent!.trim()).toBe('Hydragon');
-            clearLeftoverTimers();
-          }),
+            await clearLeftoverTimers();
+          },
         );
 
         it(
           'does nothing on outside click with ' + 'matEditControlClickOutBehavior = "noop"',
-          fakeAsync(() => {
+          async () => {
             component.clickOutBehavior = 'noop';
-            component.openLens();
+            await component.openLens();
 
             component.getInput()!.value = 'Hydragon';
             component.getInput()!.dispatchEvent(new Event('input'));
@@ -838,38 +838,38 @@ matPopoverEditTabOut`, fakeAsync(() => {
 
             expect(component.lensIsOpen()).toBe(true);
             expect(component.getEditCell().firstChild!.textContent!.trim()).toBe('Hydrogen');
-            clearLeftoverTimers();
-          }),
+            await clearLeftoverTimers();
+          },
         );
 
-        it('sets focus on the first input in the lens', fakeAsync(() => {
-          component.openLens();
+        it('sets focus on the first input in the lens', async () => {
+          await component.openLens();
 
           expect(document.activeElement).toBe(component.getInput());
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
-        it('returns focus to the edited cell after closing', fakeAsync(() => {
-          component.openLens();
+        it('returns focus to the edited cell after closing', async () => {
+          await component.openLens();
 
           component.clickCloseButton();
 
           expect(document.activeElement).toBe(component.getEditCell());
-          clearLeftoverTimers();
-        }));
+          await clearLeftoverTimers();
+        });
 
         it(
           'does not focus to the edited cell after closing if another element ' +
             'outside the lens is already focused',
-          fakeAsync(() => {
-            component.openLens(0);
+          async () => {
+            await component.openLens(0);
 
             component.getEditCell(1).focus();
             component.getEditCell(1).dispatchEvent(new Event('click', {bubbles: true}));
 
             expect(document.activeElement).toBe(component.getEditCell(1));
-            clearLeftoverTimers();
-          }),
+            await clearLeftoverTimers();
+          },
         );
       });
     });
@@ -905,6 +905,10 @@ function getCells(row: Element): HTMLElement[] {
 // Common actions like mouse events and focus/blur cause timers to be fired off.
 // When not testing this behavior directly, use this function to clear any timers that were
 // created in passing.
-function clearLeftoverTimers() {
-  tick(100);
+async function clearLeftoverTimers() {
+  await wait(100);
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

@@ -89,8 +89,57 @@ on how scroll events are detected and dispatched.
 
 ### The overlay container
 The `OverlayContainer` provides a handle to the container element in which all individual overlay
-elements are rendered. By default, the overlay container is appended directly to the document body
-so that an overlay is never clipped by an `overflow: hidden` parent.
+elements are rendered. By default, the overlay container is appended directly to the document body.
+
+In supported browsers, the CDK renders overlays as native
+[Popover](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API) elements.
+The `OverlayContainer` acts as the default insertion point for these elements, but because they are
+rendered as popovers, the browser automatically promotes them to the top layer. This natively
+bypasses `z-index` and `overflow: hidden` clipping issues without needing complex DOM stacking
+workarounds.
+
+If a browser does not support the Popover API, the CDK falls back to the traditional
+behavior where appending to the `OverlayContainer` is the only way to avoid clipping.
+
+You can explicitly configure the popover behavior using the `usePopover` option when creating an
+overlay. If you need to globally disable the popover behavior, you can provide the
+`OVERLAY_DEFAULT_CONFIG` injection token:
+
+```ts
+import {OVERLAY_DEFAULT_CONFIG} from '@angular/cdk/overlay';
+
+bootstrapApplication(MyApp, {
+  providers: [
+    {provide: OVERLAY_DEFAULT_CONFIG, useValue: {usePopover: false}}
+  ]
+});
+```
+
+#### Popover DOM location
+When an overlay is rendered as a native popover, it doesn't strictly need to be placed inside the
+`OverlayContainer` to escape `overflow: hidden` containers. The `FlexibleConnectedPositionStrategy`
+allows you to change where the popover is inserted in the DOM via the `withPopoverLocation()` method.
+
+This is particularly beneficial for accessibility. By injecting the popover directly next to its
+trigger element in the DOM structure, the DOM sequence naturally follows the visual logical order,
+while the browser continues to render the popover on top of everything.
+
+If you are using the `cdkConnectedOverlay` directive, you can configure this using the
+`cdkConnectedOverlayUsePopover` input. The supported locations are:
+- `'global'` (default): Inserts the popover inside the `OverlayContainer`.
+- `'inline'`: Inserts the popover in the DOM immediately following its trigger element.
+- `{type: 'parent', element: HTMLElement}`: Inserts the popover as a child of a specific custom element.
+
+```html
+<!-- Inserts the overlay popover right next to the trigger button in the DOM -->
+<button cdkOverlayOrigin #trigger="cdkOverlayOrigin">Open Menu</button>
+<ng-template cdkConnectedOverlay
+             [cdkConnectedOverlayOrigin]="trigger"
+             [cdkConnectedOverlayOpen]="isOpen"
+             cdkConnectedOverlayUsePopover="inline">
+  <div class="menu-panel">Menu content</div>
+</ng-template>
+```
 
 #### Full-screen overlays
 The `FullscreenOverlayContainer` is an alternative to `OverlayContainer` that supports correct

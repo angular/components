@@ -9,7 +9,6 @@
 import {
   AfterContentInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -71,12 +70,12 @@ export class MatSlideToggleChange {
     '[attr.aria-labelledby]': 'null',
     '[class.mat-mdc-slide-toggle-focused]': '_focused',
     '[class.mat-mdc-slide-toggle-checked]': 'checked',
+    '[class.mat-slide-toggle-full-width]': 'fullWidth',
     '[class._mat-animation-noopable]': '_noopAnimations',
     '[class]': 'color ? "mat-" + color : ""',
   },
   exportAs: 'matSlideToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -165,6 +164,9 @@ export class MatSlideToggle
 
   /** Whether the slide toggle is disabled. */
   @Input({transform: booleanAttribute}) disabled: boolean = false;
+
+  /** Whether the slide toggle should be full width. */
+  @Input({transform: booleanAttribute}) fullWidth: boolean = false;
 
   /** Whether the slide toggle has a ripple. */
   @Input({transform: booleanAttribute}) disableRipple: boolean = false;

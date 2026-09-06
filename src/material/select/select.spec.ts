@@ -4712,7 +4712,6 @@ class SelectWithErrorSibling {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control">
@@ -4734,7 +4733,6 @@ class BasicSelectOnPush {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
       <mat-select placeholder="Food" [formControl]="control">

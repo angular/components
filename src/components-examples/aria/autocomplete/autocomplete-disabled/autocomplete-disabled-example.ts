@@ -8,14 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
-import {
-  afterRenderEffect,
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-  viewChild,
-} from '@angular/core';
+import {afterRenderEffect, Component, computed, signal, viewChild} from '@angular/core';
 import {COUNTRIES} from '../countries';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
@@ -26,7 +19,6 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'autocomplete-disabled-example.html',
   styleUrl: '../autocomplete.css',
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AutocompleteDisabledExample {
   /** The selected value of the combobox. */

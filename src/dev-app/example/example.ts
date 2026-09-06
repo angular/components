@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Injector,
@@ -56,7 +55,6 @@ import {loadExample} from '@angular/components-examples/private';
       white-space: pre;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Example implements OnInit {
   private _injector = inject(Injector);

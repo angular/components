@@ -1,19 +1,23 @@
-<mat-tab-group>
-<!-- #docregion mat-tab-content -->
+<mat-tab-group (selectedIndexChange)="markTimeLoaded($event + 1)">
+  <!-- #docregion mat-tab-content -->
   <mat-tab label="First">
     <ng-template matTabContent>
-      Content 1 - Loaded: {{getTimeLoaded(1) | date:'medium'}}
+      Content 1 - Loaded: {{tabLoadTimes()[1] | date:'medium'}}
     </ng-template>
   </mat-tab>
-<!-- #enddocregion mat-tab-content -->
+  <!-- #enddocregion mat-tab-content -->
   <mat-tab label="Second">
     <ng-template matTabContent>
-      Content 2 - Loaded: {{getTimeLoaded(2) | date:'medium'}}
+      Content 2 - Loaded: {{tabLoadTimes()[2] | date:'medium'}}
     </ng-template>
   </mat-tab>
   <mat-tab label="Third">
     <ng-template matTabContent>
-      Content 3 - Loaded: {{getTimeLoaded(3) | date:'medium'}}
+      Content 3 - Loaded: {{tabLoadTimes()[3] | date:'medium'}}
     </ng-template>
   </mat-tab>
 </mat-tab-group>
+
+<!-- Copyright 2026 Google LLC. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at https://angular.io/license -->

@@ -10,7 +10,6 @@
 
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -83,7 +82,6 @@ const VIDEOS: Video[] = [
   templateUrl: 'youtube-player-demo.html',
   styleUrl: 'youtube-player-demo.css',
   imports: [FormsModule, MatRadioModule, MatCheckboxModule, MatButton, YouTubePlayer],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YouTubePlayerDemo implements AfterViewInit, OnDestroy {
   @ViewChild('demoYouTubePlayer') demoYouTubePlayer!: ElementRef<HTMLDivElement>;

@@ -112,7 +112,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     // (undocumented)
     _userContent: MatDrawerContent;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatDrawerContainer, "mat-drawer-container", ["matDrawerContainer"], { "autosize": { "alias": "autosize"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; }, { "backdropClick": "backdropClick"; }, ["_content", "_allDrawers"], ["mat-drawer", "mat-drawer-content", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatDrawerContainer, "mat-drawer-container", ["matDrawerContainer"], { "autosize": { "alias": "autosize"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; }, { "backdropClick": "backdropClick"; }, ["_content", "_allDrawers"], ["mat-drawer, mat-sidenav", "mat-drawer-content, mat-sidenav-content", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDrawerContainer, never>;
 }
@@ -121,6 +121,10 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
 export class MatDrawerContent extends CdkScrollable implements AfterContentInit {
     // (undocumented)
     _container: MatDrawerContainer;
+    // (undocumented)
+    _drawerModeChanged(): void;
+    // (undocumented)
+    _drawerToggled(drawer: MatDrawer): void;
     // (undocumented)
     ngAfterContentInit(): void;
     protected _shouldBeHidden(): boolean;
@@ -157,7 +161,7 @@ export class MatSidenavContainer extends MatDrawerContainer {
     // (undocumented)
     _content: MatSidenavContent;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSidenavContainer, "mat-sidenav-container", ["matSidenavContainer"], {}, {}, ["_content", "_allDrawers"], ["mat-sidenav", "mat-sidenav-content", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSidenavContainer, "mat-sidenav-container", ["matSidenavContainer"], {}, {}, ["_content", "_allDrawers"], ["mat-drawer, mat-sidenav", "mat-drawer-content, mat-sidenav-content", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSidenavContainer, never>;
 }

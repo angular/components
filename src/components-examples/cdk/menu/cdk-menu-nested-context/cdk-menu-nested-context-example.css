@@ -1,6 +1,6 @@
 .example-context-area {
   display: inline-grid;
-  border: 2px dashed black;
+  border: 2px dashed white;
 }
 
 .example-context-area .example-context-area {

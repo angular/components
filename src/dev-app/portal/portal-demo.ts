@@ -7,19 +7,11 @@
  */
 
 import {CdkPortal, ComponentPortal, DomPortal, Portal, PortalModule} from '@angular/cdk/portal';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  QueryList,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChild, ViewChildren} from '@angular/core';
 
 @Component({
   selector: 'science-joke',
   template: `<p> 100 kilopascals go into a bar. </p>`,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScienceJoke {}
 
@@ -28,7 +20,6 @@ export class ScienceJoke {}
   templateUrl: 'portal-demo.html',
   styleUrl: 'portal-demo.css',
   imports: [PortalModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PortalDemo {
   @ViewChildren(CdkPortal) templatePortals!: QueryList<Portal<any>>;

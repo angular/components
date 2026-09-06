@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {ArrayDataSource} from '@angular/cdk/collections';
 import {NestedTreeControl, CdkTreeModule} from '@angular/cdk/tree';
 import {MatIconModule} from '@angular/material/icon';
@@ -21,7 +21,6 @@ interface FoodNode {
   templateUrl: 'cdk-tree-nested-example.html',
   styleUrl: 'cdk-tree-nested-example.css',
   imports: [CdkTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTreeNestedExample {
   treeControl = new NestedTreeControl<FoodNode>(node => node.children);

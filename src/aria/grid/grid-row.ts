@@ -30,8 +30,6 @@ import {GridCell} from './grid-cell';
  * </tr>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Grid](guide/aria/grid)
  */
 @Directive({

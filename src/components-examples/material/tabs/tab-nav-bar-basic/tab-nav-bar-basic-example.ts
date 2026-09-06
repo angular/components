@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, linkedSignal, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTabsModule} from '@angular/material/tabs';
 
@@ -12,10 +12,10 @@ import {MatTabsModule} from '@angular/material/tabs';
   imports: [MatTabsModule, MatButtonModule],
 })
 export class TabNavBarBasicExample {
-  links = ['First', 'Second', 'Third'];
-  activeLink = this.links[0];
+  links = signal(['Link 1', 'Link 2', 'Link 3']);
+  activeLink = linkedSignal(() => this.links()[0]);
 
   addLink() {
-    this.links.push(`Link ${this.links.length + 1}`);
+    this.links.update(current => [...current, `Link ${current.length + 1}`]);
   }
 }

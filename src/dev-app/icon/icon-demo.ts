@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 
@@ -15,7 +15,6 @@ import {DomSanitizer} from '@angular/platform-browser';
   templateUrl: 'icon-demo.html',
   styleUrl: 'icon-demo.css',
   imports: [MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IconDemo {
   constructor() {

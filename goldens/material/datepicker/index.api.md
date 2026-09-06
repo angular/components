@@ -16,6 +16,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -579,7 +580,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, 
     separator: string;
     setDescribedByIds(ids: string[]): void;
     _shouldHidePlaceholders(): boolean;
-    _shouldHideSeparator(): boolean | "" | null;
+    _shouldHideSeparator(): "" | boolean | null;
     get shouldLabelFloat(): boolean;
     // (undocumented)
     _startInput: MatStartDate<D>;

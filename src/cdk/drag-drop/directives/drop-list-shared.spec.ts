@@ -4999,7 +4999,7 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
     <div
       class="drop-list scroll-container"
       cdkDropList
-      cdkDropListOrientation="${listOrientation}"
+      [cdkDropListOrientation]="_listOrientation"
       [cdkDropListData]="items"
       (cdkDropListDropped)="droppedSpy($event)">
       @for (item of items; track item) {
@@ -5021,6 +5021,7 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
   })
   class DraggableInHorizontalDropZone implements AfterViewInit {
     readonly _elementRef = inject(ElementRef);
+    readonly _listOrientation = listOrientation;
 
     @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
     @ViewChild(CdkDropList) dropInstance!: CdkDropList;
@@ -5088,7 +5089,7 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
       }
     `,
     template: `
-      <div class="list" cdkDropList cdkDropListOrientation="${listOrientation}">
+      <div class="list" cdkDropList [cdkDropListOrientation]="_listOrientation">
         @for (item of items; track item) {
           <div class="item" cdkDrag>
             {{item}}
@@ -5103,6 +5104,8 @@ export function getHorizontalFixtures(listOrientation: Exclude<DropListOrientati
     changeDetection: ChangeDetectionStrategy.Eager,
   })
   class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
+    readonly _listOrientation = listOrientation;
+
     @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
     items = ['Zero', 'One', 'Two'];
   }
@@ -5170,7 +5173,7 @@ export class DraggableInDropZone implements AfterViewInit {
   startedSpy = jasmine.createSpy('started spy');
   previewContainer: PreviewContainer = 'global';
   dropDisabled = signal(false);
-  dropLockAxis = signal<DragAxis | undefined>(undefined);
+  dropLockAxis = signal<DragAxis | null>(null);
   scale = 1;
 
   ngAfterViewInit() {
@@ -5184,7 +5187,6 @@ export class DraggableInDropZone implements AfterViewInit {
 @Component({
   selector: 'draggable-in-on-push-zone',
   template: DROP_ZONE_FIXTURE_TEMPLATE,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkDropList, CdkDrag, NgFor],
 })
 class DraggableInOnPushDropZone extends DraggableInDropZone {}
@@ -5327,31 +5329,27 @@ class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
 class DraggableInDropZoneWithCustomPreview {
   @ViewChild(CdkDropList) dropInstance!: CdkDropList;
   @ViewChildren(CdkDrag) dragItems!: QueryList<CdkDrag>;
-  items: {label: string; lockAxis?: DragAxis}[] = [
-    {label: 'Zero'},
-    {label: 'One'},
-    {label: 'Two'},
-    {label: 'Three'},
+  items: {label: string; lockAxis: DragAxis | null}[] = [
+    {label: 'Zero', lockAxis: null},
+    {label: 'One', lockAxis: null},
+    {label: 'Two', lockAxis: null},
+    {label: 'Three', lockAxis: null},
   ];
   boundarySelector!: string;
   renderCustomPreview = true;
   matchPreviewSize = false;
   previewClass: string | string[] = [];
   constrainPosition: ((point: Point) => Point) | undefined;
-  dropLockAxis = signal<DragAxis | undefined>(undefined);
+  dropLockAxis = signal<DragAxis | null>(null);
 }
 
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
       @for (item of items; track item) {
-        <div
-          cdkDrag
-          [cdkDragConstrainPosition]="constrainPosition"
-          [cdkDragBoundary]="boundarySelector"
-          style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
-            {{item}}
-            <ng-template cdkDragPreview>Hello {{item}}</ng-template>
+        <div cdkDrag style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+          {{item}}
+          <ng-template cdkDragPreview>Hello {{item}}</ng-template>
         </div>
       }
     </div>
@@ -5693,7 +5691,6 @@ class NestedDropListGroups {
 class DropListOnNgContainer {}
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkDropList, CdkDrag],
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
@@ -5728,7 +5725,6 @@ class DraggableInDropZoneWithoutEvents {
     </div>
   `,
   imports: [CdkDropList, CdkDrag],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class WrappedDropContainerComponent {
   @Input() items: string[] | undefined;
@@ -5927,10 +5923,7 @@ class NestedDragsComponent {
   imports: [CdkDrag, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-class NestedDragsThroughTemplate {
-  @ViewChild('container') container!: ElementRef;
-  @ViewChild('item') item!: ElementRef;
-}
+class NestedDragsThroughTemplate extends NestedDragsComponent {}
 
 @Component({
   styles: `

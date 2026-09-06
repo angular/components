@@ -19,11 +19,11 @@ import {
 import {ModifierKeys} from '@angular/cdk/testing';
 
 // Test types
-type TestWidget = ToolbarWidgetPattern<string> & {
+type TestWidget = ToolbarWidgetPattern & {
   inputs: {disabled: WritableSignalLike<boolean>};
 };
 
-type TestWidgetGroup = ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string> & {
+type TestWidgetGroup = ToolbarWidgetGroupPattern & {
   disabled: WritableSignalLike<boolean>;
   items: WritableSignalLike<TestWidget[]>;
 };
@@ -31,8 +31,8 @@ type TestWidgetGroup = ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, s
 type TestItem = TestWidget;
 
 type TestInputs = {
-  readonly [K in keyof ToolbarInputs<string>]: WritableSignalLike<
-    ToolbarInputs<string>[K] extends SignalLike<infer T> ? T : never
+  readonly [K in keyof ToolbarInputs]: WritableSignalLike<
+    ToolbarInputs[K] extends SignalLike<infer T> ? T : never
   >;
 };
 
@@ -46,7 +46,7 @@ const right = () => createKeyboardEvent('keydown', 39, 'ArrowRight');
 const left = () => createKeyboardEvent('keydown', 37, 'ArrowLeft');
 const space = () => createKeyboardEvent('keydown', 32, ' ');
 
-function clickItem(item: ToolbarWidgetPattern<string>, mods?: ModifierKeys) {
+function clickItem(item: ToolbarWidgetPattern, mods?: ModifierKeys) {
   return {
     target: item.element(),
     shiftKey: mods?.shift,
@@ -65,7 +65,7 @@ function getToolbarPattern(
   const activeItem = signal<TestItem | undefined>(undefined);
 
   const allItems = computed(() => {
-    const flatItems: ToolbarWidgetPattern<string>[] = [];
+    const flatItems: ToolbarWidgetPattern[] = [];
     for (const item of items()) {
       if (item instanceof ToolbarWidgetGroupPattern) {
         flatItems.push(...item.inputs.items());
@@ -76,11 +76,10 @@ function getToolbarPattern(
     return flatItems;
   });
 
-  const toolbar = new ToolbarPattern<string>({
+  const toolbar = new ToolbarPattern({
     element,
     items,
     activeItem,
-    value: signal([]),
     wrap: signal(inputs.wrap ?? true),
     disabled: signal(inputs.disabled ?? false),
     softDisabled: signal(inputs.softDisabled ?? true),
@@ -93,36 +92,34 @@ function getToolbarPattern(
 }
 
 function getWidgetPattern(
-  value: string,
-  toolbar: ToolbarPattern<string>,
-  group?: ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string>,
+  id: string,
+  toolbar: ToolbarPattern,
+  group?: ToolbarWidgetGroupPattern,
 ): TestWidget {
   const element = signal(document.createElement('button'));
-  const widget = new ToolbarWidgetPattern<string>({
-    id: signal(`widget-${value}`),
+  const widget = new ToolbarWidgetPattern({
+    id: signal(id),
     element,
     disabled: signal(false),
-    value: signal(value),
     group: signal(group),
     toolbar: signal(toolbar),
   });
   return widget as TestWidget;
 }
 
-function getWidgetGroupPattern(id: string, toolbar: ToolbarPattern<string>): TestWidgetGroup {
+function getWidgetGroupPattern(id: string, toolbar: ToolbarPattern): TestWidgetGroup {
   const disabled = signal(false);
   const items = signal<TestWidget[]>([]);
 
-  const group = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<string>, string>({
+  const group = new ToolbarWidgetGroupPattern({
     disabled,
     toolbar: signal(toolbar),
     items,
-    multi: signal(false),
   });
 
-  (group as TestWidgetGroup).disabled = disabled;
-  (group as TestWidgetGroup).items = items;
-  return group as TestWidgetGroup;
+  (group as unknown as TestWidgetGroup).disabled = disabled;
+  (group as unknown as TestWidgetGroup).items = items;
+  return group as unknown as TestWidgetGroup;
 }
 
 function getPatterns(
@@ -159,8 +156,8 @@ function getPatterns(
 }
 
 describe('Toolbar Pattern', () => {
-  function getItem(toolbar: ToolbarPattern<string>, value: string) {
-    return toolbar.inputs.items().find(item => item.value() === value)!;
+  function getItem(toolbar: ToolbarPattern, id: string) {
+    return toolbar.inputs.items().find(item => item.id() === id)!;
   }
 
   describe('Tabindex', () => {
@@ -183,34 +180,34 @@ describe('Toolbar Pattern', () => {
         const {toolbar} = getPatterns();
         const item5 = getItem(toolbar, 'item 5');
         toolbar.onClick(clickItem(item5));
-        expect(toolbar.activeItem()?.value()).toBe('item 5');
+        expect(toolbar.activeItem()?.id()).toBe('item 5');
       });
 
       describe('with ltr text direction', () => {
         it('should navigate next on ArrowRight', () => {
           const {toolbar} = getPatterns();
           toolbar.onKeydown(right()); // Item 0 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate prev on ArrowLeft', () => {
           const {toolbar} = getPatterns();
           toolbar.onKeydown(right()); // Item 0 -> Item 1
           toolbar.onKeydown(left()); // Item 1 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should not navigate next on ArrowDown when not in a widget group (ltr)', () => {
           const {toolbar} = getPatterns();
           toolbar.onKeydown(down()); // Item 0 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should not navigate prev on ArrowUp when not in a widget group (ltr)', () => {
           const {toolbar} = getPatterns();
           toolbar.onKeydown(right()); // Item 0 -> Item 1
           toolbar.onKeydown(up()); // Item 1 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate next in a widget group on ArrowDown (ltr)', () => {
@@ -220,7 +217,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(right()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 3');
+          expect(toolbar.activeItem()?.id()).toBe('item 3');
         });
 
         it('should navigate prev in a widget group on ArrowUp (ltr)', () => {
@@ -231,7 +228,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
           toolbar.onKeydown(up()); // Item 3 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         it('should navigate last to first in a widget group on ArrowDown (ltr)', () => {
@@ -243,7 +240,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 3 -> Item 4 (Group 0)
           toolbar.onKeydown(down()); // Item 4 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         it('should navigate first to last in a widget group on ArrowUp (ltr)', () => {
@@ -253,7 +250,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(right()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(up()); // Item 2 -> Item 4 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 4');
+          expect(toolbar.activeItem()?.id()).toBe('item 4');
         });
 
         describe('with wrap false', () => {
@@ -261,13 +258,13 @@ describe('Toolbar Pattern', () => {
             const {toolbar} = getPatterns({wrap: false});
             toolbar.onKeydown(end());
             toolbar.onKeydown(right());
-            expect(toolbar.activeItem()?.value()).toBe('item 8');
+            expect(toolbar.activeItem()?.id()).toBe('item 8');
           });
 
           it('should not wrap from first to last (horizontal, ltr)', () => {
             const {toolbar} = getPatterns({wrap: false});
             toolbar.onKeydown(left());
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
         });
 
@@ -277,7 +274,7 @@ describe('Toolbar Pattern', () => {
             items[1].inputs.disabled.set(true);
 
             toolbar.onKeydown(right()); // Item 0 -> Item 1 (disabled)
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should not skip disabled items when navigating prev (horizontal, ltr)', () => {
@@ -288,7 +285,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(right()); // Item 1 -> Item 2
             toolbar.onKeydown(left()); // Item 2 -> Item 1 (disabled)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should not skip disabled groups when navigating next', () => {
@@ -297,14 +294,14 @@ describe('Toolbar Pattern', () => {
 
             toolbar.onKeydown(right()); // Item 0 -> Item 1
             toolbar.onKeydown(right()); // Item 1 -> Item 2
-            expect(toolbar.activeItem()?.value()).toBe('item 2');
+            expect(toolbar.activeItem()?.id()).toBe('item 2');
           });
 
           it('should not skip disabled groups when navigating prev', () => {
             const {toolbar, group0} = getPatterns({softDisabled: true});
             group0.disabled.set(true);
             toolbar.onKeydown(left()); // Item 0 -> Item 8
-            expect(toolbar.activeItem()?.value()).toBe('item 8');
+            expect(toolbar.activeItem()?.id()).toBe('item 8');
           });
 
           it('should navigate to the last item on End (horizontal, ltr)', () => {
@@ -312,7 +309,7 @@ describe('Toolbar Pattern', () => {
             items[items.length - 1].inputs.disabled.set(true);
 
             toolbar.onKeydown(end());
-            expect(toolbar.activeItem()?.value()).toBe('item 8');
+            expect(toolbar.activeItem()?.id()).toBe('item 8');
           });
 
           it('should navigate to the first item on Home (horizontal, ltr)', () => {
@@ -322,7 +319,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(end()); // Item 0 -> Item 8
             toolbar.onKeydown(home()); // Item 8 -> Item 0
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           describe('with wrap true', () => {
@@ -333,7 +330,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(right());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
 
             it('should wrap from first to last (horizontal, ltr)', () => {
@@ -341,7 +338,7 @@ describe('Toolbar Pattern', () => {
               items[items.length - 1].inputs.disabled.set(true);
 
               toolbar.onKeydown(left());
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
           });
         });
@@ -352,7 +349,7 @@ describe('Toolbar Pattern', () => {
             items[1].inputs.disabled.set(true);
 
             toolbar.onClick(clickItem(items[1]));
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           it('should skip disabled items when navigating next (horizontal, ltr)', () => {
@@ -360,7 +357,7 @@ describe('Toolbar Pattern', () => {
             items[1].inputs.disabled.set(true);
 
             toolbar.onKeydown(right()); // Item 0 -> Item 2 (skips Item 1)
-            expect(toolbar.activeItem()?.value()).toBe('item 2');
+            expect(toolbar.activeItem()?.id()).toBe('item 2');
           });
 
           it('should skip disabled items when navigating prev (horizontal, ltr)', () => {
@@ -370,7 +367,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(right()); // Item 0 -> Item 2
             toolbar.onKeydown(left()); // Item 2 -> Item 0 (skips Item 1)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           it('should not navigate to items in disabled groups on click', () => {
@@ -378,7 +375,7 @@ describe('Toolbar Pattern', () => {
             group0.disabled.set(true);
             const item2 = getItem(toolbar, 'item 2');
             toolbar.onClick(clickItem(item2));
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           it('should skip disabled groups when navigating next', () => {
@@ -388,7 +385,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(right()); // Item 0 -> Item 1
             toolbar.onKeydown(right()); // Item 1 -> Item 5 (skips Group 0)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 5');
+            expect(toolbar.activeItem()?.id()).toBe('item 5');
           });
 
           it('should skip disabled groups when navigating prev', () => {
@@ -399,7 +396,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(left()); // Item 0 -> Item 5 (skips Group 1)
             toolbar.onKeydown(left()); // Item 5 -> Item 1 (skips Group 0)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should navigate to the last focusable item on End (horizontal, ltr)', () => {
@@ -407,7 +404,7 @@ describe('Toolbar Pattern', () => {
             items[items.length - 1].inputs.disabled.set(true);
 
             toolbar.onKeydown(end());
-            expect(toolbar.activeItem()?.value()).toBe('item 7');
+            expect(toolbar.activeItem()?.id()).toBe('item 7');
           });
 
           it('should navigate to the first focusable item on Home (horizontal, ltr)', () => {
@@ -417,7 +414,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(end());
             toolbar.onKeydown(home());
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           describe('with wrap true', () => {
@@ -428,7 +425,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(right());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 1');
+              expect(toolbar.activeItem()?.id()).toBe('item 1');
             });
 
             it('should wrap from first to last focusable item (horizontal, ltr)', () => {
@@ -438,7 +435,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(left());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 7');
+              expect(toolbar.activeItem()?.id()).toBe('item 7');
             });
           });
 
@@ -449,7 +446,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(right());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 7');
+              expect(toolbar.activeItem()?.id()).toBe('item 7');
             });
 
             it('should not wrap from first to last focusable item (horizontal, ltr)', () => {
@@ -460,7 +457,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(left());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 1');
+              expect(toolbar.activeItem()?.id()).toBe('item 1');
             });
           });
         });
@@ -471,33 +468,33 @@ describe('Toolbar Pattern', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           const item5 = getItem(toolbar, 'item 5');
           toolbar.onClick(clickItem(item5));
-          expect(toolbar.activeItem()?.value()).toBe('item 5');
+          expect(toolbar.activeItem()?.id()).toBe('item 5');
         });
 
         it('should navigate next on ArrowLeft (rtl)', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(left()); // Item 0 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate prev on ArrowRight (rtl)', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(left()); // Item 0 -> Item 1
           toolbar.onKeydown(right()); // Item 1 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should not navigate next on ArrowDown when not in a widget group (rtl)', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(up()); // Item 0 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should not navigate prev on ArrowUp when not in a widget group (rtl)', () => {
           const {toolbar} = getPatterns({textDirection: 'rtl'});
           toolbar.onKeydown(left()); // Item 0 -> Item 1
           toolbar.onKeydown(down()); // Item 1 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate next in a widget group on ArrowDown (rtl)', () => {
@@ -507,7 +504,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(left()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 3');
+          expect(toolbar.activeItem()?.id()).toBe('item 3');
         });
 
         it('should navigate prev in a widget group on ArrowUp (rtl)', () => {
@@ -518,7 +515,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 2 -> Item 3 (Group 0)
           toolbar.onKeydown(up()); // Item 3 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         it('should navigate first to last in a widget group on ArrowUp (rtl)', () => {
@@ -528,7 +525,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(left()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(up()); // Item 2 -> Item 4 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 4');
+          expect(toolbar.activeItem()?.id()).toBe('item 4');
         });
 
         it('should navigate last to first in a widget group on ArrowDown (rtl)', () => {
@@ -540,7 +537,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 3 -> Item 4 (Group 0)
           toolbar.onKeydown(down()); // Item 4 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         describe('with softDisabled true', () => {
@@ -549,7 +546,7 @@ describe('Toolbar Pattern', () => {
             items[1].inputs.disabled.set(true);
 
             toolbar.onKeydown(left()); // Item 0 -> Item 1 (disabled)
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should not skip disabled items when navigating prev (horizontal, rtl)', () => {
@@ -560,7 +557,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(left()); // Item 1 -> Item 2
             toolbar.onKeydown(right()); // Item 2 -> Item 1 (disabled)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should navigate to the last item on End (horizontal, rtl)', () => {
@@ -568,7 +565,7 @@ describe('Toolbar Pattern', () => {
             items[items.length - 1].inputs.disabled.set(true);
 
             toolbar.onKeydown(end());
-            expect(toolbar.activeItem()?.value()).toBe('item 8');
+            expect(toolbar.activeItem()?.id()).toBe('item 8');
           });
 
           it('should navigate to the first item on Home (horizontal, rtl)', () => {
@@ -578,7 +575,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(left()); // Item 0 -> Item 1
             toolbar.onKeydown(home()); // Item 1 -> Item 0
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           describe('with wrap true', () => {
@@ -593,7 +590,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(left());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
 
             it('should wrap from first to last (horizontal, rtl)', () => {
@@ -605,7 +602,7 @@ describe('Toolbar Pattern', () => {
               items[items.length - 1].inputs.disabled.set(true);
 
               toolbar.onKeydown(right());
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
           });
 
@@ -619,7 +616,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(left());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
 
             it('should not wrap from first to last (horizontal, rtl)', () => {
@@ -631,7 +628,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(right());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
           });
         });
@@ -642,7 +639,7 @@ describe('Toolbar Pattern', () => {
             items[1].inputs.disabled.set(true);
 
             toolbar.onKeydown(left()); // Item 0 -> Item 2 (skips Item 1)
-            expect(toolbar.activeItem()?.value()).toBe('item 2');
+            expect(toolbar.activeItem()?.id()).toBe('item 2');
           });
 
           it('should skip disabled items when navigating prev (horizontal, rtl)', () => {
@@ -652,7 +649,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(left()); // Item 0 -> Item 2
             toolbar.onKeydown(right()); // Item 2 -> Item 0 (skips Item 1)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           it('should navigate to the last focusable item on End (horizontal, rtl)', () => {
@@ -660,7 +657,7 @@ describe('Toolbar Pattern', () => {
             items[items.length - 1].inputs.disabled.set(true);
 
             toolbar.onKeydown(end());
-            expect(toolbar.activeItem()?.value()).toBe('item 7');
+            expect(toolbar.activeItem()?.id()).toBe('item 7');
           });
 
           it('should navigate to the first focusable item on Home (horizontal, rtl)', () => {
@@ -670,7 +667,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(end());
             toolbar.onKeydown(home());
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           describe('with wrap true', () => {
@@ -685,7 +682,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(left());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 1');
+              expect(toolbar.activeItem()?.id()).toBe('item 1');
             });
 
             it('should wrap from first to last focusable item (horizontal, rtl)', () => {
@@ -699,7 +696,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(right());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 7');
+              expect(toolbar.activeItem()?.id()).toBe('item 7');
             });
           });
 
@@ -712,7 +709,7 @@ describe('Toolbar Pattern', () => {
               });
               toolbar.onKeydown(end());
               toolbar.onKeydown(left());
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
 
             it('should not wrap from first to last focusable item (horizontal, rtl)', () => {
@@ -726,7 +723,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(right());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
           });
         });
@@ -738,27 +735,27 @@ describe('Toolbar Pattern', () => {
         it('should navigate next on ArrowDown (vertical, ltr)', () => {
           const {toolbar} = getPatterns({orientation: 'vertical'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate prev on ArrowUp (vertical, ltr)', () => {
           const {toolbar} = getPatterns({orientation: 'vertical'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           toolbar.onKeydown(up()); // Item 1 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should not navigate next on ArrowRight when not in a widget group', () => {
           const {toolbar} = getPatterns({orientation: 'vertical'});
           toolbar.onKeydown(right()); // Item 0 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should not navigate prev on ArrowLeft when not in a widget group', () => {
           const {toolbar} = getPatterns({orientation: 'vertical'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           toolbar.onKeydown(left()); // Item 1 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate next in a widget group on ArrowRight', () => {
@@ -768,7 +765,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(right()); // Item 2 -> Item 3 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 3');
+          expect(toolbar.activeItem()?.id()).toBe('item 3');
         });
 
         it('should navigate prev in a widget group on ArrowLeft', () => {
@@ -779,7 +776,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(right()); // Item 2 -> Item 3 (Group 0)
           toolbar.onKeydown(left()); // Item 3 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         it('should navigate last to first in a widget group on ArrowRight', () => {
@@ -791,7 +788,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(right()); // Item 3 -> Item 4 (Group 0)
           toolbar.onKeydown(right()); // Item 4 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         it('should navigate first to last in a widget group on ArrowLeft', () => {
@@ -801,7 +798,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(left()); // Item 2 -> Item 4 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 4');
+          expect(toolbar.activeItem()?.id()).toBe('item 4');
         });
 
         describe('with softDisabled true', () => {
@@ -811,7 +808,7 @@ describe('Toolbar Pattern', () => {
 
             toolbar.onKeydown(down()); // Item 0 -> Item 1 (disabled)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should not skip disabled items when navigating prev (vertical, ltr)', () => {
@@ -822,7 +819,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(down()); // Item 1 -> Item 2
             toolbar.onKeydown(up()); // Item 2 -> Item 1 (disabled)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should navigate to the last item on End (vertical, ltr)', () => {
@@ -830,7 +827,7 @@ describe('Toolbar Pattern', () => {
             items[items.length - 1].inputs.disabled.set(true);
 
             toolbar.onKeydown(end());
-            expect(toolbar.activeItem()?.value()).toBe('item 8');
+            expect(toolbar.activeItem()?.id()).toBe('item 8');
           });
 
           it('should navigate to the first item on Home (vertical, ltr)', () => {
@@ -840,7 +837,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(down()); // Item 0 -> Item 1
             toolbar.onKeydown(home()); // Item 1 -> Item 0
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           describe('with wrap true', () => {
@@ -855,7 +852,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
 
             it('should wrap from first to last (vertical, ltr)', () => {
@@ -869,7 +866,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
           });
 
@@ -883,7 +880,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
 
             it('should not wrap from first to last (vertical, ltr)', () => {
@@ -895,7 +892,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
           });
         });
@@ -917,7 +914,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(down()); // Item 0 -> Item 2
             toolbar.onKeydown(up()); // Item 2 -> Item 0 (skips Item 1)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           it('should navigate to the last focusable item on End (vertical, ltr)', () => {
@@ -925,7 +922,7 @@ describe('Toolbar Pattern', () => {
             items[items.length - 1].inputs.disabled.set(true);
 
             toolbar.onKeydown(end());
-            expect(toolbar.activeItem()?.value()).toBe('item 7');
+            expect(toolbar.activeItem()?.id()).toBe('item 7');
           });
 
           it('should navigate to the first focusable item on Home (vertical, ltr)', () => {
@@ -935,7 +932,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(end());
             toolbar.onKeydown(home());
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           describe('with wrap true', () => {
@@ -950,7 +947,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 1');
+              expect(toolbar.activeItem()?.id()).toBe('item 1');
             });
 
             it('should wrap from first to last focusable item (vertical, ltr)', () => {
@@ -964,7 +961,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 7');
+              expect(toolbar.activeItem()?.id()).toBe('item 7');
             });
           });
 
@@ -978,7 +975,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
 
             it('should not wrap from first to last focusable item (vertical, ltr)', () => {
@@ -992,7 +989,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
           });
         });
@@ -1002,14 +999,14 @@ describe('Toolbar Pattern', () => {
         it('should navigate next on ArrowDown (vertical, rtl)', () => {
           const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
-          expect(toolbar.activeItem()?.value()).toBe('item 1');
+          expect(toolbar.activeItem()?.id()).toBe('item 1');
         });
 
         it('should navigate prev on ArrowUp (vertical, rtl)', () => {
           const {toolbar} = getPatterns({orientation: 'vertical', textDirection: 'rtl'});
           toolbar.onKeydown(down()); // Item 0 -> Item 1
           toolbar.onKeydown(up()); // Item 1 -> Item 0
-          expect(toolbar.activeItem()?.value()).toBe('item 0');
+          expect(toolbar.activeItem()?.id()).toBe('item 0');
         });
 
         it('should navigate last to first in a widget group on ArrowLeft (vertical, rtl)', () => {
@@ -1021,7 +1018,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(left()); // Item 3 -> Item 4 (Group 0)
           toolbar.onKeydown(left()); // Item 4 -> Item 2 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 2');
+          expect(toolbar.activeItem()?.id()).toBe('item 2');
         });
 
         it('should navigate first to last in a widget group on ArrowRight (vertical, rtl)', () => {
@@ -1031,7 +1028,7 @@ describe('Toolbar Pattern', () => {
           toolbar.onKeydown(down()); // Item 1 -> Item 2 (Group 0)
           toolbar.onKeydown(right()); // Item 2 -> Item 4 (Group 0)
 
-          expect(toolbar.activeItem()?.value()).toBe('item 4');
+          expect(toolbar.activeItem()?.id()).toBe('item 4');
         });
 
         describe('with softDisabled true', () => {
@@ -1044,7 +1041,7 @@ describe('Toolbar Pattern', () => {
             items[1].inputs.disabled.set(true);
 
             toolbar.onKeydown(down()); // Item 0 -> Item 1 (disabled)
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should not skip disabled items when navigating prev (vertical, rtl)', () => {
@@ -1059,7 +1056,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(down()); // Item 1 -> Item 2
             toolbar.onKeydown(up()); // Item 2 -> Item 1 (disabled)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           it('should navigate to the last item on End (vertical, rtl)', () => {
@@ -1072,7 +1069,7 @@ describe('Toolbar Pattern', () => {
 
             toolbar.onKeydown(end());
 
-            expect(toolbar.activeItem()?.value()).toBe('item 8');
+            expect(toolbar.activeItem()?.id()).toBe('item 8');
           });
 
           it('should navigate to the first item on Home (vertical, rtl)', () => {
@@ -1086,7 +1083,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(down()); // Item 0 -> Item 1
             toolbar.onKeydown(home());
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           describe('with wrap true', () => {
@@ -1102,7 +1099,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
 
             it('should wrap from first to last (vertical, rtl)', () => {
@@ -1117,7 +1114,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
           });
 
@@ -1132,7 +1129,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
 
             it('should not wrap from first to last (vertical, rtl)', () => {
@@ -1145,7 +1142,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
           });
         });
@@ -1175,7 +1172,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(down()); // Item 0 -> Item 2
             toolbar.onKeydown(up()); // Item 2 -> Item 0 (skips Item 1)
 
-            expect(toolbar.activeItem()?.value()).toBe('item 0');
+            expect(toolbar.activeItem()?.id()).toBe('item 0');
           });
 
           it('should navigate to the last focusable item on End (vertical, rtl)', () => {
@@ -1201,7 +1198,7 @@ describe('Toolbar Pattern', () => {
             toolbar.onKeydown(end());
             toolbar.onKeydown(home());
 
-            expect(toolbar.activeItem()?.value()).toBe('item 1');
+            expect(toolbar.activeItem()?.id()).toBe('item 1');
           });
 
           describe('with wrap true', () => {
@@ -1217,7 +1214,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 1');
+              expect(toolbar.activeItem()?.id()).toBe('item 1');
             });
 
             it('should wrap from first to last focusable item (vertical, rtl)', () => {
@@ -1247,7 +1244,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(end());
               toolbar.onKeydown(down());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 8');
+              expect(toolbar.activeItem()?.id()).toBe('item 8');
             });
 
             it('should not wrap from first to last focusable item (vertical, rtl)', () => {
@@ -1262,7 +1259,7 @@ describe('Toolbar Pattern', () => {
               toolbar.onKeydown(home());
               toolbar.onKeydown(up());
 
-              expect(toolbar.activeItem()?.value()).toBe('item 0');
+              expect(toolbar.activeItem()?.id()).toBe('item 0');
             });
           });
         });
@@ -1295,95 +1292,43 @@ describe('Toolbar Pattern', () => {
     });
   });
 
-  describe('Selection', () => {
-    it('should toggle the active item on Enter (selection)', () => {
-      const {toolbar} = getPatterns();
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
-      toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
-      toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
-    });
-
-    it('should toggle the active item on Space (selection)', () => {
-      const {toolbar} = getPatterns();
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
-      toolbar.onKeydown(space());
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
-      toolbar.onKeydown(space());
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
-    });
-
-    it('should toggle the active item on click (selection)', () => {
+  describe('Interactions', () => {
+    it('should set active item on click', () => {
       const {toolbar, items} = getPatterns();
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
-      toolbar.onClick(clickItem(items[0]));
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
-      toolbar.onClick(clickItem(items[0]));
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
+      expect(toolbar.activeItem()?.id()).toBe('item 0');
+      toolbar.onClick(clickItem(items[1]));
+      expect(toolbar.activeItem()?.id()).toBe('item 1');
     });
 
-    it('should be able to select multiple items in the toolbar (selection)', () => {
+    it('should not update active item on click if toolbar is disabled', () => {
+      const {toolbar, items} = getPatterns({disabled: true});
+      toolbar.onClick(clickItem(items[1]));
+      expect(toolbar.activeItem()?.id()).toBe('item 0');
+    });
+
+    it('should not intercept Enter or Space for toolbar-level selection', () => {
       const {toolbar} = getPatterns();
-      expect(getItem(toolbar, 'item 0').selected()).toBeFalse();
-      expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
-
-      // Select first item
+      expect(toolbar.activeItem()?.id()).toBe('item 0');
       toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
-      expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
-
-      // Navigate to and select second item
-      toolbar.onKeydown(right());
+      expect(toolbar.activeItem()?.id()).toBe('item 0');
       toolbar.onKeydown(space());
-      expect(getItem(toolbar, 'item 0').selected()).toBeTrue();
-      expect(getItem(toolbar, 'item 1').selected()).toBeTrue();
+      expect(toolbar.activeItem()?.id()).toBe('item 0');
     });
 
-    it('should not be able to select multiple items in a group (selection)', () => {
-      const {toolbar} = getPatterns();
-      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
-      expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
-
-      // Navigate to and select first item in group
-      toolbar.onKeydown(right());
-      toolbar.onKeydown(right());
-      toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 2').selected()).toBeTrue();
-      expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
-
-      // Navigate to and select second item in group
-      toolbar.onKeydown(right());
-      toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
-      expect(getItem(toolbar, 'item 3').selected()).toBeTrue();
-    });
-
-    it('should not select disabled items (selection)', () => {
-      const {toolbar, items} = getPatterns();
+    it('should allow clicking disabled items if softDisabled', () => {
+      const {toolbar, items} = getPatterns({softDisabled: true});
       items[1].inputs.disabled.set(true);
 
-      // Navigate to disabled item
-      toolbar.onKeydown(right());
-      expect(toolbar.activeItem()?.value()).toBe('item 1');
-
-      // Try to select disabled item
-      toolbar.onKeydown(enter());
-      expect(getItem(toolbar, 'item 1').selected()).toBeFalse();
+      toolbar.onClick(clickItem(items[1]));
+      expect(toolbar.activeItem()?.id()).toBe('item 1');
     });
 
-    it('should not select items in a disabled group (selection)', () => {
-      const {toolbar, items, group0} = getPatterns();
-      group0.disabled.set(true);
+    it('should not activate disabled items on click if hardDisabled', () => {
+      const {toolbar, items} = getPatterns({softDisabled: false});
+      items[1].inputs.disabled.set(true);
 
-      toolbar.onClick(clickItem(items[2]));
-      expect(toolbar.activeItem()?.value()).toBe('item 2');
-      expect(getItem(toolbar, 'item 2').selected()).toBeFalse();
-
-      toolbar.onKeydown(right());
-      toolbar.onKeydown(enter());
-      expect(toolbar.activeItem()?.value()).toBe('item 3');
-      expect(getItem(toolbar, 'item 3').selected()).toBeFalse();
+      toolbar.onClick(clickItem(items[1]));
+      expect(toolbar.activeItem()?.id()).toBe('item 0');
     });
   }); // Close preceding section
 
@@ -1392,7 +1337,7 @@ describe('Toolbar Pattern', () => {
       const {toolbar, items} = getPatterns();
       toolbar.inputs.activeItem.set(items[1]); // Set to item 1
       toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 0'); // Should reset to item 0
+      expect(toolbar.activeItem()?.id()).toBe('item 0'); // Should reset to item 0
     });
 
     it('should NOT set default state if keyboard interacted', () => {
@@ -1401,7 +1346,7 @@ describe('Toolbar Pattern', () => {
       toolbar.onKeydown(right()); // Interaction (ArrowRight moves to item 1)
 
       toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1 (interacted)
+      expect(toolbar.activeItem()?.id()).toBe('item 1'); // Should stay on item 1 (interacted)
     });
 
     it('should NOT set default state if pointer interacted', () => {
@@ -1410,7 +1355,7 @@ describe('Toolbar Pattern', () => {
       toolbar.onPointerdown(clickItem(items[1])); // Interaction
 
       toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
+      expect(toolbar.activeItem()?.id()).toBe('item 1'); // Should stay on item 1
     });
 
     it('should NOT set default state if focus-in occurred', () => {
@@ -1419,7 +1364,7 @@ describe('Toolbar Pattern', () => {
       toolbar.onFocusIn(); // Interaction
 
       toolbar.setDefaultStateEffect();
-      expect(toolbar.activeItem()?.value()).toBe('item 1'); // Should stay on item 1
+      expect(toolbar.activeItem()?.id()).toBe('item 1'); // Should stay on item 1
     });
   });
 });

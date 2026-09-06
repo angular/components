@@ -45,12 +45,12 @@
     </div>
     <mat-slider
         class="example-margin"
-        [disabled]="disabled"
-        [max]="max"
-        [min]="min"
-        [step]="step"
-        [discrete]="thumbLabel"
-        [showTickMarks]="showTicks">
+        [disabled]="disabled()"
+        [max]="max()"
+        [min]="min()"
+        [step]="step()"
+        [discrete]="thumbLabel()"
+        [showTickMarks]="showTicks()">
       <input matSliderThumb [(ngModel)]="value" #slider>
     </mat-slider>
   </mat-card-content>

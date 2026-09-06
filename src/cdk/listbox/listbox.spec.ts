@@ -1,6 +1,6 @@
 import {A, B, DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '../keycodes';
 import {Component, Type, signal, ChangeDetectionStrategy} from '@angular/core';
-import {TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '../testing/private';
@@ -21,6 +21,10 @@ function setupComponent<T, O = string>(component: Type<T>) {
     options: optionDebugEls.map(el => el.injector.get<CdkOption<O>>(CdkOption)),
     optionEls: optionDebugEls.map(el => el.nativeElement as HTMLElement),
   };
+}
+
+function wait(milliseconds: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
 
 describe('CdkOption and CdkListbox', () => {
@@ -449,20 +453,18 @@ describe('CdkOption and CdkListbox', () => {
       expect(fixture.componentInstance.changedOption).toBe(null);
     });
 
-    it('should not handle type ahead on a disabled listbox', async (...args: unknown[]) => {
+    it('should not handle type ahead on a disabled listbox', async () => {
       const {fixture, testComponent, listboxEl, options} = setupComponent(ListboxWithOptions);
-      await fakeAsync(() => {
-        testComponent.isListboxDisabled.set(true);
-        fixture.detectChanges();
+      testComponent.isListboxDisabled.set(true);
+      fixture.detectChanges();
 
-        dispatchKeyboardEvent(listboxEl, 'keydown', B);
-        fixture.detectChanges();
-        tick(200);
+      dispatchKeyboardEvent(listboxEl, 'keydown', B);
+      fixture.detectChanges();
+      await wait(200);
 
-        for (let option of options) {
-          expect(option.isActive()).toBeFalse();
-        }
-      })(args);
+      for (let option of options) {
+        expect(option.isActive()).toBeFalse();
+      }
     });
 
     it('should skip disabled options when navigating with arrow keys', () => {
@@ -561,32 +563,28 @@ describe('CdkOption and CdkListbox', () => {
       expect(optionEls[0].classList).toContain('cdk-option-active');
     });
 
-    it('should change active item using type ahead', async (...args: unknown[]) => {
+    it('should change active item using type ahead', async () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithOptions);
-      await fakeAsync(() => {
-        listbox.focus();
-        fixture.detectChanges();
+      listbox.focus();
+      fixture.detectChanges();
 
-        dispatchKeyboardEvent(listboxEl, 'keydown', B);
-        fixture.detectChanges();
-        tick(200);
+      dispatchKeyboardEvent(listboxEl, 'keydown', B);
+      fixture.detectChanges();
+      await wait(200);
 
-        expect(options[2].isActive()).toBeTrue();
-      })(args);
+      expect(options[2].isActive()).toBeTrue();
     });
 
-    it('should allow custom type ahead label', async (...args: unknown[]) => {
+    it('should allow custom type ahead label', async () => {
       const {fixture, listbox, listboxEl, options} = setupComponent(ListboxWithCustomTypeahead);
-      await fakeAsync(() => {
-        listbox.focus();
-        fixture.detectChanges();
+      listbox.focus();
+      fixture.detectChanges();
 
-        dispatchKeyboardEvent(listboxEl, 'keydown', B);
-        fixture.detectChanges();
-        tick(200);
+      dispatchKeyboardEvent(listboxEl, 'keydown', B);
+      fixture.detectChanges();
+      await wait(200);
 
-        expect(options[2].isActive()).toBeTrue();
-      })(args);
+      expect(options[2].isActive()).toBeTrue();
     });
 
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {

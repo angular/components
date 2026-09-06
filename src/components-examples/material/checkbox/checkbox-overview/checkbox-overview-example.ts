@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, signal} from '@angular/core';
+import {Component, computed, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 
@@ -16,7 +16,6 @@ export interface Task {
   templateUrl: 'checkbox-overview-example.html',
   styleUrl: 'checkbox-overview-example.css',
   imports: [MatCheckboxModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxOverviewExample {
   readonly task = signal<Task>({

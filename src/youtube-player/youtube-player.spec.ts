@@ -15,7 +15,6 @@ import {
   YouTubePlayer,
 } from './youtube-player';
 import {PlaceholderImageQuality} from './youtube-player-placeholder';
-import type * as YT from 'youtube';
 
 declare var window: Window;
 

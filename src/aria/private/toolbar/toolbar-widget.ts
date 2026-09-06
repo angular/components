@@ -7,23 +7,30 @@
  */
 
 import {SignalLike, computed} from '../behaviors/signal-like/signal-like';
-import {ListItem} from '../behaviors/list/list';
+import {ListFocusItem} from '../behaviors/list-focus/list-focus';
+import {ListNavigationItem} from '../behaviors/list-navigation/list-navigation';
 import type {ToolbarPattern} from './toolbar';
 import {ToolbarWidgetGroupPattern} from './toolbar-widget-group';
 
 /** Represents the required inputs for a toolbar widget in a toolbar. */
-export interface ToolbarWidgetInputs<V> extends Omit<
-  ListItem<V>,
-  'searchTerm' | 'index' | 'selectable'
-> {
+export interface ToolbarWidgetInputs {
+  /** A unique identifier for the widget. */
+  id: SignalLike<string>;
+
+  /** The html element that should receive focus. */
+  element: SignalLike<HTMLElement | undefined>;
+
+  /** Whether the widget is disabled. */
+  disabled: SignalLike<boolean>;
+
   /** A reference to the parent toolbar. */
-  toolbar: SignalLike<ToolbarPattern<V>>;
+  toolbar: SignalLike<ToolbarPattern>;
 
   /** A reference to the parent widget group. */
-  group: SignalLike<ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V> | undefined>;
+  group: SignalLike<ToolbarWidgetGroupPattern | undefined>;
 }
 
-export class ToolbarWidgetPattern<V> implements ListItem<V> {
+export class ToolbarWidgetPattern implements ListFocusItem, ListNavigationItem {
   /** A unique identifier for the widget. */
   readonly id = () => this.inputs.id();
 
@@ -40,27 +47,13 @@ export class ToolbarWidgetPattern<V> implements ListItem<V> {
   readonly toolbar = () => this.inputs.toolbar();
 
   /** The tabindex of the widget. */
-  readonly tabIndex = computed(() => this.toolbar().listBehavior.getItemTabindex(this));
-
-  /** The text used by the typeahead search. */
-  readonly searchTerm = () => ''; // Unused because toolbar does not support typeahead.
-
-  /** The value associated with the widget. */
-  readonly value = () => this.inputs.value();
-
-  /** Whether the widget is selectable. */
-  readonly selectable = () => true; // Unused because toolbar does not support selection.
+  readonly tabIndex = computed(() => this.toolbar().focusManager.getItemTabIndex(this));
 
   /** The position of the widget within the toolbar. */
   readonly index = computed(() => this.toolbar().inputs.items().indexOf(this) ?? -1);
 
-  /** Whether the widget is selected (only relevant in a selection group). */
-  readonly selected = computed(() =>
-    this.toolbar().listBehavior.inputs.value().includes(this.value()),
-  );
-
   /** Whether the widget is currently the active one (focused). */
   readonly active: SignalLike<boolean> = computed(() => this.toolbar().activeItem() === this);
 
-  constructor(readonly inputs: ToolbarWidgetInputs<V>) {}
+  constructor(readonly inputs: ToolbarWidgetInputs) {}
 }

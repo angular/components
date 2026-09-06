@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {provideLuxonDateAdapter} from '@angular/material-luxon-adapter';
 import {MatDatepicker, MatDatepickerModule} from '@angular/material/datepicker';
@@ -39,7 +39,6 @@ export const MY_FORMATS = {
     FormsModule,
     ReactiveFormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerViewsSelectionExample {
   readonly date = new FormControl<DateTime>(DateTime.now());

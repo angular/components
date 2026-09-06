@@ -72,7 +72,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     arrowPosition: SortHeaderArrowPosition;
     disableClear: boolean;
     disabled: boolean;
-    _getAriaSortAttribute(): "none" | "ascending" | "descending";
+    _getAriaSortAttribute(): "ascending" | "descending" | "none";
     // (undocumented)
     _handleKeydown(event: KeyboardEvent): void;
     id: string;

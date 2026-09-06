@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Signal, signal} from '@angular/core';
+import {Component, Signal, signal} from '@angular/core';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatTimepickerModule} from '@angular/material/timepicker';
 
@@ -10,7 +10,6 @@ import {MatTimepickerModule} from '@angular/material/timepicker';
   templateUrl: 'timepicker-harness-example.html',
   providers: [provideNativeDateAdapter()],
   imports: [MatTimepickerModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TimepickerHarnessExample {
   date: Signal<Date | null>;

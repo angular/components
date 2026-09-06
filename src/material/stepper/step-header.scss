@@ -29,12 +29,20 @@ $fallbacks: m3-stepper.get-tokens();
   &:hover[aria-disabled='false'] {
     background-color: token-utils.slot(stepper-header-hover-state-layer-color, $fallbacks);
     border-radius: token-utils.slot(stepper-header-hover-state-layer-shape, $fallbacks);
+
+    .mat-step-header-ripple::before {
+      border-radius: token-utils.slot(stepper-header-hover-state-layer-shape, $fallbacks);
+    }
   }
 
   &.cdk-keyboard-focused,
   &.cdk-program-focused {
     background-color: token-utils.slot(stepper-header-focus-state-layer-color, $fallbacks);
     border-radius: token-utils.slot(stepper-header-focus-state-layer-shape, $fallbacks);
+
+    .mat-step-header-ripple::before {
+      border-radius: token-utils.slot(stepper-header-focus-state-layer-shape, $fallbacks);
+    }
   }
 
   // On touch devices the :hover state will linger on the element after a tap.

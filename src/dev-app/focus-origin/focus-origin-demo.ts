@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
 
 @Component({
@@ -14,7 +14,6 @@ import {A11yModule, FocusMonitor} from '@angular/cdk/a11y';
   templateUrl: 'focus-origin-demo.html',
   styleUrl: 'focus-origin-demo.css',
   imports: [A11yModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FocusOriginDemo {
   fom = inject(FocusMonitor);

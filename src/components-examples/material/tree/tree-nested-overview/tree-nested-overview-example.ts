@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -20,7 +20,6 @@ interface FoodNode {
   templateUrl: 'tree-nested-overview-example.html',
   styleUrl: 'tree-nested-overview-example.css',
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeNestedOverviewExample {
   childrenAccessor = (node: FoodNode) => node.children ?? [];

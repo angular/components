@@ -8,7 +8,6 @@
 
 import {
   AfterContentInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -53,7 +52,6 @@ export class MatDatepickerToggleIcon {}
   },
   exportAs: 'matDatepickerToggle',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatIconButton],
 })
 export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {

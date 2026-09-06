@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
@@ -17,7 +17,6 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: 'badge-demo.html',
   styleUrl: 'badge-demo.css',
   imports: [FormsModule, MatBadgeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BadgeDemo {
   visible = true;

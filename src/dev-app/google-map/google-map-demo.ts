@@ -8,13 +8,7 @@
 
 /// <reference types="google.maps" />
 
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import {ChangeDetectorRef, Component, ViewChild, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   GoogleMap,
@@ -83,7 +77,6 @@ let apiLoadingPromise: Promise<unknown> | null = null;
     MapTransitLayer,
     FormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GoogleMapDemo {
   private readonly _mapDirectionsService = inject(MapDirectionsService);

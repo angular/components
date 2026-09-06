@@ -77,7 +77,6 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
     ngOnInit(): void;
     _noopAnimations: boolean;
     _onInputInteraction(event: Event): void;
-    _onTouchTargetClick(event: Event): void;
     radioGroup: MatRadioGroup;
     get required(): boolean;
     set required(value: boolean);

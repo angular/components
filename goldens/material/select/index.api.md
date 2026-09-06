@@ -20,6 +20,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FlexibleOverlayPopoverLocation } from '@angular/cdk/overlay';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -81,7 +82,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _floatingLabel: MatFormFieldFloatingLabel | undefined;
     get floatLabel(): FloatLabelType;
     set floatLabel(value: FloatLabelType);
-    _forceDisplayInfixLabel(): boolean | 0;
+    _forceDisplayInfixLabel(): 0 | boolean;
     // (undocumented)
     _formFieldControl: MatFormFieldControl<any>;
     getConnectedOverlayOrigin(): ElementRef;

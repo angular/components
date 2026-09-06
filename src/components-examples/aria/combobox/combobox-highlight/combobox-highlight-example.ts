@@ -10,6 +10,7 @@ import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {afterRenderEffect, Component, computed, effect, signal, viewChild} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
+import {STATES} from '../states';
 
 /** @title Combobox Highlight */
 @Component({
@@ -57,55 +58,12 @@ export class ComboboxHighlightExample {
   }
 }
 
-const states = [
-  {name: 'Alabama', disabled: false},
-  {name: 'Alaska', disabled: true},
-  {name: 'Arizona', disabled: false},
-  {name: 'Arkansas', disabled: true},
-  {name: 'California', disabled: true},
-  {name: 'Colorado', disabled: false},
-  {name: 'Connecticut', disabled: false},
-  {name: 'Delaware', disabled: false},
-  {name: 'Florida', disabled: false},
-  {name: 'Georgia', disabled: false},
-  {name: 'Hawaii', disabled: false},
-  {name: 'Idaho', disabled: false},
-  {name: 'Illinois', disabled: false},
-  {name: 'Indiana', disabled: false},
-  {name: 'Iowa', disabled: false},
-  {name: 'Kansas', disabled: false},
-  {name: 'Kentucky', disabled: false},
-  {name: 'Louisiana', disabled: false},
-  {name: 'Maine', disabled: false},
-  {name: 'Maryland', disabled: false},
-  {name: 'Massachusetts', disabled: false},
-  {name: 'Michigan', disabled: false},
-  {name: 'Minnesota', disabled: false},
-  {name: 'Mississippi', disabled: false},
-  {name: 'Missouri', disabled: false},
-  {name: 'Montana', disabled: false},
-  {name: 'Nebraska', disabled: false},
-  {name: 'Nevada', disabled: false},
-  {name: 'New Hampshire', disabled: false},
-  {name: 'New Jersey', disabled: false},
-  {name: 'New Mexico', disabled: false},
-  {name: 'New York', disabled: false},
-  {name: 'North Carolina', disabled: false},
-  {name: 'North Dakota', disabled: false},
-  {name: 'Ohio', disabled: false},
-  {name: 'Oklahoma', disabled: false},
-  {name: 'Oregon', disabled: false},
-  {name: 'Pennsylvania', disabled: false},
-  {name: 'Rhode Island', disabled: false},
-  {name: 'South Carolina', disabled: false},
-  {name: 'South Dakota', disabled: false},
-  {name: 'Tennessee', disabled: false},
-  {name: 'Texas', disabled: false},
-  {name: 'Utah', disabled: false},
-  {name: 'Vermont', disabled: false},
-  {name: 'Virginia', disabled: false},
-  {name: 'Washington', disabled: false},
-  {name: 'West Virginia', disabled: false},
-  {name: 'Wisconsin', disabled: false},
-  {name: 'Wyoming', disabled: false},
-];
+interface StateOption {
+  name: string;
+  disabled: boolean;
+}
+
+const states: StateOption[] = STATES.map((name: string, index: number) => ({
+  name,
+  disabled: index === 1 || index === 3 || index === 4,
+}));

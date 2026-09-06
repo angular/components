@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {
   computed,
   signal,
@@ -56,7 +57,9 @@ export class GridCellPattern implements GridCell {
   readonly selectable: SignalLike<boolean> = () => this.inputs.selectable();
 
   /** Whether a cell is disabled. */
-  readonly disabled: SignalLike<boolean> = () => this.inputs.disabled();
+  readonly disabled: SignalLike<boolean> = computed(
+    () => this.inputs.disabled() || (this.inputs.widget()?.inputs.disabled() ?? false),
+  );
 
   /** The number of rows the cell should span. */
   readonly rowSpan: SignalLike<number> = () => this.inputs.rowSpan();
@@ -123,7 +126,7 @@ export class GridCellPattern implements GridCell {
   onFocusIn(event: FocusEvent): void {
     this.isFocused.set(true);
 
-    const focusTarget = event.target as Element | null;
+    const focusTarget = _getEventTarget<Element>(event);
     const widget = this.inputs.getWidget(focusTarget);
     if (!widget) return;
 
@@ -133,7 +136,7 @@ export class GridCellPattern implements GridCell {
 
   /** Handles focusout events for the cell. */
   onFocusOut(event: FocusEvent): void {
-    const blurTarget = event.target as Element | null;
+    const blurTarget = _getEventTarget<Element>(event);
     const widget = this.inputs.getWidget(blurTarget);
 
     // Pass down focusout event to the widget.

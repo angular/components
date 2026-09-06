@@ -106,19 +106,19 @@ describe('ToolbarHarness', () => {
 @Component({
   template: `
     <div ngToolbar [orientation]="orientation()" [disabled]="toolbarDisabled()">
-      <button ngToolbarWidget #u="ngToolbarWidget" value="undo" [disabled]="undoDisabled()" [aria-pressed]="u.selected()">Undo</button>
-      <button ngToolbarWidget value="redo">Redo</button>
+      <button ngToolbarWidget [disabled]="undoDisabled()" [attr.aria-pressed]="undoPressed()" (click)="undoPressed.set(!undoPressed())">Undo</button>
+      <button ngToolbarWidget>Redo</button>
 
       <div ngToolbarWidgetGroup>
-        <button ngToolbarWidget value="bold">Bold</button>
-        <button ngToolbarWidget value="italic">Italic</button>
-        <button ngToolbarWidget value="underlined">Underlined</button>
+        <button ngToolbarWidget>Bold</button>
+        <button ngToolbarWidget>Italic</button>
+        <button ngToolbarWidget>Underlined</button>
       </div>
 
       <div ngToolbarWidgetGroup>
-        <button ngToolbarWidget value="aling-left">Align left</button>
-        <button ngToolbarWidget value="aling-center">Align center</button>
-        <button ngToolbarWidget value="aling-right">Align right</button>
+        <button ngToolbarWidget>Align left</button>
+        <button ngToolbarWidget>Align center</button>
+        <button ngToolbarWidget>Align right</button>
       </div>
     </div>
   `,
@@ -128,4 +128,5 @@ class ToolbarHarnessTest {
   orientation = signal<'vertical' | 'horizontal'>('horizontal');
   toolbarDisabled = signal(false);
   undoDisabled = signal(false);
+  undoPressed = signal(false);
 }

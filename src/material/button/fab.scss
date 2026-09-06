@@ -6,6 +6,9 @@
 @use './m3-fab';
 
 $fallbacks: m3-fab.get-tokens();
+$indicator-border-width: focus-indicators-private.$default-border-width;
+$border-width: var(--mat-focus-indicator-border-width, #{$indicator-border-width});
+$indicator-offset: calc(#{$border-width} + 2px);
 
 .mat-mdc-fab-base {
   @include vendor-prefixes.user-select(none);
@@ -73,18 +76,22 @@ $fallbacks: m3-fab.get-tokens();
   // ```
   // However, Angular Material expects a `mat-icon` instead. The following
   // mixin will style the icons appropriately.
-  // stylelint-disable-next-line selector-class-pattern
-  .mat-icon, .material-icons {
+  // stylelint-disable selector-class-pattern
+  .mat-icon,
+  .material-icons,
+  .material-symbols-outlined,
+  .material-symbols-rounded,
+  .material-symbols-sharp {
     transition: transform 180ms 90ms cubic-bezier(0, 0, 0.2, 1);
     fill: currentColor;
     will-change: transform;
   }
+  // stylelint-enable selector-class-pattern
 
   .mat-focus-indicator::before {
-    $default-border-width: focus-indicators-private.$default-border-width;
-    $border-width: var(--mat-focus-indicator-border-width, #{$default-border-width});
-    $offset: calc(#{$border-width} + 2px);
-    margin: calc(#{$offset} * -1);
+    margin: calc(#{$indicator-offset} * -1);
+    border-radius: calc(#{token-utils.slot(fab-container-shape, $fallbacks)} +
+      #{$indicator-offset});
   }
 
   @include button-base.mat-private-button-disabled {
@@ -149,6 +156,11 @@ $fallbacks: m3-fab.get-tokens();
     box-shadow: token-utils.slot(fab-small-pressed-container-elevation-shadow, $fallbacks);
   }
 
+  .mat-focus-indicator::before {
+    border-radius: calc(#{token-utils.slot(fab-small-container-shape, $fallbacks)} +
+      #{$indicator-offset});
+  }
+
   @include button-base.mat-private-button-disabled {
     color: token-utils.slot(fab-small-disabled-state-foreground-color, $fallbacks);
     background-color: token-utils.slot(fab-small-disabled-state-container-color, $fallbacks);
@@ -207,16 +219,28 @@ $fallbacks: m3-fab.get-tokens();
   // uses the same template as button.
   [dir='rtl'] & .mdc-button__label + .mat-icon,
   [dir='rtl'] & .mdc-button__label + .material-icons,
+  [dir='rtl'] & .mdc-button__label + .material-symbols-outlined,
+  [dir='rtl'] & .mdc-button__label + .material-symbols-rounded,
+  [dir='rtl'] & .mdc-button__label + .material-symbols-sharp,
   > .mat-icon,
-  > .material-icons {
+  > .material-icons,
+  > .material-symbols-outlined,
+  > .material-symbols-rounded,
+  > .material-symbols-sharp {
     margin-left: -8px;
     margin-right: 12px;
   }
 
   .mdc-button__label + .mat-icon,
   .mdc-button__label + .material-icons,
+  .mdc-button__label + .material-symbols-outlined,
+  .mdc-button__label + .material-symbols-rounded,
+  .mdc-button__label + .material-symbols-sharp,
   [dir='rtl'] & > .mat-icon,
-  [dir='rtl'] & > .material-icons {
+  [dir='rtl'] & > .material-icons,
+  [dir='rtl'] & > .material-symbols-outlined,
+  [dir='rtl'] & > .material-symbols-rounded,
+  [dir='rtl'] & > .material-symbols-sharp {
     margin-left: 12px;
     margin-right: -8px;
   }
