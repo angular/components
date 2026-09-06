@@ -1,7 +1,7 @@
-<button matButton="elevated" (click)="isLinear = !isLinear" id="toggle-linear">
-  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+<button matButton="elevated" (click)="isLinear.set(!isLinear())" id="toggle-linear">
+  {{!isLinear() ? 'Enable linear mode' : 'Disable linear mode'}}
 </button>
-<mat-stepper [linear]="isLinear" #stepper>
+<mat-stepper [linear]="isLinear()" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Fill out your name</ng-template>

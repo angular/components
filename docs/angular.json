@@ -173,18 +173,6 @@
               }
             ]
           }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "material-angular-io:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "material-angular-io:serve:production"
-            }
-          }
         }
       }
     },
@@ -272,18 +260,6 @@
             "scripts": [],
             "stylePreprocessorOptions": {
               "includePaths": ["node_modules"]
-            }
-          }
-        },
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "scenes/e2e/protractor.conf.js",
-            "devServerTarget": "scenes:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "scenes:serve:production"
             }
           }
         }

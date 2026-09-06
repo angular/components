@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {
   Component,
   ElementRef,
@@ -149,15 +149,15 @@ describe('MenuBar', () => {
           expect(document.activeElement).toEqual(menuBarNativeItems[menuBarNativeItems.length - 1]);
         });
 
-        it('should focus the edit MenuItem on E, D character keys', fakeAsync(() => {
+        it('should focus the edit MenuItem on E, D character keys', async () => {
           focusMenuBar();
           dispatchKeyboardEvent(nativeMenuBar, 'keydown', E);
           dispatchKeyboardEvent(nativeMenuBar, 'keydown', D);
-          tick(500);
+          await wait(600);
           detectChanges();
 
           expect(document.activeElement).toEqual(menuBarNativeItems[1]);
-        }));
+        });
 
         it(
           'should toggle and wrap when cycling the right/left arrow keys on menu bar ' +
@@ -450,16 +450,16 @@ describe('MenuBar', () => {
           expect(nativeMenus.length).toBe(0);
         });
 
-        it('should focus share MenuItem on S, H character key press', fakeAsync(() => {
+        it('should focus share MenuItem on S, H character key press', async () => {
           openFileMenu();
 
           dispatchKeyboardEvent(nativeMenus[0], 'keydown', S);
           dispatchKeyboardEvent(nativeMenus[0], 'keydown', H);
-          tick(500);
+          await wait(600);
           detectChanges();
 
           expect(document.activeElement).toEqual(fileMenuNativeItems[1]);
-        }));
+        });
 
         it('should handle keyboard actions if initial menu is opened programmatically', () => {
           fixture.debugElement
@@ -1061,6 +1061,10 @@ describe('MenuBar', () => {
     });
   });
 });
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 @Component({
   template: `

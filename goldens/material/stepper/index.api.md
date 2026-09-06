@@ -16,6 +16,7 @@ import { CdkStepperNext } from '@angular/cdk/stepper';
 import { CdkStepperPrevious } from '@angular/cdk/stepper';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -36,6 +37,8 @@ import { TemplateRef } from '@angular/core';
 export class MatStep extends CdkStep implements ErrorStateMatcher, AfterContentInit, OnDestroy {
     color: ThemePalette;
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    // (undocumented)
+    isSignalErrorState(field: Field<unknown> | null): boolean;
     _lazyContent: MatStepContent;
     // (undocumented)
     ngAfterContentInit(): void;

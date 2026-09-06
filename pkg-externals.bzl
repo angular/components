@@ -24,6 +24,7 @@ PKG_EXTERNALS = [
     "@angular/core/rxjs-interop",
     "@angular/core/testing",
     "@angular/forms",
+    "@angular/forms/signals",
     "@angular/platform-browser",
     "@angular/platform-browser/animations",
     "@angular/platform-server",

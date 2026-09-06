@@ -1,4 +1,4 @@
-import {waitForAsync, fakeAsync, TestBed, flush} from '@angular/core/testing';
+import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component, ViewChild, signal, inject, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
@@ -78,7 +78,7 @@ describe('Directionality', () => {
       expect(injectedDirectionality.value).toBe('rtl');
     });
 
-    it('should emit a change event when the value changes', fakeAsync(() => {
+    it('should emit a change event when the value changes', () => {
       const fixture = TestBed.createComponent(ElementWithDir);
       const injectedDirectionality = fixture.debugElement.query(
         By.directive(InjectsDirectionality),
@@ -102,9 +102,9 @@ describe('Directionality', () => {
       expect(direction).toBe('ltr');
       expect(injectedDirectionality.value).toBe('ltr');
       expect(fixture.componentInstance.changeCount).toBe(1);
-    }));
+    });
 
-    it('should complete the change stream on destroy', fakeAsync(() => {
+    it('should complete the change stream on destroy', () => {
       const fixture = TestBed.createComponent(ElementWithDir);
       const dir = fixture.debugElement.query(By.directive(InjectsDirectionality))!.componentInstance
         .dir;
@@ -114,8 +114,7 @@ describe('Directionality', () => {
       fixture.destroy();
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
-      flush();
-    }));
+    });
 
     it('should default to ltr if an invalid value is passed in', () => {
       const fixture = TestBed.createComponent(ElementWithDir);

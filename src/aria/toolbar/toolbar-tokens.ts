@@ -10,6 +10,4 @@ import {InjectionToken} from '@angular/core';
 import type {ToolbarWidgetGroup} from './toolbar-widget-group';
 
 /** Token used to provide the `ToolbarWidgetGroup` directive. */
-export const TOOLBAR_WIDGET_GROUP = new InjectionToken<ToolbarWidgetGroup<unknown>>(
-  'TOOLBAR_WIDGET_GROUP',
-);
+export const TOOLBAR_WIDGET_GROUP = new InjectionToken<ToolbarWidgetGroup>('TOOLBAR_WIDGET_GROUP');

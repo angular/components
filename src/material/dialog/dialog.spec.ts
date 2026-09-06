@@ -31,6 +31,7 @@ import {
   inject,
   inputBinding,
 } from '@angular/core';
+import {DialogRef} from '@angular/cdk/dialog';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -871,6 +872,14 @@ describe('MatDialog', () => {
 
     dialogRef.removePanelClass('custom-class-one');
     expect(pane.classList).not.toContain('custom-class-one', 'Expected class to be removed');
+  });
+
+  it('should not inject the CDK dialog ref into the child component', () => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    viewContainerFixture.detectChanges();
+
+    expect(dialogRef.componentInstance.cdkDialogRef).toBe(null);
+    expect(dialogRef.componentInstance.dialogRef).toBeTruthy();
   });
 
   describe('disableClose option', () => {
@@ -1793,7 +1802,6 @@ describe('MatDialog', () => {
       @Component({
         imports: [Child],
         template: `<child></child>`,
-        changeDetection: ChangeDetectionStrategy.OnPush,
       })
       class OnPushHost {
         @ViewChild(Child, {static: true}) child!: Child;
@@ -1833,6 +1841,25 @@ describe('MatDialog', () => {
 
         expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
           0,
+        );
+      });
+
+      it('should not close when clicking on an aria-disabled close button', async () => {
+        expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
+          1,
+        );
+
+        const closeButton = overlayContainerElement.querySelector(
+          'button[mat-dialog-close]',
+        ) as HTMLElement;
+
+        closeButton.setAttribute('aria-disabled', 'true');
+        closeButton.click();
+        viewContainerFixture.detectChanges();
+        await viewContainerFixture.whenStable();
+
+        expect(overlayContainerElement.querySelectorAll('.mat-mdc-dialog-container').length).toBe(
+          1,
         );
       });
 
@@ -2304,7 +2331,6 @@ class DirectiveWithViewContainer {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
 })
 class ComponentWithOnPushViewContainer {
@@ -2355,6 +2381,7 @@ class PizzaMsg {
   dialogRef = inject<MatDialogRef<PizzaMsg>>(MatDialogRef);
   dialogInjector = inject(Injector);
   directionality = inject(Directionality);
+  cdkDialogRef = inject(DialogRef, {optional: true});
 }
 
 @Component({
@@ -2508,7 +2535,6 @@ class ModuleBoundDialogModule {}
 @Component({
   template: `{{message | async}}`,
   imports: [AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DialogWithAfterOpenSubscription {
   dialogRef = inject(MatDialogRef);

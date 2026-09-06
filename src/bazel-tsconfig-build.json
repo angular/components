@@ -4,6 +4,7 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "stableTypeOrdering": true,
     "stripInternal": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

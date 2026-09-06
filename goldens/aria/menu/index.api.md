@@ -6,6 +6,7 @@
 
 import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -20,21 +21,25 @@ export class Menu<V> implements OnDestroy {
     readonly expansionDelay: _angular_core.InputSignal<number>;
     readonly id: _angular_core.InputSignal<string>;
     readonly _items: Signal<MenuItem<V>[]>;
-    readonly itemSelected: _angular_core.OutputEmitterRef<V>;
+    readonly itemSelected: _angular_core.OutputEmitterRef<V | undefined>;
     // (undocumented)
     ngOnDestroy(): void;
-    readonly parent: _angular_core.WritableSignal<MenuTrigger<V> | MenuItem<V> | undefined>;
+    readonly parent: _angular_core.WritableSignal<MenuItem<V> | MenuTrigger<V> | undefined>;
     readonly _pattern: MenuPattern<V>;
-    readonly tabIndex: Signal<0 | -1>;
+    readonly softDisabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly tabIndex: Signal<-1 | 0>;
     readonly textDirection: _angular_core.WritableSignal<_angular_cdk_bidi.Direction>;
     readonly typeaheadDelay: _angular_core.InputSignal<number>;
     readonly visible: Signal<boolean>;
     readonly wrap: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Menu<any>, "[ngMenu]", ["ngMenu"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "expansionDelay": { "alias": "expansionDelay"; "required": false; "isSignal": true; }; }, { "itemSelected": "itemSelected"; }, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<Menu<any>, "[ngMenu]", ["ngMenu"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "wrap": { "alias": "wrap"; "required": false; "isSignal": true; }; "typeaheadDelay": { "alias": "typeaheadDelay"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "softDisabled": { "alias": "softDisabled"; "required": false; "isSignal": true; }; "expansionDelay": { "alias": "expansionDelay"; "required": false; "isSignal": true; }; }, { "itemSelected": "itemSelected"; }, never, never, true, [{ directive: typeof DeferredContentAware; inputs: { "preserveContent": "preserveContent"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<Menu<any>, never>;
 }
+
+// @public
+export const MENU_COMPONENT: InjectionToken<Menu<any> | MenuBar<any>>;
 
 // @public
 export class MenuBar<V> implements OnDestroy {
@@ -45,7 +50,7 @@ export class MenuBar<V> implements OnDestroy {
     readonly element: HTMLElement;
     // (undocumented)
     readonly _items: SignalLike<MenuItem<V>[]>;
-    readonly itemSelected: _angular_core.OutputEmitterRef<V>;
+    readonly itemSelected: _angular_core.OutputEmitterRef<V | undefined>;
     // (undocumented)
     ngOnDestroy(): void;
     readonly _pattern: MenuBarPattern<V>;
@@ -85,11 +90,12 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     open(): void;
     readonly parent: Menu<V> | MenuBar<V> | null;
     readonly _pattern: MenuItemPattern<V>;
+    readonly role: _angular_core.InputSignal<"menuitem" | "menuitemcheckbox" | "menuitemradio">;
     readonly searchTerm: _angular_core.ModelSignal<string>;
     readonly submenu: _angular_core.InputSignal<Menu<V> | undefined>;
-    readonly value: _angular_core.InputSignal<V>;
+    readonly value: _angular_core.InputSignal<V | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": true; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<MenuItem<any>, "[ngMenuItem]", ["ngMenuItem"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "searchTerm": { "alias": "searchTerm"; "required": false; "isSignal": true; }; "role": { "alias": "role"; "required": false; "isSignal": true; }; "submenu": { "alias": "submenu"; "required": false; "isSignal": true; }; }, { "searchTerm": "searchTermChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<MenuItem<any>, never>;
 }

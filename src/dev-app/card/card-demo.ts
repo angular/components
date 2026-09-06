@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardAppearance, MatCardModule} from '@angular/material/card';
@@ -18,7 +18,6 @@ import {MatRadioModule} from '@angular/material/radio';
   styleUrl: 'card-demo.css',
   encapsulation: ViewEncapsulation.None,
   imports: [MatCardModule, MatButtonModule, MatRadioModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CardDemo {
   appearance: MatCardAppearance = 'raised';

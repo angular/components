@@ -15,19 +15,14 @@ import {A11yModule, CdkTrapFocus, FocusTrap} from '../index';
 
 describe('FocusTrap', () => {
   describe('with default element', () => {
-    let fixture: ComponentFixture<SimpleFocusTrap>;
-    let focusTrapInstance: FocusTrap;
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SimpleFocusTrap);
-      fixture.detectChanges();
-      focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
-    });
-
     it('wrap focus from end to start', () => {
+      const fixture = TestBed.createComponent(SimpleFocusTrap);
+      fixture.detectChanges();
+
       // Because we can't mimic a real tab press focus change in a unit test, just call the
       // focus event handler directly.
-      const result = focusTrapInstance.focusFirstTabbableElement();
+      const result =
+        fixture.componentInstance.focusTrapDirective.focusTrap.focusFirstTabbableElement();
 
       expect(getActiveElement().nodeName.toLowerCase())
         .withContext('Expected input element to be focused')
@@ -38,9 +33,13 @@ describe('FocusTrap', () => {
     });
 
     it('should wrap focus from start to end', () => {
+      const fixture = TestBed.createComponent(SimpleFocusTrap);
+      fixture.detectChanges();
+
       // Because we can't mimic a real tab press focus change in a unit test, just call the
       // focus event handler directly.
-      const result = focusTrapInstance.focusLastTabbableElement();
+      const result =
+        fixture.componentInstance.focusTrapDirective.focusTrap.focusLastTabbableElement();
 
       const platform = TestBed.inject(Platform);
       // In iOS button elements are never tabbable, so the last element will be the input.
@@ -56,19 +55,31 @@ describe('FocusTrap', () => {
     });
 
     it('should return false if it did not manage to find a focusable element', () => {
-      fixture.destroy();
+      const fixture = TestBed.createComponent(FocusTrapWithoutFocusableElements);
+      fixture.detectChanges();
 
-      const newFixture = TestBed.createComponent(FocusTrapWithoutFocusableElements);
-      newFixture.detectChanges();
-
-      const focusTrap = newFixture.componentInstance.focusTrapDirective.focusTrap;
+      const focusTrap = fixture.componentInstance.focusTrapDirective.focusTrap;
       const result = focusTrap.focusFirstTabbableElement();
 
       expect(result).toBe(false);
     });
 
     it('should be enabled by default', () => {
-      expect(focusTrapInstance.enabled).toBe(true);
+      const fixture = TestBed.createComponent(SimpleFocusTrap);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.focusTrapDirective.focusTrap.enabled).toBe(true);
+    });
+
+    it('should focus the root node if there are no focusable elements, but the root is focusable', () => {
+      const fixture = TestBed.createComponent(FocusTrapWithoutFocusableElements);
+      fixture.detectChanges();
+      const root = fixture.nativeElement.querySelector('.trap') as HTMLElement;
+      root.setAttribute('tabindex', '-1');
+
+      fixture.nativeElement.querySelector('.cdk-focus-trap-anchor').focus();
+      fixture.detectChanges();
+
+      expect(getActiveElement()).withContext('Expected focus trap root to be focused').toBe(root);
     });
   });
 
@@ -322,7 +333,7 @@ function getActiveElement() {
       <input>
       <button>SAVE</button>
     </div>
-    `,
+  `,
   imports: [A11yModule, PortalModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -388,7 +399,7 @@ class FocusTrapWithBindings {
       <button>after</button>
       <input>
     </div>
-    `,
+  `,
   imports: [A11yModule, PortalModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -401,7 +412,7 @@ class FocusTrapTargets {
     <div cdkTrapFocus>
       <div cdkFocusInitial></div>
     </div>
-    `,
+  `,
   imports: [A11yModule, PortalModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -416,7 +427,7 @@ class FocusTrapUnfocusableTarget {
         <circle cx="100" cy="100" r="100"/>
       </svg>
     </div>
-    `,
+  `,
   imports: [A11yModule, PortalModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -426,10 +437,10 @@ class FocusTrapWithSvg {
 
 @Component({
   template: `
-    <div cdkTrapFocus>
+    <div class="trap" cdkTrapFocus>
       <p>Hello</p>
     </div>
-    `,
+  `,
   imports: [A11yModule, PortalModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
@@ -439,15 +450,15 @@ class FocusTrapWithoutFocusableElements {
 
 @Component({
   template: `
-  <div class="portal-outlet">
-    <ng-template cdkPortalOutlet></ng-template>
-  </div>
-
-  <ng-template #template>
-    <div cdkTrapFocus>
-      <button>Click me</button>
+    <div class="portal-outlet">
+      <ng-template cdkPortalOutlet></ng-template>
     </div>
-  </ng-template>
+
+    <ng-template #template>
+      <div cdkTrapFocus>
+        <button>Click me</button>
+      </div>
+    </ng-template>
   `,
   imports: [A11yModule, PortalModule],
   changeDetection: ChangeDetectionStrategy.Eager,

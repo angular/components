@@ -6,6 +6,8 @@ export {ComboboxDatepickerExample} from './combobox-datepicker/combobox-datepick
 export {ComboboxAutoSelectExample} from './combobox-auto-select/combobox-auto-select-example';
 export {ComboboxHighlightExample} from './combobox-highlight/combobox-highlight-example';
 export {ComboboxDisabledExample} from './combobox-disabled/combobox-disabled-example';
+export {ComboboxReadonlyExample} from './combobox-readonly/combobox-readonly-example';
+export {ComboboxHardDisabledExample} from './combobox-hard-disabled/combobox-hard-disabled-example';
 export {ComboboxReadonlyDisabledExample} from './combobox-readonly-disabled/combobox-readonly-disabled-example';
 export {ComboboxReadonlyMultiselectExample} from './combobox-readonly-multiselect/combobox-readonly-multiselect-example';
 export {ComboboxDialogExample} from './combobox-dialog/combobox-dialog-example';

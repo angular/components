@@ -28,7 +28,6 @@
       slide-toggle-disabled-track-opacity: 0.12,
       slide-toggle-disabled-unselected-handle-opacity: 0.38,
       slide-toggle-disabled-unselected-icon-opacity: 0.38,
-      slide-toggle-disabled-unselected-track-outline-color: transparent,
       slide-toggle-disabled-unselected-track-outline-width: 1px,
       slide-toggle-handle-height: 20px,
       slide-toggle-handle-shape: 10px,
@@ -44,11 +43,9 @@
       slide-toggle-selected-pressed-handle-horizontal-margin: 0,
       slide-toggle-selected-pressed-state-layer-opacity:
           map.get($system, pressed-state-layer-opacity),
-      slide-toggle-selected-track-outline-color: transparent,
       slide-toggle-selected-track-outline-width: 1px,
       slide-toggle-selected-with-icon-handle-horizontal-margin: 0,
       slide-toggle-track-height: 14px,
-      slide-toggle-track-outline-color: transparent,
       slide-toggle-track-outline-width: 1px,
       slide-toggle-track-shape: 7px,
       slide-toggle-track-width: 36px,
@@ -68,6 +65,9 @@
       slide-toggle-touch-target-size: 48px,
     ),
     color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
+      slide-toggle-disabled-unselected-track-outline-color: transparent,
+      slide-toggle-selected-track-outline-color: transparent,
+      slide-toggle-track-outline-color: transparent,
       slide-toggle-disabled-label-text-color:
           m3-utils.color-with-opacity(map.get($system, on-surface), 38%),
       slide-toggle-disabled-handle-elevation-shadow: elevation.get-box-shadow(0),

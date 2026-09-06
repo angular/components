@@ -9,7 +9,6 @@
 import {
   Component,
   ViewEncapsulation,
-  ChangeDetectionStrategy,
   Input,
   InjectionToken,
   booleanAttribute,
@@ -53,7 +52,6 @@ export const MAT_OPTGROUP = new InjectionToken<MatOptgroup>('MatOptgroup');
   exportAs: 'matOptgroup',
   templateUrl: 'optgroup.html',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: 'optgroup.css',
   host: {
     'class': 'mat-mdc-optgroup',

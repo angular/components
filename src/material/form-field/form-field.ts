@@ -14,7 +14,6 @@ import {
   AfterContentChecked,
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChild,
@@ -109,8 +108,7 @@ export const MAT_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<MatFormFieldDef
 
 /** Styles that are to be applied to the label elements in the outlined appearance. */
 type OutlinedLabelStyles =
-  | [floatingLabelTransform: string, notchedOutlineWidth: number | null]
-  | null;
+  [floatingLabelTransform: string, notchedOutlineWidth: number | null] | null;
 
 /** Default appearance used by the form field. */
 const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
@@ -173,7 +171,6 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     '[class.ng-pending]': '_shouldForward("pending")',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {provide: MAT_FORM_FIELD, useExisting: MatFormField},
     {provide: FLOATING_LABEL_PARENT, useExisting: MatFormField},
@@ -403,6 +400,7 @@ export class MatFormField
       }
 
       this._previousControl = this._control;
+      this._changeDetectorRef.markForCheck();
     }
 
     // make sure the the control has been initialized.

@@ -1,5 +1,5 @@
 import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatChipInputEvent, MatChipsModule} from '@angular/material/chips';
@@ -14,7 +14,6 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: 'chips-template-form-example.html',
   styleUrl: 'chips-template-form-example.css',
   imports: [MatButtonModule, MatFormFieldModule, MatChipsModule, FormsModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChipsTemplateFormExample {
   private _announcer = inject(LiveAnnouncer);

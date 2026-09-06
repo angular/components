@@ -28,6 +28,7 @@ import {
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {FormGroupDirective, NgControl, NgForm, Validators} from '@angular/forms';
+import {FORM_FIELD} from '@angular/forms/signals';
 import {ErrorStateMatcher, _ErrorStateTracker} from '../core';
 import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '../form-field';
 import {Subject} from 'rxjs';
@@ -299,6 +300,7 @@ export class MatInput
     const parentFormGroup = inject(FormGroupDirective, {optional: true});
     const defaultErrorStateMatcher = inject(ErrorStateMatcher);
     const accessor = inject(MAT_INPUT_VALUE_ACCESSOR, {optional: true, self: true});
+    const formField = inject(FORM_FIELD, {optional: true, self: true});
 
     const element = this._elementRef.nativeElement;
     const nodeName = element.nodeName.toLowerCase();
@@ -331,7 +333,7 @@ export class MatInput
 
     this._errorStateTracker = new _ErrorStateTracker(
       defaultErrorStateMatcher,
-      this.ngControl,
+      formField || this.ngControl,
       parentFormGroup,
       parentForm,
       this.stateChanges,

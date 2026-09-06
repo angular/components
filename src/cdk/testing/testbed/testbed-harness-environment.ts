@@ -15,11 +15,12 @@ import {
   stopHandlingAutoChangeDetectionStatus,
   TestElement,
 } from '../../testing';
-import {ComponentFixture, flush} from '@angular/core/testing';
+import {ComponentFixture, DirectiveFixture, flush, TestBed} from '@angular/core/testing';
 import {Observable} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {TaskState, TaskStateZoneInterceptor} from './task-state-zone-interceptor';
 import {UnitTestElement} from './unit-test-element';
+import {DestroyRef} from '@angular/core';
 
 /** Options to configure the environment. */
 export interface TestbedHarnessEnvironmentOptions {
@@ -32,19 +33,22 @@ const defaultEnvironmentOptions: TestbedHarnessEnvironmentOptions = {
   queryFn: (selector: string, root: Element) => root.querySelectorAll(selector),
 };
 
+/** Covers all fixtures supported by `TestBed`. */
+export type Fixture<T = unknown> = ComponentFixture<T> | DirectiveFixture<T>;
+
 /** Whether auto change detection is currently disabled. */
 let disableAutoChangeDetection = false;
 
 /**
  * The set of non-destroyed fixtures currently being used by `TestbedHarnessEnvironment` instances.
  */
-const activeFixtures = new Set<ComponentFixture<unknown>>();
+const activeFixtures = new Set<Fixture>();
 
 /**
  * Installs a handler for change detection batching status changes for a specific fixture.
  * @param fixture The fixture to handle change detection batching for.
  */
-function installAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
+function installAutoChangeDetectionStatusHandler(fixture: Fixture) {
   if (!activeFixtures.size) {
     handleAutoChangeDetectionStatus(({isDisabled, onDetectChangesNow}) => {
       disableAutoChangeDetection = isDisabled;
@@ -60,7 +64,7 @@ function installAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unkno
  * Uninstalls a handler for change detection batching status changes for a specific fixture.
  * @param fixture The fixture to stop handling change detection batching for.
  */
-function uninstallAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
+function uninstallAutoChangeDetectionStatusHandler(fixture: Fixture) {
   activeFixtures.delete(fixture);
   if (!activeFixtures.size) {
     stopHandlingAutoChangeDetectionStatus();
@@ -76,7 +80,7 @@ function isInFakeAsyncZone() {
  * Triggers change detection for a specific fixture.
  * @param fixture The fixture to trigger change detection for.
  */
-async function detectChanges(fixture: ComponentFixture<unknown>) {
+async function detectChanges(fixture: Fixture) {
   fixture.detectChanges();
   if (isInFakeAsyncZone()) {
     flush();
@@ -101,7 +105,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
 
   protected constructor(
     rawRootElement: Element,
-    private _fixture: ComponentFixture<unknown>,
+    private _fixture: Fixture,
     options?: TestbedHarnessEnvironmentOptions,
   ) {
     super(rawRootElement);
@@ -111,17 +115,22 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     }
     this._stabilizeCallback = () => this.forceStabilize();
     installAutoChangeDetectionStatusHandler(_fixture);
-    _fixture.componentRef.onDestroy(() => {
+
+    const onDestroy = () => {
       uninstallAutoChangeDetectionStatusHandler(_fixture);
       this._destroyed = true;
-    });
+    };
+
+    if (_fixture instanceof ComponentFixture) {
+      _fixture.componentRef.onDestroy(onDestroy);
+    } else {
+      // TODO(crisbeto): use host ref in directive fixture once it's available.
+      TestBed.inject(DestroyRef).onDestroy(onDestroy);
+    }
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
-  static loader(
-    fixture: ComponentFixture<unknown>,
-    options?: TestbedHarnessEnvironmentOptions,
-  ): HarnessLoader {
+  static loader(fixture: Fixture, options?: TestbedHarnessEnvironmentOptions): HarnessLoader {
     return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
   }
 
@@ -130,7 +139,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * located outside of a fixture (e.g. overlays appended to the document body).
    */
   static documentRootLoader(
-    fixture: ComponentFixture<unknown>,
+    fixture: Fixture,
     options?: TestbedHarnessEnvironmentOptions,
   ): HarnessLoader {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
@@ -151,7 +160,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * of the fixture.
    */
   static async harnessForFixture<T extends ComponentHarness>(
-    fixture: ComponentFixture<unknown>,
+    fixture: Fixture,
     harnessType: ComponentHarnessConstructor<T>,
     options?: TestbedHarnessEnvironmentOptions,
   ): Promise<T> {

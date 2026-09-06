@@ -30,6 +30,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
+import {FORM_FIELD} from '@angular/forms/signals';
 import {ErrorStateMatcher, _ErrorStateTracker} from '../core';
 import {_computeAriaAccessibleName} from './aria-accessible-name';
 import {DateRange, DateSelectionModelChange} from './date-selection-model';
@@ -102,6 +103,11 @@ abstract class MatDateRangeInputPartBase<D>
     // validator. We work around it here by injecting the `NgControl` in `ngOnInit`, after
     // everything has been resolved.
     const ngControl = this._injector.get(NgControl, null, {optional: true, self: true});
+
+    this._errorStateTracker.formField = this._injector.get(FORM_FIELD, null, {
+      optional: true,
+      self: true,
+    });
 
     if (ngControl) {
       this.ngControl = ngControl;

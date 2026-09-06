@@ -1,21 +1,40 @@
-import {browser, by, element, ElementFinder} from 'protractor';
-import {ILocation, ISize} from 'selenium-webdriver';
+import * as webdriver from 'selenium-webdriver';
+import {waitForAngularReady} from '../../cdk/testing/selenium-webdriver';
+import {createE2eWebDriver} from '../../e2e-app/e2e-setup';
 
 declare var window: any;
 
+const {builder, port} = createE2eWebDriver();
+
 describe('autosize cdk-virtual-scroll', () => {
-  let viewport: ElementFinder;
+  let wd: webdriver.WebDriver;
+  let viewport: webdriver.WebElement;
+
+  beforeAll(async () => {
+    wd = await builder.build();
+  });
+
+  afterAll(async () => {
+    await wd.quit();
+  });
 
   describe('with uniform items', () => {
     beforeEach(async () => {
-      await browser.get('/virtual-scroll');
-      viewport = element(by.css('.demo-virtual-scroll-uniform-size cdk-virtual-scroll-viewport'));
+      await wd.get(`http://localhost:${port}/virtual-scroll`);
+      await waitForAngularReady(wd);
+      viewport = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-uniform-size cdk-virtual-scroll-viewport'),
+      );
     });
 
     it('should scroll down slowly', async () => {
-      await browser.executeAsyncScript(smoothScrollViewportTo, viewport, 2000);
-      const offScreen = element(by.css('.demo-virtual-scroll-uniform-size [data-index="39"]'));
-      const onScreen = element(by.css('.demo-virtual-scroll-uniform-size [data-index="40"]'));
+      await wd.executeAsyncScript(smoothScrollViewportTo, viewport, 2000);
+      const offScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-uniform-size [data-index="39"]'),
+      );
+      const onScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-uniform-size [data-index="40"]'),
+      );
       expect(await isVisibleInViewport(offScreen, viewport)).toBe(false);
       expect(await isVisibleInViewport(onScreen, viewport)).toBe(true);
     });
@@ -23,29 +42,42 @@ describe('autosize cdk-virtual-scroll', () => {
     it('should jump scroll position down and slowly scroll back up', async () => {
       // The estimate of the total content size is exactly correct, so we wind up scrolled to the
       // same place as if we slowly scrolled down.
-      await browser.executeAsyncScript(scrollViewportTo, viewport, 2000);
-      const offScreen = element(by.css('.demo-virtual-scroll-uniform-size [data-index="39"]'));
-      const onScreen = element(by.css('.demo-virtual-scroll-uniform-size [data-index="40"]'));
+      await wd.executeAsyncScript(scrollViewportTo, viewport, 2000);
+      const offScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-uniform-size [data-index="39"]'),
+      );
+      const onScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-uniform-size [data-index="40"]'),
+      );
       expect(await isVisibleInViewport(offScreen, viewport)).toBe(false);
       expect(await isVisibleInViewport(onScreen, viewport)).toBe(true);
 
       // As we slowly scroll back up we should wind up back at the start of the content.
-      await browser.executeAsyncScript(smoothScrollViewportTo, viewport, 0);
-      const first = element(by.css('.demo-virtual-scroll-uniform-size [data-index="0"]'));
+      await wd.executeAsyncScript(smoothScrollViewportTo, viewport, 0);
+      const first = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-uniform-size [data-index="0"]'),
+      );
       expect(await isVisibleInViewport(first, viewport)).toBe(true);
     });
   });
 
   describe('with variable size', () => {
     beforeEach(async () => {
-      await browser.get('/virtual-scroll');
-      viewport = element(by.css('.demo-virtual-scroll-variable-size cdk-virtual-scroll-viewport'));
+      await wd.get(`http://localhost:${port}/virtual-scroll`);
+      await waitForAngularReady(wd);
+      viewport = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-variable-size cdk-virtual-scroll-viewport'),
+      );
     });
 
     it('should scroll down slowly', async () => {
-      await browser.executeAsyncScript(smoothScrollViewportTo, viewport, 2000);
-      const offScreen = element(by.css('.demo-virtual-scroll-variable-size [data-index="19"]'));
-      const onScreen = element(by.css('.demo-virtual-scroll-variable-size [data-index="20"]'));
+      await wd.executeAsyncScript(smoothScrollViewportTo, viewport, 2000);
+      const offScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-variable-size [data-index="19"]'),
+      );
+      const onScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-variable-size [data-index="20"]'),
+      );
       expect(await isVisibleInViewport(offScreen, viewport)).toBe(false);
       expect(await isVisibleInViewport(onScreen, viewport)).toBe(true);
     });
@@ -53,29 +85,37 @@ describe('autosize cdk-virtual-scroll', () => {
     it('should jump scroll position down and slowly scroll back up', async () => {
       // The estimate of the total content size is slightly different than the actual, so we don't
       // wind up in the same spot as if we scrolled slowly down.
-      await browser.executeAsyncScript(scrollViewportTo, viewport, 2000);
-      const offScreen = element(by.css('.demo-virtual-scroll-variable-size [data-index="18"]'));
-      const onScreen = element(by.css('.demo-virtual-scroll-variable-size [data-index="19"]'));
+      await wd.executeAsyncScript(scrollViewportTo, viewport, 2000);
+      const offScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-variable-size [data-index="18"]'),
+      );
+      const onScreen = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-variable-size [data-index="19"]'),
+      );
       expect(await isVisibleInViewport(offScreen, viewport)).toBe(false);
       expect(await isVisibleInViewport(onScreen, viewport)).toBe(true);
 
       // As we slowly scroll back up we should wind up back at the start of the content. As we
       // scroll the error from when we jumped the scroll position should be slowly corrected.
-      await browser.executeAsyncScript(smoothScrollViewportTo, viewport, 0);
-      const first = element(by.css('.demo-virtual-scroll-variable-size [data-index="0"]'));
+      await wd.executeAsyncScript(smoothScrollViewportTo, viewport, 0);
+      const first = await wd.findElement(
+        webdriver.By.css('.demo-virtual-scroll-variable-size [data-index="0"]'),
+      );
       expect(await isVisibleInViewport(first, viewport)).toBe(true);
     });
   });
 });
 
 /** Checks if the given element is visible in the given viewport. */
-async function isVisibleInViewport(el: ElementFinder, viewport: ElementFinder): Promise<boolean> {
-  if (
-    !(await el.isPresent()) ||
-    !(await el.isDisplayed()) ||
-    !(await viewport.isPresent()) ||
-    !(await viewport.isDisplayed())
-  ) {
+async function isVisibleInViewport(
+  el: webdriver.WebElement,
+  viewport: webdriver.WebElement,
+): Promise<boolean> {
+  try {
+    if (!(await el.isDisplayed()) || !(await viewport.isDisplayed())) {
+      return false;
+    }
+  } catch {
     return false;
   }
   const viewportRect = getRect(await viewport.getLocation(), await viewport.getSize());
@@ -90,8 +130,8 @@ async function isVisibleInViewport(el: ElementFinder, viewport: ElementFinder): 
 
 /** Gets the rect for an element given its location ans size. */
 function getRect(
-  location: ILocation,
-  size: ISize,
+  location: webdriver.ILocation,
+  size: webdriver.ISize,
 ): {top: number; left: number; bottom: number; right: number} {
   return {
     top: location.y,

@@ -17,7 +17,7 @@ import {
   TooltipPositionAtOriginExample,
   TooltipPositionExample,
 } from '@angular/components-examples/material/tooltip';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'tooltip-demo',
@@ -34,6 +34,5 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     TooltipPositionExample,
     TooltipPositionAtOriginExample,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipDemo {}

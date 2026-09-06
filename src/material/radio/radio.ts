@@ -11,7 +11,6 @@ import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -399,7 +398,6 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   },
   exportAs: 'matRadioButton',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy {
@@ -708,17 +706,6 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
           this.radioGroup._emitChangeEvent();
         }
       }
-    }
-  }
-
-  /** Triggered when the user clicks on the touch target. */
-  _onTouchTargetClick(event: Event) {
-    this._onInputInteraction(event);
-
-    if (!this.disabled || this.disabledInteractive) {
-      // Normally the input should be focused already, but if the click
-      // comes from the touch target, then we might have to focus it ourselves.
-      this._inputElement?.nativeElement.focus();
     }
   }
 

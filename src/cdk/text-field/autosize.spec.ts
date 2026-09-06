@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, flush, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '../testing/private';
@@ -264,7 +264,7 @@ describe('CdkTextareaAutosize', () => {
       .toBe(textarea.scrollHeight);
   });
 
-  it('should resize when an associated form control value changes', fakeAsync(() => {
+  it('should resize when an associated form control value changes', async () => {
     const fixtureWithForms = TestBed.createComponent(AutosizeTextareaWithNgModel);
     textarea = fixtureWithForms.nativeElement.querySelector('textarea');
     fixtureWithForms.detectChanges();
@@ -280,15 +280,15 @@ describe('CdkTextareaAutosize', () => {
                 This it is and nothing more.” `;
     fixtureWithForms.changeDetectorRef.markForCheck();
     fixtureWithForms.detectChanges();
-    flush();
+    await wait(50);
     fixtureWithForms.detectChanges();
 
     expect(textarea.clientHeight)
       .withContext('Expected increased height when ngModel is updated.')
       .toBeGreaterThan(previousHeight);
-  }));
+  });
 
-  it('should resize when the textarea value is changed programmatically', fakeAsync(() => {
+  it('should resize when the textarea value is changed programmatically', () => {
     const previousHeight = textarea.clientHeight;
 
     textarea.value = `
@@ -298,24 +298,22 @@ describe('CdkTextareaAutosize', () => {
 
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
-    flush();
-    fixture.detectChanges();
 
     expect(textarea.clientHeight)
       .withContext('Expected the textarea height to have increased.')
       .toBeGreaterThan(previousHeight);
-  }));
+  });
 
-  it('should trigger a resize when the window is resized', fakeAsync(() => {
+  it('should trigger a resize when the window is resized', async () => {
     spyOn(autosize, 'resizeToFitContent');
 
     dispatchFakeEvent(window, 'resize');
-    tick(16);
+    await wait(100);
 
     expect(autosize.resizeToFitContent).toHaveBeenCalled();
-  }));
+  });
 
-  it('should not trigger a resize when it is disabled', fakeAsync(() => {
+  it('should not trigger a resize when it is disabled', () => {
     const fixtureWithoutAutosize = TestBed.createComponent(AutosizeTextareaWithoutAutosize);
     textarea = fixtureWithoutAutosize.nativeElement.querySelector('textarea');
     autosize = fixtureWithoutAutosize.debugElement
@@ -363,7 +361,7 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.clientHeight)
       .withContext('Expected textarea to have a scrollbar.')
       .toBeLessThan(textarea.scrollHeight);
-  }));
+  });
 
   it('should handle an undefined placeholder', () => {
     fixture.componentInstance.placeholder = undefined!;
@@ -373,6 +371,10 @@ describe('CdkTextareaAutosize', () => {
     expect(textarea.hasAttribute('placeholder')).toBe(false);
   });
 });
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 // Styles to reset padding and border to make measurement comparisons easier.
 const textareaStyleReset = `

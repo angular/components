@@ -25,14 +25,14 @@ $fallbacks: m3-sort.get-tokens();
   // active, the arrow will always be shown so the user has no way of telling the difference.
   [mat-sort-header].cdk-keyboard-focused &,
   [mat-sort-header].cdk-program-focused & {
-    border-bottom: solid 1px currentColor;
+    border-bottom: var(--mat-focus-indicator-fallback-border-style, solid) 1px currentColor;
   }
 
   // For the sort-header element, default inset/offset values are necessary to ensure that
   // the focus indicator is sufficiently contrastive and renders appropriately.
   &::before {
     $border-width: var(--mat-focus-indicator-border-width, #{private.$default-border-width});
-    $offset: calc(#{$border-width} + 2px);
+    $offset: calc(#{$border-width} + 4px);
     margin: calc(#{$offset} * -1);
   }
 }

@@ -6,24 +6,28 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {KeyboardEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
 /** The inputs for the MenuBarPattern class. */
-export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V> {
+export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V | undefined> {
   /** The menu items contained in the menu. */
   items: SignalLike<MenuItemPattern<V>[]>;
 
   /** Callback function triggered when a menu item is selected. */
-  itemSelected?: (value: V) => void;
+  itemSelected?: (value: V | undefined) => void;
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
 }
 
 /** The inputs for the MenuPattern class. */
-export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, 'value'> {
+export interface MenuInputs<V> extends Omit<
+  ListInputs<MenuItemPattern<V>, V | undefined>,
+  'value'
+> {
   /** The unique ID of the menu. */
   id: SignalLike<string>;
 
@@ -34,7 +38,7 @@ export interface MenuInputs<V> extends Omit<ListInputs<MenuItemPattern<V>, V>, '
   parent: SignalLike<MenuTriggerPattern<V> | MenuItemPattern<V> | undefined>;
 
   /** Callback function triggered when a menu item is selected. */
-  itemSelected?: (value: V) => void;
+  itemSelected?: (value: V | undefined) => void;
 
   /** The text direction of the menu bar. */
   textDirection: SignalLike<'ltr' | 'rtl'>;
@@ -59,12 +63,18 @@ export interface MenuTriggerInputs<V> {
 }
 
 /** The inputs for the MenuItemPattern class. */
-export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable'> {
+export interface MenuItemInputs<V> extends Omit<ListItem<V>, 'index' | 'selectable' | 'value'> {
+  /** The value of the menu item. */
+  value?: SignalLike<V | undefined>;
+
   /** A reference to the parent menu or menu trigger. */
   parent: SignalLike<MenuPattern<V> | MenuBarPattern<V> | undefined>;
 
   /** A reference to the submenu associated with the menu item. */
   submenu: SignalLike<MenuPattern<V> | undefined>;
+
+  /** The role of the menu item. */
+  role: SignalLike<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>;
 }
 
 /** The menu ui pattern class. */
@@ -84,7 +94,7 @@ export class MenuPattern<V> {
   );
 
   /** Controls list behavior for the menu items. */
-  readonly listBehavior: List<MenuItemPattern<V>, V>;
+  readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
 
   /** Whether the menu or any of its child elements are currently focused. */
   readonly isFocused = signal(false);
@@ -95,11 +105,14 @@ export class MenuPattern<V> {
   /** Whether the menu trigger has been hovered. */
   readonly hasBeenHovered = signal(false);
 
+  /** Items currently inside the menu. */
+  readonly items = () => this.inputs.items();
+
   /** Timeout used to open sub-menus on hover. */
-  _openTimeout: any;
+  private _openTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /** Timeout used to close sub-menus on hover out. */
-  _closeTimeout: any;
+  private _closeTimeout: ReturnType<typeof setTimeout> | undefined;
 
   /** The tab index of the menu. */
   readonly tabIndex = () => this.listBehavior.tabIndex();
@@ -175,10 +188,26 @@ export class MenuPattern<V> {
 
   constructor(readonly inputs: MenuInputs<V>) {
     this.id = inputs.id;
-    this.listBehavior = new List<MenuItemPattern<V>, V>({
+    this.listBehavior = new List<MenuItemPattern<V>, V | undefined>({
       ...inputs,
       value: signal([]),
     });
+  }
+
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    const values = this.inputs
+      .items()
+      .map(i => i.value())
+      .filter((val): val is V => val !== undefined);
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate value '${duplicates[0]}' detected inside ngMenu.`);
+    }
+
+    return violations;
   }
 
   /** Sets the default state for the menu. */
@@ -213,14 +242,14 @@ export class MenuPattern<V> {
     }
 
     this.hasBeenHovered.set(true);
-    const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
+    const item = this.inputs.items().find(i => i.element()?.contains(_getEventTarget(event)));
 
     if (!item) {
       return;
     }
 
     const parent = this.inputs.parent();
-    const activeItem = this?.inputs.activeItem();
+    const activeItem = this.inputs.activeItem();
 
     if (parent instanceof MenuItemPattern) {
       const grandparent = parent.inputs.parent();
@@ -293,7 +322,7 @@ export class MenuPattern<V> {
 
   /** Handles click events for the menu. */
   onClick(event: MouseEvent) {
-    const relatedTarget = event.target as Node | null;
+    const relatedTarget = _getEventTarget<Node>(event);
     const item = this.inputs.items().find(i => i.element()?.contains(relatedTarget));
 
     if (item) {
@@ -463,7 +492,7 @@ export class MenuPattern<V> {
 /** The menubar ui pattern class. */
 export class MenuBarPattern<V> {
   /** Controls list behavior for the menu items. */
-  readonly listBehavior: List<MenuItemPattern<V>, V>;
+  readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
 
   /** The tab index of the menu. */
   readonly tabIndex = () => this.listBehavior.tabIndex();
@@ -508,7 +537,7 @@ export class MenuBarPattern<V> {
   });
 
   constructor(readonly inputs: MenuBarInputs<V>) {
-    this.listBehavior = new List<MenuItemPattern<V>, V>(inputs);
+    this.listBehavior = new List<MenuItemPattern<V>, V | undefined>(inputs);
   }
 
   /** Sets the default state for the menubar. */
@@ -536,7 +565,7 @@ export class MenuBarPattern<V> {
 
   /** Handles click events for the menu bar. */
   onClick(event: MouseEvent) {
-    const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
+    const item = this.inputs.items().find(i => i.element()?.contains(_getEventTarget(event)));
 
     if (!item) {
       return;
@@ -548,7 +577,7 @@ export class MenuBarPattern<V> {
 
   /** Handles mouseover events for the menu bar. */
   onMouseOver(event: MouseEvent) {
-    const item = this.inputs.items().find(i => i.element()?.contains(event.target as Node));
+    const item = this.inputs.items().find(i => i.element()?.contains(_getEventTarget(event)));
 
     if (item) {
       this.goto(item, {focusElement: this.isFocused()});
@@ -625,6 +654,9 @@ export class MenuTriggerPattern<V> {
   /** Whether the menu trigger has received interaction. */
   readonly hasBeenInteracted = signal(false);
 
+  /** The pending focus target when the menu is opened before the menu instance is available. */
+  readonly pendingFocus = signal<'first' | 'last' | undefined>(undefined);
+
   /** The role of the menu trigger. */
   readonly role = () => 'button';
 
@@ -654,6 +686,24 @@ export class MenuTriggerPattern<V> {
 
   constructor(readonly inputs: MenuTriggerInputs<V>) {
     this.menu = this.inputs.menu;
+  }
+
+  /** Flushes any pending focus when the menu instance becomes available. */
+  pendingFocusEffect(): void {
+    const menu = this.inputs.menu();
+    const intent = this.pendingFocus();
+    const items = menu?.items();
+
+    // We check the items so that we don't try calling into
+    // `first/last` until the items are actually available.
+    if (menu && intent && items?.length) {
+      if (intent === 'first') {
+        menu.first();
+      } else if (intent === 'last') {
+        menu.last();
+      }
+      this.pendingFocus.set(undefined);
+    }
   }
 
   /** Handles keyboard events for the menu trigger. */
@@ -695,15 +745,16 @@ export class MenuTriggerPattern<V> {
     this.expanded.set(true);
 
     if (opts?.first) {
-      this.inputs.menu()?.first();
+      this.pendingFocus.set('first');
     } else if (opts?.last) {
-      this.inputs.menu()?.last();
+      this.pendingFocus.set('last');
     }
   }
 
   /** Closes the menu. */
   close(opts: {refocus?: boolean} = {}) {
     this.expanded.set(false);
+    this.pendingFocus.set(undefined);
     this.menu()?.listBehavior.unfocus();
 
     if (opts.refocus) {
@@ -722,9 +773,9 @@ export class MenuTriggerPattern<V> {
 }
 
 /** The menu item ui pattern class. */
-export class MenuItemPattern<V> implements ListItem<V> {
+export class MenuItemPattern<V> implements ListItem<V | undefined> {
   /** The value of the menu item. */
-  readonly value: SignalLike<V>;
+  readonly value: SignalLike<V | undefined>;
 
   /** The unique ID of the menu item. */
   readonly id: SignalLike<string>;
@@ -765,7 +816,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
   readonly controls = signal<string | undefined>(undefined);
 
   /** The role of the menu item. */
-  readonly role = () => 'menuitem';
+  readonly role = () => this.inputs.role();
 
   /** Whether the menu item has a popup. */
   readonly hasPopup = computed(() => !!this.submenu());
@@ -778,7 +829,7 @@ export class MenuItemPattern<V> implements ListItem<V> {
 
   constructor(readonly inputs: MenuItemInputs<V>) {
     this.id = inputs.id;
-    this.value = inputs.value;
+    this.value = inputs.value ?? signal(undefined);
     this.element = inputs.element;
     this.submenu = this.inputs.submenu;
     this.searchTerm = inputs.searchTerm;

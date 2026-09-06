@@ -8,15 +8,7 @@
 
 import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Tree, TreeItem, TreeItemGroup} from '@angular/aria/tree';
-import {
-  Component,
-  afterRenderEffect,
-  computed,
-  signal,
-  viewChild,
-  untracked,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, afterRenderEffect, computed, signal, viewChild, untracked} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {OverlayModule} from '@angular/cdk/overlay';
 
@@ -41,7 +33,6 @@ interface SeasonNode {
     TreeItemGroup,
     OverlayModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxTreeAutoSelectExample {
   readonly tree = viewChild(Tree);

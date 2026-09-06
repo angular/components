@@ -9,7 +9,6 @@
 import {_IdGenerator, FocusableOption} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -104,7 +103,6 @@ export class MatCheckboxChange {
   ],
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox
@@ -206,9 +204,6 @@ export class MatCheckbox
 
   /** The native `<input type="checkbox">` element */
   @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
-
-  /** The native `<label>` element */
-  @ViewChild('label') _labelElement!: ElementRef<HTMLInputElement>;
 
   /** Tabindex for the checkbox. */
   @Input({transform: (value: unknown) => (value == null ? undefined : numberAttribute(value))})
@@ -517,16 +512,6 @@ export class MatCheckbox
     this._handleInputClick();
   }
 
-  _onTouchTargetClick() {
-    this._handleInputClick();
-
-    if (!this.disabled) {
-      // Normally the input should be focused already, but if the click
-      // comes from the touch target, then we might have to focus it ourselves.
-      this._inputElement.nativeElement.focus();
-    }
-  }
-
   /**
    *  Prevent click events that come from the `<label/>` element from bubbling. This prevents the
    *  click handler on the host from triggering twice when clicking on the `<label/>` element. After
@@ -535,7 +520,7 @@ export class MatCheckbox
    *  bubbles when the label is clicked.
    */
   _preventBubblingFromLabel(event: MouseEvent) {
-    if (!!event.target && this._labelElement.nativeElement.contains(event.target as HTMLElement)) {
+    if (event.target && this._inputElement && event.target !== this._inputElement.nativeElement) {
       event.stopPropagation();
     }
   }

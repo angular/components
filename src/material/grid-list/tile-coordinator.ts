@@ -94,10 +94,9 @@ export class TileCoordinator {
 
   /** Finds the next available space large enough to fit the tile. */
   private _findMatchingGap(tileCols: number): number {
-    if (tileCols > this.tracker.length && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+    if (tileCols > this.tracker.length) {
       throw Error(
-        `mat-grid-list: tile with colspan ${tileCols} is wider than ` +
-          `grid with cols="${this.tracker.length}".`,
+        `mat-grid-list: tile with colspan ${tileCols} is wider than grid with cols="${this.tracker.length}".`,
       );
     }
 

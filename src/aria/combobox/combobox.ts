@@ -23,21 +23,37 @@ import {DeferredContentAware, ComboboxPattern, tabIndexTransform} from '@angular
 import type {ComboboxPopup} from './combobox-popup';
 
 /**
- * The container element that wraps a combobox input and popup, and orchestrates its behavior.
+ * A directive that coordinates a combobox trigger element and its associated popup widget.
  *
- * The `ngCombobox` directive is the main entry point for creating a combobox and customizing its
- * behavior. It coordinates the interactions between the input and the popup.
+ * The `ngCombobox` directive is applied directly to the interactive trigger element, which can be
+ * either an editable `<input>` (for search/autocomplete behaviors) or a non-editable element like
+ * a `<div>` (for custom select dropdowns). It manages focus and expansion states, coordinates autocomplete
+ * suggestions (if editable), and forwards navigation keys down into the active popup.
  *
+ * ### Example 1: Editable Autocomplete Input
  * ```html
- * <div ngCombobox [(expanded)]="expanded">
- *   <input ngComboboxInput />
+ * <input ngCombobox #combobox="ngCombobox" [(value)]="searchQuery" [(expanded)]="isExpanded" />
  *
- *   <ng-template ngComboboxPopup>
- *     <div ngComboboxWidget>
- *       <!-- ... options ... -->
- *     </div>
- *   </ng-template>
+ * <ng-template ngComboboxPopup [combobox]="combobox">
+ *   <div ngComboboxWidget #listbox="ngListbox" ngListbox [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
+ *     <div ngOption value="first">First Option</div>
+ *     <div ngOption value="second">Second Option</div>
+ *   </div>
+ * </ng-template>
+ * ```
+ *
+ * ### Example 2: Non-Editable Custom Select Dropdown
+ * ```html
+ * <div ngCombobox #combobox="ngCombobox" [(expanded)]="isExpanded" class="select-trigger">
+ *   {{selectedValue}}
  * </div>
+ *
+ * <ng-template ngComboboxPopup [combobox]="combobox">
+ *   <div ngComboboxWidget #listbox="ngListbox" ngListbox [(value)]="selectedValues" [activeDescendant]="listbox.activeDescendant()">
+ *     <div ngOption value="first">First Option</div>
+ *     <div ngOption value="second">Second Option</div>
+ *   </div>
+ * </ng-template>
  * ```
  */
 @Directive({
@@ -47,17 +63,18 @@ import type {ComboboxPopup} from './combobox-popup';
     'role': 'combobox',
     '[attr.aria-autocomplete]': '_pattern.autocomplete()',
     '[attr.aria-disabled]': '_pattern.disabled()',
+    '[attr.aria-readonly]': '_pattern.ariaReadonly()',
     '[attr.aria-expanded]': '_pattern.isExpanded()',
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '[attr.aria-controls]': '_pattern.popupId()',
     '[attr.aria-haspopup]': '_pattern.popupType()',
     '[attr.tabindex]':
       'disabled() && !softDisabled() ? -1 : (tabIndex() !== undefined ? tabIndex() : 0)',
-    '[attr.disabled]': 'disabled() && !softDisabled() ? "" : null',
-    '[attr.readonly]': 'disabled() && _pattern.isEditable() ? "" : null',
+    '[attr.disabled]': '_pattern.nativeDisabled()',
+    '[attr.readonly]': '_pattern.nativeReadonly()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(focusin)': '_pattern.onFocusin()',
-    '(focusout)': '_pattern.onFocusout($event)',
+    '(focusout)': '_pattern.onFocusout()',
     '(click)': '_pattern.onClick($event)',
     '(input)': '_pattern.onInput($event)',
   },
@@ -76,6 +93,9 @@ export class Combobox extends DeferredContentAware implements OnInit {
 
   /** Whether the combobox is disabled. */
   readonly disabled = input(false, {transform: booleanAttribute});
+
+  /** Whether the combobox is readonly. */
+  readonly readonly = input(false, {transform: booleanAttribute});
 
   /** Whether the combobox is soft disabled (remains focusable). */
   readonly softDisabled = input(true, {transform: booleanAttribute});
@@ -101,6 +121,7 @@ export class Combobox extends DeferredContentAware implements OnInit {
   /** The combobox ui pattern. */
   readonly _pattern = new ComboboxPattern({
     ...this,
+    readonly: () => this.readonly(),
     element: () => this.element,
     expandable: () => true,
     popup: computed(() => this._popup()?._pattern),
@@ -109,8 +130,7 @@ export class Combobox extends DeferredContentAware implements OnInit {
   constructor() {
     super();
 
-    afterRenderEffect(() => this._pattern.keyboardEventRelayEffect());
-    afterRenderEffect(() => this._pattern.closePopupOnBlurEffect());
+    afterRenderEffect({write: () => this._pattern.keyboardEventRelayEffect()});
     afterRenderEffect(() => {
       this.contentVisible.set(this._pattern.isExpanded());
     });

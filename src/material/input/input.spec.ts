@@ -458,6 +458,27 @@ describe('MatInput without forms', () => {
     expect(inputEl.disabled).toBe(true);
   });
 
+  it('should update the disabled styling when the form field control is swapped out', () => {
+    const fixture = TestBed.createComponent(MatInputWithSwappedControl);
+    fixture.detectChanges();
+
+    const wrapperEl = fixture.debugElement.query(
+      By.css('.mat-mdc-text-field-wrapper'),
+    )!.nativeElement;
+
+    expect(wrapperEl.classList.contains('mdc-text-field--disabled'))
+      .withContext(`Expected form field not to start out disabled.`)
+      .toBe(false);
+
+    fixture.componentInstance.disabled = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+
+    expect(wrapperEl.classList.contains('mdc-text-field--disabled'))
+      .withContext(`Expected form field to look disabled after the control was swapped.`)
+      .toBe(true);
+  });
+
   it('should be able to set an input as being disabled and interactive', () => {
     const fixture = TestBed.createComponent(MatInputWithDisabled);
     fixture.componentInstance.disabled = true;
@@ -1747,6 +1768,23 @@ class MatInputWithDisabled {
 }
 
 @Component({
+  template: `
+    <mat-form-field>
+      @if (disabled) {
+        <input matInput [disabled]="true">
+      } @else {
+        <input matInput>
+      }
+    </mat-form-field>
+  `,
+  imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MatInputWithSwappedControl {
+  disabled = false;
+}
+
+@Component({
   template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`,
   imports: [MatInputModule],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -2140,7 +2178,6 @@ class MatInputWithNgIf {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <mat-form-field>
       <mat-label>Label</mat-label>

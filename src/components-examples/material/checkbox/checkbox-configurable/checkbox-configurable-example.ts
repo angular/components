@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, model} from '@angular/core';
+import {Component, model} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -12,7 +12,6 @@ import {MatRadioModule} from '@angular/material/radio';
   templateUrl: 'checkbox-configurable-example.html',
   styleUrl: 'checkbox-configurable-example.css',
   imports: [MatCardModule, MatCheckboxModule, FormsModule, MatRadioModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CheckboxConfigurableExample {
   readonly checked = model(false);

@@ -363,7 +363,7 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
     // handles arrowing and updating the value when
     // a step is defined.
     if (this._slider.step || !this._isActive) {
-      this._updateThumbUIByValue({withAnimation: true});
+      this._updateThumbUIByValue({withAnimation: !this._isActive});
     }
     this._slider._onValueChange(this);
   }
@@ -617,8 +617,7 @@ export class MatSliderRangeThumb extends MatSliderThumb implements _MatSliderRan
   getSibling(): _MatSliderRangeThumb | undefined {
     if (!this._sibling) {
       this._sibling = this._slider._getInput(this._isEndThumb ? _MatThumb.START : _MatThumb.END) as
-        | MatSliderRangeThumb
-        | undefined;
+        MatSliderRangeThumb | undefined;
     }
     return this._sibling;
   }

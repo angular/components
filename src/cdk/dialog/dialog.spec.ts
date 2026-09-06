@@ -1328,7 +1328,6 @@ class DirectiveWithViewContainer {
 }
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: 'hello',
 })
 class ComponentWithOnPushViewContainer {

@@ -3,8 +3,8 @@
     <a
       mat-list-item
       href="#{{link}}"
-      (click)="$event.preventDefault(); activeLink=link;"
-      [activated]="activeLink === link"
+      (click)="$event.preventDefault(); activeLink.set(link)"
+      [activated]="activeLink() === link"
       >{{link | titlecase}}</a
     >
   }
@@ -13,9 +13,9 @@
   @for (link of fragments; track link) {
     <a
       mat-list-item
-      [activated]="activeLink===link"
+      [activated]="activeLink() === link"
       href="#{{link}}"
-      (click)="$event.preventDefault(); activeLink=link;"
+      (click)="$event.preventDefault(); activeLink.set(link);"
     >
       <mat-icon matListItemIcon>folder</mat-icon>
       <span matListItemTitle>{{ link | titlecase}}</span>

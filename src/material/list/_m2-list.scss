@@ -8,23 +8,23 @@
 
   @return (
     base: (
-      list-active-indicator-color: transparent,
       list-active-indicator-shape: 4px,
       list-list-item-container-shape: 0,
       list-list-item-leading-avatar-shape: 50%,
-      list-list-item-container-color: transparent,
-      list-list-item-selected-container-color: transparent,
-      list-list-item-leading-avatar-color: transparent,
       list-list-item-leading-icon-size: 24px,
       list-list-item-leading-avatar-size: 40px,
       list-list-item-trailing-icon-size: 24px,
-      list-list-item-disabled-state-layer-color: transparent,
       list-list-item-disabled-state-layer-opacity: 0,
       list-list-item-disabled-label-text-opacity: 0.38,
       list-list-item-disabled-leading-icon-opacity: 0.38,
       list-list-item-disabled-trailing-icon-opacity: 0.38,
     ),
     color: (
+      list-active-indicator-color: transparent,
+      list-list-item-container-color: transparent,
+      list-list-item-selected-container-color: transparent,
+      list-list-item-leading-avatar-color: transparent,
+      list-list-item-disabled-state-layer-color: transparent,
       list-list-item-label-text-color: map.get($system, on-surface),
       list-list-item-supporting-text-color: map.get($system, on-surface-variant),
       list-list-item-leading-icon-color: map.get($system, on-surface-variant),

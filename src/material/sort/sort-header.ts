@@ -10,7 +10,6 @@ import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ElementRef,
   Input,
@@ -59,7 +58,6 @@ import {_animationsDisabled, _StructuralStylesLoader} from '../core';
     '[class.mat-sort-header-disabled]': '_isDisabled()',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewInit {
   protected _sort = inject(MatSort, {optional: true})!;

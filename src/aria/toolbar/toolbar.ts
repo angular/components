@@ -15,7 +15,6 @@ import {
   ElementRef,
   inject,
   input,
-  model,
   OnDestroy,
   signal,
 } from '@angular/core';
@@ -30,18 +29,16 @@ import type {ToolbarWidget} from './toolbar-widget';
  *
  * ```html
  * <div ngToolbar orientation="horizontal" [wrap]="true">
- *   <button ngToolbarWidget value="save">Save</button>
- *   <button ngToolbarWidget value="print">Print</button>
+ *   <button ngToolbarWidget>Save</button>
+ *   <button ngToolbarWidget>Print</button>
  *
- *   <div ngToolbarWidgetGroup [(value)]="selectedAlignment">
- *     <button ngToolbarWidget value="left">Left</button>
- *     <button ngToolbarWidget value="center">Center</button>
- *     <button ngToolbarWidget value="right">Right</button>
+ *   <div ngToolbarWidgetGroup>
+ *     <button ngToolbarWidget>Left</button>
+ *     <button ngToolbarWidget>Center</button>
+ *     <button ngToolbarWidget>Right</button>
  *   </div>
  * </div>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Toolbar](guide/aria/toolbar)
  */
@@ -59,7 +56,7 @@ import type {ToolbarWidget} from './toolbar-widget';
     '(focusin)': '_pattern.onFocusIn()',
   },
 })
-export class Toolbar<V> implements OnDestroy {
+export class Toolbar implements OnDestroy {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -67,13 +64,13 @@ export class Toolbar<V> implements OnDestroy {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The collection of widgets in the toolbar. */
-  readonly _collection = new SortedCollection<ToolbarWidget<V>>();
+  readonly _collection = new SortedCollection<ToolbarWidget>();
 
   /** Text direction. */
   readonly textDirection = inject(Directionality).valueSignal;
 
   /** Sorted UIPatterns of the child widgets */
-  readonly _itemPatterns = computed<ToolbarWidgetPattern<V>[]>(() =>
+  readonly _itemPatterns = computed<ToolbarWidgetPattern[]>(() =>
     this._collection.orderedItems().map(widget => widget._pattern),
   );
 
@@ -92,18 +89,14 @@ export class Toolbar<V> implements OnDestroy {
   /** Whether focus should wrap when navigating. */
   readonly wrap = input(true, {transform: booleanAttribute});
 
-  /** The values of the selected widgets within the toolbar. */
-  readonly value = model<V[]>([]);
-
   /** The toolbar UIPattern. */
-  readonly _pattern: ToolbarPattern<V> = new ToolbarPattern<V>({
+  readonly _pattern: ToolbarPattern = new ToolbarPattern({
     ...this,
     items: this._itemPatterns,
     activeItem: signal(undefined),
     textDirection: this.textDirection,
     element: () => this._elementRef.nativeElement,
     getItem: e => this._getItem(e),
-    value: this.value,
   });
 
   constructor() {

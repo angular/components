@@ -11,6 +11,7 @@ export {TabList} from './tab-list';
 export {Tab} from './tab';
 export {TabPanel} from './tab-panel';
 export {TabContent} from './tab-content';
+export {TABS, TAB_LIST} from './tab-tokens';
 
 // This needs to be re-exported, because it's used by the tab components.
 // See: https://github.com/angular/components/issues/30663.

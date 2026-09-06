@@ -7,13 +7,12 @@
  */
 
 import {BreakpointObserverOverviewExample} from '@angular/components-examples/cdk/layout';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'layout-demo',
   templateUrl: 'layout-demo.html',
   styleUrl: 'layout-demo.css',
   imports: [BreakpointObserverOverviewExample],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutDemo {}

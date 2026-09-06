@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
   ElementRef,
@@ -104,7 +103,6 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
   },
   templateUrl: 'progress-bar.html',
   styleUrl: 'progress-bar.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatProgressBar implements AfterViewInit, OnDestroy {

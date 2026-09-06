@@ -34,6 +34,7 @@ import {ScrollStrategyOptions} from './scroll/index';
 
 /** Object used to configure the default options for overlays. */
 export interface OverlayDefaultConfig {
+  /** Whether overlays should be rendered inside popovers by default. */
   usePopover?: boolean;
 }
 
@@ -68,7 +69,10 @@ export function createOverlayRef(injector: Injector, config?: OverlayConfig): Ov
 
   overlayConfig.direction = overlayConfig.direction || directionality.value;
 
-  if (!('showPopover' in doc.body)) {
+  // `document.body` can be null during page navigation or unload cycles per the WHATWG spec
+  // (https://html.spec.whatwg.org/multipage/dom.html#dom-document-body), even though TypeScript
+  // types it as non-nullable. Guard against it to avoid "Cannot use 'in' operator ... in null".
+  if (!doc.body || !('showPopover' in doc.body)) {
     overlayConfig.usePopover = false;
   } else {
     overlayConfig.usePopover = config?.usePopover ?? defaultUsePopover;

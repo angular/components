@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
@@ -15,7 +15,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 export class SlideToggleFormsExample {
   private _formBuilder = inject(FormBuilder);
 
-  isChecked = true;
+  isChecked = signal(true);
   formGroup = this._formBuilder.group({
     enableWifi: '',
     acceptTerms: ['', Validators.requiredTrue],

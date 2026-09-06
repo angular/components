@@ -90,7 +90,7 @@ describe('MatDatepicker', () => {
         testComponent = fixture.componentInstance;
         model = fixture.debugElement
           .query(By.directive(MatDatepicker))
-          .injector.get(MatDateSelectionModel);
+          .injector.get<MatDateSelectionModel<Date | null, Date>>(MatDateSelectionModel);
       });
 
       afterEach(() => {
@@ -798,7 +798,7 @@ describe('MatDatepicker', () => {
         testComponent = fixture.componentInstance;
         model = fixture.debugElement
           .query(By.directive(MatDatepicker))
-          .injector.get(MatDateSelectionModel);
+          .injector.get<MatDateSelectionModel<Date | null, Date>>(MatDateSelectionModel);
       });
 
       afterEach(() => {
@@ -968,7 +968,7 @@ describe('MatDatepicker', () => {
         testComponent = fixture.componentInstance;
         model = fixture.debugElement
           .query(By.directive(MatDatepicker))
-          .injector.get(MatDateSelectionModel);
+          .injector.get<MatDateSelectionModel<Date | null, Date>>(MatDateSelectionModel);
       });
 
       afterEach(() => {

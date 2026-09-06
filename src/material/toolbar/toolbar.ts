@@ -10,7 +10,6 @@ import {Platform} from '@angular/cdk/platform';
 
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   Component,
   ContentChildren,
   Directive,
@@ -40,7 +39,6 @@ export class MatToolbarRow {}
     '[class.mat-toolbar-multiple-rows]': '_toolbarRows.length > 0',
     '[class.mat-toolbar-single-row]': '_toolbarRows.length === 0',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatToolbar implements AfterViewInit {

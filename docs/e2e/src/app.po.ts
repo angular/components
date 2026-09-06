@@ -6,16 +6,28 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {browser, by, element} from 'protractor';
+import * as webdriver from 'selenium-webdriver';
 
 export class MaterialDocsAppPage {
-  navigateTo() {
-    return browser.get(browser.baseUrl) as Promise<any>;
+  constructor(
+    private _wd: webdriver.WebDriver,
+    private _baseUrl: string,
+  ) {}
+
+  async navigateTo() {
+    await this._wd.get(this._baseUrl);
+    await this._wd.wait(
+      webdriver.until.elementLocated(
+        webdriver.By.css('app-homepage header .docs-header-headline .mat-h1'),
+      ),
+      10000,
+    );
   }
 
-  getTitleText() {
-    return element(
-      by.css('app-homepage header .docs-header-headline .mat-h1'),
-    ).getText() as Promise<string>;
+  async getTitleText() {
+    const el = await this._wd.findElement(
+      webdriver.By.css('app-homepage header .docs-header-headline .mat-h1'),
+    );
+    return el.getText();
   }
 }

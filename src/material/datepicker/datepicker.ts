@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
 import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
 
@@ -18,7 +18,6 @@ import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
   selector: 'mat-datepicker',
   template: '',
   exportAs: 'matDatepicker',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   providers: [
     MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -35,7 +35,6 @@ import {MatStepperModule} from '@angular/material/stepper';
     MatSelectModule,
     ReactiveFormsModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StepperDemo {
   private _formBuilder = inject(FormBuilder);

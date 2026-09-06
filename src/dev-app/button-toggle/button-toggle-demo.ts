@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -17,7 +17,6 @@ import {MatIconModule} from '@angular/material/icon';
   templateUrl: 'button-toggle-demo.html',
   styleUrl: 'button-toggle-demo.css',
   imports: [FormsModule, MatButtonToggleModule, MatCheckboxModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ButtonToggleDemo {
   isVertical = false;

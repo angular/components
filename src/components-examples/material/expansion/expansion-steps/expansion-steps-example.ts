@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -23,7 +23,6 @@ import {MatInputModule} from '@angular/material/input';
     MatButtonModule,
     MatDatepickerModule,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpansionStepsExample {
   step = signal(0);

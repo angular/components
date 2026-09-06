@@ -10,7 +10,6 @@ import {Combobox, ComboboxPopup, ComboboxWidget} from '@angular/aria/combobox';
 import {Listbox, Option} from '@angular/aria/listbox';
 import {
   afterRenderEffect,
-  ChangeDetectionStrategy,
   Component,
   computed,
   signal,
@@ -20,6 +19,7 @@ import {
 } from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {FormsModule} from '@angular/forms';
+import {STATES as states} from '../states';
 
 /** @title Combobox with a dialog popup. */
 @Component({
@@ -27,7 +27,6 @@ import {FormsModule} from '@angular/forms';
   templateUrl: 'combobox-dialog-example.html',
   styleUrls: ['../combobox-example.css'],
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option, OverlayModule, FormsModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ComboboxDialogExample {
   listbox = viewChild<Listbox<string>>(Listbox);
@@ -77,56 +76,3 @@ export class ComboboxDialogExample {
     this.combobox()?.element.focus(); // Focus back to main trigger!
   }
 }
-
-const states = [
-  'Alabama',
-  'Alaska',
-  'Arizona',
-  'Arkansas',
-  'California',
-  'Colorado',
-  'Connecticut',
-  'Delaware',
-  'Florida',
-  'Georgia',
-  'Hawaii',
-  'Idaho',
-  'Illinois',
-  'Indiana',
-  'Iowa',
-  'Kansas',
-  'Kentucky',
-  'Louisiana',
-  'Maine',
-  'Maryland',
-  'Massachusetts',
-  'Michigan',
-  'Minnesota',
-  'Mississippi',
-  'Missouri',
-  'Montana',
-  'Nebraska',
-  'Nevada',
-  'New Hampshire',
-  'New Jersey',
-  'New Mexico',
-  'New York',
-  'North Carolina',
-  'North Dakota',
-  'Ohio',
-  'Oklahoma',
-  'Oregon',
-  'Pennsylvania',
-  'Rhode Island',
-  'South Carolina',
-  'South Dakota',
-  'Tennessee',
-  'Texas',
-  'Utah',
-  'Vermont',
-  'Virginia',
-  'Washington',
-  'West Virginia',
-  'Wisconsin',
-  'Wyoming',
-];

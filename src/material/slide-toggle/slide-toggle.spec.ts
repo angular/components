@@ -374,6 +374,16 @@ describe('MatSlideToggle without forms', () => {
 
       expect(slideToggle.checked).toBe(false);
     });
+
+    it('should add the full-width class if fullWidth is true', () => {
+      expect(slideToggleElement.classList).not.toContain('mat-slide-toggle-full-width');
+
+      slideToggle.fullWidth = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(slideToggleElement.classList).toContain('mat-slide-toggle-full-width');
+    });
   });
 
   describe('custom template', () => {

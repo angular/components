@@ -35,6 +35,10 @@ describe('MatChipListbox', () => {
   let directionality: WritableSignal<Direction>;
   let primaryActions: NodeListOf<HTMLElement>;
 
+  function wait(milliseconds: number) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+  }
+
   describe('StandardChipList', () => {
     describe('basic behaviors', () => {
       beforeEach(() => {
@@ -384,7 +388,7 @@ describe('MatChipListbox', () => {
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
-          await new Promise(r => setTimeout(r, 0));
+          await wait(0);
 
           expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 0')
@@ -407,7 +411,7 @@ describe('MatChipListbox', () => {
             .withContext('Expected tabIndex to be set to -1 temporarily.')
             .toBe(-1);
 
-          await new Promise(r => setTimeout(r, 0));
+          await wait(0);
 
           expect(chipListboxNativeElement.tabIndex)
             .withContext('Expected tabIndex to be reset back to 4')
@@ -690,7 +694,7 @@ describe('MatChipListbox', () => {
             By.css('mat-chip-listbox'),
           )!.nativeElement;
           dispatchFakeEvent(nativeChipListbox, 'blur');
-          await new Promise(r => setTimeout(r, 0));
+          await wait(0);
 
           expect(fixture.componentInstance.control.touched)
             .withContext('Expected the control to be touched.')
@@ -707,7 +711,7 @@ describe('MatChipListbox', () => {
             By.css('mat-chip-listbox'),
           )!.nativeElement;
           dispatchFakeEvent(nativeChipListbox, 'blur');
-          await new Promise(r => setTimeout(r, 0));
+          await wait(0);
 
           expect(fixture.componentInstance.control.touched)
             .withContext('Expected the control to stay untouched.')
@@ -863,16 +867,16 @@ describe('MatChipListbox', () => {
             initFixture.componentInstance.control = new FormControl(['tutorial-1', 'tutorial-2']);
           });
           fixture.detectChanges();
-
-          await new Promise(r => setTimeout(r, 400));
+          await wait(400);
           fixture.detectChanges();
 
           let array = fixture.componentInstance.chips.toArray();
 
           expect(array.length).withContext('Expect chips not to be rendered yet').toBe(0);
 
-          await new Promise(r => setTimeout(r, 100));
+          await wait(100);
           fixture.detectChanges();
+          await fixture.whenStable();
 
           array = fixture.componentInstance.chips.toArray();
 
@@ -891,13 +895,13 @@ describe('MatChipListbox', () => {
           fixture.detectChanges();
           await fixture.whenStable();
 
-          await new Promise(r => setTimeout(r, 500));
+          await wait(500);
           fixture.detectChanges();
 
           fixture.componentInstance.control.setValue(['tutorial-4']);
           fixture.componentInstance.updateChips(['tutorial-3', 'tutorial-4']);
 
-          await new Promise(r => setTimeout(r, 500));
+          await wait(500);
           fixture.detectChanges();
           await fixture.whenStable();
 

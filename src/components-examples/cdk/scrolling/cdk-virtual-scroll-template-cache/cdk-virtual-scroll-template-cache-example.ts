@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Virtual scroll with no template caching */
@@ -6,7 +6,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   selector: 'cdk-virtual-scroll-template-cache-example',
   styleUrl: 'cdk-virtual-scroll-template-cache-example.css',
   templateUrl: 'cdk-virtual-scroll-template-cache-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollTemplateCacheExample {

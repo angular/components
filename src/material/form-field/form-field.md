@@ -11,7 +11,9 @@ The following Angular Material components are designed to work inside a `<mat-fo
 - [`<input matNativeControl>` &amp; `<textarea matNativeControl>`](https://material.angular.dev/components/input/overview)
 - [`<select matNativeControl>`](https://material.angular.dev/components/select/overview)
 - [`<mat-select>`](https://material.angular.dev/components/select/overview)
-- [`<mat-chip-set>`](https://material.angular.dev/components/chips/overview)
+- [`<mat-chip-grid>`](https://material.angular.dev/components/chips/overview)
+
+Note: `<mat-form-field>` requires a child component that implements `MatFormFieldControl`. Among the chips components, only `<mat-chip-grid>` supports this integration.
 
 <!-- example(form-field-overview) -->
 
@@ -141,6 +143,18 @@ When you provide informational text via `<mat-hint>` or `<mat-error>`, `MatFormF
 adds these elements' IDs to the control's `aria-describedby` attribute. Additionally, `MatError`
 applies `aria-live="polite"` by default such that assistive technology will announce errors when
 they appear.
+
+When using static text prefixes or suffixes (such as currency symbols like `$` or unit suffixes like
+`.00` or `kg`), screen readers may not announce them as part of the input value, and some mobile screen
+readers, especially on Android/TalkBack, may expose them as separate focus stops. This can lead to
+redundant announcements or unexpected focus behavior when navigating the field.
+
+If the prefix or suffix provides important context, add an `aria-label` to the input or include the full
+meaning in `aria-describedby` so the accessible name/description matches the visible content. For example,
+if the prefix is `$` and the suffix is `.00` to indicate dollars with no cents, an appropriate `aria-label`
+could be `aria-label="Amount in dollars with 0 cents"`. When the static text is purely decorative and the
+input already conveys the full context, add `aria-hidden="true"` to the static `matTextPrefix` or
+`matTextSuffix` elements so they are skipped during swipe navigation and do not create redundant focus stops.
 
 ### Troubleshooting
 

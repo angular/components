@@ -21,7 +21,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import {MenuPattern, DeferredContentAware, SortedCollection} from '../private';
+import {MenuPattern, DeferredContentAware, SortedCollection, reportViolations} from '../private';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {MenuTrigger} from './menu-trigger';
@@ -50,8 +50,6 @@ import {MENU_COMPONENT} from './menu-tokens';
  *   <div ngMenuItem value="Sub Item 2">Sub Item 2</div>
  * </div>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Menu](guide/aria/menu)
  * @see [MenuBar](guide/aria/menubar)
@@ -116,6 +114,9 @@ export class Menu<V> implements OnDestroy {
   /** A reference to the parent menu item or menu trigger. */
   readonly parent = signal<MenuTrigger<V> | MenuItem<V> | undefined>(undefined);
 
+  /** Whether the menu is soft disabled. */
+  readonly softDisabled = input(true, {transform: booleanAttribute});
+
   /** The menu ui pattern instance. */
   readonly _pattern: MenuPattern<V>;
 
@@ -143,7 +144,7 @@ export class Menu<V> implements OnDestroy {
   readonly tabIndex = computed(() => this._pattern.tabIndex());
 
   /** A callback function triggered when a menu item is selected. */
-  readonly itemSelected = output<V>();
+  readonly itemSelected = output<V | undefined>();
 
   /** The delay in milliseconds before expanding sub-menus on hover. */
   readonly expansionDelay = input<number>(100); // Arbitrarily chosen.
@@ -154,13 +155,12 @@ export class Menu<V> implements OnDestroy {
       parent: computed(() => this.parent()?._pattern),
       items: this._itemPatterns,
       multi: () => false,
-      softDisabled: () => true,
       focusMode: () => 'roving',
       orientation: () => 'vertical',
       selectionMode: () => 'explicit',
       activeItem: signal(undefined),
       element: computed(() => this._elementRef.nativeElement),
-      itemSelected: (value: V) => this.itemSelected.emit(value),
+      itemSelected: (value: V | undefined) => this.itemSelected.emit(value),
     });
 
     afterRenderEffect({
@@ -189,6 +189,15 @@ export class Menu<V> implements OnDestroy {
     });
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
+
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
 
     afterNextRender(() => {
       this._collection.startObserving(this.element);

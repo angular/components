@@ -10,7 +10,7 @@ import {Directionality} from '../bidi';
 import {getRtlScrollAxisType, RtlScrollAxisType, supportsScrollBehavior} from '../platform';
 import {Directive, ElementRef, NgZone, OnDestroy, OnInit, Renderer2, inject} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {ScrollDispatcher} from './scroll-dispatcher';
+import {ScrollDispatcher, ScrollDispatcherTarget} from './scroll-dispatcher';
 
 export type _Without<T> = {[P in keyof T]?: never};
 export type _XOR<T, U> = (_Without<T> & U) | (_Without<U> & T);
@@ -39,7 +39,7 @@ export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
 @Directive({
   selector: '[cdk-scrollable], [cdkScrollable]',
 })
-export class CdkScrollable implements OnInit, OnDestroy {
+export class CdkScrollable implements ScrollDispatcherTarget, OnInit, OnDestroy {
   protected elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   protected scrollDispatcher = inject(ScrollDispatcher);
   protected ngZone = inject(NgZone);

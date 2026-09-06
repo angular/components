@@ -5,7 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.dev/license
  */
-import {ChangeDetectionStrategy, Component, Service, inject, signal} from '@angular/core';
+import {Component, Service, inject, signal} from '@angular/core';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
@@ -115,7 +115,6 @@ export class LoadmoreDatabase {
   styleUrl: 'tree-loadmore-example.css',
   providers: [LoadmoreDatabase],
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TreeLoadmoreExample {
   private _database = inject(LoadmoreDatabase);

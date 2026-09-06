@@ -10,18 +10,18 @@ In this guide, we'll learn how to build our own custom stepper using the CDK ste
 
 Now we are ready to create our custom stepper component. Therefore, we need to create a new Angular component which extends `CdkStepper`:
 
-**custom-stepper.component.ts**
+**custom-stepper.ts**
 
 ```ts
 @Component({
   selector: 'app-custom-stepper',
-  templateUrl: './custom-stepper.component.html',
-  styleUrl: './custom-stepper.component.css',
+  templateUrl: './custom-stepper.html',
+  styleUrl: './custom-stepper.css',
   // This custom stepper provides itself as CdkStepper so that it can be recognized
   // by other components.
-  providers: [{ provide: CdkStepper, useExisting: CustomStepperComponent }]
+  providers: [{ provide: CdkStepper, useExisting: CustomStepper }]
 })
-export class CustomStepperComponent extends CdkStepper {
+export class CustomStepper extends CdkStepper {
   onClick(index: number): void {
     this.selectedIndex = index;
   }
@@ -32,7 +32,7 @@ After we've extended our component class from `CdkStepper` we can now access dif
 
 This is the HTML template of our custom stepper component:
 
-**custom-stepper.component.html**
+**custom-stepper.html**
 
 ```html
 <section class="container">
@@ -55,9 +55,9 @@ This is the HTML template of our custom stepper component:
 </section>
 ```
 
-In the `app.component.css` file we can now style the stepper however we want:
+In the `app.css` file we can now style the stepper however we want:
 
-**custom-stepper.component.css**
+**custom-stepper.css**
 
 ```css
 .example-container {
@@ -97,9 +97,9 @@ In the `app.component.css` file we can now style the stepper however we want:
 
 ## Using our new custom stepper component
 
-Now we are ready to use our new custom stepper component and fill it with steps. Therefore, we can, for example, add it to our `app.component.html` and define some steps:
+Now we are ready to use our new custom stepper component and fill it with steps. Therefore, we can, for example, add it to our `app.html` and define some steps:
 
-**app.component.html**
+**app.html**
 
 ```html
 <app-custom-stepper>
@@ -128,7 +128,7 @@ The above example allows the user to freely navigate between all steps. The `Cdk
 
 A simple example without using forms could look like this:
 
-**app.component.html**
+**app.html**
 
 ```html
 <app-custom-stepper linear>
@@ -142,10 +142,10 @@ A simple example without using forms could look like this:
 </app-custom-stepper>
 ```
 
-**app.component.ts**
+**app.ts**
 
 ```ts
-export class AppComponent {
+export class App {
   completed = false;
 
   completeStep(): void {

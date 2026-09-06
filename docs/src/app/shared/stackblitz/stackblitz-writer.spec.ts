@@ -1,5 +1,5 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {fakeAsync, flushMicrotasks, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {EXAMPLE_COMPONENTS, ExampleData, LiveExample} from '@angular/components-examples';
 import {StackBlitzWriter, TEMPLATE_FILES} from './stackblitz-writer';
 import stackblitz from '@stackblitz/sdk';
@@ -20,6 +20,10 @@ const TEST_URLS = TEMPLATE_FILES.map(filePath => `/assets/stackblitz/${filePath}
   `${testExampleBasePath}/test.html`,
   `${testExampleBasePath}/src/detail.ts`,
 ]);
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 describe('StackBlitzWriter', () => {
   let stackBlitzWriter: StackBlitzWriter;
@@ -70,34 +74,34 @@ describe('StackBlitzWriter', () => {
     can be found in the LICENSE file at https://angular.io/license -->`);
   });
 
-  it('should set tags for example stackblitz', fakeAsync(() => {
+  it('should set tags for example stackblitz', async () => {
     const openProjectSpy = spyOn(stackblitz, 'openProject');
 
     stackBlitzWriter
       .createStackBlitzForExample(testExampleId, data, false)
       .then(openBlitzFn => openBlitzFn());
 
-    flushMicrotasks();
+    await wait(100);
     fakeExternalFileRequests();
-    flushMicrotasks();
+    await wait(100);
 
     expect(openProjectSpy).toHaveBeenCalledTimes(1);
     expect(openProjectSpy).toHaveBeenCalledWith(
       jasmine.objectContaining({tags: ['angular', 'material', 'cdk', 'web', 'example']}),
       jasmine.anything(),
     );
-  }));
+  });
 
-  it('should read and transform template files properly', fakeAsync(() => {
+  it('should read and transform template files properly', async () => {
     const openProjectSpy = spyOn(stackblitz, 'openProject');
 
     stackBlitzWriter
       .createStackBlitzForExample(testExampleId, data, false)
       .then(openBlitzFn => openBlitzFn());
 
-    flushMicrotasks();
+    await wait(100);
     fakeExternalFileRequests();
-    flushMicrotasks();
+    await wait(100);
 
     const expectedFiles = jasmine.objectContaining({
       'angular.json': 'fake',
@@ -115,5 +119,5 @@ describe('StackBlitzWriter', () => {
       openFile: 'src/example/test.ts',
       startScript: 'start',
     });
-  }));
+  });
 });

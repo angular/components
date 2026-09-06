@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
@@ -11,7 +11,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   imports: [MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule],
 })
 export class SelectSelectableNullExample {
-  value: number | null = null;
+  value = signal<number | null>(null);
   options = [
     {label: 'None', value: null},
     {label: 'One', value: 1},

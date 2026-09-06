@@ -1,4 +1,4 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, signal, viewChild} from '@angular/core';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatInputModule} from '@angular/material/input';
@@ -20,13 +20,13 @@ import {MatFormFieldModule} from '@angular/material/form-field';
   ],
 })
 export class AutocompleteRequireSelectionExample {
-  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
+  input = viewChild.required<ElementRef<HTMLInputElement>>('input');
   myControl = new FormControl('');
   options: string[] = ['One', 'Two', 'Three', 'Four', 'Five'];
-  filteredOptions: string[] = this.options.slice();
+  filteredOptions = signal<string[]>(this.options.slice());
 
   filter(): void {
-    const filterValue = this.input.nativeElement.value.toLowerCase();
-    this.filteredOptions = this.options.filter(o => o.toLowerCase().includes(filterValue));
+    const filterValue = this.input().nativeElement.value.toLowerCase();
+    this.filteredOptions.set(this.options.filter(o => o.toLowerCase().includes(filterValue)));
   }
 }

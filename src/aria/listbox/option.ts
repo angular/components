@@ -33,8 +33,6 @@ import {LISTBOX} from './tokens';
  * </li>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Listbox](guide/aria/listbox)
  * @see [Autocomplete](guide/aria/autocomplete)
  * @see [Select](guide/aria/select)

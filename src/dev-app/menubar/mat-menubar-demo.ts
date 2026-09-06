@@ -7,7 +7,7 @@
  */
 
 import {CDK_MENU, CdkMenu, CdkMenuGroup, CdkMenuItem, CdkMenuModule} from '@angular/cdk/menu';
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {MatMenuBarModule} from '@angular/material-experimental/menubar';
 
 // TODO: Remove the fake when mat-menu is re-built with CdkMenu directives
@@ -28,7 +28,6 @@ import {MatMenuBarModule} from '@angular/material-experimental/menubar';
   ],
   styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenu extends CdkMenu {}
 
@@ -46,13 +45,11 @@ export class DemoMenu extends CdkMenu {}
   template: '<ng-content></ng-content>',
   styleUrl: 'mat-menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoMenuItem extends CdkMenuItem {}
 
 @Component({
   templateUrl: 'mat-menubar-demo.html',
   imports: [CdkMenuModule, MatMenuBarModule, DemoMenu, DemoMenuItem],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatMenuBarDemo {}

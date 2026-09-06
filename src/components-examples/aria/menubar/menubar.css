@@ -47,7 +47,13 @@
   opacity: 0.5;
 }
 
-[ngMenuItem][data-active='true'] {
+[ngMenu] [ngMenuItem][data-active='true'] {
+  background: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
+}
+
+[ngMenuBar] > [ngMenuItem]:hover,
+[ngMenuBar] > [ngMenuItem]:focus-within,
+[ngMenuBar] > [ngMenuItem][aria-expanded='true'] {
   background: color-mix(in srgb, var(--mat-sys-outline) 20%, transparent);
 }
 

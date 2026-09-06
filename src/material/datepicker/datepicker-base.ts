@@ -38,7 +38,6 @@ import {
   afterNextRender,
   AfterViewInit,
   booleanAttribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ComponentRef,
@@ -117,7 +116,6 @@ export type DatepickerDropdownPositionY = 'above' | 'below';
   },
   exportAs: 'matDatepickerContent',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CdkTrapFocus, MatCalendar, CdkPortalOutlet, MatButton],
 })
 export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>

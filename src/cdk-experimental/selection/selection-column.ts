@@ -13,7 +13,6 @@ import {
   OnDestroy,
   OnInit,
   ViewChild,
-  ChangeDetectionStrategy,
   ViewEncapsulation,
   inject,
 } from '@angular/core';
@@ -54,7 +53,6 @@ import {CdkSelectAll} from './select-all';
       </td>
     </ng-container>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
     CdkColumnDef,

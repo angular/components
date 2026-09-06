@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
 /** @title Virtual scrolling viewport parent element */
@@ -6,7 +6,6 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
   selector: 'cdk-virtual-scroll-parent-scrolling-example',
   styleUrl: 'cdk-virtual-scroll-parent-scrolling-example.css',
   templateUrl: 'cdk-virtual-scroll-parent-scrolling-example.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ScrollingModule],
 })
 export class CdkVirtualScrollParentScrollingExample {

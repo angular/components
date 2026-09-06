@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -12,6 +12,5 @@ import {MatInputModule} from '@angular/material/input';
   styleUrl: 'datepicker-api-example.css',
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, MatButtonModule],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerApiExample {}

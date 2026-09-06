@@ -1,6 +1,6 @@
 <table mat-table
        [dataSource]="dataSource" multiTemplateDataRows
-       class="mat-elevation-z8">
+       class="mat-shadow-2">
   @for (column of columnsToDisplay; track column) {
     <ng-container matColumnDef="{{column}}">
       <th mat-header-cell *matHeaderCellDef>{{column}}</th>

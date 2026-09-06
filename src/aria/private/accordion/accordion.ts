@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
@@ -82,7 +83,7 @@ export class AccordionGroupPattern {
   /** The click event manager for the accordion trigger. */
   readonly click = computed(() => {
     return new ClickEventManager<PointerEvent>().on((e: PointerEvent) => {
-      const item = this._findTriggerPattern(e.target as Element);
+      const item = this._findTriggerPattern(_getEventTarget(e));
       if (!item) return;
 
       this.navigationBehavior.goto(item);
@@ -102,7 +103,7 @@ export class AccordionGroupPattern {
 
   /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */
   onFocus(event: FocusEvent): void {
-    const item = this._findTriggerPattern(event.target as Element);
+    const item = this._findTriggerPattern(_getEventTarget(event));
     if (!item) return;
     if (!this.focusBehavior.isFocusable(item)) return;
 
@@ -124,6 +125,22 @@ export class AccordionGroupPattern {
   /** Collapses all accordion panels. */
   collapseAll() {
     this.expansionBehavior.closeAll();
+  }
+
+  /** Returns a set of violations */
+  validate(): string[] {
+    const violations: string[] = [];
+
+    if (!this.inputs.multiExpandable()) {
+      const expandedCount = this.inputs.items().filter(t => t.expanded()).length;
+      if (expandedCount > 1) {
+        violations.push(
+          'ngAccordionGroup has multiExpandable set to false, but multiple ngAccordionTrigger panels are initially expanded.',
+        );
+      }
+    }
+
+    return violations;
   }
 
   /** Finds the trigger pattern for a given element. */

@@ -9,11 +9,11 @@
   @return (
     base: (
       sidenav-container-shape: map.get($system, corner-large),
-      sidenav-container-elevation-shadow: none,
       sidenav-container-width: 360px,
-      sidenav-container-divider-color: transparent,
     ),
     color: (
+      sidenav-container-elevation-shadow: none,
+      sidenav-container-divider-color: transparent,
       sidenav-container-background-color: map.get($system, surface),
       sidenav-container-text-color: map.get($system, on-surface-variant),
       sidenav-content-background-color: map.get($system, background),

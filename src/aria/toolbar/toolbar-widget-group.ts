@@ -14,8 +14,9 @@ import {
   input,
   booleanAttribute,
   contentChildren,
+  afterRenderEffect,
 } from '@angular/core';
-import {ToolbarWidgetPattern, ToolbarWidgetGroupPattern} from '../private';
+import {ToolbarWidgetGroupPattern, reportViolations} from '../private';
 import {Toolbar} from './toolbar';
 import {ToolbarWidget} from './toolbar-widget';
 import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
@@ -24,8 +25,6 @@ import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
  * A directive that groups toolbar widgets, used for more complex widgets like radio groups
  * that have their own internal navigation.
  *
- * @developerPreview 21.0
- *
  * @see [Toolbar](guide/aria/toolbar)
  */
 @Directive({
@@ -33,7 +32,7 @@ import {TOOLBAR_WIDGET_GROUP} from './toolbar-tokens';
   exportAs: 'ngToolbarWidgetGroup',
   providers: [{provide: TOOLBAR_WIDGET_GROUP, useExisting: ToolbarWidgetGroup}],
 })
-export class ToolbarWidgetGroup<V> {
+export class ToolbarWidgetGroup {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -41,10 +40,10 @@ export class ToolbarWidgetGroup<V> {
   readonly element = this._elementRef.nativeElement as HTMLElement;
 
   /** The parent Toolbar. */
-  private readonly _toolbar = inject<Toolbar<V>>(Toolbar, {optional: true});
+  private readonly _toolbar = inject<Toolbar>(Toolbar, {optional: true});
 
   /** The list of child widgets within the group. */
-  private readonly _widgets = contentChildren(ToolbarWidget, {descendants: true});
+  private readonly _widgets = contentChildren<ToolbarWidget>(ToolbarWidget, {descendants: true});
 
   /** The parent Toolbar UIPattern. */
   private readonly _toolbarPattern = computed(() => this._toolbar?._pattern);
@@ -55,13 +54,25 @@ export class ToolbarWidgetGroup<V> {
   /** The list of toolbar items within the group. */
   private readonly _itemPatterns = () => this._widgets().map(w => w._pattern);
 
-  /** Whether the group allows multiple widgets to be selected. */
-  readonly multi = input(false, {transform: booleanAttribute});
-
   /** The ToolbarWidgetGroup UIPattern. */
-  readonly _pattern = new ToolbarWidgetGroupPattern<ToolbarWidgetPattern<V>, V>({
+  readonly _pattern = new ToolbarWidgetGroupPattern({
     ...this,
     items: this._itemPatterns,
     toolbar: this._toolbarPattern,
   });
+
+  constructor() {
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          const violations: string[] = [];
+          if (!this._toolbar) {
+            violations.push('ngToolbarWidgetGroup must be placed inside an ngToolbar container.');
+          }
+          reportViolations(violations, this.element);
+        },
+      });
+    }
+  }
 }

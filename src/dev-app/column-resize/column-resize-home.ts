@@ -11,7 +11,7 @@ import {
   DefaultEnabledColumnResizeFlexExample,
   OptInColumnResizeExample,
 } from '@angular/components-examples/material-experimental/column-resize';
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Component} from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
@@ -22,6 +22,5 @@ import {MatExpansionModule} from '@angular/material/expansion';
     DefaultEnabledColumnResizeFlexExample,
     OptInColumnResizeExample,
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnResizeHome {}

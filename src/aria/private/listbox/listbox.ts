@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
+import {_getEventTarget} from '@angular/cdk/platform';
 import {OptionPattern} from './option';
 import {KeyboardEventManager, Modifier, ClickEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
@@ -215,6 +216,18 @@ export class ListboxPattern<V> {
       );
     }
 
+    const values = this.inputs.items().map(o => o.value());
+    const duplicates = values.filter((val, idx) => values.indexOf(val) !== idx);
+    if (duplicates.length > 0) {
+      violations.push(`Duplicate option value '${duplicates[0]}' detected inside ngListbox.`);
+    }
+
+    const ids = this.inputs.items().map(o => o.id());
+    const duplicateIds = ids.filter((id, idx) => ids.indexOf(id) !== idx);
+    if (duplicateIds.length > 0) {
+      violations.push(`Duplicate option ID '${duplicateIds[0]}' detected inside ngListbox.`);
+    }
+
     return violations;
   }
 
@@ -280,11 +293,12 @@ export class ListboxPattern<V> {
   }
 
   protected _getItem(e: PointerEvent) {
-    if (!(e.target instanceof HTMLElement)) {
+    const target = _getEventTarget<Element>(e);
+    if (!target) {
       return;
     }
 
-    const element = e.target.closest('[role="option"]');
+    const element = target.closest('[role="option"]');
     return this.inputs.items().find(i => i.element() === element);
   }
 }

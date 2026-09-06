@@ -1,11 +1,4 @@
-import {
-  Component,
-  DebugElement,
-  Directive,
-  inject,
-  signal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import {Component, DebugElement, Directive, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {waitForMicrotasks} from '../private/testing/test-helpers';
@@ -18,7 +11,7 @@ describe('Toolbar', () => {
   let fixture: ComponentFixture<ToolbarExample>;
   let toolbarElement: HTMLElement;
 
-  const keydown = (key: string, target?: HTMLElement, modifierKeys: {} = {}) => {
+  const keydown = async (key: string, target?: HTMLElement, modifierKeys: {} = {}) => {
     const eventTarget = target || toolbarElement;
     eventTarget.dispatchEvent(
       new KeyboardEvent('keydown', {
@@ -27,28 +20,31 @@ describe('Toolbar', () => {
         ...modifierKeys,
       }),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const click = (element: HTMLElement, eventInit?: PointerEventInit) => {
+  const click = async (element: HTMLElement, eventInit?: PointerEventInit) => {
     element.dispatchEvent(
       // Include pointerType to better simulate a real mouse click v.s. enter keyboard event.
       new PointerEvent('click', {bubbles: true, pointerType: 'mouse', ...eventInit}),
     );
-    fixture.detectChanges();
+    await fixture.whenStable();
   };
 
-  const right = (target?: HTMLElement, modifierKeys?: {}) =>
-    keydown('ArrowRight', target, modifierKeys);
-  const left = (target?: HTMLElement, modifierKeys?: {}) =>
-    keydown('ArrowLeft', target, modifierKeys);
-  const up = (target?: HTMLElement, modifierKeys?: {}) => keydown('ArrowUp', target, modifierKeys);
-  const down = (target?: HTMLElement, modifierKeys?: {}) =>
-    keydown('ArrowDown', target, modifierKeys);
-  const home = (target?: HTMLElement, modifierKeys?: {}) => keydown('Home', target, modifierKeys);
-  const end = (target?: HTMLElement, modifierKeys?: {}) => keydown('End', target, modifierKeys);
+  const right = async (target?: HTMLElement, modifierKeys?: {}) =>
+    await keydown('ArrowRight', target, modifierKeys);
+  const left = async (target?: HTMLElement, modifierKeys?: {}) =>
+    await keydown('ArrowLeft', target, modifierKeys);
+  const up = async (target?: HTMLElement, modifierKeys?: {}) =>
+    await keydown('ArrowUp', target, modifierKeys);
+  const down = async (target?: HTMLElement, modifierKeys?: {}) =>
+    await keydown('ArrowDown', target, modifierKeys);
+  const home = async (target?: HTMLElement, modifierKeys?: {}) =>
+    await keydown('Home', target, modifierKeys);
+  const end = async (target?: HTMLElement, modifierKeys?: {}) =>
+    await keydown('End', target, modifierKeys);
 
-  function setupToolbar(
+  async function setupToolbar(
     opts: {
       orientation?: 'vertical' | 'horizontal';
       softDisabled?: boolean;
@@ -77,7 +73,7 @@ describe('Toolbar', () => {
       testComponent.wrap.set(opts.wrap);
     }
 
-    fixture.detectChanges();
+    await fixture.whenStable();
     defineTestVariables();
   }
 
@@ -105,7 +101,7 @@ describe('Toolbar', () => {
       fixture = TestBed.createComponent(
         ShuffledToolbarExample,
       ) as unknown as ComponentFixture<ToolbarExample>;
-      fixture.detectChanges();
+      await fixture.whenStable();
       const shuffledToolbarDebugEl = fixture.debugElement.query(By.directive(Toolbar));
       const shuffledToolbarInstance = shuffledToolbarDebugEl.injector.get(Toolbar);
 
@@ -117,7 +113,7 @@ describe('Toolbar', () => {
       const firstItem = items.shift()!;
       items.push(firstItem);
       (fixture.componentInstance as unknown as ShuffledToolbarExample).items.set([...items]);
-      fixture.detectChanges();
+      await fixture.whenStable();
       await waitForMicrotasks();
 
       const widgetsAfter = shuffledToolbarInstance._itemPatterns();
@@ -128,292 +124,292 @@ describe('Toolbar', () => {
 
   describe('Navigation', () => {
     describe('with horizontal orientation', () => {
-      it('should navigate on click (horizontal)', () => {
-        setupToolbar();
+      it('should navigate on click (horizontal)', async () => {
+        await setupToolbar();
         const item3 = getWidgetEl('item 3')!;
-        click(item3);
+        await click(item3);
         expect(document.activeElement).toBe(item3);
       });
 
       describe('with ltr text direction', () => {
-        beforeEach(() => setupToolbar());
+        beforeEach(async () => await setupToolbar());
 
-        it('should navigate next on ArrowRight', () => {
+        it('should navigate next on ArrowRight', async () => {
           const item0 = getWidgetEl('item 0')!;
-          click(item0);
-          right();
+          await click(item0);
+          await right();
           expect(document.activeElement).toBe(getWidgetEl('item 1'));
         });
 
-        it('should navigate prev on ArrowLeft', () => {
+        it('should navigate prev on ArrowLeft', async () => {
           const item1 = getWidgetEl('item 1')!;
-          click(item1);
-          left();
+          await click(item1);
+          await left();
           expect(document.activeElement).toBe(getWidgetEl('item 0'));
         });
 
-        it('should not navigate next on ArrowDown when not in a widget group (horizontal, ltr)', () => {
+        it('should not navigate next on ArrowDown when not in a widget group (horizontal, ltr)', async () => {
           const item0 = getWidgetEl('item 0')!;
-          click(item0);
-          down();
+          await click(item0);
+          await down();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should not navigate prev on ArrowUp when not in a widget group (horizontal, ltr)', () => {
+        it('should not navigate prev on ArrowUp when not in a widget group (horizontal, ltr)', async () => {
           const item0 = getWidgetEl('item 0')!;
-          click(item0);
-          up();
+          await click(item0);
+          await up();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should navigate next in a widget group on ArrowDown (horizontal, ltr)', () => {
+        it('should navigate next in a widget group on ArrowDown (horizontal, ltr)', async () => {
           const item2 = getWidgetEl('item 2')!;
-          click(item2);
-          down();
+          await click(item2);
+          await down();
           expect(document.activeElement).toBe(getWidgetEl('item 3'));
         });
 
-        it('should navigate prev in a widget group on ArrowUp (horizontal, ltr)', () => {
+        it('should navigate prev in a widget group on ArrowUp (horizontal, ltr)', async () => {
           const item3 = getWidgetEl('item 3')!;
-          click(item3);
-          up();
+          await click(item3);
+          await up();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should navigate last to first in a widget group on ArrowDown (horizontal, ltr)', () => {
+        it('should navigate last to first in a widget group on ArrowDown (horizontal, ltr)', async () => {
           const item4 = getWidgetEl('item 4')!;
-          click(item4);
-          down();
+          await click(item4);
+          await down();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should navigate first to last in a widget group on ArrowUp (horizontal, ltr)', () => {
+        it('should navigate first to last in a widget group on ArrowUp (horizontal, ltr)', async () => {
           const item2 = getWidgetEl('item 2')!;
-          click(item2);
-          up();
+          await click(item2);
+          await up();
           expect(document.activeElement).toBe(getWidgetEl('item 4'));
         });
 
         describe('with wrap false', () => {
-          beforeEach(() => {
+          beforeEach(async () => {
             fixture.componentInstance.wrap.set(false);
-            fixture.detectChanges();
+            await fixture.whenStable();
           });
 
-          it('should not wrap from last to first', () => {
+          it('should not wrap from last to first', async () => {
             const item5 = getWidgetEl('item 5')!;
-            click(item5);
-            right();
+            await click(item5);
+            await right();
             expect(document.activeElement).toBe(item5);
           });
 
-          it('should not wrap from first to last', () => {
+          it('should not wrap from first to last', async () => {
             const item0 = getWidgetEl('item 0')!;
-            click(item0);
-            left();
+            await click(item0);
+            await left();
             expect(document.activeElement).toBe(item0);
           });
         });
 
         describe('with softDisabled true', () => {
-          beforeEach(() => {
+          beforeEach(async () => {
             fixture.componentInstance.softDisabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
           });
 
-          it('should not skip disabled items when navigating next', () => {
+          it('should not skip disabled items when navigating next', async () => {
             fixture.componentInstance.widgets[1].disabled.set(true);
-            fixture.detectChanges();
-            click(getWidgetEl('item 0')!);
-            right();
+            await fixture.whenStable();
+            await click(getWidgetEl('item 0')!);
+            await right();
             expect(document.activeElement).toBe(getWidgetEl('item 1'));
           });
 
-          it('should not skip disabled items when navigating prev', () => {
+          it('should not skip disabled items when navigating prev', async () => {
             fixture.componentInstance.widgets[1].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item2 = getWidgetEl('item 2')!;
-            click(item2);
-            left();
+            await click(item2);
+            await left();
             expect(document.activeElement).toBe(getWidgetEl('item 1'));
           });
 
-          it('should not skip disabled groups when navigating next', () => {
+          it('should not skip disabled groups when navigating next', async () => {
             fixture.componentInstance.groups[0].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item1 = getWidgetEl('item 1')!;
-            click(item1);
-            right();
+            await click(item1);
+            await right();
             expect(document.activeElement).toBe(getWidgetEl('item 2'));
           });
 
-          it('should not skip disabled groups when navigating prev', () => {
+          it('should not skip disabled groups when navigating prev', async () => {
             fixture.componentInstance.groups[0].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item5 = getWidgetEl('item 5')!;
-            click(item5);
-            left();
+            await click(item5);
+            await left();
             expect(document.activeElement).toBe(getWidgetEl('item 4'));
           });
 
-          it('should navigate to the last item on End', () => {
+          it('should navigate to the last item on End', async () => {
             const item0 = getWidgetEl('item 0')!;
-            click(item0);
-            end();
+            await click(item0);
+            await end();
             expect(document.activeElement).toBe(getWidgetEl('item 5'));
           });
 
-          it('should navigate to the first item on Home', () => {
+          it('should navigate to the first item on Home', async () => {
             const item5 = getWidgetEl('item 5')!;
-            click(item5);
-            home();
+            await click(item5);
+            await home();
             expect(document.activeElement).toBe(getWidgetEl('item 0'));
           });
 
           describe('with wrap true', () => {
-            beforeEach(() => {
+            beforeEach(async () => {
               fixture.componentInstance.wrap.set(true);
-              fixture.detectChanges();
+              await fixture.whenStable();
             });
 
-            it('should wrap from last to first', () => {
+            it('should wrap from last to first', async () => {
               const item5 = getWidgetEl('item 5')!;
-              click(item5);
-              right();
+              await click(item5);
+              await right();
               expect(document.activeElement).toBe(getWidgetEl('item 0'));
             });
 
-            it('should wrap from first to last', () => {
+            it('should wrap from first to last', async () => {
               const item0 = getWidgetEl('item 0')!;
-              click(item0);
-              left();
+              await click(item0);
+              await left();
               expect(document.activeElement).toBe(getWidgetEl('item 5'));
             });
           });
         });
 
         describe('with softDisabled false', () => {
-          beforeEach(() => {
+          beforeEach(async () => {
             fixture.componentInstance.softDisabled.set(false);
-            fixture.detectChanges();
+            await fixture.whenStable();
           });
 
-          it('should not navigate to disabled items on click', () => {
+          it('should not navigate to disabled items on click', async () => {
             fixture.componentInstance.widgets[1].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item1 = getWidgetEl('item 1')!;
-            click(item1);
+            await click(item1);
             expect(document.activeElement).not.toBe(item1);
           });
 
-          it('should skip disabled items when navigating next', () => {
+          it('should skip disabled items when navigating next', async () => {
             fixture.componentInstance.widgets[1].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item0 = getWidgetEl('item 0')!;
-            click(item0);
-            right();
+            await click(item0);
+            await right();
             expect(document.activeElement).toBe(getWidgetEl('item 2'));
           });
 
-          it('should skip disabled items when navigating prev', () => {
+          it('should skip disabled items when navigating prev', async () => {
             fixture.componentInstance.widgets[1].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item2 = getWidgetEl('item 2')!;
-            click(item2);
-            left();
+            await click(item2);
+            await left();
             expect(document.activeElement).toBe(getWidgetEl('item 0'));
           });
 
-          it('should not navigate to items in disabled groups on click', () => {
+          it('should not navigate to items in disabled groups on click', async () => {
             fixture.componentInstance.groups[0].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item3 = getWidgetEl('item 3')!;
-            click(item3);
+            await click(item3);
             expect(document.activeElement).not.toBe(item3);
           });
 
-          it('should skip disabled groups when navigating next', () => {
+          it('should skip disabled groups when navigating next', async () => {
             fixture.componentInstance.groups[0].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item1 = getWidgetEl('item 1')!;
-            click(item1);
-            right();
+            await click(item1);
+            await right();
             expect(document.activeElement).toBe(getWidgetEl('item 5'));
           });
 
-          it('should skip disabled groups when navigating prev', () => {
+          it('should skip disabled groups when navigating prev', async () => {
             fixture.componentInstance.groups[0].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item5 = getWidgetEl('item 5')!;
-            click(item5);
-            left();
+            await click(item5);
+            await left();
             expect(document.activeElement).toBe(getWidgetEl('item 1'));
           });
 
-          it('should navigate to the last focusable item on End', () => {
+          it('should navigate to the last focusable item on End', async () => {
             fixture.componentInstance.widgets[5].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item0 = getWidgetEl('item 0')!;
-            click(item0);
-            end();
+            await click(item0);
+            await end();
             expect(document.activeElement).toBe(getWidgetEl('item 4'));
           });
 
-          it('should navigate to the first focusable item on Home', () => {
+          it('should navigate to the first focusable item on Home', async () => {
             fixture.componentInstance.widgets[0].disabled.set(true);
-            fixture.detectChanges();
+            await fixture.whenStable();
             const item5 = getWidgetEl('item 5')!;
-            click(item5);
-            home();
+            await click(item5);
+            await home();
             expect(document.activeElement).toBe(getWidgetEl('item 1'));
           });
 
           describe('with wrap true', () => {
-            beforeEach(() => {
+            beforeEach(async () => {
               fixture.componentInstance.wrap.set(true);
-              fixture.detectChanges();
+              await fixture.whenStable();
             });
 
-            it('should wrap from last to first focusable item', () => {
+            it('should wrap from last to first focusable item', async () => {
               fixture.componentInstance.widgets[0].disabled.set(true);
-              fixture.detectChanges();
+              await fixture.whenStable();
               const item5 = getWidgetEl('item 5')!;
-              click(item5);
-              right();
+              await click(item5);
+              await right();
               expect(document.activeElement).toBe(getWidgetEl('item 1'));
             });
 
-            it('should wrap from first to last focusable item', () => {
+            it('should wrap from first to last focusable item', async () => {
               fixture.componentInstance.widgets[5].disabled.set(true);
-              fixture.detectChanges();
+              await fixture.whenStable();
               const item0 = getWidgetEl('item 0')!;
-              click(item0);
-              left();
+              await click(item0);
+              await left();
               expect(document.activeElement).toBe(getWidgetEl('item 4'));
             });
           });
 
           describe('with wrap false', () => {
-            beforeEach(() => {
+            beforeEach(async () => {
               fixture.componentInstance.wrap.set(false);
-              fixture.detectChanges();
+              await fixture.whenStable();
             });
 
-            it('should not wrap from last to first focusable item', () => {
+            it('should not wrap from last to first focusable item', async () => {
               fixture.componentInstance.widgets[0].disabled.set(true);
-              fixture.detectChanges();
+              await fixture.whenStable();
               const item5 = getWidgetEl('item 5')!;
-              click(item5);
-              right();
+              await click(item5);
+              await right();
               expect(document.activeElement).toBe(item5);
             });
 
-            it('should not wrap from first to last focusable item', () => {
+            it('should not wrap from first to last focusable item', async () => {
               fixture.componentInstance.widgets[5].disabled.set(true);
-              fixture.detectChanges();
+              await fixture.whenStable();
               const item0 = getWidgetEl('item 0')!;
-              click(item0);
-              left();
+              await click(item0);
+              await left();
               expect(document.activeElement).toBe(item0);
             });
           });
@@ -421,286 +417,336 @@ describe('Toolbar', () => {
       });
 
       describe('with rtl text direction', () => {
-        beforeEach(() => setupToolbar({textDirection: 'rtl'}));
+        beforeEach(async () => await setupToolbar({textDirection: 'rtl'}));
 
-        it('should navigate on click (horizontal, rtl)', () => {
+        it('should navigate on click (horizontal, rtl)', async () => {
           const item3 = getWidgetEl('item 3')!;
-          click(item3);
+          await click(item3);
           expect(document.activeElement).toBe(item3);
         });
 
-        it('should navigate next on ArrowLeft', () => {
+        it('should navigate next on ArrowLeft', async () => {
           const item0 = getWidgetEl('item 0')!;
-          click(item0);
-          left();
+          await click(item0);
+          await left();
           expect(document.activeElement).toBe(getWidgetEl('item 1'));
         });
 
-        it('should navigate prev on ArrowRight', () => {
-          click(getWidgetEl('item 1')!);
-          right();
+        it('should navigate prev on ArrowRight', async () => {
+          await click(getWidgetEl('item 1')!);
+          await right();
           expect(document.activeElement).toBe(getWidgetEl('item 0'));
         });
 
-        it('should not navigate next on ArrowDown when not in a widget group (horizontal, rtl)', () => {
+        it('should not navigate next on ArrowDown when not in a widget group (horizontal, rtl)', async () => {
           const item0 = getWidgetEl('item 0')!;
-          click(item0);
-          down();
+          await click(item0);
+          await down();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should not navigate prev on ArrowUp when not in a widget group (horizontal, rtl)', () => {
+        it('should not navigate prev on ArrowUp when not in a widget group (horizontal, rtl)', async () => {
           const item0 = getWidgetEl('item 0')!;
-          click(item0);
-          up();
+          await click(item0);
+          await up();
           expect(document.activeElement).toBe(item0);
         });
 
-        it('should navigate next in a widget group on ArrowDown (horizontal, rtl)', () => {
+        it('should navigate next in a widget group on ArrowDown (horizontal, rtl)', async () => {
           const item2 = getWidgetEl('item 2')!;
-          click(item2);
-          down();
+          await click(item2);
+          await down();
           expect(document.activeElement).toBe(getWidgetEl('item 3'));
         });
 
-        it('should navigate prev in a widget group on ArrowUp (horizontal, rtl)', () => {
+        it('should navigate prev in a widget group on ArrowUp (horizontal, rtl)', async () => {
           const item3 = getWidgetEl('item 3')!;
-          click(item3);
-          up();
+          await click(item3);
+          await up();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
 
-        it('should navigate first to last in a widget group on ArrowUp (horizontal, rtl)', () => {
+        it('should navigate first to last in a widget group on ArrowUp (horizontal, rtl)', async () => {
           const item2 = getWidgetEl('item 2')!;
-          click(item2);
-          up();
+          await click(item2);
+          await up();
           expect(document.activeElement).toBe(getWidgetEl('item 4'));
         });
 
-        it('should navigate last to first in a widget group on ArrowDown (horizontal, rtl)', () => {
+        it('should navigate last to first in a widget group on ArrowDown (horizontal, rtl)', async () => {
           const item4 = getWidgetEl('item 4')!;
-          click(item4);
-          down();
+          await click(item4);
+          await down();
           expect(document.activeElement).toBe(getWidgetEl('item 2'));
         });
       });
     });
 
     describe('with vertical orientation', () => {
-      beforeEach(() => setupToolbar({orientation: 'vertical'}));
+      beforeEach(async () => await setupToolbar({orientation: 'vertical'}));
 
-      it('should navigate next on ArrowDown', () => {
+      it('should navigate next on ArrowDown', async () => {
         const item0 = getWidgetEl('item 0')!;
-        click(item0);
-        down();
+        await click(item0);
+        await down();
         expect(document.activeElement).toBe(getWidgetEl('item 1'));
       });
 
-      it('should navigate prev on ArrowUp', () => {
+      it('should navigate prev on ArrowUp', async () => {
         const item1 = getWidgetEl('item 1')!;
-        click(item1);
-        up();
+        await click(item1);
+        await up();
         expect(document.activeElement).toBe(getWidgetEl('item 0'));
       });
 
-      it('should not navigate next on ArrowRight when not in a widget group', () => {
+      it('should not navigate next on ArrowRight when not in a widget group', async () => {
         const item0 = getWidgetEl('item 0')!;
-        click(item0);
-        right();
+        await click(item0);
+        await right();
         expect(document.activeElement).toBe(item0);
       });
 
-      it('should not navigate prev on ArrowLeft when not in a widget group', () => {
+      it('should not navigate prev on ArrowLeft when not in a widget group', async () => {
         const item0 = getWidgetEl('item 0')!;
-        click(item0);
-        left();
+        await click(item0);
+        await left();
         expect(document.activeElement).toBe(item0);
       });
 
-      it('should navigate next in a widget group on ArrowRight', () => {
+      it('should navigate next in a widget group on ArrowRight', async () => {
         const item2 = getWidgetEl('item 2')!;
-        click(item2);
-        right();
+        await click(item2);
+        await right();
         expect(document.activeElement).toBe(getWidgetEl('item 3'));
       });
 
-      it('should navigate prev in a widget group on ArrowLeft', () => {
+      it('should navigate prev in a widget group on ArrowLeft', async () => {
         const item3 = getWidgetEl('item 3')!;
-        click(item3);
-        left();
+        await click(item3);
+        await left();
         expect(document.activeElement).toBe(getWidgetEl('item 2'));
       });
 
-      it('should navigate last to first in a widget group on ArrowRight', () => {
+      it('should navigate last to first in a widget group on ArrowRight', async () => {
         const item4 = getWidgetEl('item 4')!;
-        click(item4);
-        right();
+        await click(item4);
+        await right();
         expect(document.activeElement).toBe(getWidgetEl('item 2'));
       });
 
-      it('should navigate first to last in a widget group on ArrowLeft', () => {
+      it('should navigate first to last in a widget group on ArrowLeft', async () => {
         const item2 = getWidgetEl('item 2')!;
-        click(item2);
-        left();
+        await click(item2);
+        await left();
         expect(document.activeElement).toBe(getWidgetEl('item 4'));
       });
     });
 
     describe('with disabled toolbar', () => {
-      it('should not navigate on any key press', () => {
-        setupToolbar({disabled: true});
+      it('should not navigate on any key press', async () => {
+        await setupToolbar({disabled: true});
         const item0 = getWidgetEl('item 0')!;
         const initialActiveElement = document.activeElement;
-        click(item0);
+        await click(item0);
         expect(document.activeElement).toBe(initialActiveElement);
 
-        right();
+        await right();
         expect(document.activeElement).toBe(initialActiveElement);
 
-        left();
+        await left();
         expect(document.activeElement).toBe(initialActiveElement);
 
-        down();
+        await down();
         expect(document.activeElement).toBe(initialActiveElement);
 
-        up();
+        await up();
         expect(document.activeElement).toBe(initialActiveElement);
 
-        home();
+        await home();
         expect(document.activeElement).toBe(initialActiveElement);
 
-        end();
+        await end();
         expect(document.activeElement).toBe(initialActiveElement);
       });
     });
 
     describe('with wrapped toolbar widgets', () => {
-      beforeEach(() => {
+      beforeEach(async () => {
         TestBed.configureTestingModule({imports: [WrappedToolbarExample]});
         fixture = TestBed.createComponent(WrappedToolbarExample) as any;
-        fixture.detectChanges();
+        await fixture.whenStable();
       });
 
-      it('should navigate on click (wrapped)', () => {
+      it('should navigate on click (wrapped)', async () => {
         const widgets = fixture.debugElement
           .queryAll(By.css('[toolbar-button]'))
           .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
-        click(widgets[0]);
+        await click(widgets[0]);
         expect(document.activeElement).toBe(widgets[0]);
       });
     });
   });
 
-  describe('Selection', () => {
-    beforeEach(() => setupToolbar());
+  describe('Interactions', () => {
+    beforeEach(async () => await setupToolbar());
 
-    it('should toggle the active item on Enter', () => {
-      const item0 = getWidgetEl('item 0')!;
-      click(item0);
-      keydown('Enter');
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
-      keydown('Enter');
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-    });
-
-    it('should toggle the active item on Space', () => {
-      const item0 = getWidgetEl('item 0')!;
-      click(item0);
-      keydown(' ');
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
-      keydown(' ');
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-    });
-
-    it('should toggle the active item on click', () => {
-      const item0 = getWidgetEl('item 0')!;
-      click(item0);
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-      click(item0);
-      expect(item0.getAttribute('aria-pressed')).toBe('false');
-    });
-
-    it('should be able to select multiple items in the toolbar', () => {
-      const item0 = getWidgetEl('item 0')!;
+    it('should set active item on click', async () => {
       const item1 = getWidgetEl('item 1')!;
-      click(item0);
-      click(item1);
-      expect(item0.getAttribute('aria-pressed')).toBe('true');
-      expect(item1.getAttribute('aria-pressed')).toBe('true');
+      await click(item1);
+      expect(document.activeElement).toBe(item1);
     });
 
-    it('should not be able to select multiple items in a group', () => {
-      const item2 = getWidgetEl('item 2')!;
-      const item3 = getWidgetEl('item 3')!;
-      click(item2);
-      click(item3);
-      expect(item2.getAttribute('aria-pressed')).toBe('false');
-      expect(item3.getAttribute('aria-pressed')).toBe('true');
-    });
+    it('should not intercept Enter or Space key events for toolbar-level selection', async () => {
+      const item0 = getWidgetEl('item 0')!;
+      await click(item0);
+      expect(document.activeElement).toBe(item0);
 
-    it('should not select disabled items', () => {
-      fixture.componentInstance.widgets[1].disabled.set(true);
-      fixture.detectChanges();
-      const item1 = getWidgetEl('item 1')!;
-      click(item1);
-      expect(item1.getAttribute('aria-pressed')).toBe('false');
-    });
+      await keydown('Enter');
+      expect(document.activeElement).toBe(item0);
 
-    it('should not select items in a disabled group', () => {
-      fixture.componentInstance.groups[0].disabled.set(true);
-      fixture.detectChanges();
-      const item2 = getWidgetEl('item 2')!;
-      click(item2);
-      expect(item2.getAttribute('aria-pressed')).toBe('false');
+      await keydown(' ');
+      expect(document.activeElement).toBe(item0);
     });
   });
 
   describe('ARIA attributes and roles', () => {
-    beforeEach(() => setupToolbar());
+    beforeEach(async () => await setupToolbar());
 
     it('should have role="toolbar"', () => {
       expect(toolbarElement.getAttribute('role')).toBe('toolbar');
     });
 
-    it('should set aria-orientation based on input', () => {
+    it('should set aria-orientation based on input', async () => {
       expect(toolbarElement.getAttribute('aria-orientation')).toBe('horizontal');
       fixture.componentInstance.orientation.set('vertical');
-      fixture.detectChanges();
+      await fixture.whenStable();
       expect(toolbarElement.getAttribute('aria-orientation')).toBe('vertical');
     });
 
-    it('should set aria-disabled based on input', () => {
+    it('should set aria-disabled based on input', async () => {
       expect(toolbarElement.getAttribute('aria-disabled')).toBe('false');
       fixture.componentInstance.disabled.set(true);
-      fixture.detectChanges();
+      await fixture.whenStable();
       expect(toolbarElement.getAttribute('aria-disabled')).toBe('true');
     });
   });
 
   describe('Focus management', () => {
-    beforeEach(() => setupToolbar());
+    beforeEach(async () => await setupToolbar());
 
-    it('should have tabindex on widgets set by active state', () => {
+    it('should have tabindex on widgets set by active state', async () => {
       const widgets = getWidgetEls();
       expect(widgets[0].getAttribute('tabindex')).toBe('0');
       expect(widgets[1].getAttribute('tabindex')).toBe('-1');
 
-      click(widgets[1]);
+      await click(widgets[1]);
       expect(widgets[0].getAttribute('tabindex')).toBe('-1');
       expect(widgets[1].getAttribute('tabindex')).toBe('0');
     });
   });
 
   describe('Hard disabled state attributes', () => {
-    beforeEach(() => setupToolbar({softDisabled: false}));
+    beforeEach(async () => await setupToolbar({softDisabled: false}));
 
-    it('should set inert and disabled attributes on hard-disabled widgets', () => {
+    it('should set inert and disabled attributes on hard-disabled widgets', async () => {
       fixture.componentInstance.widgets[0].disabled.set(true);
-      fixture.detectChanges();
+      await fixture.whenStable();
 
       const widgets = getWidgetEls();
       expect(widgets[0].hasAttribute('inert')).toBe(true);
       expect(widgets[0].getAttribute('disabled')).toBe('true');
+    });
+  });
+
+  describe('structural validations', () => {
+    let consoleSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      consoleSpy = spyOn(console, 'warn');
+    });
+
+    afterEach(async () => {
+      TestBed.resetTestingModule();
+      await setupToolbar();
+    });
+
+    it('should warn when ngToolbarWidgetGroup is outside ngToolbar', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [ToolbarGroupOutsideToolbar],
+      });
+      const noToolbarFixture = TestBed.createComponent(ToolbarGroupOutsideToolbar);
+      noToolbarFixture.detectChanges();
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'ngToolbarWidgetGroup must be placed inside an ngToolbar container.',
+      );
+    });
+  });
+
+  describe('Form controls and embedded widgets', () => {
+    let formFixture: ComponentFixture<ToolbarWithFormControlsExample>;
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        imports: [ToolbarWithFormControlsExample],
+        providers: [provideFakeDirectionality('ltr')],
+      });
+      formFixture = TestBed.createComponent(ToolbarWithFormControlsExample);
+      fixture = formFixture as any;
+      await formFixture.whenStable();
+    });
+
+    it('should not move toolbar focus on ArrowUp/ArrowDown on select in horizontal toolbar', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      await click(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await down(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await up(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+    });
+
+    it('should navigate across toolbar on ArrowRight / ArrowLeft from select', async () => {
+      const selectEl = formFixture.debugElement.query(By.css('select'))
+        .nativeElement as HTMLElement;
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      const buttons = formFixture.debugElement
+        .queryAll(By.css('button'))
+        .map(de => de.nativeElement as HTMLElement);
+
+      await click(selectEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await right(selectEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await right(inputEl);
+      expect(document.activeElement).toBe(buttons[1]); // Italic button
+
+      await left(buttons[1]);
+      expect(document.activeElement).toBe(inputEl);
+
+      await left(inputEl);
+      expect(document.activeElement).toBe(selectEl);
+
+      await left(selectEl);
+      expect(document.activeElement).toBe(buttons[0]); // Bold button
+    });
+
+    it('should not move toolbar focus on ArrowUp/ArrowDown on number input in horizontal toolbar', async () => {
+      const inputEl = formFixture.debugElement.query(By.css('input')).nativeElement as HTMLElement;
+      await click(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await down(inputEl);
+      expect(document.activeElement).toBe(inputEl);
+
+      await up(inputEl);
+      expect(document.activeElement).toBe(inputEl);
     });
   });
 });
@@ -716,44 +762,26 @@ describe('Toolbar', () => {
     >
       <button
         ngToolbarWidget
-        #item0="ngToolbarWidget"
-        [aria-pressed]="item0.selected()"
-        [disabled]="widgets[0].disabled()"
-        value="item 0">item 0</button>
+        [disabled]="widgets[0].disabled()">item 0</button>
 
       <button
         ngToolbarWidget
-        #item1="ngToolbarWidget"
-        [aria-pressed]="item1.selected()"
-        [disabled]="widgets[1].disabled()"
-        value="item 1">item 1</button>
+        [disabled]="widgets[1].disabled()">item 1</button>
 
       <div ngToolbarWidgetGroup [disabled]="groups[0].disabled()">
         <button
           ngToolbarWidget
-          #item2="ngToolbarWidget"
-          [aria-pressed]="item2.selected()"
-          [disabled]="widgets[2].disabled()"
-          value="item 2">item 2</button>
+          [disabled]="widgets[2].disabled()">item 2</button>
         <button
           ngToolbarWidget
-          #item3="ngToolbarWidget"
-          [aria-pressed]="item3.selected()"
-          [disabled]="widgets[3].disabled()"
-          value="item 3">item 3</button>
+          [disabled]="widgets[3].disabled()">item 3</button>
         <button
           ngToolbarWidget
-          #item4="ngToolbarWidget"
-          [aria-pressed]="item4.selected()"
-          [disabled]="widgets[4].disabled()"
-          value="item 4">item 4</button>
+          [disabled]="widgets[4].disabled()">item 4</button>
       </div>
       <button
         ngToolbarWidget
-        #item5="ngToolbarWidget"
-        [aria-pressed]="item5.selected()"
-        [disabled]="widgets[5].disabled()"
-        value="item 5">item 5</button>
+        [disabled]="widgets[5].disabled()">item 5</button>
     </div>
   `,
   imports: [Toolbar, ToolbarWidget, ToolbarWidgetGroup],
@@ -779,22 +807,19 @@ class ToolbarExample {
 
 @Directive({
   selector: 'button[toolbar-button]',
-  hostDirectives: [{directive: ToolbarWidget, inputs: ['value', 'disabled']}],
+  hostDirectives: [{directive: ToolbarWidget, inputs: ['disabled']}],
   host: {
     type: 'button',
     class: 'example-button material-symbols-outlined',
-    '[aria-label]': 'widget.value()',
   },
 })
-export class SimpleToolbarButton {
-  widget = inject(ToolbarWidget);
-}
+export class SimpleToolbarButton {}
 
 @Component({
   template: `
     <div ngToolbar>
-      <button toolbar-button value="undo">undo</button>
-      <button toolbar-button value="redo">redo</button>
+      <button toolbar-button>undo</button>
+      <button toolbar-button>redo</button>
     </div>
   `,
   imports: [Toolbar, SimpleToolbarButton],
@@ -806,7 +831,7 @@ class WrappedToolbarExample {}
   template: `
     <div ngToolbar>
       @for (item of items(); track item) {
-        <button ngToolbarWidget [value]="item.value">{{item.value}}</button>
+        <button ngToolbarWidget>{{item.value}}</button>
       }
     </div>
   `,
@@ -816,3 +841,31 @@ class WrappedToolbarExample {}
 class ShuffledToolbarExample {
   items = signal([{value: 'item 0'}, {value: 'item 1'}, {value: 'item 2'}]);
 }
+
+@Component({
+  template: `
+    <div ngToolbarWidgetGroup>
+      Widget Group Content
+    </div>
+  `,
+  imports: [ToolbarWidgetGroup],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ToolbarGroupOutsideToolbar {}
+
+@Component({
+  template: `
+    <div ngToolbar>
+      <button ngToolbarWidget>Bold</button>
+      <select ngToolbarWidget aria-label="Font family">
+        <option value="sans-serif">Sans-Serif</option>
+        <option value="serif">Serif</option>
+      </select>
+      <input ngToolbarWidget type="number" value="16" aria-label="Font size" />
+      <button ngToolbarWidget>Italic</button>
+    </div>
+  `,
+  imports: [Toolbar, ToolbarWidget],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ToolbarWithFormControlsExample {}

@@ -20,7 +20,7 @@ export {
   CDK_CONNECTED_OVERLAY_DEFAULT_CONFIG,
 } from './overlay-directives';
 export {FullscreenOverlayContainer} from './fullscreen-overlay-container';
-export {OverlayRef, OverlaySizeConfig} from './overlay-ref';
+export {OverlayRef, OverlaySizeConfig, getAttachedOverlays} from './overlay-ref';
 export {ViewportRuler} from '../scrolling';
 export {ComponentType} from '../portal';
 export {OverlayPositionBuilder} from './position/overlay-position-builder';

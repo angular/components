@@ -3,6 +3,7 @@ import {Toolbar, ToolbarWidget, ToolbarWidgetGroup} from '@angular/aria/toolbar'
 import {
   SimpleToolbarButton,
   SimpleToolbarRadioButton,
+  SimpleToolbarRadioGroup,
   SimpleToolbarToggleButton,
 } from '../simple-toolbar';
 
@@ -17,6 +18,7 @@ import {
     ToolbarWidgetGroup,
     SimpleToolbarButton,
     SimpleToolbarRadioButton,
+    SimpleToolbarRadioGroup,
     SimpleToolbarToggleButton,
   ],
 })

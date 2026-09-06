@@ -7,14 +7,7 @@ import {
   ViewChildren,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  flush,
-  tick,
-  waitForAsync,
-} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   createMouseEvent,
@@ -87,6 +80,12 @@ describe('Menu', () => {
   });
 
   describe('menu aim', () => {
+    // TODO(crisbeto): update the component to clear timeouts on destroy.
+    // Give some time for timeouts to be cleaned up.
+    afterEach(async () => {
+      await wait(350);
+    });
+
     /** A coordinate in the browser window */
     type Point = {x: number; y: number};
 
@@ -189,13 +188,13 @@ describe('Menu', () => {
        *
        * @return the number of elements the mouse entered into.
        */
-      function hover(from: Point, to: Point, inMenu: HTMLElement, duration: number) {
+      async function hover(from: Point, to: Point, inMenu: HTMLElement, duration: number) {
         const getNextPoint = getNextPointIterator(from, to);
 
         let currentPoint: Point | null = from;
         let currElement = getElementAt(currentPoint);
 
-        const timeout = duration / (to.x - from.x);
+        const timeout = duration / Math.abs(to.x - from.x);
 
         let numEnters = 0;
         while (currentPoint) {
@@ -209,7 +208,9 @@ describe('Menu', () => {
             fixture.detectChanges();
           }
           currentPoint = getNextPoint();
-          tick(timeout);
+          if (timeout > 0) {
+            await wait(timeout);
+          }
         }
         return numEnters;
       }
@@ -231,31 +232,31 @@ describe('Menu', () => {
         };
       }
 
-      it('should close the edit menu when hovering directly down from the edit menu trigger to the print item without waiting', fakeAsync(() => {
+      it('should close the edit menu when hovering directly down from the edit menu trigger to the print item without waiting', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const printPosition = nativeFileButtons![4].getBoundingClientRect();
 
-        const numEnterEvents = hover(
+        const numEnterEvents = await hover(
           {x: editPosition.x, y: editPosition.y + 1},
           {x: printPosition.x + 5, y: printPosition.y + 1},
           nativeMenus[0],
-          100,
+          0,
         );
         detectChanges();
 
         expect(numEnterEvents).toBe(4);
         expect(nativeMenus.length).toBe(1);
-      }));
+      });
 
-      it('should close the edit menu after moving towards submenu and stopping', fakeAsync(() => {
+      it('should close the edit menu after moving towards submenu and stopping', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const sharePosition = nativeShareTrigger!.getBoundingClientRect();
 
-        const numEnters = hover(
+        const numEnters = await hover(
           {
             x: editPosition.x + editPosition.width / 2,
             y: editPosition.y + editPosition.height - 10,
@@ -265,44 +266,43 @@ describe('Menu', () => {
             y: sharePosition.y + sharePosition.height - 10,
           },
           nativeMenus[0],
-          100,
+          0,
         );
-        tick(2000);
+        await wait(2100);
         detectChanges();
 
         expect(numEnters).toBe(1);
         expect(nativeMenus.length).toBe(2);
         expect(nativeMenus[1].id).toBe('share_menu');
-      }));
+      });
 
-      it('should not close the edit submenu when hovering into its items in time', fakeAsync(() => {
+      it('should not close the edit submenu when hovering into its items in time', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const pastePosition = nativeEditButtons![4].getBoundingClientRect();
 
-        const numEnters = hover(editPosition, pastePosition, nativeMenus[0], 100);
+        const numEnters = await hover(editPosition, pastePosition, nativeMenus[0], 0);
         detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(numEnters).toBeGreaterThan(2);
         expect(nativeMenus.length).toBe(2);
         expect(nativeMenus[1].id).toBe('edit_menu');
-      }));
+      });
 
-      it('should close the edit menu when hovering into its items slowly', fakeAsync(() => {
+      it('should close the edit menu when hovering into its items slowly', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const pastePosition = nativeEditButtons![4].getBoundingClientRect();
 
-        const numEnters = hover(editPosition, pastePosition, nativeMenus[0], 4000);
+        const numEnters = await hover(editPosition, pastePosition, nativeMenus[0], 1100);
         detectChanges();
-        flush();
 
         expect(numEnters).toBeGreaterThan(2);
         expect(nativeMenus.length).toBe(1);
-      }));
+      });
     });
 
     describe('with rtl layout and menu at bottom of page moving up and left', () => {
@@ -383,13 +383,13 @@ describe('Menu', () => {
        *
        * @return the number of elements the mouse entered into.
        */
-      function hover(from: Point, to: Point, inMenu: HTMLElement, duration: number) {
+      async function hover(from: Point, to: Point, inMenu: HTMLElement, duration: number) {
         const getNextPoint = getNextPointIterator(from, to);
 
         let currPoint: Point | null = from;
         let currElement = getElementAt(currPoint);
 
-        const timeout = duration / (to.x - from.x);
+        const timeout = duration / Math.abs(to.x - from.x);
 
         let numEnters = 0;
         while (currPoint) {
@@ -403,7 +403,9 @@ describe('Menu', () => {
             fixture.detectChanges();
           }
           currPoint = getNextPoint();
-          tick(timeout);
+          if (timeout) {
+            await wait(timeout);
+          }
         }
         return numEnters;
       }
@@ -425,66 +427,63 @@ describe('Menu', () => {
         };
       }
 
-      it('should close the edit menu when hovering directly up from the edit menu trigger to the print item without waiting', fakeAsync(() => {
+      it('should close the edit menu when hovering directly up from the edit menu trigger to the print item without waiting', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
-        tick();
 
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const printPosition = nativeFileButtons![0].getBoundingClientRect();
 
-        const numEnterEvents = hover(
+        const numEnterEvents = await hover(
           {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
           {x: printPosition.x + 10, y: printPosition.y - 10},
           nativeMenus[0],
-          100,
+          0,
         );
         detectChanges();
-        flush();
 
         expect(numEnterEvents).toBe(4);
         expect(nativeMenus.length).toBe(1);
-      }));
+      });
 
-      it('should close the edit menu after moving towards submenu and stopping', fakeAsync(() => {
+      it('should close the edit menu after moving towards submenu and stopping', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const sharePosition = nativeShareTrigger!.getBoundingClientRect();
 
-        const numEnters = hover(
+        const numEnters = await hover(
           {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
           {
             x: sharePosition.x + 10,
             y: sharePosition.y + 10,
           },
           nativeMenus[0],
-          100,
+          0,
         );
-        tick(2000);
+        await wait(2100);
         detectChanges();
 
         expect(numEnters).toBe(1);
         expect(nativeMenus.length).toBe(2);
         expect(nativeMenus[1].id).toBe('share_menu');
-      }));
+      });
 
-      it('should not close the edit submenu when hovering into its items in time', fakeAsync(() => {
+      it('should not close the edit submenu when hovering into its items in time', async () => {
         openFileMenu();
         openMenuOnHover(nativeEditTrigger!);
-        tick();
 
         const editPosition = nativeEditTrigger!.getBoundingClientRect();
         const undoPosition = nativeEditButtons![0].getBoundingClientRect();
 
-        const numEnters = hover(editPosition, undoPosition, nativeMenus[0], 100);
+        const numEnters = await hover(editPosition, undoPosition, nativeMenus[0], 0);
         detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(numEnters).toBeGreaterThan(2);
         expect(nativeMenus.length).toBe(2);
         expect(nativeMenus[1].id).toBe('edit_menu');
-      }));
+      });
     });
   });
 
@@ -517,6 +516,10 @@ describe('Menu', () => {
     expect(getItemsText(fixture.componentInstance.inner)).toEqual(['Three', 'Four', 'Five']);
   });
 });
+
+function wait(milliseconds: number) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
 @Component({
   template: `

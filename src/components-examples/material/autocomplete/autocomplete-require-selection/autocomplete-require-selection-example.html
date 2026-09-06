@@ -12,7 +12,7 @@ Control value: {{myControl.value || 'empty'}}
            (input)="filter()"
            (focus)="filter()">
     <mat-autocomplete requireSelection #auto="matAutocomplete">
-      @for (option of filteredOptions; track option) {
+      @for (option of filteredOptions(); track option) {
         <mat-option [value]="option">{{option}}</mat-option>
       }
     </mat-autocomplete>

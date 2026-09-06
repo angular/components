@@ -20,9 +20,7 @@ $touch-landscape-width: 64vh;
 $touch-landscape-height: 80vh;
 $touch-portrait-width: 80vw;
 $touch-portrait-height: 100vw;
-$touch-portrait-height-with-actions: 115vw;
 $touch-min-width: 250px;
-$touch-min-height: 312px;
 $touch-max-width: 750px;
 $touch-max-height: 788px;
 
@@ -119,12 +117,16 @@ $touch-max-height: 788px;
   // Prevents the content from jumping around on Windows while the animation is running.
   overflow: visible;
 
+  // Prevent the content from shrinking to a point where it doesn't fit all the dates anymore.
+  // stylelint-disable material/no-prefixes
+  min-height: fit-content;
+
   &.mat-datepicker-content-animations-enabled {
     animation: _mat-datepicker-content-dialog-enter 150ms cubic-bezier(0, 0, 0.2, 1);
   }
 
   .mat-datepicker-content-container {
-    min-height: $touch-min-height;
+    min-height: fit-content;
     max-height: $touch-max-height;
     min-width: $touch-min-width;
     max-width: $touch-max-width;
@@ -151,11 +153,5 @@ $touch-max-height: 788px;
   .mat-datepicker-content-touch .mat-datepicker-content-container {
     width: $touch-portrait-width;
     height: $touch-portrait-height;
-  }
-
-  // The content needs to be a bit taller when actions have
-  // been projected so that it doesn't have to scroll.
-  .mat-datepicker-content-touch .mat-datepicker-content-container-with-actions {
-    height: $touch-portrait-height-with-actions;
   }
 }

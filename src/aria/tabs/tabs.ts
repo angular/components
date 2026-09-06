@@ -47,8 +47,6 @@ import {SortedCollection, TabPanelPattern, TabPattern} from '../private';
  * </div>
  * ```
  *
- * @developerPreview 21.0
- *
  * @see [Tabs](guide/aria/tabs)
  */
 @Directive({

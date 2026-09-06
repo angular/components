@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {ListboxPattern, SortedCollection, tabIndexTransform} from '../private';
+import {ListboxPattern, SortedCollection, tabIndexTransform, reportViolations} from '../private';
 import {Option} from './option';
 import {LISTBOX} from './tokens';
 
@@ -43,8 +43,6 @@ import {LISTBOX} from './tokens';
  *   }
  * </ul>
  * ```
- *
- * @developerPreview 21.0
  *
  * @see [Listbox](guide/aria/listbox)
  * @see [Autocomplete](guide/aria/autocomplete)
@@ -138,16 +136,15 @@ export class Listbox<V> implements OnDestroy {
   /** The ID of the active descendant in the listbox. */
   readonly activeDescendant: Signal<string | undefined>;
 
-  constructor() {
-    // Map directives to their patterns for the ListboxPattern
-    const orderedItemPatterns = computed(() =>
-      this._collection.orderedItems().map(option => option._pattern),
-    );
+  private readonly _orderedItemPatterns = computed(() =>
+    this._collection.orderedItems().map(option => option._pattern),
+  );
 
+  constructor() {
     const inputs = {
       ...this,
       id: this.id,
-      items: orderedItemPatterns,
+      items: this._orderedItemPatterns,
       activeItem: signal(undefined),
       textDirection: this.textDirection,
       element: () => this._elementRef.nativeElement,
@@ -161,17 +158,14 @@ export class Listbox<V> implements OnDestroy {
       this._collection.startObserving(this.element);
     });
 
-    // Check for any violationns after the DOM has been updated.
-    afterRenderEffect({
-      read: () => {
-        if (typeof ngDevMode === 'undefined' || ngDevMode) {
-          const violations = this._pattern.validate();
-          for (const violation of violations) {
-            console.error(violation);
-          }
-        }
-      },
-    });
+    // Check for any violations after the DOM has been updated.
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      afterRenderEffect({
+        read: () => {
+          reportViolations(this._pattern.validate(), this.element);
+        },
+      });
+    }
 
     afterRenderEffect({write: () => this._pattern.setDefaultStateEffect()});
 
@@ -214,5 +208,15 @@ export class Listbox<V> implements OnDestroy {
   /** Navigates to the first item in the listbox. */
   gotoFirst() {
     this._pattern.listBehavior.first();
+  }
+
+  /** Navigates to an item at a specific index in the listbox. */
+  gotoIndex(index: number) {
+    const patterns = this._orderedItemPatterns();
+    const item = patterns[Math.min(Math.max(index, 0), patterns.length - 1)];
+
+    if (item) {
+      this._pattern.listBehavior.goto(item);
+    }
   }
 }
