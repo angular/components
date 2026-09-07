@@ -6,8 +6,6 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-/// <reference types="google.maps" preserve="true" />
-
 import {Marker} from '../marker-utilities';
 
 // This file duplicates the necessary types from the `@googlemaps/markerclusterer`
