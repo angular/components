@@ -14,10 +14,9 @@ If you don't want the label to appear next to the checkbox, you can use
 [`aria-labelledby`](https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby) to
 specify an appropriate label.
 
-### Use with `@angular/forms`
+### Use with Angular Forms
 
-`<mat-checkbox>` is compatible with `@angular/forms` and supports both `FormsModule`
-and `ReactiveFormsModule`.
+`<mat-checkbox>` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, and `ReactiveFormsModule`.
 
 ### Indeterminate state
 
