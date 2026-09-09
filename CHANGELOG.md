@@ -1,3 +1,13 @@
+<a name="22.2.0-next.5"></a>
+# 22.2.0-next.5 "bismuth-badge" (2026-09-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [0bb7b183e](https://github.com/angular/components/commit/0bb7b183e1deb0a6a7a2aea5e05a287033ae1de6) | fix | **overlay:** expose currently open overlays ([#33768](https://github.com/angular/components/pull/33768)) |
+| [3d30bf1b4](https://github.com/angular/components/commit/3d30bf1b4301f494cfbf5defed8e268eb02ec35b) | fix | **testing:** account for new DirectiveFixture API ([#33771](https://github.com/angular/components/pull/33771)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.6"></a>
 # 22.1.6 "bismuth-bike" (2026-09-09)
 ### cdk
