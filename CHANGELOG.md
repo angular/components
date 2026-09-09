@@ -1,3 +1,12 @@
+<a name="22.1.6"></a>
+# 22.1.6 "bismuth-bike" (2026-09-09)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [690ddb4a2](https://github.com/angular/components/commit/690ddb4a291b67e9da2188177fe364a8c8302cbf) | fix | **overlay:** expose currently open overlays ([#33768](https://github.com/angular/components/pull/33768)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.5"></a>
 # 22.1.5 "platinum-parachute" (2026-09-02)
 ### aria
