@@ -3,7 +3,7 @@
   <mat-form-field class="example-form-field">
     <mat-label>Video keywords</mat-label>
     <mat-chip-grid #templateChipGrid aria-label="Enter template form keywords" [(ngModel)]="keywords">
-    @for (keyword of keywords(); track keyword) {
+    @for (keyword of keywords(); track $index) {
       <mat-chip-row (removed)="removeKeyword(keyword)">
         {{keyword}}
       <button matChipRemove [attr.aria-label]="'remove template form' + keyword">
