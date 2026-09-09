@@ -4,7 +4,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 /**
- * @title Input with error messages
+ * @title Input with error messages (reactive form)
  */
 @Component({
   selector: 'input-errors-example',
