@@ -77,5 +77,6 @@
 
   @return (
     chip-container-height: list.nth((32px, 28px, 24px), $index),
+    chip-touch-target-display: list.nth((block, none, none), $index),
   );
 }
