@@ -12,6 +12,7 @@ $_graphic-padding: 6px;
 $_trailing-action-padding: 8px;
 $_avatar-leading-padding: 4px;
 $_avatar-trailing-padding: 8px;
+$_touch-target-size: 48px;
 
 $fallbacks: m3-chip.get-tokens();
 
@@ -25,6 +26,17 @@ $fallbacks: m3-chip.get-tokens();
 .mdc-evolution-chip {
   position: relative;
   max-width: 100%;
+}
+
+.mat-mdc-chip-touch-target {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: $_touch-target-size;
+  transform: translateY(-50%);
+  display: token-utils.slot(chip-touch-target-display, $fallbacks);
+  pointer-events: auto;
 }
 
 .mdc-evolution-chip__cell,
