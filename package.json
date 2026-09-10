@@ -87,6 +87,7 @@
     "@bazel/runfiles": "6.5.0",
     "@firebase/app-types": "^0.9.0",
     "@material/material-color-utilities": "^0.4.0",
+    "@modelcontextprotocol/server": "2.0.0",
     "@octokit/rest": "22.0.1",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
