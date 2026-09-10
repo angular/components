@@ -29,11 +29,11 @@
       datepicker-calendar-date-hover-state-background-color: m3-utils.color-with-opacity(
           map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
       datepicker-calendar-date-in-comparison-range-state-background-color:
-          map.get($system, tertiary-container),
+          map.get($system, tertiary-fixed-dim),
       datepicker-calendar-date-in-overlap-range-selected-state-background-color:
           map.get($system, secondary),
       datepicker-calendar-date-in-overlap-range-state-background-color:
-          map.get($system, secondary-container),
+          map.get($system, secondary-fixed-dim),
       datepicker-calendar-date-in-range-state-background-color:map.get($system, primary-container),
       datepicker-calendar-date-outline-color: transparent,
       datepicker-calendar-date-preview-state-outline-color: map.get($system, primary),
