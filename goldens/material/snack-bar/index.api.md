@@ -53,7 +53,7 @@ export class MatSnackBar implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBar, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatSnackBar>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

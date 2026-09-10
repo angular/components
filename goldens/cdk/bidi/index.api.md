@@ -55,7 +55,7 @@ export class Directionality implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Directionality, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<Directionality>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // (No @packageDocumentation comment for this package)

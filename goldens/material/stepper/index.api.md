@@ -171,7 +171,7 @@ export class MatStepperIntl {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatStepperIntl, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatStepperIntl>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

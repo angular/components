@@ -30,7 +30,7 @@ export class AutofillMonitor implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AutofillMonitor, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<AutofillMonitor>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

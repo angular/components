@@ -101,7 +101,7 @@ export class ErrorStateMatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -354,7 +354,7 @@ export class MatRippleLoader implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRippleLoader, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatRippleLoader>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -430,7 +430,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<NativeDateAdapter, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<NativeDateAdapter>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -527,7 +527,7 @@ export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnDirtyErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnDirtyErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

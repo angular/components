@@ -55,7 +55,7 @@ export class AriaDescriber implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AriaDescriber, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<AriaDescriber>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -138,7 +138,7 @@ export class ConfigurableFocusTrapFactory {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ConfigurableFocusTrapFactory, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ConfigurableFocusTrapFactory>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -182,7 +182,7 @@ export class FocusMonitor implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<FocusMonitor, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<FocusMonitor>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -244,7 +244,7 @@ export class FocusTrapFactory {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<FocusTrapFactory, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<FocusTrapFactory>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -276,7 +276,7 @@ export class HighContrastModeDetector implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<HighContrastModeDetector, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<HighContrastModeDetector>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -291,7 +291,7 @@ export class _IdGenerator {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_IdGenerator, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<_IdGenerator>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -315,7 +315,7 @@ export class InputModalityDetector implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<InputModalityDetector, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<InputModalityDetector>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -332,7 +332,7 @@ export class InteractivityChecker {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<InteractivityChecker, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<InteractivityChecker>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -405,7 +405,7 @@ export class LiveAnnouncer implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<LiveAnnouncer, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<LiveAnnouncer>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

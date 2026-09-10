@@ -80,7 +80,7 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelection
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DefaultMatCalendarRangeStrategy<any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<DefaultMatCalendarRangeStrategy<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -458,7 +458,7 @@ export class MatDatepickerIntl {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDatepickerIntl, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatDatepickerIntl>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -630,7 +630,7 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDateSelectionModel<any, any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatDateSelectionModel<any, any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -769,7 +769,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatRangeDateSelectionModel<any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatRangeDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -782,7 +782,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSingleDateSelectionModel<any>, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatSingleDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

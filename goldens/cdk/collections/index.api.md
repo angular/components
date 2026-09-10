@@ -108,7 +108,7 @@ export class UniqueSelectionDispatcher implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<UniqueSelectionDispatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<UniqueSelectionDispatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

@@ -16,7 +16,7 @@ export class BreakpointObserver implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<BreakpointObserver, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<BreakpointObserver>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -62,7 +62,7 @@ export class MediaMatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MediaMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MediaMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // (No @packageDocumentation comment for this package)
