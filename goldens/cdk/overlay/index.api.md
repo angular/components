@@ -329,7 +329,7 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<FullscreenOverlayContainer, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<FullscreenOverlayContainer>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -382,7 +382,7 @@ export class Overlay {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Overlay, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<Overlay>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -435,7 +435,7 @@ export class OverlayContainer implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayContainer, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<OverlayContainer>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -450,7 +450,7 @@ export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayKeyboardDispatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<OverlayKeyboardDispatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -470,7 +470,7 @@ export class OverlayOutsideClickDispatcher extends BaseOverlayDispatcher {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayOutsideClickDispatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<OverlayOutsideClickDispatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -480,7 +480,7 @@ export class OverlayPositionBuilder {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<OverlayPositionBuilder, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<OverlayPositionBuilder>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -575,7 +575,7 @@ export class ScrollDispatcher implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ScrollDispatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -607,7 +607,7 @@ export class ScrollStrategyOptions {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollStrategyOptions, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ScrollStrategyOptions>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
@@ -656,7 +656,7 @@ export class ViewportRuler implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ViewportRuler, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ViewportRuler>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // (No @packageDocumentation comment for this package)

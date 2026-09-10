@@ -109,7 +109,7 @@ export class MatSortHeaderIntl {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeaderIntl, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatSortHeaderIntl>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

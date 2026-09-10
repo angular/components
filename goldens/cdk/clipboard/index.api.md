@@ -39,7 +39,7 @@ class Clipboard_2 {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Clipboard_2, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<Clipboard_2>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 export { Clipboard_2 as Clipboard }
 

@@ -480,7 +480,7 @@ export class MapDirectionsService {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapDirectionsService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MapDirectionsService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -497,7 +497,7 @@ export class MapGeocoder {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MapGeocoder, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MapGeocoder>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

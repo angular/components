@@ -99,7 +99,7 @@ export class Dialog implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Dialog, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<Dialog>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
