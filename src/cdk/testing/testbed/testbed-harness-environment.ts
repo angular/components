@@ -15,12 +15,11 @@ import {
   stopHandlingAutoChangeDetectionStatus,
   TestElement,
 } from '../../testing';
-import {ComponentFixture, DirectiveFixture, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, DirectiveFixture, flush} from '@angular/core/testing';
 import {Observable} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {TaskState, TaskStateZoneInterceptor} from './task-state-zone-interceptor';
 import {UnitTestElement} from './unit-test-element';
-import {DestroyRef} from '@angular/core';
 
 /** Options to configure the environment. */
 export interface TestbedHarnessEnvironmentOptions {
@@ -124,8 +123,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     if (_fixture instanceof ComponentFixture) {
       _fixture.componentRef.onDestroy(onDestroy);
     } else {
-      // TODO(crisbeto): use host ref in directive fixture once it's available.
-      TestBed.inject(DestroyRef).onDestroy(onDestroy);
+      _fixture.onDestroy(onDestroy);
     }
   }
 
