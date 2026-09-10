@@ -81,7 +81,7 @@ export class MatDialog implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatDialog, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatDialog>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

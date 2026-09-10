@@ -53,7 +53,7 @@ export class FakeMatIconRegistry implements PublicApi<MatIconRegistry>, OnDestro
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<FakeMatIconRegistry, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<FakeMatIconRegistry>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

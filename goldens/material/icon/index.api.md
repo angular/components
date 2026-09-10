@@ -124,7 +124,7 @@ export class MatIconRegistry implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatIconRegistry, [{ optional: true; }, null, { optional: true; }, null]>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatIconRegistry>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

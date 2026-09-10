@@ -320,7 +320,7 @@ export class DragDrop {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DragDrop, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<DragDrop>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -381,7 +381,7 @@ export class DragDropRegistry implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DragDropRegistry, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<DragDropRegistry>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

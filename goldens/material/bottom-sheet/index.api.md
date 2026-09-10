@@ -45,7 +45,7 @@ export class MatBottomSheet implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatBottomSheet, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatBottomSheet>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

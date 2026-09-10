@@ -15,7 +15,7 @@ export class _CdkPrivateStyleLoader {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<_CdkPrivateStyleLoader, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<_CdkPrivateStyleLoader>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

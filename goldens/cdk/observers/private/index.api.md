@@ -17,7 +17,7 @@ export class SharedResizeObserver implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<SharedResizeObserver, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<SharedResizeObserver>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // (No @packageDocumentation comment for this package)
