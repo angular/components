@@ -131,7 +131,7 @@ export class MatPaginatorIntl {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatPaginatorIntl, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MatPaginatorIntl>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

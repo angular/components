@@ -342,7 +342,7 @@ export class MenuStack {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MenuStack, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MenuStack>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -362,7 +362,7 @@ export class MenuTracker {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MenuTracker, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MenuTracker>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -396,7 +396,7 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<TargetMenuAim, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<TargetMenuAim>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

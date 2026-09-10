@@ -268,7 +268,7 @@ export class ScrollDispatcher implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ScrollDispatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ScrollDispatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -320,7 +320,7 @@ export class ViewportRuler implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ViewportRuler, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ViewportRuler>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public

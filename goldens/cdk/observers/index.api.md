@@ -39,7 +39,7 @@ export class ContentObserver implements OnDestroy {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ContentObserver, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ContentObserver>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public
@@ -49,7 +49,7 @@ export class MutationObserverFactory {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MutationObserverFactory, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MutationObserverFactory>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)

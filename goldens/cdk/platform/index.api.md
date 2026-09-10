@@ -41,7 +41,7 @@ export class Platform {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<Platform, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<Platform>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 // @public (undocumented)
