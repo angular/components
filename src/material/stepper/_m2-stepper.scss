@@ -23,6 +23,7 @@
       stepper-header-optional-label-text-color: map.get($system, on-surface-variant),
       stepper-header-selected-state-label-text-color: map.get($system, on-surface),
       stepper-header-error-state-label-text-color: map.get($system, error),
+      stepper-header-icon-foreground-color: map.get($system, surface),
       stepper-header-icon-background-color: map.get($system, on-surface-variant),
       stepper-header-error-state-icon-foreground-color: map.get($system, error),
       stepper-header-error-state-icon-background-color: transparent)
@@ -54,7 +55,6 @@
   $system: m3-utils.replace-colors-with-variant($system, primary, $color-variant);
 
   @return (
-    stepper-header-icon-foreground-color: map.get($system, on-primary),
     stepper-header-selected-state-icon-background-color: map.get($system, primary),
     stepper-header-selected-state-icon-foreground-color: map.get($system, on-primary),
     stepper-header-done-state-icon-background-color: map.get($system, primary),
