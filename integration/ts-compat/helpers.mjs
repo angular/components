@@ -20,6 +20,7 @@ export async function runTypeScriptCompatibilityTest(tscBinPath) {
       // Disables automatic type resolution. In non-sandbox environments, the node modules
       // are accessible and types could end up as part of the program.
       '--types',
+      'node',
       '--lib',
       'es2015,dom',
       testFilePath,
