@@ -1,3 +1,12 @@
 .example-form-field {
   margin: 0 8px 16px 0;
 }
+
+/*
+ * Give the comparison range a distinct color so that it stands out from the
+ * selected range. With the default theme colors the two ranges can look very
+ * similar, which makes the comparison difficult to see.
+ */
+.example-comparison-range-panel {
+  --mat-datepicker-calendar-date-in-comparison-range-state-background-color: rgba(249, 171, 0, 0.4);
+}
