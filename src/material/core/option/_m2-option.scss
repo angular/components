@@ -26,6 +26,7 @@
 
   @return (
     option-selected-state-label-text-color: map.get($system, primary),
+    option-multiple-selected-state-label-text-color: null,
     option-label-text-color: map.get($system, on-surface),
     option-hover-state-layer-color: m3-utils.color-with-opacity(
         map.get($system, on-surface), map.get($system, hover-state-layer-opacity)),
