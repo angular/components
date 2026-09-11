@@ -193,6 +193,11 @@ $fallbacks: m3-form-field.get-tokens();
       display: inline-block;
       position: relative;
       max-width: 100%;
+      vertical-align: top;
+    }
+
+    .mdc-notched-outline:not(.mdc-notched-outline--notched) & {
+      margin-top: calc(-1 * var(--mat-mdc-form-field-outline-width, 1px));
     }
 
     .mdc-text-field--outlined & {
@@ -373,9 +378,11 @@ $fallbacks: m3-form-field.get-tokens();
     border: none;
     border-top: 1px solid;
     border-bottom: 1px solid;
+    --mat-mdc-form-field-outline-width: 1px;
 
     .mdc-text-field--focused & {
       border-width: 2px;
+      --mat-mdc-form-field-outline-width: 2px;
     }
 
     // Moved out into variables because the selectors we inherited were too long.
@@ -385,6 +392,8 @@ $fallbacks: m3-form-field.get-tokens();
     #{$enabled-selector} & {
       border-color: token-utils.slot(form-field-outlined-outline-color, $fallbacks);
       border-width: token-utils.slot(form-field-outlined-outline-width, $fallbacks);
+      --mat-mdc-form-field-outline-width: #{token-utils.slot(
+          form-field-outlined-outline-width, $fallbacks)};
     }
 
     #{$enabled-selector}#{$hover-selector} & {
@@ -413,6 +422,8 @@ $fallbacks: m3-form-field.get-tokens();
 
     #{$enabled-selector}.mdc-text-field--focused .mdc-notched-outline & {
       border-width: token-utils.slot(form-field-outlined-focus-outline-width, $fallbacks);
+      --mat-mdc-form-field-outline-width: #{token-utils.slot(
+          form-field-outlined-focus-outline-width, $fallbacks)};
     }
   }
 
