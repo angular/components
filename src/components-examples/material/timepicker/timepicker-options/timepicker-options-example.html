@@ -28,3 +28,19 @@
     <mat-timepicker [options]="customOptions" #customPicker/>
   </mat-form-field>
 </div>
+
+<h3>Display unavailable options</h3>
+
+<div>
+  <mat-form-field>
+    <mat-label>Pick available option</mat-label>
+    <input
+      matInput
+      [matTimepicker]="displayAllPicker"
+      matDisplayUnavailableItems
+      matTimepickerMin="9:30"
+      matTimepickerMax="17:00">
+    <mat-timepicker-toggle matIconSuffix [for]="displayAllPicker"/>
+    <mat-timepicker #displayAllPicker/>
+  </mat-form-field>
+</div>
