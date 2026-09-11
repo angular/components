@@ -430,6 +430,14 @@ bootstrapApplication(MyApp, {
 });
 ```
 
+You can also change the default behaviour to parse and handle dates as any desired time zone by passing `zone` into `provideLuxonDateAdapter`:
+
+```ts
+bootstrapApplication(MyApp, {
+  providers: [provideLuxonDateAdapter(undefined, {zone: 'UTC+2'})]
+});
+```
+
 It is also possible to create your own `DateAdapter` that works with any date format your app
 requires. This is accomplished by subclassing `DateAdapter` and providing your subclass as the
 `DateAdapter` implementation. You will also want to make sure that the `MAT_DATE_FORMATS` provided
