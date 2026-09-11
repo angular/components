@@ -72,7 +72,7 @@ $indicator-offset: calc(#{$border-width} + 2px);
 
   // MDC expects the fab icon to contain this HTML content:
   // ```html
-  //   <span class="mdc-fab__icon material-icons">favorite</span>
+  //   <span class="mdc-fab__icon material-symbols-outlined">favorite</span>
   // ```
   // However, Angular Material expects a `mat-icon` instead. The following
   // mixin will style the icons appropriately.

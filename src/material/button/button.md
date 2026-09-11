@@ -45,8 +45,9 @@ the `extended` attribute, mini FABs do not.
 
 ### Icon positioning
 
-Buttons can contain icons alongside text. By default, icons (`mat-icon`, `.material-icons`, or
-elements with the `matButtonIcon` attribute) are projected **before** the button label.
+Buttons can contain icons alongside text. By default, icons (`.material-icons`, `mat-icon`,
+`.material-symbols-outlined`, `.material-symbols-rounded`, `.material-symbols-sharp` or elements
+with the `matButtonIcon` attribute) are projected **before** the button label.
 
 ```html
 <button matButton>
@@ -74,8 +75,8 @@ You can also use both positions at once:
 </button>
 ```
 
-If you are using a custom icon element that is not a `mat-icon` or `.material-icons`, add the
-`matButtonIcon` attribute so that the button can project it into the correct slot:
+If you are using a custom icon element that does not use the `Material Symbols` or `Material Icons`
+set, add the `matButtonIcon` attribute so that the button can project it into the correct slot:
 
 ```html
 <button matButton>
