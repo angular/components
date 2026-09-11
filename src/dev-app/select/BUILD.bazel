@@ -16,6 +16,7 @@ ng_project(
         "//src/material/button",
         "//src/material/card",
         "//src/material/checkbox",
+        "//src/material/divider",
         "//src/material/form-field",
         "//src/material/icon",
         "//src/material/input",

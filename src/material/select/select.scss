@@ -52,6 +52,11 @@ $fallbacks: m3-select.get-tokens();
 }
 div.mat-mdc-select-panel {
   box-shadow: token-utils.slot(select-container-elevation-shadow, $fallbacks);
+
+  .mat-divider {
+    margin-top: token-utils.slot(select-divider-top-spacing, $fallbacks);
+    margin-bottom: token-utils.slot(select-divider-bottom-spacing, $fallbacks);
+  }
 }
 
 .mat-mdc-select-disabled {
