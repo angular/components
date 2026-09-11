@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@11.25.0",
+  "packageManager": "pnpm@11.26.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "11.25.0"
+    "pnpm": "11.26.0"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -107,7 +107,7 @@
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.30.0",
     "esbuild": "^0.28.0",
-    "firebase-tools": "15.28.2",
+    "firebase-tools": "15.30.0",
     "fs-extra": "^11.0.0",
     "glob": "^13.0.0",
     "highlight.js": "^11.0.0",
@@ -122,7 +122,7 @@
     "karma-jasmine": "^5.0.0",
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
-    "magic-string": "1.2.3",
+    "magic-string": "1.3.1",
     "marked": "^18.0.0",
     "minimatch": "^10.0.3",
     "parse5": "^8.0.0",

@@ -50,7 +50,7 @@ minimumReleaseAgeExclude:
 overrides:
   typescript: 6.0.2
   protobufjs: 8.8.0
-  '@nginfra/angular-linking>@babel/core': 8.0.1
+  '@nginfra/angular-linking>@babel/core': 8.0.5
 packageExtensions:
   dgeni-packages:
     dependencies:
