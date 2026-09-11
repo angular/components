@@ -321,7 +321,7 @@ export class MatChipListbox
     if (Array.isArray(this.selected)) {
       valueToEmit = this.selected.map(chip => chip.value);
     } else {
-      valueToEmit = this.selected ? this.selected.value : undefined;
+      valueToEmit = this.selected ? this.selected.value : null;
     }
     this._value = valueToEmit;
     this.change.emit(new MatChipListboxChange(this, valueToEmit));
