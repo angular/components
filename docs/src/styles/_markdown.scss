@@ -33,8 +33,7 @@
       font-weight: 400;
     }
 
-    // stylelint-disable-next-line selector-class-pattern
-    h3 .material-icons, h4 .material-icons {
+    h3 .mat-icon, h4 .mat-icon {
       color: var(--mat-sys-on-surface);
     }
 
@@ -109,13 +108,11 @@
       }
     }
 
-    // stylelint-disable-next-line selector-class-pattern
-    .material-icons {
+    .mat-icon {
       visibility: hidden;
     }
 
-    // stylelint-disable-next-line selector-class-pattern
-    &:hover .material-icons {
+    &:hover .mat-icon {
       visibility: visible;
     }
   }
