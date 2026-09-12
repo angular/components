@@ -19,6 +19,7 @@ sass_library(
     deps = [
         ":sass_utils",
         ":variables",
+        "//src/material/core/tokens:m3_utils",
     ],
 )
 
