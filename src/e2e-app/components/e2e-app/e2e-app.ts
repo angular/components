@@ -16,6 +16,7 @@ export class E2eApp {
     {path: 'block-scroll-strategy', title: 'Block Scroll Strategy'},
     {path: 'component-harness', title: 'Component Harness'},
     {path: 'slider', title: 'Slider'},
+    {path: 'tailwind-layer', title: 'Tailwind Layer'},
     {path: 'virtual-scroll', title: 'Virtual Scroll'},
   ];
 }

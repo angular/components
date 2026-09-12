@@ -53,6 +53,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "expansion-panel.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -65,6 +66,7 @@ sass_binary(
 sass_binary(
     name = "header_css",
     src = "expansion-panel-header.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         ":variables",

@@ -203,6 +203,7 @@ sass_library(
 sass_binary(
     name = "ripple_structure",
     src = "ripple/ripple-structure.scss",
+    layer = "angular-material",
     deps = [
         ":ripple_sass",
     ],

@@ -53,6 +53,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "grid-list.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/material/core/style:layout_common",
