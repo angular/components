@@ -8,12 +8,15 @@
     <div #trackActive class="mdc-slider__track--active_fill"></div>
   </div>
   @if (showTickMarks) {
-    <div class="mdc-slider__tick-marks" #tickMarkContainer>
+    <!-- The offset of 4.7 was derived empirically to ensure perfect alignment between the active track and the tick marks. -->
+    <div class="mdc-slider__tick-marks" #tickMarkContainer
+         [style.width.px]="_tickMarkTrackWidth + 4"
+         [style.left.px]="_isRtl() ? _cachedWidth - 4.7 - _tickMarkTrackWidth : 1"
+         [attr.dir]="_isRtl() ? 'rtl' : null">
       @if (_cachedWidth) {
         @for (tickMark of _tickMarks; track i; let i = $index) {
           <div
-            [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"
-            [style.transform]="_calcTickMarkTransform(i)"></div>
+            [class]="tickMark === 0 ? 'mdc-slider__tick-mark--active' : 'mdc-slider__tick-mark--inactive'"></div>
         }
       }
     </div>

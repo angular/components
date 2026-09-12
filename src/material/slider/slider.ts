@@ -285,7 +285,9 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   /** The values at which the thumb will snap. */
   @Input({transform: numberAttribute})
   get step(): number {
-    return this._step;
+    // A step of 0 is treated as "no step".
+    // i.e. a slider which does not snap to any values.
+    return this._step < 0 ? 1 : this._step;
   }
   set step(v: number) {
     const step = isNaN(v) ? this._step : v;
@@ -591,14 +593,6 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     trackStyle.transform = styles.transform;
   }
 
-  /** Returns the translateX positioning for a tick mark based on it's index. */
-  _calcTickMarkTransform(index: number): string {
-    // TODO(wagnermaciel): See if we can avoid doing this and just using flex to position these.
-    const offset = index * (this._tickMarkTrackWidth / (this._tickMarks.length - 1));
-    const translateX = this._isRtl() ? this._cachedWidth - 6 - offset : offset;
-    return `translateX(${translateX}px)`;
-  }
-
   // Handlers for updating the slider ui.
 
   _onTranslateXChange(source: _MatSliderThumb): void {
@@ -791,7 +785,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
     }
 
     const step = this._step && this._step > 0 ? this._step : 1;
-    const maxValue = Math.floor(this.max / step) * step;
+    const maxValue = this.min + Math.floor((this.max - this.min) / step) * step;
     const percentage = (maxValue - this.min) / (this.max - this.min);
     this._tickMarkTrackWidth = (this._cachedWidth - 6) * percentage;
   }
@@ -872,42 +866,21 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
 
   /** Updates the dots along the slider track. */
   _updateTickMarkUI(): void {
-    if (
-      !this.showTickMarks ||
-      this.step === undefined ||
-      this.min === undefined ||
-      this.max === undefined
-    ) {
+    if (!this.showTickMarks) {
       return;
     }
-    const step = this.step > 0 ? this.step : 1;
-    this._isRange ? this._updateTickMarkUIRange(step) : this._updateTickMarkUINonRange(step);
-  }
 
-  private _updateTickMarkUINonRange(step: number): void {
-    const value = this._getValue();
-    let numActive = Math.max(Math.round((value - this.min) / step), 0) + 1;
-    let numInactive = Math.max(Math.round((this.max - value) / step), 0) - 1;
-    this._isRtl() ? numActive++ : numInactive++;
+    const step = this.step || 1;
+    const numTicks = Math.floor((this.max - this.min) / step) + 1;
+    this._tickMarks = [];
 
-    this._tickMarks = Array(numActive)
-      .fill(_MatTickMark.ACTIVE)
-      .concat(Array(numInactive).fill(_MatTickMark.INACTIVE));
-  }
-
-  private _updateTickMarkUIRange(step: number): void {
     const endValue = this._getValue();
-    const startValue = this._getValue(_MatThumb.START);
-
-    const numInactiveBeforeStartThumb = Math.max(Math.round((startValue - this.min) / step), 0);
-    const numActive = Math.max(Math.round((endValue - startValue) / step) + 1, 0);
-    const numInactiveAfterEndThumb = Math.max(Math.round((this.max - endValue) / step), 0);
-    this._tickMarks = Array(numInactiveBeforeStartThumb)
-      .fill(_MatTickMark.INACTIVE)
-      .concat(
-        Array(numActive).fill(_MatTickMark.ACTIVE),
-        Array(numInactiveAfterEndThumb).fill(_MatTickMark.INACTIVE),
-      );
+    const startValue = this._isRange ? this._getValue(_MatThumb.START) : this.min;
+    for (let i = 0; i < numTicks; i++) {
+      const value = this.min + i * step;
+      const isActive = value >= startValue && value <= endValue;
+      this._tickMarks.push(isActive ? _MatTickMark.ACTIVE : _MatTickMark.INACTIVE);
+    }
   }
 
   /** Gets the slider thumb input of the given thumb position. */
