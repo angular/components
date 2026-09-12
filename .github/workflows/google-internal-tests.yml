@@ -14,8 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: angular/dev-infra/github-actions/google-internal-tests@4a09f9588769980eacb41fcc76e2c76d048eac42 # main
         with:
+          persist-credentials: false
+      - uses: angular/dev-infra/github-actions/google-internal-tests@f826089a718c89f9ce3d6a0d3e155fbc0fb4a3de # main
+        with:
+          persist-credentials: false
           run-tests-guide-url: http://go/angular-material-presubmit
           github-token: ${{ secrets.GITHUB_TOKEN }}
           sync-config: ./.ng-dev/google-sync-config.json
