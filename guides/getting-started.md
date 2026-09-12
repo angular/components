@@ -28,7 +28,7 @@ The `ng add` command will additionally perform the following actions:
 
 * Add project dependencies to `package.json`
 * Add the Roboto font to your `index.html`
-* Add the Material Design icon font to your `index.html`
+* Add the [Material Symbols icon font](https://fonts.google.com/icons) to your `index.html`
 * Add a few global CSS styles to:
   * Remove margins from `body`
   * Set `height: 100%` on `html` and `body`

@@ -25,7 +25,7 @@ The Angular Material `ng add` schematic helps you set up an Angular CLI project 
 - Ensure [project dependencies](./getting-started#step-1-install-angular-material-angular-cdk-and-angular-animations) are placed in `package.json`
 - Add either a prebuilt theme or a custom theme
 - Add Roboto fonts to your `index.html`
-- Add the [Material Icon font](./getting-started#step-6-optional-add-material-icons) to your `index.html`
+- Add the [Material Symbols icon font](https://fonts.google.com/icons) to your `index.html`
 - Add global styles to
   - Remove margins from `body`
   - Set `height: 100%` on `html` and `body`

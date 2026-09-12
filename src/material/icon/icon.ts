@@ -110,15 +110,17 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
  *   content of the `<mat-icon>` component. If you register a custom font class, don't forget to also
  *   include the special class `mat-ligature-font`. It is recommended to use the attribute alternative
  *   to prevent the ligature text to be selectable and to appear in search engine results.
- *   By default, the Material icons font is used as described at
- *   http://google.github.io/material-design-icons/#icon-font-for-the-web. You can specify an
- *   alternate font by setting the fontSet input to either the CSS class to apply to use the
- *   desired font, or to an alias previously registered with MatIconRegistry.registerFontClassAlias.
+ *   By default, the Material Icons or Material Symbols fonts are used as described at
+ *   https://fonts.google.com/icons. You can specify an alternate font by setting the `fontSet`
+ *   input to either the CSS class to apply to use the desired font, or to an alias previously
+ *   registered with `MatIconRegistry.registerFontClassAlias`.
  *   Examples:
- *     `<mat-icon fontIcon="home"></mat-icon>
+ *     ```html
+ *     <mat-icon fontIcon="home"></mat-icon>
  *     <mat-icon>home</mat-icon>
  *     <mat-icon fontSet="myfont" fontIcon="sun"></mat-icon>
- *     <mat-icon fontSet="myfont">sun</mat-icon>`
+ *     <mat-icon fontSet="myfont">sun</mat-icon>
+ *     ```
  *
  * - Specify a font glyph to be included via CSS rules by setting the fontSet input to specify the
  *   font, and the fontIcon input to specify the icon. Typically the fontIcon will specify a
