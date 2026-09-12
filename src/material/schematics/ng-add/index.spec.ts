@@ -150,7 +150,7 @@ describe('ng-add schematic', () => {
         '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
       );
       expect(htmlContent).toContain(
-        '  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"',
+        '  <link href="https://fonts.googleapis.com/icon?family=Material+Symbols+Outlined"',
       );
       expect(htmlContent).toContain(
         '  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@' +
