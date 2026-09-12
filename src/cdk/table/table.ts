@@ -423,6 +423,12 @@ export class CdkTable<T>
    */
   private _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>[]>>();
 
+  /**
+   * Row definition used to create each rendered data-row view. Keying by the view keeps the
+   * association intact when the differ moves rows.
+   */
+  private _rowDefsByView = new WeakMap<EmbeddedViewRef<RowContext<T>>, CdkRowDef<T>>();
+
   /** Whether the table is applied to a native `<table>`. */
   protected _isNativeHtmlTable: boolean;
 
@@ -750,19 +756,31 @@ export class CdkTable<T>
       (change: _ViewRepeaterItemChange<RenderRow<T>, RowContext<T>>) => {
         if (change.operation === _ViewRepeaterOperation.INSERTED && change.context) {
           this._renderCellTemplateForItem(change.record.item.rowDef, change.context);
+          const rowView = viewContainer.get(change.record.currentIndex!) as RowViewRef<T>;
+          this._rowDefsByView.set(rowView, change.record.item.rowDef);
         }
       },
     );
 
-    // Update the meta context of a row's context data (index, count, first, last, ...)
-    this._updateRowIndexContext();
-
     // Update rows that did not get added/removed/moved but may have had their identity changed,
     // e.g. if trackBy matched data on some property but the actual data reference changed.
     changes.forEachIdentityChange((record: IterableChangeRecord<RenderRow<T>>) => {
-      const rowView = <RowViewRef<T>>viewContainer.get(record.currentIndex!);
-      rowView.context.$implicit = record.item.data;
+      const currentIndex = record.currentIndex!;
+      const rowView = viewContainer.get(currentIndex) as RowViewRef<T>;
+
+      if (this._rowDefsByView.get(rowView) !== record.item.rowDef) {
+        viewContainer.remove(currentIndex);
+        const newRowView = this._renderRow(this._rowOutlet, record.item.rowDef, currentIndex, {
+          $implicit: record.item.data,
+        });
+        this._rowDefsByView.set(newRowView, record.item.rowDef);
+      } else {
+        rowView.context.$implicit = record.item.data;
+      }
     });
+
+    // Update the meta context of a row's context data (index, count, first, last, ...)
+    this._updateRowIndexContext();
 
     this._updateNoDataRow();
 
