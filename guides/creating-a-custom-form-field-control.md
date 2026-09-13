@@ -1,5 +1,46 @@
 # Creating a custom form field control
 
+## Wrapping an existing Material control
+
+If a reusable component only needs to configure an existing Material control, keep the form
+control on the native Material element instead of implementing `MatFormFieldControl` again. Pass
+the control to the wrapper and bind it with `formControl`:
+
+```ts
+import {Component, Input} from '@angular/core';
+import {FormControl, ReactiveFormsModule} from '@angular/forms';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+
+@Component({
+  selector: 'app-address-line',
+  imports: [MatFormFieldModule, MatInputModule, ReactiveFormsModule],
+  template: `
+    <mat-form-field>
+      <mat-label>Address line</mat-label>
+      <input matInput [formControl]="control" />
+      @if (control.hasError('required')) {
+        <mat-error>This field is required</mat-error>
+      }
+    </mat-form-field>
+  `,
+})
+export class AddressLine {
+  @Input({required: true}) control!: FormControl<string>;
+}
+```
+
+Use the wrapper with the control from the parent form:
+
+```html
+<app-address-line [control]="addressForm.controls.street" />
+```
+
+This pattern preserves the control's value, validation, touched state, and error-state handling.
+Use the custom form field control pattern below when the component itself must behave as the direct
+child of `<mat-form-field>` or needs to expose a value that is not represented by an existing
+Material control.
+
 It is possible to create custom form field controls that can be used inside `<mat-form-field>`. This
 can be useful if you need to create a component that shares a lot of common behavior with a form
 field, but adds some additional logic.
