@@ -574,3 +574,7 @@ in your application, you must load the theme styles within each shadow root that
 contains an Angular Material component. You can accomplish this by manually
 loading the CSS in each shadow root, or by using
 [Constructable Stylesheets](https://web.dev/articles/constructable-stylesheets).
+
+Loading the theme styles in a shadow root does not move Angular Material's component styles or
+overlay containers into that root. Components that render overlays, such as dialogs and menus,
+may therefore need additional styling and overlay configuration when used inside Shadow DOM.
