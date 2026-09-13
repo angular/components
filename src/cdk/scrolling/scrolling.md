@@ -9,6 +9,30 @@ This marks the element as a `Scrollable` and registers it with the `ScrollDispat
 dispatcher, then, allows components to share both event listeners and knowledge of all of the
 scrollable containers in the application.
 
+#### Reacting to a scrollable container
+
+Inject `ScrollDispatcher` when a component needs to react to scrolling anywhere in the application.
+The `scrolled` observable emits the `CdkScrollable` that caused the event, or `undefined` when the
+event came from the document. Use the optional audit time when the handler does not need to run for
+every native scroll event.
+
+```ts
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/scrolling';
+
+export class ScrollSpy {
+  constructor(scrollDispatcher: ScrollDispatcher) {
+    scrollDispatcher.scrolled(100).subscribe((scrollable: CdkScrollable | undefined) => {
+      const element = scrollable?.getElementRef().nativeElement;
+      // Update the active section using element?.scrollTop or the document scroll position.
+    });
+  }
+}
+```
+
+For a single container, inject `CdkScrollable` and subscribe to its `elementScrolled()` observable
+instead. The container must have the `cdkScrollable` directive, and the subscription should be
+cleaned up with the component's lifecycle.
+
 ### ViewportRuler
 The `ViewportRuler` is a service that can be injected and used to measure the bounds of the browser
 viewport.
