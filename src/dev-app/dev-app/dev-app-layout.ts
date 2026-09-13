@@ -18,7 +18,7 @@ import {
   DOCUMENT,
 } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule, MatIconRegistry} from '@angular/material/icon';
+import {MatIconModule} from '@angular/material/icon';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -52,7 +52,6 @@ export class DevAppLayout {
   private _dir = inject(Directionality) as DevAppDirectionality;
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _document = inject(DOCUMENT);
-  private _iconRegistry = inject(MatIconRegistry);
   private _route = inject(ActivatedRoute);
 
   state = getAppState();
@@ -227,10 +226,6 @@ export class DevAppLayout {
         ? 'theme-m3.css'
         : 'theme.css';
     }
-
-    this._iconRegistry.setDefaultFontSetClass(
-      value ? 'material-symbols-outlined' : 'material-icons',
-    );
     this.state.m3Enabled = value;
     setAppState(this.state);
   }
