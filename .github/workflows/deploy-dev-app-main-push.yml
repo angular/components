@@ -27,7 +27,7 @@ jobs:
 
       - name: Building dev-app
         run: |
-          pnpm -s bazel build //src/dev-app:web_package --symlink_prefix=dist/
+          pnpm --silent bazel build //src/dev-app:web_package --symlink_prefix=dist/
           cp -R dist/bin/src/dev-app/web_package dist/dev-app-web-pkg
 
       - name: Configure Firebase deploy target

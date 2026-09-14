@@ -41,7 +41,7 @@ jobs:
       - name: Check code lint
         run: pnpm tslint
       - name: Check for circular dependencies
-        run: pnpm -s ts-circular-deps:check
+        run: pnpm --silent ts-circular-deps:check
       - name: Check code format
         run: pnpm ng-dev format changed --check ${{ github.event.pull_request.base.sha }}
       - name: Check Package Licenses

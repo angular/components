@@ -29,7 +29,7 @@ jobs:
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Build
-        run: pnpm -s build //docs/...
+        run: pnpm --silent build //docs/...
 
   test:
     runs-on: ubuntu-latest
@@ -64,7 +64,7 @@ jobs:
       - name: Install node modules
         run: pnpm install --frozen-lockfile
       - name: Execute Lighthouse Audit
-        run: pnpm -s bazel test --test_tag_filters=audit //docs/...
+        run: pnpm --silent bazel test --test_tag_filters=audit //docs/...
       - name: Store Audit Logs
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
