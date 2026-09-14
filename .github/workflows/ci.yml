@@ -43,7 +43,7 @@ jobs:
       - name: Check code lint
         run: pnpm tslint
       - name: Check for circular dependencies
-        run: pnpm -s ts-circular-deps:check
+        run: pnpm --silent ts-circular-deps:check
 
   api_golden_checks:
     runs-on: ubuntu-latest

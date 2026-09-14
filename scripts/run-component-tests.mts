@@ -77,7 +77,7 @@ if (debug && (components.length > 1 || all)) {
 }
 
 const browserName = firefox ? 'firefox' : 'chromium';
-const bazelBinary = `pnpm -s ${watch ? 'ibazel' : 'bazel'}`;
+const bazelBinary = `pnpm --silent ${watch ? 'ibazel' : 'bazel'}`;
 
 // If `all` has been specified as component, we run tests for all components
 // in the repository. The `--firefox` flag can be still specified.
@@ -90,7 +90,7 @@ if (all) {
     console.warn(chalk.yellow('Tests will be run in non-watch mode..'));
   }
   sh.exec(
-    `pnpm -s bazel test --test_tag_filters=-e2e,browser:${browserName} ` +
+    `pnpm --silent bazel test --test_tag_filters=-e2e,browser:${browserName} ` +
       `--build_tag_filters=browser:${browserName} --build_tests_only //src/...`,
   );
 } else {
