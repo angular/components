@@ -26,7 +26,7 @@
       dialog-with-actions-content-padding: 20px 24px 0,
     ),
     color: (
-      dialog-container-color: map.get($system, surface),
+      dialog-container-color: map.get($system, surface-container-high),
       dialog-subhead-color: map.get($system, on-surface),
       dialog-supporting-text-color: map.get($system, on-surface-variant),
     ),
