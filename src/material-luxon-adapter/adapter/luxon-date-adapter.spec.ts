@@ -11,7 +11,7 @@ import {TestBed} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {CalendarSystem, DateTime, FixedOffsetZone, Settings} from 'luxon';
 import {LuxonDateModule} from './index';
-import {MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
+import {LuxonDateAdapter, MAT_LUXON_DATE_ADAPTER_OPTIONS} from './luxon-date-adapter';
 
 const JAN = 1,
   FEB = 2,
@@ -418,7 +418,7 @@ describe('LuxonDateAdapter', () => {
     expect(clone.toISO()).toEqual(date.toISO());
   });
 
-  it('should respect timezone on clone', () => {
+  it('should respect timeZone on clone', () => {
     const dateLocal = DateTime.local(2017, JAN, 1);
     const dateInCet = dateLocal.setZone('Europe/Budapest');
     const cloneInCet = adapter.clone(dateInCet);
@@ -757,7 +757,7 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
 });
 
 describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => {
-  let adapter: DateAdapter<DateTime>;
+  let adapter: LuxonDateAdapter;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -770,7 +770,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
       ],
     });
 
-    adapter = TestBed.inject(DateAdapter);
+    adapter = TestBed.inject(DateAdapter) as LuxonDateAdapter;
   });
 
   describe('use UTC', () => {
@@ -789,7 +789,7 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
     });
 
     it('should parse dates to UTC', () => {
-      const date = adapter.parse('1/2/2017', 'LL/dd/yyyy')!;
+      const date = adapter.parse('1/2/2017', 'L/d/yyyy')!;
       expect(date.toISO()).toBe(date.toUTC().toISO());
     });
 
@@ -797,6 +797,30 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => 
       const date = adapter.deserialize('1985-04-12T23:20:50.52Z')!;
       expect(date.toISO()).toBe(date.toUTC().toISO());
     });
+
+    it('setting timeZone should throw an error when useUtc is true', () => {
+      expect(() => adapter.setTimeZone('Europe/Budapest')).toThrowError(
+        'Cannot set timeZone if the useUtc option is set to true.',
+      );
+    });
+  });
+});
+
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS useUtc and timeZone override same time', () => {
+  it('setting useUtc and timeZone same time should throw an Error', () => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {useUtc: true, firstDayOfWeek: 1, timeZone: 'Europe/Budapest'},
+        },
+      ],
+    });
+
+    expect(() => TestBed.inject(DateAdapter)).toThrowError(
+      'Cannot set timeZone if the useUtc option is set to true.',
+    );
   });
 });
 
@@ -831,6 +855,93 @@ describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override for defa
       expect(adapter.today().toLocaleString()).toBe(
         DateTime.local({outputCalendar: calendarExample}).toLocaleString(),
       );
+    });
+  });
+});
+
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS timeZone override', () => {
+  let adapter: DateAdapter<DateTime>;
+
+  const timeZone = 'UTC-12';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {firstDayOfWeek: 1, timeZone},
+        },
+      ],
+    });
+
+    adapter = TestBed.inject(DateAdapter);
+  });
+
+  describe(`use ${timeZone} timeZone`, () => {
+    it('should create Luxon date in specified timeZone', () => {
+      const date = adapter.createDate(2017, 0, 5);
+      expect(date.zone.name).toEqual(timeZone);
+      expect(date.toISO()).toEqual(DateTime.local(2017, JAN, 5, {zone: timeZone}).toISO());
+    });
+
+    it('should create today in specified timeZone', () => {
+      const today = adapter.today();
+      expect(today.zone.name).toEqual(timeZone);
+    });
+
+    it('should parse dates to specified timeZone', () => {
+      const date = adapter.parse('1/2/2017', 'L/d/yyyy')!;
+      expect(date.zone.name).toEqual(timeZone);
+      expect(date.toISO()).toBe(DateTime.local(2017, JAN, 2, {zone: timeZone}).toISO());
+    });
+
+    it('should return date when deserializing in specified timeZone', () => {
+      const date = adapter.deserialize('1985-04-12T23:20:50.52Z')!;
+      expect(date.zone.name).toEqual(timeZone);
+      expect(date.toISO()).toBe('1985-04-12T11:20:50.520-12:00');
+    });
+  });
+});
+
+describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS timeZone override programmatically', () => {
+  let adapter: LuxonDateAdapter;
+
+  const timeZone = 'UTC-12';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [LuxonDateModule],
+      providers: [
+        {
+          provide: MAT_LUXON_DATE_ADAPTER_OPTIONS,
+          useValue: {firstDayOfWeek: 1, timeZone},
+        },
+      ],
+    });
+
+    adapter = TestBed.inject(DateAdapter) as LuxonDateAdapter;
+  });
+
+  describe(`use ${timeZone} timeZone`, () => {
+    it('should return correct timeZone after setting zone programmatically', () => {
+      const date = adapter.createDate(2017, 0, 5);
+      expect(date.zone.name).toEqual(timeZone);
+
+      const newTimeZone = 'UTC-6';
+      adapter.setTimeZone(newTimeZone);
+
+      const dateAfterZoneChange = adapter.createDate(2017, 0, 5);
+      expect(dateAfterZoneChange.zone.name).toEqual(newTimeZone);
+
+      const today = adapter.today();
+      expect(today.zone.name).toEqual(newTimeZone);
+
+      const parsedDate = adapter.parse('1/2/2017', 'L/d/yyyy')!;
+      expect(parsedDate.zone.name).toEqual(newTimeZone);
+
+      const deserializedDate = adapter.deserialize('1985-04-12T23:20:50.52Z')!;
+      expect(deserializedDate.zone.name).toEqual(newTimeZone);
     });
   });
 });
