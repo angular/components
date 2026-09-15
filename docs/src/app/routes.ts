@@ -13,19 +13,6 @@ import {CanActivateComponentSidenav} from './pages/component-sidenav/component-s
 @Component({template: ''})
 export class RedirectPlaceholder {}
 
-function externalRedirect(target: string): Partial<Route> {
-  return {
-    // The router requires a `component`.
-    component: RedirectPlaceholder,
-    canActivate: [
-      () => {
-        window.location.href = target;
-        return false;
-      },
-    ],
-  };
-}
-
 export const MATERIAL_DOCS_ROUTES: Routes = [
   {
     path: '',
@@ -45,27 +32,27 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   // Component harness, drag & drop docs have moved to angular.dev
   {
     path: 'cdk/testing',
-    ...externalRedirect('https://angular.dev/guide/testing/component-harnesses-overview'),
+    ...adevRedirect('/guide/testing/component-harnesses-overview'),
   },
   {
     path: 'cdk/testing/api',
-    ...externalRedirect('https://angular.dev/api#angular_cdk_testing'),
+    ...adevRedirect('/api#angular_cdk_testing'),
   },
   {
     path: 'cdk/testing/:tab',
-    ...externalRedirect('https://angular.dev/guide/testing/component-harnesses-overview'),
+    ...adevRedirect('/guide/testing/component-harnesses-overview'),
   },
   {
     path: 'cdk/drag-drop',
-    ...externalRedirect('https://angular.dev/guide/drag-drop'),
+    ...adevRedirect('/guide/drag-drop'),
   },
   {
     path: 'cdk/drag-drop/api',
-    ...externalRedirect('https://angular.dev/api#angular_cdk_drag-drop'),
+    ...adevRedirect('/api#angular_cdk_drag-drop'),
   },
   {
     path: 'cdk/drag-drop/:tab',
-    ...externalRedirect('https://angular.dev/guide/drag-drop'),
+    ...adevRedirect('/guide/drag-drop'),
   },
   {path: 'guide/system-variables', redirectTo: '/guide/theming-your-components'},
   // In v19, the theming system became based on system variables and the mat.theme mixin.
@@ -92,3 +79,30 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   },
   {path: '**', redirectTo: '/404'},
 ];
+
+function adevRedirect(path: string) {
+  return externalRedirect(() => {
+    const match = window.location.hostname.match(/^([a-zA-Z0-9]+)\.material\.angular\./);
+    let version: string | null = null;
+
+    if (match) {
+      // adev doesn't have an RC URL so we route to next.
+      version = match[1].toLowerCase() === 'rc' ? 'next' : match[1];
+    }
+
+    return `https://${version ? version + '.' : ''}angular.dev${path}`;
+  });
+}
+
+function externalRedirect(target: string | (() => string)): Partial<Route> {
+  return {
+    // The router requires a `component`.
+    component: RedirectPlaceholder,
+    canActivate: [
+      () => {
+        window.location.href = typeof target === 'string' ? target : target();
+        return false;
+      },
+    ],
+  };
+}
