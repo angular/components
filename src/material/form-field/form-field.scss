@@ -186,6 +186,12 @@ $_icon-prefix-infix-padding: 4px;
   &:has(textarea[cols]) {
     width: auto;
   }
+
+  input:-webkit-autofill,
+  textarea:-webkit-autofill {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: token-utils.slot(form-field-filled-input-text-color, $fallbacks);
+  }
 }
 
 // In the form-field theme, we add a 1px left margin to the notch to fix a rendering bug in Chrome.
