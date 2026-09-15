@@ -205,6 +205,9 @@ export class MatAutocompleteTrigger
     this._canOpenOnNextFocus = this.panelOpen || !this._hasFocus();
   };
 
+  /** Value of the autocomplete control. */
+  private _value: any;
+
   /** `View -> model callback called when value changes` */
   _onChange: (value: any) => void = () => {};
 
@@ -248,6 +251,15 @@ export class MatAutocompleteTrigger
   ngAfterViewInit() {
     this._initialized.next();
     this._initialized.complete();
+    if (this._value) {
+      const selectedOption = this.autocomplete?.options?.find(
+        o => this._getDisplayValue(o.value) === this._getDisplayValue(this._value),
+      );
+      if (selectedOption && !selectedOption.selected) {
+        selectedOption.select(false);
+        this._changeDetectorRef.detectChanges();
+      }
+    }
     this._cleanupWindowBlur = this._renderer.listen('window', 'blur', this._windowBlurHandler);
   }
 
@@ -424,6 +436,7 @@ export class MatAutocompleteTrigger
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any): void {
+    this._value = value;
     Promise.resolve(null).then(() => this._assignOptionValue(value));
   }
 
