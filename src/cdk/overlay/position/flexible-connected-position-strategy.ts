@@ -65,9 +65,7 @@ export function createFlexibleConnectedPositionStrategy(
 
 /** Supported locations in the DOM for connected overlays. */
 export type FlexibleOverlayPopoverLocation =
-  | 'global'
-  | 'inline'
-  | {type: 'parent'; element: Element};
+  'global' | 'inline' | {type: 'parent'; element: Element};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -230,8 +228,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * @docs-private
    */
   apply(): void {
-    // We shouldn't do anything if the strategy was disposed or we're on the server.
-    if (this._isDisposed || !this._platform.isBrowser) {
+    // We shouldn't do anything if the strategy was disposed, we're on the server, or the
+    // origin is no longer usable (e.g. it was removed from the view while the overlay
+    // hasn't been disposed of yet). There's nothing meaningful to position against in that case.
+    if (this._isDisposed || !this._platform.isBrowser || !this._isOriginUsable()) {
       return;
     }
 
@@ -391,7 +391,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * allows one to re-align the panel without changing the orientation of the panel.
    */
   reapplyLastPosition(): void {
-    if (this._isDisposed || !this._platform.isBrowser) {
+    if (this._isDisposed || !this._platform.isBrowser || !this._isOriginUsable()) {
       return;
     }
 
@@ -1269,6 +1269,31 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _getViewportMarginBottom(): number {
     if (typeof this._viewportMargin === 'number') return this._viewportMargin;
     return this._viewportMargin?.bottom ?? 0;
+  }
+
+  /**
+   * Checks whether the current origin can actually be measured. The origin can become
+   * unusable while the overlay is still open and hasn't been disposed of yet, e.g. an
+   * `ElementRef` whose `nativeElement` was cleared out, or a virtual (point) origin
+   * whose owner set it to `null`/`undefined` via `setOrigin` after the trigger it was
+   * tracking disappeared.
+   */
+  private _isOriginUsable(): boolean {
+    const origin = this._origin;
+
+    if (origin == null) {
+      return false;
+    }
+
+    if (origin instanceof ElementRef) {
+      return origin.nativeElement != null;
+    }
+
+    if (origin instanceof Element) {
+      return true;
+    }
+
+    return typeof origin.x === 'number' && typeof origin.y === 'number';
   }
 
   /** Returns the DOMRect of the current origin. */
