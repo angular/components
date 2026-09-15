@@ -49,6 +49,15 @@ filter that doesn't limit matches to the beginning of the string.
 
 <!-- example(autocomplete-filter) -->
 
+### Showing loading and empty states
+
+When autocomplete options come from an asynchronous source, keep loading and empty-state messages
+outside of `mat-option` so that options only represent values that users can select. The example
+below uses `switchMap` so stale requests are cancelled when the input changes, `finalize` to clear
+the loading state when each request finishes, and an `aria-live` hint to announce status changes.
+
+<!-- example(autocomplete-loading) -->
+
 ### Setting separate control and display values
 
 If you want the option's control value (what is saved in the form) to be different than the option's
