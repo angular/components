@@ -65,9 +65,7 @@ export function createFlexibleConnectedPositionStrategy(
 
 /** Supported locations in the DOM for connected overlays. */
 export type FlexibleOverlayPopoverLocation =
-  | 'global'
-  | 'inline'
-  | {type: 'parent'; element: Element};
+  'global' | 'inline' | {type: 'parent'; element: Element};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -1073,9 +1071,15 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // above or below the origin and the direction in which the element will expand.
     if (position.overlayY === 'bottom') {
       // When using `bottom`, we adjust the y position such that it is the distance
-      // from the bottom of the viewport rather than the top.
-      const documentHeight = this._document.documentElement!.clientHeight;
-      styles.bottom = `${documentHeight - (overlayPoint.y + this._overlayRect.height)}px`;
+      // from the bottom of the containing block rather than the top. Native popovers are
+      // positioned relative to the viewport, while regular overlays use the overlay container.
+      const containingBlockHeight = this._overlayRef.getConfig().usePopover
+        ? this._document.documentElement!.clientHeight
+        : this._containerRect.height;
+
+      styles.bottom = coerceCssPixelValue(
+        containingBlockHeight - (overlayPoint.y + this._overlayRect.height),
+      );
     } else {
       styles.top = coerceCssPixelValue(overlayPoint.y);
     }
