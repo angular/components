@@ -743,26 +743,28 @@ function isSafeUrlWithOptions(value: any): value is SafeResourceUrlWithIconOptio
 
 /** Infers which font classes to apply by default based on the fonts that have been loaded. */
 function inferDefaultFontSetClass(document: Document): string[] {
-  let materialSymbolsVariantion: 'outlined' | 'rounded' | 'sharp' | null = null;
+  let materialSymbolsVariation: 'outlined' | 'rounded' | 'sharp' | null = null;
   let hasLegacyMaterialIcons = false;
 
   // Note that this approach only detects the fonts that are link tags at the time of calling
   // so we may miss some fonts that are loaded later. That should be a minority and the logic
   // below still falls back to the old behavior if that happens.
   if (document.fonts && typeof document.fonts.forEach === 'function') {
-    document.fonts.forEach(({family}) => {
-      if (family.includes('Material Icons')) {
+    document.fonts.forEach(font => {
+      const family = font.family.replace(/['"]/g, '').trim().toLowerCase();
+
+      if (family === 'material icons' || family.startsWith('material icons ')) {
         hasLegacyMaterialIcons = true;
       }
 
-      if (family.includes('Material Symbols Rounded')) {
-        materialSymbolsVariantion = 'rounded';
-      } else if (family.includes('Material Symbols Sharp')) {
-        materialSymbolsVariantion = 'sharp';
-      } else if (family.includes('Material Symbols')) {
+      if (family.startsWith('material symbols rounded')) {
+        materialSymbolsVariation = 'rounded';
+      } else if (family.startsWith('material symbols sharp')) {
+        materialSymbolsVariation = 'sharp';
+      } else if (family.startsWith('material symbols')) {
         // This should mostly catch `Material Symbols Outlined`,
         // but we keep it a bit broader just in case.
-        materialSymbolsVariantion = 'outlined';
+        materialSymbolsVariation = 'outlined';
       }
     });
   }
@@ -772,8 +774,8 @@ function inferDefaultFontSetClass(document: Document): string[] {
     // however this ends up being very breaking internally, because some apps were loading both
     // without setting the correct class. We play it safe here so we can at least handle the class
     // automatically for new apps.
-    materialSymbolsVariantion && !hasLegacyMaterialIcons
-      ? `material-symbols-${materialSymbolsVariantion}`
+    materialSymbolsVariation && !hasLegacyMaterialIcons
+      ? `material-symbols-${materialSymbolsVariation}`
       : 'material-icons',
     'mat-ligature-font',
   ];
