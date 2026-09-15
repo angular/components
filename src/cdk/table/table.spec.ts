@@ -801,6 +801,25 @@ describe('CdkTable', () => {
       ]);
     });
 
+    it('should replace only the row whose row definition changed', () => {
+      setupTableTestApp(WhenRowChangeDetectionCdkTableApp);
+      const initialRows = getRows(tableElement);
+
+      initialRows.forEach(row => expect(row.classList).toContain('default-row'));
+
+      component.showAlternate = true;
+      component.table.renderRows();
+      fixture.detectChanges();
+
+      const updatedRows = getRows(tableElement);
+      expect(updatedRows[0]).toBe(initialRows[0]);
+      expect(updatedRows[1]).not.toBe(initialRows[1]);
+      expect(updatedRows[2]).toBe(initialRows[2]);
+      expect(updatedRows[0].classList).toContain('default-row');
+      expect(updatedRows[1].classList).toContain('alternate-row');
+      expect(updatedRows[2].classList).toContain('default-row');
+    });
+
     it('should error if there is row data that does not have a matching row template', fakeAsync(() => {
       const whenRowWithoutDefaultFixture = TestBed.createComponent(
         WhenRowWithoutDefaultCdkTableApp,
@@ -2403,6 +2422,31 @@ class WhenRowCdkTableApp {
     this.columnsForHasC3Row = indexColumns;
     this.cdr.markForCheck();
   }
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource" [trackBy]="trackByIndex">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
+      </ng-container>
+
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']" class="default-row"></cdk-row>
+      <cdk-row *cdkRowDef="let row; columns: ['column_a']; when: isAlternateRow"
+               class="alternate-row"></cdk-row>
+    </cdk-table>
+  `,
+  imports: [CdkTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class WhenRowChangeDetectionCdkTableApp {
+  dataSource = new FakeDataSource();
+  showAlternate = false;
+
+  @ViewChild(CdkTable) table!: CdkTable<TestData>;
+
+  trackByIndex = (index: number, _item: TestData) => index;
+  isAlternateRow = (index: number, _item: TestData) => this.showAlternate && index === 1;
 }
 
 @Component({
