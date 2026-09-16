@@ -1,3 +1,22 @@
+<a name="22.2.0-rc.0"></a>
+# 22.2.0-rc.0 "argon-airplane" (2026-09-16)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a3936eabe](https://github.com/angular/components/commit/a3936eabe6a4056e31db8ab926f02d09322597ef) | fix | **table:** update rows when row definitions change ([#33670](https://github.com/angular/components/pull/33670)) |
+| [aad74d364](https://github.com/angular/components/commit/aad74d3646c26e54dcd676bd57744bd1ca2e4df0) | fix | **testing:** use directive fixture onDestroy ([#33793](https://github.com/angular/components/pull/33793)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [b0019f844](https://github.com/angular/components/commit/b0019f8444adadbb2d5ce457d4acafb14e764cf1) | fix | **core:** generate Material Symbols in schematic ([#33797](https://github.com/angular/components/pull/33797)) |
+| [fd3f02826](https://github.com/angular/components/commit/fd3f02826de79a65636f590d91ba1bb7f4ee7d25) | fix | **icon:** false positive in font detection ([#33805](https://github.com/angular/components/pull/33805)) |
+### material-luxon-adapter
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d3acf189e](https://github.com/angular/components/commit/d3acf189e5c52cc688bf7990d4bd8ffe0dd872ab) | feat | add option to set zone ([#33579](https://github.com/angular/components/pull/33579)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.7"></a>
 # 22.1.7 "argon-aristocrat" (2026-09-16)
 ### cdk
