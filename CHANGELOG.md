@@ -1,3 +1,12 @@
+<a name="22.1.7"></a>
+# 22.1.7 "argon-aristocrat" (2026-09-16)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a9b6b74bb](https://github.com/angular/components/commit/a9b6b74bb20930a19f79198f97e4aee77d25b444) | fix | **table:** update rows when row definitions change ([#33670](https://github.com/angular/components/pull/33670)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.6"></a>
 # 22.1.6 "bismuth-bike" (2026-09-09)
 ### cdk
