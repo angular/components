@@ -34,5 +34,5 @@ for (const searchPackageName of process.argv.slice(2)) {
 }
 
 for (const target of targetsToRun) {
-  execFileSync('pnpm', ['-s', 'bazel', 'run', target], {stdio: 'inherit'});
+  execFileSync('pnpm', ['--silent', 'bazel', 'run', target], {stdio: 'inherit'});
 }
