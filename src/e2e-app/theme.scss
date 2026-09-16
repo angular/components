@@ -1,5 +1,7 @@
 @use '@angular/material' as mat;
 
+@layer base, angular-material, utilities;
+
 $theme: mat.define-theme((
   color: (
     theme-type: light,
@@ -11,8 +13,21 @@ $theme: mat.define-theme((
   )
 ));
 
-html {
-  @include mat.all-component-themes($theme);
+@include mat.theme-layer {
+  html {
+    @include mat.all-component-themes($theme);
+  }
+
+  @include mat.typography-hierarchy($theme);
 }
 
-@include mat.typography-hierarchy($theme);
+@layer utilities {
+  .tw-bg-lime-500 {
+    background-color: rgb(132, 204, 22);
+  }
+}
+
+// Control utility that is intentionally unlayered.
+.tw-bg-fuchsia-unlayered {
+  background-color: rgb(217, 70, 239);
+}
