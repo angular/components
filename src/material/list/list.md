@@ -98,6 +98,10 @@ Simple action lists can use the `mat-list-item` attribute on button tag elements
 </mat-action-list>
 ```
 
+### Use with Angular Forms
+
+`<mat-selection-list>` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, and `ReactiveFormsModule`.
+
 ### Selection lists
 A selection list provides an interface for selecting values, where each list item is an option.
 
