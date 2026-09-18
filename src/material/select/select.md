@@ -20,15 +20,19 @@ To use a native select inside `<mat-form-field>`, import `MatInputModule` and ad
 
 ### Getting and setting the select value
 
+#### 2-way binding with `value`
+
 The `<mat-select>` supports 2-way binding to the `value` property without the need for Angular
 forms.
 
 <!-- example(select-value-binding) -->
 
-Both`<mat-select>` and `<select>` support all of the form directives from the core `FormsModule` (`NgModel`) and
-`ReactiveFormsModule` (`FormControl`, `FormGroup`, etc.) As with native `<select>`, `<mat-select>`
-also supports a `compareWith` function. (Additional information about using a custom `compareWith`
-function can be found in the
+#### Use with Angular Forms
+
+Both `<mat-select>` and `<select>` support all of the form directives from the core `@angular/forms`. 
+Including `FormField` (signal forms), `FormsModule` (`NgModel`) and `ReactiveFormsModule` 
+(`FormControl`, `FormGroup`, etc.) As with native `<select>`, `<mat-select>` also supports a 
+`compareWith` function. (Additional information about using a custom `compareWith` function can be found in the 
 [Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).
 
 <!-- example(select-form) -->

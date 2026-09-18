@@ -28,6 +28,10 @@ to the input's `matAutocomplete` property.
               "file":"autocomplete-simple-example.html",
               "region":"input"}) -->
 
+### Use with Angular Forms
+
+`matAutocomplete` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, and `ReactiveFormsModule`.
+
 ### Adding a custom filter
 
 At this point, the autocomplete panel should be toggleable on focus and options should be
