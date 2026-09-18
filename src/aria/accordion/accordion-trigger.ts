@@ -52,6 +52,11 @@ import {AccordionPanel} from './accordion-panel';
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.disabled]': '_pattern.hardDisabled() ? true : null',
     '[attr.tabindex]': '_pattern.tabIndex()',
+
+    // `AccordionGroupPattern` depends on this to find the closest
+    // trigger so ensure that it is set. It's usually there for normal usage,
+    // but it might not be when the trigger is a host directive.
+    'ngAccordionTrigger': '',
   },
 })
 export class AccordionTrigger implements OnInit, OnDestroy {
