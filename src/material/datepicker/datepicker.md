@@ -61,10 +61,10 @@ Connect the range picker and range input using the `rangePicker` property:
 
 <!-- example(date-range-picker-overview) -->
 
-### Date range input forms integration
+### Use with Angular Forms
 
-The `mat-date-range-input` component can be used together with the `FormGroup` directive from
-`@angular/forms` to group the start and end values together and to validate them as a group.
+The `mat-date-range-input` component can be used together with the `FormField` or `FormGroup` directive 
+from `@angular/forms` to group the start and end values together and to validate them as a group.
 
 <!-- example(date-range-picker-forms) -->
 

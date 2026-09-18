@@ -19,7 +19,9 @@ The timepicker input and toggle can be used either on their own or as a part of 
 <!-- example({"example":"timepicker-overview",
               "file":"timepicker-overview-example.html"}) -->
 
-### Timepicker forms integration
+### Use with Angular Forms
+
+`matTimepicker` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, and `ReactiveFormsModule`.
 
 The timepicker input integrates with the `@angular/forms` module by providing itself as a
 `ControlValueAccessor` and a `Validator` (see [Input validation](#input-validation) below for more

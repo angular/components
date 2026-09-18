@@ -31,6 +31,10 @@ that of the `matSliderStartThumb`, though they both may have the same value.
 
 <!-- example(slider-range) -->
 
+### Use with Angular Forms
+
+`<mat-slider>` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, and `ReactiveFormsModule`.
+
 ### Thumb label
 By default, the exact selected value of a slider is not visible to the user. However, this value can
 be added to the thumb by adding the `discrete` attribute.
