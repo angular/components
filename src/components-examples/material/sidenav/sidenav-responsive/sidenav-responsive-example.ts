@@ -1,5 +1,6 @@
-import {MediaMatcher} from '@angular/cdk/layout';
-import {Component, OnDestroy, inject, signal} from '@angular/core';
+import {BreakpointObserver} from '@angular/cdk/layout';
+import {Component, inject, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
@@ -13,7 +14,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   styleUrl: 'sidenav-responsive-example.css',
   imports: [MatToolbarModule, MatButtonModule, MatIconModule, MatSidenavModule, MatListModule],
 })
-export class SidenavResponsiveExample implements OnDestroy {
+export class SidenavResponsiveExample {
   protected readonly fillerNav = Array.from({length: 50}, (_, i) => `Nav Item ${i + 1}`);
 
   protected readonly fillerContent = Array.from(
@@ -28,20 +29,13 @@ export class SidenavResponsiveExample implements OnDestroy {
 
   protected readonly isMobile = signal(true);
 
-  private readonly _mobileQuery: MediaQueryList;
-  private readonly _mobileQueryListener: () => void;
-
   constructor() {
-    const media = inject(MediaMatcher);
+    const breakpointObserver = inject(BreakpointObserver);
 
-    this._mobileQuery = media.matchMedia('(max-width: 600px)');
-    this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQueryListener = () => this.isMobile.set(this._mobileQuery.matches);
-    this._mobileQuery.addEventListener('change', this._mobileQueryListener);
-  }
-
-  ngOnDestroy(): void {
-    this._mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    breakpointObserver
+      .observe('(max-width: 600px)')
+      .pipe(takeUntilDestroyed())
+      .subscribe(result => this.isMobile.set(result.matches));
   }
 
   protected readonly shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(
