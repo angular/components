@@ -29,6 +29,9 @@ attribute, for example `matButton="outlined"`:
 | `outlined`   | Medium-emphasis buttons often used for actions that need attention but aren't the primary action. |
 | `elevated`   | Medium-emphasis buttons often used when a button requires visual separation from a patterned background. |
 
+The `matIconButton` supports filled and tonal appearances, for example
+`matIconButton="filled"` and `matIconButton="tonal"`.
+
 
 ### Extended FAB buttons
 Traditional floating action buttons (FAB) buttons are circular and only have space for a single
