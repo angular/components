@@ -10,7 +10,7 @@ import {AccordionContent} from './accordion-content';
 import {AccordionGroup} from './accordion-group';
 
 describe('AccordionGroup', () => {
-  let fixture: ComponentFixture<AccordionGroupWithLoop>;
+  let fixture: ComponentFixture<unknown>;
   let testComponent: AccordionGroupWithLoop;
   let groupElement: HTMLElement;
 
@@ -66,6 +66,79 @@ describe('AccordionGroup', () => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr'), _IdGenerator],
     });
+  });
+
+  describe('triggers applied with hostDirectives', () => {
+    beforeEach(() => {
+      fixture = TestBed.createComponent(AccordionWithHostDirectiveTrigger);
+      fixture.detectChanges();
+    });
+
+    it('should toggle when clicking a nested child', async () => {
+      const trigger = fixture.nativeElement.querySelector('#host-trigger');
+      const child = trigger.querySelector('span');
+
+      child.dispatchEvent(new PointerEvent('click', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(trigger.getAttribute('aria-expanded')).toBe('true');
+      expect(fixture.nativeElement.querySelector('#host-content')).not.toBeNull();
+    });
+
+    it('should update the active trigger when focusing a nested child', async () => {
+      const trigger = fixture.nativeElement.querySelector('#host-trigger');
+      const child = trigger.querySelector('span');
+
+      child.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(trigger.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should toggle when clicking the host element directly', async () => {
+      const trigger = fixture.nativeElement.querySelector('#host-trigger');
+
+      trigger.dispatchEvent(new PointerEvent('click', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('should not toggle when clicking panel content', async () => {
+      const trigger = fixture.nativeElement.querySelector('#host-trigger');
+      const content = fixture.nativeElement.querySelector('#host-content');
+
+      content.dispatchEvent(new PointerEvent('click', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    });
+  });
+
+  describe('nested accordion groups', () => {
+    it('should only toggle the inner panel', async () => {
+      fixture = TestBed.createComponent(NestedAccordionGroups);
+      fixture.detectChanges();
+
+      const outerTrigger = fixture.nativeElement.querySelector('#outer-trigger');
+      const innerTrigger = fixture.nativeElement.querySelector('#inner-trigger');
+      innerTrigger.querySelector('span').dispatchEvent(new PointerEvent('click', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(outerTrigger.getAttribute('aria-expanded')).toBe('false');
+      expect(innerTrigger.getAttribute('aria-expanded')).toBe('true');
+    });
+  });
+
+  it('should toggle a direct trigger with a nested child', async () => {
+    fixture = TestBed.createComponent(AccordionWithDirectNestedTrigger);
+    fixture.detectChanges();
+    const trigger = fixture.nativeElement.querySelector('#direct-trigger');
+
+    trigger.querySelector('span').dispatchEvent(new PointerEvent('click', {bubbles: true}));
+    await fixture.whenStable();
+
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
   });
 
   afterEach(async () => {
@@ -773,3 +846,71 @@ class AccordionPanelWithoutTrigger {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AccordionWithMultipleExpandedItems {}
+
+@Component({
+  selector: '[hostDirectiveTrigger]',
+  hostDirectives: [
+    {
+      directive: AccordionTrigger,
+      inputs: ['panel'],
+    },
+  ],
+  template: '<ng-content />',
+  imports: [],
+})
+class HostDirectiveTrigger {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button id="host-trigger" hostDirectiveTrigger [panel]="panel">
+        Trigger <span tabindex="0">nested</span>
+      </button>
+      <div ngAccordionPanel #panel="ngAccordionPanel">
+        <ng-template ngAccordionContent><span id="host-content">Content</span></ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionPanel, AccordionContent, HostDirectiveTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithHostDirectiveTrigger {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button id="direct-trigger" ngAccordionTrigger [panel]="panel">
+        Trigger <span>nested</span>
+      </button>
+      <div ngAccordionPanel #panel="ngAccordionPanel">
+        <ng-template ngAccordionContent>Content</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithDirectNestedTrigger {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button id="outer-trigger" ngAccordionTrigger [panel]="outerPanel" [expanded]="true">Outer</button>
+      <div ngAccordionPanel #outerPanel="ngAccordionPanel">
+        <ng-template ngAccordionContent>
+          <div ngAccordionGroup>
+            <button id="inner-trigger" ngAccordionTrigger [panel]="innerPanel">
+              Inner <span>nested</span>
+            </button>
+            <div ngAccordionPanel #innerPanel="ngAccordionPanel">
+              <ng-template ngAccordionContent>Inner content</ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class NestedAccordionGroups {}

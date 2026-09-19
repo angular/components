@@ -147,15 +147,15 @@ export class AccordionGroupPattern {
   private _findTriggerPattern(
     element: Element | null | undefined,
   ): AccordionTriggerPattern | undefined {
+    const items = this.inputs.items();
     let target = element;
-
-    while (target) {
-      const pattern = this.inputs.items().find(t => t.element() === target);
+    while (target && target !== this.inputs.element()) {
+      const pattern = items.find(t => t.element() === target);
       if (pattern) {
         return pattern;
       }
 
-      target = target.parentElement?.closest('[ngAccordionTrigger]');
+      target = target.parentElement;
     }
 
     return undefined;
