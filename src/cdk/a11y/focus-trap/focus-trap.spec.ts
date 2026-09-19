@@ -8,6 +8,7 @@ import {
   ViewEncapsulation,
   inject,
   ChangeDetectionStrategy,
+  CUSTOM_ELEMENTS_SCHEMA,
 } from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
@@ -196,6 +197,21 @@ describe('FocusTrap', () => {
 
       expect(() => focusTrapInstance.focusFirstTabbableElement()).not.toThrow();
       expect(() => focusTrapInstance.focusLastTabbableElement()).not.toThrow();
+    });
+
+    it('should find a tabbable element nested inside a child element shadow root', () => {
+      if (!_supportsShadowDom()) {
+        return;
+      }
+
+      const fixture = TestBed.createComponent(FocusTrapWithNestedShadowDomChild);
+      fixture.detectChanges();
+      const focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+
+      const result = focusTrapInstance.focusFirstTabbableElement();
+
+      expect(getActiveElement()?.id).toBe('shadow-child-button');
+      expect(result).toBe(true);
     });
   });
 
@@ -432,6 +448,38 @@ class FocusTrapUnfocusableTarget {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class FocusTrapWithSvg {
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
+}
+
+if (
+  typeof customElements !== 'undefined' &&
+  !customElements.get('cdk-focus-trap-test-shadow-child')
+) {
+  customElements.define(
+    'cdk-focus-trap-test-shadow-child',
+    class extends HTMLElement {
+      connectedCallback() {
+        const root = this.attachShadow({mode: 'open'});
+        const button = document.createElement('button');
+        button.id = 'shadow-child-button';
+        button.textContent = 'Shadow button';
+        root.appendChild(button);
+      }
+    },
+  );
+}
+
+@Component({
+  template: `
+    <div cdkTrapFocus>
+      <cdk-focus-trap-test-shadow-child></cdk-focus-trap-test-shadow-child>
+    </div>
+    `,
+  imports: [A11yModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+class FocusTrapWithNestedShadowDomChild {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
 }
 
