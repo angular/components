@@ -229,9 +229,9 @@ function parseMinScores(raw) {
     .map(x => x.split(':'))
     .forEach(([key, val]) => (minScores[key] = Number(val) / 100));
 
-  if (minScores.hasOwnProperty('all')) {
+  if (Object.hasOwn(minScores, 'all')) {
     AUDIT_CATEGORIES.forEach(
-      cat => minScores.hasOwnProperty(cat) || (minScores[cat] = minScores.all),
+      cat => Object.hasOwn(minScores, cat) || (minScores[cat] = minScores.all),
     );
     delete minScores.all;
   }

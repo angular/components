@@ -2,7 +2,7 @@
   "compilerOptions": {
     "noUnusedParameters": false,
     "noUnusedLocals": false,
-    "lib": ["es2020", "dom"],
+    "lib": ["es2022", "dom"],
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strictNullChecks": true,

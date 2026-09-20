@@ -27,7 +27,7 @@ export function extendStyles(
   importantProperties?: Set<string>,
 ) {
   for (let key in source) {
-    if (source.hasOwnProperty(key)) {
+    if (Object.hasOwn(source, key)) {
       const value = source[key];
 
       if (value) {

@@ -6,7 +6,7 @@ import {CategorizedClassDoc, DeprecationInfo, HasDecoratorsDoc} from './dgeni-de
 import {findJsDocTag, hasJsDocTag} from './tags';
 
 export function isMethod(doc: MemberDoc): boolean {
-  return doc.hasOwnProperty('parameters') && !doc.isGetAccessor && !doc.isSetAccessor;
+  return Object.hasOwn(doc, 'parameters') && !doc.isGetAccessor && !doc.isSetAccessor;
 }
 
 export function isGenericTypeParameter(doc: MemberDoc): boolean {

@@ -142,7 +142,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges<this>): void {
-    if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {
+    if (Object.hasOwn(changes, 'textLabel') || Object.hasOwn(changes, 'disabled')) {
       this._stateChanges.next();
     }
   }
