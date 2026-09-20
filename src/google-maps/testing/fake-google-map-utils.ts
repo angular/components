@@ -34,9 +34,6 @@ export interface TestingWindow extends Window {
       DirectionsRenderer?: jasmine.Spy;
       DirectionsService?: jasmine.Spy;
       LatLng?: jasmine.Spy;
-      visualization?: {
-        HeatmapLayer?: jasmine.Spy;
-      };
       marker?: {
         AdvancedMarkerElement?: jasmine.Spy;
       };
@@ -751,48 +748,6 @@ export function createDirectionsServiceConstructorSpy(
     };
   }
   return directionsServiceConstructorSpy;
-}
-
-/** Creates a jasmine.SpyObj for a `google.maps.visualization.HeatmapLayer`. */
-export function createHeatmapLayerSpy(): jasmine.SpyObj<google.maps.visualization.HeatmapLayer> {
-  const heatmapLayerSpy = jasmine.createSpyObj('google.maps.visualization.HeatmapLayer', [
-    'setMap',
-    'setOptions',
-    'setData',
-    'getData',
-  ]);
-  return heatmapLayerSpy;
-}
-
-/**
- * Creates a jasmine.Spy to watch for the constructor
- * of a `google.maps.visualization.HeatmapLayer`.
- */
-export function createHeatmapLayerConstructorSpy(
-  heatmapLayerSpy: jasmine.SpyObj<google.maps.visualization.HeatmapLayer>,
-): jasmine.Spy {
-  // The spy target function cannot be an arrow-function as this breaks when created through `new`.
-  const heatmapLayerConstructorSpy = jasmine
-    .createSpy('HeatmapLayer constructor', function () {
-      return heatmapLayerSpy;
-    })
-    .and.callThrough();
-  const testingWindow: TestingWindow = window;
-  if (testingWindow.google && testingWindow.google.maps) {
-    if (!testingWindow.google.maps.visualization) {
-      testingWindow.google.maps.visualization = {};
-    }
-    testingWindow.google.maps.visualization['HeatmapLayer'] = heatmapLayerConstructorSpy;
-  } else {
-    testingWindow.google = {
-      maps: {
-        visualization: {
-          'HeatmapLayer': heatmapLayerConstructorSpy,
-        },
-      },
-    };
-  }
-  return heatmapLayerConstructorSpy;
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.LatLng. */
