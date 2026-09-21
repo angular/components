@@ -33,6 +33,9 @@ import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
+export const attachedOverlays: i0.Signal<readonly OverlayRef[]>;
+
+// @public
 export class BlockScrollStrategy implements ScrollStrategy {
     constructor(_viewportRuler: ViewportRuler, document: any);
     attach(): void;
@@ -331,9 +334,6 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
-
-// @public
-export function getAttachedOverlays(): OverlayRef[];
 
 // @public
 export class GlobalPositionStrategy implements PositionStrategy {

@@ -29,7 +29,7 @@ import {
   PositionStrategy,
   ScrollStrategy,
   createOverlayRef,
-  getAttachedOverlays,
+  attachedOverlays,
 } from './index';
 
 describe('Overlay', () => {
@@ -481,24 +481,24 @@ describe('Overlay', () => {
 
   it('should track when an overlay is attached and detached', () => {
     const overlayRef = createOverlayRef(injector);
-    expect(getAttachedOverlays()).toEqual([]);
+    expect(attachedOverlays()).toEqual([]);
 
     overlayRef.attach(componentPortal);
-    expect(getAttachedOverlays()).toEqual([overlayRef]);
+    expect(attachedOverlays()).toEqual([overlayRef]);
 
     overlayRef.detach();
-    expect(getAttachedOverlays()).toEqual([]);
+    expect(attachedOverlays()).toEqual([]);
   });
 
   it('should track when an overlay is attached and disposed', () => {
     const overlayRef = createOverlayRef(injector);
-    expect(getAttachedOverlays()).toEqual([]);
+    expect(attachedOverlays()).toEqual([]);
 
     overlayRef.attach(componentPortal);
-    expect(getAttachedOverlays()).toEqual([overlayRef]);
+    expect(attachedOverlays()).toEqual([overlayRef]);
 
     overlayRef.dispose();
-    expect(getAttachedOverlays()).toEqual([]);
+    expect(attachedOverlays()).toEqual([]);
   });
 
   describe('positioning', () => {

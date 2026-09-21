@@ -15,6 +15,7 @@ import {
   NgZone,
   Renderer2,
   afterNextRender,
+  signal,
 } from '@angular/core';
 import {Observable, Subject, Subscription, SubscriptionLike} from 'rxjs';
 import {Direction, Directionality} from '../bidi';
@@ -37,12 +38,10 @@ export function isElement(value: any): value is Element {
   return value && (value as Element).nodeType === 1;
 }
 
-const attachedOverlays = new Set<OverlayRef>();
+const attachedOverlaysInternal = signal<readonly OverlayRef[]>([]);
 
-/** Gets all overlays that are currently attached. */
-export function getAttachedOverlays(): OverlayRef[] {
-  return Array.from(attachedOverlays);
-}
+/** Signal with all of the overlays that are currently attached. */
+export const attachedOverlays = attachedOverlaysInternal.asReadonly();
 
 /**
  * Reference to an overlay that has been created with the Overlay service.
@@ -149,7 +148,8 @@ export class OverlayRef implements PortalOutlet {
     this._updateStackingOrder();
     this._updateElementSize();
     this._updateElementDirection();
-    attachedOverlays.add(this);
+
+    attachedOverlaysInternal.update(value => (value.includes(this) ? value : [...value, this]));
 
     if (this._scrollStrategy) {
       this._scrollStrategy.enable();
@@ -256,7 +256,7 @@ export class OverlayRef implements PortalOutlet {
     this._detachContentWhenEmpty();
     this._locationChanges.unsubscribe();
     this._outsideClickDispatcher.remove(this);
-    attachedOverlays.delete(this);
+    attachedOverlaysInternal.update(value => value.filter(current => current !== this));
     return detachmentResult;
   }
 
@@ -293,7 +293,7 @@ export class OverlayRef implements PortalOutlet {
     this._detachments.complete();
     this._completeDetachContent();
     this._disposed = true;
-    attachedOverlays.delete(this);
+    attachedOverlaysInternal.update(value => value.filter(current => current !== this));
   }
 
   /** Whether the overlay has attached content. */
