@@ -28,7 +28,7 @@ class Walker extends Lint.RuleWalker {
       if (
         !ts.isMethodDeclaration(member) ||
         !ts.isIdentifier(member.name) ||
-        !HOOKS_TO_INTERFACES.hasOwnProperty(member.name.text)
+        !Object.hasOwn(HOOKS_TO_INTERFACES, member.name.text)
       ) {
         continue;
       }

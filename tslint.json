@@ -42,6 +42,7 @@
       {"name": ["*", "removeChild"], "message": "Use `remove` instead instead."},
       {"name": ["CommonModule"], "message": "Import the necessary symbols directly instead."},
       {"name": ["*", "compileComponents"], "message": "`compileComponents` is not necessary."},
+      {"name": ["*", "hasOwnProperty"], "message": "Use `Object.hasOwn` instead."},
       {
         "name": ["isDevMode"],
         "message": "Use `typeof ngDevMode === 'undefined' || ngDevMode` instead"

@@ -65,9 +65,7 @@ export function createFlexibleConnectedPositionStrategy(
 
 /** Supported locations in the DOM for connected overlays. */
 export type FlexibleOverlayPopoverLocation =
-  | 'global'
-  | 'inline'
-  | {type: 'parent'; element: Element};
+  'global' | 'inline' | {type: 'parent'; element: Element};
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -1390,7 +1388,7 @@ function extendStyles(
   source: CSSStyleDeclaration,
 ): CSSStyleDeclaration {
   for (let key in source) {
-    if (source.hasOwnProperty(key)) {
+    if (Object.hasOwn(source, key)) {
       destination[key] = source[key];
     }
   }
