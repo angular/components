@@ -68,7 +68,7 @@ describe('MatMonthView', () => {
         expect(labelEl.innerHTML.trim()).toBe('JAN');
       });
 
-      it('does not show a month label when showLabel is false', () => {
+      it('does not render a month label when showLabel is false', () => {
         const noLabelFixture = TestBed.createComponent(StandardMonthView);
         noLabelFixture.componentInstance.showLabel = false;
         noLabelFixture.detectChanges();
@@ -76,8 +76,8 @@ describe('MatMonthView', () => {
         const noLabelNativeElement = noLabelFixture.debugElement.query(
           By.directive(MatMonthView),
         )!.nativeElement;
-        let labelEl = noLabelNativeElement.querySelector('.mat-calendar-body-label')!;
-        expect(labelEl.innerHTML.trim()).toBe('');
+        let labelEl = noLabelNativeElement.querySelector('.mat-calendar-body-label');
+        expect(labelEl).toBeNull();
       });
 
       it('has 31 days', () => {

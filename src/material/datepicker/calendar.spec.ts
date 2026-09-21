@@ -75,8 +75,7 @@ describe('MatCalendar', () => {
       expect(periodButton.textContent).toContain('JAN');
 
       const labelEls = calendarElement.querySelectorAll('.mat-calendar-body-label');
-      expect(labelEls.length).toBeGreaterThan(0);
-      labelEls.forEach(labelEl => expect(labelEl.textContent!.trim()).toBe(''));
+      expect(labelEls.length).toBe(0);
     });
 
     it('should select date in month view', () => {
