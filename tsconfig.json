@@ -24,7 +24,7 @@
     "skipLibCheck": true,
     "strictBindCallApply": true,
     "target": "es2022",
-    "lib": ["es2020", "dom"],
+    "lib": ["es2022", "dom"],
     "types": ["jasmine"],
     "paths": {
       "@angular/aria": ["./src/aria"],

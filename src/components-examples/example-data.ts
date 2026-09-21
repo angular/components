@@ -23,7 +23,7 @@ export class ExampleData {
   componentNames!: string[];
 
   constructor(example: string) {
-    if (!example || !EXAMPLE_COMPONENTS.hasOwnProperty(example)) {
+    if (!example || !Object.hasOwn(EXAMPLE_COMPONENTS, example)) {
       return;
     }
 

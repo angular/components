@@ -7,7 +7,7 @@
     "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
-    "lib": ["es2020"],
+    "lib": ["es2022"],
     "skipLibCheck": true,
     "types": ["node"]
   },
