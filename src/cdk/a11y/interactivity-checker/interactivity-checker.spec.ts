@@ -44,6 +44,40 @@ describe('InteractivityChecker', () => {
     });
   });
 
+  describe('isInert', () => {
+    it('should return true for an element with the inert attribute', () => {
+      const button = document.createElement('button');
+      button.setAttribute('inert', '');
+      testContainerElement.appendChild(button);
+
+      expect(checker.isInert(button)).withContext('Expected <button inert> to be inert').toBe(true);
+    });
+
+    it('should return true for a descendant of an inert element', () => {
+      testContainerElement.innerHTML = `<div inert>
+           <div>
+             <button></button>
+           </div>
+         </div>`;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isInert(button))
+        .withContext('Expected element with an inert ancestor to be inert')
+        .toBe(true);
+    });
+
+    it('should return false for an element without an inert ancestor', () => {
+      testContainerElement.innerHTML = `<div>
+           <button></button>
+         </div>`;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isInert(button))
+        .withContext('Expected element without an inert ancestor not to be inert')
+        .toBe(false);
+    });
+  });
+
   describe('isVisible', () => {
     it('should return false for a `display: none` element (isVisible)', () => {
       testContainerElement.innerHTML = `<input style="display: none;">`;
@@ -156,6 +190,45 @@ describe('InteractivityChecker', () => {
           .withContext(`Expected <${el.nodeName} disabled> not to be focusable`)
           .toBe(false);
       });
+    });
+
+    it('should return false for a focusable element with the inert attribute', () => {
+      const button = document.createElement('button');
+      button.setAttribute('inert', '');
+      testContainerElement.appendChild(button);
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected <button inert> not to be focusable')
+        .toBe(false);
+    });
+
+    it('should return false for a focusable element inside an inert container', () => {
+      testContainerElement.innerHTML = `<div inert>
+           <button></button>
+         </div>`;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected element with an inert ancestor not to be focusable')
+        .toBe(false);
+    });
+
+    it('should return true for a focusable element once inert is removed', () => {
+      testContainerElement.innerHTML = `<div inert>
+           <button></button>
+         </div>`;
+      const container = testContainerElement.firstElementChild as HTMLElement;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected element with an inert ancestor not to be focusable')
+        .toBe(false);
+
+      container.removeAttribute('inert');
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected element to be focusable once inert is removed')
+        .toBe(true);
     });
 
     it('should return false for a `display: none` element (isFocusable)', () => {

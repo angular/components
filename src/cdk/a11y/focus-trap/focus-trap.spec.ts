@@ -54,6 +54,21 @@ describe('FocusTrap', () => {
         .toBe(true);
     });
 
+    it('should skip elements inside an inert subtree when focusing the last element', () => {
+      const fixture = TestBed.createComponent(FocusTrapWithInertLastChild);
+      fixture.detectChanges();
+
+      const result =
+        fixture.componentInstance.focusTrapDirective.focusTrap.focusLastTabbableElement();
+
+      expect(getActiveElement().id)
+        .withContext('Expected the last non-inert element to be focused')
+        .toBe('last-visible');
+      expect(result)
+        .withContext('Expected return value to be true if focus was shifted.')
+        .toBe(true);
+    });
+
     it('should return false if it did not manage to find a focusable element', () => {
       const fixture = TestBed.createComponent(FocusTrapWithoutFocusableElements);
       fixture.detectChanges();
@@ -338,6 +353,23 @@ function getActiveElement() {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SimpleFocusTrap {
+  @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
+}
+
+@Component({
+  template: `
+    <div cdkTrapFocus>
+      <button>SAVE</button>
+      <input id="last-visible">
+      <div inert>
+        <input>
+      </div>
+    </div>
+  `,
+  imports: [A11yModule, PortalModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class FocusTrapWithInertLastChild {
   @ViewChild(CdkTrapFocus) focusTrapDirective!: CdkTrapFocus;
 }
 

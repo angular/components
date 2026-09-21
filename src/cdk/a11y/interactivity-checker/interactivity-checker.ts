@@ -44,6 +44,19 @@ export class InteractivityChecker {
   }
 
   /**
+   * Gets whether an element is inert, either directly or through an inert ancestor.
+   * Inert elements cannot receive focus, so calling `focus()` on them has no effect.
+   *
+   * @param element Element to be checked.
+   * @returns Whether the element is inert.
+   */
+  isInert(element: HTMLElement): boolean {
+    // The `inert` attribute applies to the element and all of its descendants, so the
+    // ancestors have to be checked as well. `closest` may be missing in non-DOM environments.
+    return element.closest?.('[inert]') != null;
+  }
+
+  /**
    * Gets whether an element is visible for the purposes of interactivity.
    *
    * This will capture states like `display: none` and `visibility: hidden`, but not things like
@@ -142,11 +155,12 @@ export class InteractivityChecker {
    * @returns Whether the element is focusable.
    */
   isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean {
-    // Perform checks in order of left to most expensive.
+    // Perform checks in order of least to most expensive.
     // Again, naive approach that does not capture many edge cases and browser quirks.
     return (
       isPotentiallyFocusable(element) &&
       !this.isDisabled(element) &&
+      !this.isInert(element) &&
       (config?.ignoreVisibility || this.isVisible(element))
     );
   }
