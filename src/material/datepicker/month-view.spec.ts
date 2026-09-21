@@ -68,6 +68,18 @@ describe('MatMonthView', () => {
         expect(labelEl.innerHTML.trim()).toBe('JAN');
       });
 
+      it('does not show a month label when showLabel is false', () => {
+        const noLabelFixture = TestBed.createComponent(StandardMonthView);
+        noLabelFixture.componentInstance.showLabel = false;
+        noLabelFixture.detectChanges();
+
+        const noLabelNativeElement = noLabelFixture.debugElement.query(
+          By.directive(MatMonthView),
+        )!.nativeElement;
+        let labelEl = noLabelNativeElement.querySelector('.mat-calendar-body-label')!;
+        expect(labelEl.innerHTML.trim()).toBe('');
+      });
+
       it('has 31 days', () => {
         let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell')!;
         expect(cellEls.length).toBe(31);
@@ -839,6 +851,7 @@ describe('MatMonthView', () => {
     <mat-month-view
       [(activeDate)]="date"
       [(selected)]="selected"
+      [showLabel]="showLabel"
       (selectedChange)="selectedChangeSpy($event)"
       (_userSelection)="userSelectionSpy($event)"
       (dragStarted)="dragStarted($event)"
@@ -850,6 +863,7 @@ describe('MatMonthView', () => {
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
+  showLabel = true;
   selected: Date | DateRange<Date> = new Date(2017, JAN, 10);
   selectedChangeSpy = jasmine.createSpy('selectedChange');
   userSelectionSpy = jasmine.createSpy('userSelection');
