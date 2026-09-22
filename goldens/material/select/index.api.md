@@ -40,6 +40,7 @@ import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ViewportRuler } from '@angular/cdk/scrolling';
@@ -86,11 +87,11 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _formFieldControl: MatFormFieldControl<any>;
     getConnectedOverlayOrigin(): ElementRef;
-    getLabelId: i0.Signal<string | null>;
+    getLabelId: Signal<string | null>;
     _getSubscriptMessageType(): 'error' | 'hint';
     _handleLabelResized(): void;
     // (undocumented)
-    _hasFloatingLabel: i0.Signal<boolean>;
+    _hasFloatingLabel: Signal<boolean>;
     // (undocumented)
     _hasIconPrefix: boolean;
     // (undocumented)
@@ -131,7 +132,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _prefixChildren: QueryList<MatPrefix>;
     _refreshOutlineNotchWidth(): void;
     _shouldAlwaysFloat(): boolean;
-    _shouldForward(prop: keyof AbstractControlDirective): boolean;
+    _shouldForward(prop: 'valid' | 'dirty' | 'touched' | 'pending' | 'untouched' | 'pristine' | 'invalid'): boolean;
     // (undocumented)
     _shouldLabelFloat(): boolean;
     get subscriptSizing(): SubscriptSizing;
@@ -144,6 +145,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _textPrefixContainer: ElementRef<HTMLElement>;
     // (undocumented)
     _textSuffixContainer: ElementRef<HTMLElement>;
+    // (undocumented)
+    protected _unwrapMaybeSignal<T>(value: T | Signal<T>): T;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
     // (undocumented)

@@ -42,6 +42,7 @@ import {
   booleanAttribute,
   forwardRef,
   inject,
+  isWritableSignal,
 } from '@angular/core';
 import {coerceArray} from '@angular/cdk/coercion';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -694,8 +695,14 @@ export class MatAutocompleteTrigger
   private _updateNativeInputValue(value: string): void {
     // If it's used within a `MatFormField`, we should set it through the property so it can go
     // through change detection.
-    if (this._formField) {
-      this._formField._control.value = value;
+    const control = this._formField?._control;
+
+    if (control) {
+      if (isWritableSignal(control.value)) {
+        control.value.set(value);
+      } else {
+        control.value = value;
+      }
     } else {
       this._element.nativeElement.value = value;
     }
