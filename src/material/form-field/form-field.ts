@@ -24,6 +24,7 @@ import {
   NgZone,
   OnDestroy,
   QueryList,
+  Signal,
   ViewChild,
   ViewEncapsulation,
   afterRenderEffect,
@@ -31,9 +32,11 @@ import {
   contentChild,
   effect,
   inject,
+  isSignal,
   signal,
   viewChild,
 } from '@angular/core';
+import {isFieldTree} from '@angular/forms/signals';
 import {AbstractControlDirective, ValidatorFn} from '@angular/forms';
 import {Subject, Subscription, merge} from 'rxjs';
 import {filter, map, pairwise, startWith, takeUntil} from 'rxjs/operators';
@@ -153,9 +156,9 @@ interface MatFormFieldControl<T> extends _MatFormFieldControl<T> {}
     // Note that these classes reuse the same names as the non-MDC version, because they can be
     // considered a public API since custom form controls may use them to style themselves.
     // See https://github.com/angular/components/pull/20502#discussion_r486124901.
-    '[class.mat-form-field-invalid]': '_control.errorState',
-    '[class.mat-form-field-disabled]': '_control.disabled',
-    '[class.mat-form-field-autofilled]': '_control.autofilled',
+    '[class.mat-form-field-invalid]': '_unwrapMaybeSignal(_control.errorState)',
+    '[class.mat-form-field-disabled]': '_unwrapMaybeSignal(_control.disabled)',
+    '[class.mat-form-field-autofilled]': '_unwrapMaybeSignal(_control.autofilled)',
     '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
     '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
     '[class.mat-form-field-hide-placeholder]': '_hasFloatingLabel() && !_shouldLabelFloat()',
@@ -195,6 +198,10 @@ export class MatFormField
     optional: true,
   });
   private _currentDirection!: Direction;
+
+  protected _unwrapMaybeSignal<T>(value: T | Signal<T>) {
+    return isSignal(value) ? value() : value;
+  }
 
   @ViewChild('textField') _textField!: ElementRef<HTMLElement>;
   @ViewChild('iconPrefixContainer') _iconPrefixContainer!: ElementRef<HTMLElement>;
@@ -396,7 +403,9 @@ export class MatFormField
 
       // keep a reference for last validator we had.
       if (this._control.ngControl && this._control.ngControl.control) {
-        this._previousControlValidatorFn = this._control.ngControl.control.validator;
+        this._previousControlValidatorFn = isFieldTree(this._control.ngField)
+          ? null
+          : this._control.ngControl.control.validator;
       }
 
       this._previousControl = this._control;
@@ -404,7 +413,11 @@ export class MatFormField
     }
 
     // make sure the the control has been initialized.
-    if (this._control.ngControl && this._control.ngControl.control) {
+    if (
+      this._control.ngControl &&
+      this._control.ngControl.control &&
+      !isFieldTree(this._control.ngField)
+    ) {
       // get the validators for current control.
       const validatorFn = this._control.ngControl.control.validator;
 
@@ -468,7 +481,7 @@ export class MatFormField
 
     // Subscribe to changes in the child control state in order to update the form field UI.
     this._stateChanges?.unsubscribe();
-    this._stateChanges = control.stateChanges.subscribe(() => {
+    this._stateChanges = control.stateChanges?.subscribe(() => {
       this._updateFocusState();
       this._changeDetectorRef.markForCheck();
     });
@@ -476,9 +489,11 @@ export class MatFormField
     // Updating the `aria-describedby` touches the DOM. Only do it if it actually needs to change.
     this._describedByChanges?.unsubscribe();
     this._describedByChanges = control.stateChanges
-      .pipe(
+      ?.pipe(
         startWith([undefined, undefined] as const),
-        map(() => [control.errorState, control.userAriaDescribedBy] as const),
+        map(
+          () => [this._unwrapMaybeSignal(control.errorState), control.userAriaDescribedBy] as const,
+        ),
         pairwise(),
         filter(([[prevErrorState, prevDescribedBy], [currentErrorState, currentDescribedBy]]) => {
           return prevErrorState !== currentErrorState || prevDescribedBy !== currentDescribedBy;
@@ -489,7 +504,7 @@ export class MatFormField
     this._valueChanges?.unsubscribe();
 
     // Run change detection if the value changes.
-    if (control.ngControl && control.ngControl.valueChanges) {
+    if (control.ngControl && control.ngControl.valueChanges && !isFieldTree(control.ngField)) {
       this._valueChanges = control.ngControl.valueChanges
         .pipe(takeUntil(this._destroyed))
         .subscribe(() => this._changeDetectorRef.markForCheck());
@@ -546,7 +561,7 @@ export class MatFormField
   }
 
   private _updateFocusState() {
-    const controlFocused = this._control.focused;
+    const controlFocused = this._unwrapMaybeSignal(this._control.focused);
 
     // Usually the MDC foundation would call "activateFocus" and "deactivateFocus" whenever
     // certain DOM events are emitted. This is not possible in our implementation of the
@@ -623,21 +638,70 @@ export class MatFormField
     if (!this._hasFloatingLabel()) {
       return false;
     }
-    return this._control.shouldLabelFloat || this._shouldAlwaysFloat();
+    return this._shouldAlwaysFloat() || this._unwrapMaybeSignal(this._control.shouldLabelFloat);
   }
 
   /**
    * Determines whether a class from the AbstractControlDirective
    * should be forwarded to the host element.
    */
-  _shouldForward(prop: keyof AbstractControlDirective): boolean {
-    const control = this._control ? this._control.ngControl : null;
-    return control && control[prop];
+  _shouldForward(
+    prop: 'valid' | 'dirty' | 'touched' | 'pending' | 'untouched' | 'pristine' | 'invalid',
+  ): boolean {
+    const rawControl = this._control?.ngField || this._control?.ngControl;
+
+    if (!rawControl) {
+      return false;
+    }
+
+    // Note: we could clean this up with something like `control()[prop]`.
+    // We don't do it, because it can cause problems with property renaming.
+    if (isFieldTree(rawControl)) {
+      const control = rawControl();
+
+      if (prop === 'valid') {
+        return control.valid();
+      } else if (prop === 'dirty') {
+        return control.dirty();
+      } else if (prop === 'touched') {
+        return control.touched();
+      } else if (prop === 'pending') {
+        return control.pending();
+      } else if (prop === 'untouched') {
+        return !control.touched();
+      } else if (prop === 'pristine') {
+        return !control.dirty();
+      } else if (prop === 'invalid') {
+        return !control.valid();
+      }
+      return false;
+    } else {
+      const control = rawControl as AbstractControlDirective;
+
+      if (prop === 'valid') {
+        return control.valid!;
+      } else if (prop === 'dirty') {
+        return control.dirty!;
+      } else if (prop === 'touched') {
+        return control.touched!;
+      } else if (prop === 'pending') {
+        return control.pending!;
+      } else if (prop === 'untouched') {
+        return control.untouched!;
+      } else if (prop === 'pristine') {
+        return control.pristine!;
+      } else if (prop === 'invalid') {
+        return control.invalid!;
+      }
+      return false;
+    }
   }
 
   /** Gets the type of subscript message to render (error or hint). */
   _getSubscriptMessageType(): 'error' | 'hint' {
-    return this._errorChildren && this._errorChildren.length > 0 && this._control.errorState
+    return this._errorChildren &&
+      this._errorChildren.length > 0 &&
+      this._unwrapMaybeSignal(this._control.errorState)
       ? 'error'
       : 'hint';
   }

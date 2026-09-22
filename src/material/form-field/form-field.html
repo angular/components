@@ -25,7 +25,7 @@
         apps want to override it and to be able to set `aria-hidden` so that screen readers don't
         pick it up.
        -->
-      @if (!hideRequiredMarker && _control.required) {
+      @if (!hideRequiredMarker && _unwrapMaybeSignal(_control.required)) {
         <span
           aria-hidden="true"
           class="mat-mdc-form-field-required-marker mdc-floating-label--required"
@@ -35,17 +35,19 @@
   }
 </ng-template>
 
+@let isDisabled = _unwrapMaybeSignal(_control.disabled);
+
 <div
   class="mat-mdc-text-field-wrapper mdc-text-field"
   #textField
   [class.mdc-text-field--filled]="!_hasOutline()"
   [class.mdc-text-field--outlined]="_hasOutline()"
   [class.mdc-text-field--no-label]="!_hasFloatingLabel()"
-  [class.mdc-text-field--disabled]="_control.disabled"
-  [class.mdc-text-field--invalid]="_control.errorState"
+  [class.mdc-text-field--disabled]="isDisabled"
+  [class.mdc-text-field--invalid]="_unwrapMaybeSignal(_control.errorState)"
   (click)="_control.onContainerClick($event)"
 >
-  @if (!_hasOutline() && !_control.disabled) {
+  @if (!_hasOutline() && !isDisabled) {
     <div class="mat-mdc-form-field-focus-overlay"></div>
   }
   <div class="mat-mdc-form-field-flex">

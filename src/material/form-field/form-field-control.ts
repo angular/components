@@ -8,46 +8,41 @@
 
 import {Observable} from 'rxjs';
 import {AbstractControlDirective, NgControl} from '@angular/forms';
-import {Directive} from '@angular/core';
+import {Directive, Signal} from '@angular/core';
+import {Field} from '@angular/forms/signals';
 
 /** An interface which allows a control to work inside of a `MatFormField`. */
 @Directive()
 export abstract class MatFormFieldControl<T> {
-  /** The value of the control. */
-  value: T | null = null;
-
-  /**
-   * Stream that emits whenever the state of the control changes such that the parent `MatFormField`
-   * needs to run change detection.
-   */
-  readonly stateChanges!: Observable<void>;
-
   /** The element ID for this control. */
   readonly id!: string;
 
-  /** The placeholder for this control. */
-  readonly placeholder!: string;
+  /** Control if the directive supports signal forms. */
+  readonly ngField?: Field<T> | null = null;
 
-  /** Gets the AbstractControlDirective for this control. */
+  /**
+   * Form control if the directive only supports Reactive or Template-driven forms.
+   * Can be skipped if your directive already sets `ngField`.
+   */
   readonly ngControl: NgControl | AbstractControlDirective | null = null;
 
   /** Whether the control is focused. */
-  readonly focused: boolean = false;
+  readonly focused: boolean | Signal<boolean> = false;
 
   /** Whether the control is empty. */
-  readonly empty: boolean = false;
+  readonly empty: boolean | Signal<boolean> = false;
 
   /** Whether the `MatFormField` label should try to float. */
-  readonly shouldLabelFloat: boolean = false;
+  readonly shouldLabelFloat: boolean | Signal<boolean> = false;
 
   /** Whether the control is required. */
-  readonly required: boolean = false;
+  readonly required: boolean | Signal<boolean> = false;
 
   /** Whether the control is disabled. */
-  readonly disabled: boolean = false;
+  readonly disabled: boolean | Signal<boolean> = false;
 
   /** Whether the control is in an error state. */
-  readonly errorState: boolean = false;
+  readonly errorState: boolean | Signal<boolean> = false;
 
   /**
    * An optional name for the control type that can be used to distinguish `mat-form-field` elements
@@ -60,13 +55,13 @@ export abstract class MatFormFieldControl<T> {
    * Whether the input is currently in an autofilled state. If property is not present on the
    * control it is assumed to be false.
    */
-  readonly autofilled?: boolean;
+  readonly autofilled?: boolean | Signal<boolean>;
 
   /**
    * Value of `aria-describedby` that should be merged with the described-by ids
    * which are set by the form-field.
    */
-  readonly userAriaDescribedBy?: string;
+  readonly userAriaDescribedBy?: string | Signal<string>;
 
   /**
    * Whether to automatically assign the ID of the form field as the `for` attribute
@@ -78,9 +73,18 @@ export abstract class MatFormFieldControl<T> {
   /** Gets the list of element IDs that currently describe this control. */
   readonly describedByIds?: string[];
 
+  /**
+   * Stream that emits whenever the state of the control changes such that the parent `MatFormField`
+   * needs to run change detection. Not necessary if the control is signal-based.
+   */
+  readonly stateChanges?: Observable<void> | null = null;
+
   /** Sets the list of element IDs that currently describe this control. */
   abstract setDescribedByIds(ids: string[]): void;
 
   /** Handles a click on the control's container. */
   abstract onContainerClick(event: MouseEvent): void;
+
+  /** Value of the form control. Left in for backwards compatibility. */
+  value?: any;
 }

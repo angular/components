@@ -10,6 +10,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
+import { Field } from '@angular/forms/signals';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/observers';
 import * as i2 from '@angular/cdk/bidi';
@@ -18,6 +19,7 @@ import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 
 // @public
 export type FloatLabelType = 'always' | 'auto';
@@ -79,11 +81,11 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _formFieldControl: MatFormFieldControl_2<any>;
     getConnectedOverlayOrigin(): ElementRef;
-    getLabelId: i0.Signal<string | null>;
+    getLabelId: Signal<string | null>;
     _getSubscriptMessageType(): 'error' | 'hint';
     _handleLabelResized(): void;
     // (undocumented)
-    _hasFloatingLabel: i0.Signal<boolean>;
+    _hasFloatingLabel: Signal<boolean>;
     // (undocumented)
     _hasIconPrefix: boolean;
     // (undocumented)
@@ -124,7 +126,7 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     _prefixChildren: QueryList<MatPrefix>;
     _refreshOutlineNotchWidth(): void;
     _shouldAlwaysFloat(): boolean;
-    _shouldForward(prop: keyof AbstractControlDirective): boolean;
+    _shouldForward(prop: 'valid' | 'dirty' | 'touched' | 'pending' | 'untouched' | 'pristine' | 'invalid'): boolean;
     // (undocumented)
     _shouldLabelFloat(): boolean;
     get subscriptSizing(): SubscriptSizing;
@@ -138,6 +140,8 @@ export class MatFormField implements FloatingLabelParent, AfterContentInit, Afte
     // (undocumented)
     _textSuffixContainer: ElementRef<HTMLElement>;
     // (undocumented)
+    protected _unwrapMaybeSignal<T>(value: T | Signal<T>): T;
+    // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<MatFormField, "mat-form-field", ["matFormField"], { "hideRequiredMarker": { "alias": "hideRequiredMarker"; "required": false; }; "color": { "alias": "color"; "required": false; }; "floatLabel": { "alias": "floatLabel"; "required": false; }; "appearance": { "alias": "appearance"; "required": false; }; "subscriptSizing": { "alias": "subscriptSizing"; "required": false; }; "hintLabel": { "alias": "hintLabel"; "required": false; }; }, {}, ["_labelChild", "_formFieldControl", "_prefixChildren", "_suffixChildren", "_errorChildren", "_hintChildren"], ["mat-label", "[matPrefix], [matIconPrefix]", "[matTextPrefix]", "*", "[matTextSuffix]", "[matSuffix], [matIconSuffix]", "mat-error, [matError]", "mat-hint:not([align='end'])", "mat-hint[align='end']"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatFormField, never>;
@@ -148,24 +152,24 @@ export type MatFormFieldAppearance = 'fill' | 'outline';
 
 // @public
 export abstract class MatFormFieldControl<T> {
-    readonly autofilled?: boolean;
+    readonly autofilled?: boolean | Signal<boolean>;
     readonly controlType?: string;
     readonly describedByIds?: string[];
     readonly disableAutomaticLabeling?: boolean;
-    readonly disabled: boolean;
-    readonly empty: boolean;
-    readonly errorState: boolean;
-    readonly focused: boolean;
+    readonly disabled: boolean | Signal<boolean>;
+    readonly empty: boolean | Signal<boolean>;
+    readonly errorState: boolean | Signal<boolean>;
+    readonly focused: boolean | Signal<boolean>;
     readonly id: string;
     readonly ngControl: NgControl | AbstractControlDirective | null;
+    readonly ngField?: Field<T> | null;
     abstract onContainerClick(event: MouseEvent): void;
-    readonly placeholder: string;
-    readonly required: boolean;
+    readonly required: boolean | Signal<boolean>;
     abstract setDescribedByIds(ids: string[]): void;
-    readonly shouldLabelFloat: boolean;
-    readonly stateChanges: Observable<void>;
-    readonly userAriaDescribedBy?: string;
-    value: T | null;
+    readonly shouldLabelFloat: boolean | Signal<boolean>;
+    readonly stateChanges?: Observable<void> | null;
+    readonly userAriaDescribedBy?: string | Signal<string>;
+    value?: any;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatFormFieldControl<any>, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
