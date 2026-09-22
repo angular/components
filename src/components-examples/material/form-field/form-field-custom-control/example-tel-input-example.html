@@ -1,40 +1,36 @@
 <div
   role="group"
   class="example-tel-input-container"
-  [formGroup]="parts"
   [attr.aria-labelledby]="_formField?.getLabelId()"
   (focusin)="onFocusIn()"
   (focusout)="onFocusOut($event)"
 >
   <input
     class="example-tel-input-element"
-    formControlName="area"
+    [formField]="parts.area"
     size="3"
-    maxLength="3"
     aria-label="Area code"
-    (input)="_handleInput(parts.controls.area, exchange)"
+    (keyup)="_handleTyping(parts.area, exchange)"
     #area
   />
   <span class="example-tel-input-spacer">&ndash;</span>
   <input
     class="example-tel-input-element"
-    formControlName="exchange"
-    maxLength="3"
+    [formField]="parts.exchange"
     size="3"
     aria-label="Exchange code"
-    (input)="_handleInput(parts.controls.exchange, subscriber)"
-    (keyup.backspace)="autoFocusPrev(parts.controls.exchange, area)"
+    (keyup)="_handleTyping(parts.exchange, subscriber)"
+    (keyup.backspace)="autoFocusPrev(parts.exchange, area)"
     #exchange
   />
   <span class="example-tel-input-spacer">&ndash;</span>
   <input
     class="example-tel-input-element"
-    formControlName="subscriber"
-    maxLength="4"
+    [formField]="parts.subscriber"
     size="4"
     aria-label="Subscriber number"
-    (input)="_handleInput(parts.controls.subscriber)"
-    (keyup.backspace)="autoFocusPrev(parts.controls.subscriber, exchange)"
+    (keyup)="_handleTyping(parts.subscriber)"
+    (keyup.backspace)="autoFocusPrev(parts.subscriber, exchange)"
     #subscriber
   />
 </div>
