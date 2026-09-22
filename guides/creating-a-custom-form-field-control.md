@@ -63,7 +63,9 @@ export class MyTelInput {
   }
 
   constructor(fb: FormBuilder) {
-    this.parts =  fb.group({
+    const formBuilder = inject(FormBuilder);
+
+    this.parts = formBuilder.group({
       'area': '',
       'exchange': '',
       'subscriber': '',
@@ -158,30 +160,34 @@ set placeholder(plh) {
 private _placeholder: string;
 ```
 
+#### `ngField`
+
+If your control is designed to work with Signal Forms (`@angular/forms/signals`) rather than
+reactive or template-driven forms, you can expose the `ngField` property instead of
+`ngControl`:
+
+```ts
+readonly ngField = inject(FORM_FIELD, {optional: true, self: true});
+```
+
+`<mat-form-field>` will use `ngField` to read the signal form field's state (e.g. `valid` or `dirty`)
+and automatically synchronize the corresponding CSS classes on the `<mat-form-field>` host.
+
+
 #### `ngControl`
 
 This property allows the form field control to specify the `@angular/forms` control that is bound
 to this component. Since we haven't set up our component to act as a `ControlValueAccessor`, we'll
-just set this to `null` in our component.
+just set this to `null` in our component. (If your control works with Signal Forms, see
+[`ngField`](#ngField) instead).
 
 ```ts
-ngControl: NgControl = null;
+ngControl = inject(NgControl, {optional: true, self: true});
 ```
 
 It is likely you will want to implement `ControlValueAccessor` so that your component can work with
 `formControl` and `ngModel`. If you do implement `ControlValueAccessor` you will need to get a
 reference to the `NgControl` associated with your control and make it publicly available.
-
-The easy way is to add it as a public property to your constructor and let dependency injection
-handle it:
-
-```ts
-constructor(
-  ...,
-  @Optional() @Self() public ngControl: NgControl,
-  ...,
-) { }
-```
 
 Note that if your component implements `ControlValueAccessor`, it may already be set up to provide
 `NG_VALUE_ACCESSOR` (in the `providers` part of the component's decorator, or possibly in a module
@@ -203,12 +209,11 @@ To resolve this, remove the `NG_VALUE_ACCESSOR` provider and instead set the val
   ],
 })
 export class MyTelInput implements MatFormFieldControl<MyTel>, ControlValueAccessor {
-  constructor(
-    ...,
-    @Optional() @Self() public ngControl: NgControl,
-    ...,
-  ) {
+  ...
+  ngControl = inject(NgControl, {optional: true, self: true});
+  ...
 
+  constructor() {
     // Replace the provider from above with this.
     if (this.ngControl != null) {
       // Setting the value accessor directly (instead of using
@@ -220,7 +225,6 @@ export class MyTelInput implements MatFormFieldControl<MyTel>, ControlValueAcces
 ```
 
 For additional information about `ControlValueAccessor` see the [API docs](https://angular.dev/api/forms/ControlValueAccessor).
-
 
 #### `focused`
 
@@ -326,8 +330,8 @@ private _disabled = false;
 
 #### `errorState`
 
-This property indicates whether the associated `NgControl` is in an error state. For example,
-we can show an error if the input is invalid and our component has been touched.
+This property indicates whether the associated `NgControl` or `ngField` is in an error
+state. For example, we can show an error if the input is invalid and our component has been touched.
 
 ```ts
 get errorState(): boolean {
@@ -341,14 +345,11 @@ to handle such cases we should re-evaluate `errorState` on every change detectio
 ```ts
 /** Whether the component is in an error state. */
 errorState: boolean = false;
-
-constructor(
-  ...,
-  @Optional() private _parentForm: NgForm,
-  @Optional() private _parentFormGroup: FormGroupDirective
-) {
 ...
-}
+// These are only relevant for non-signal forms.
+private _parentForm = inject(NgForm, {optional: true});
+private _parentFormGroup = inject(FormGroupDirective, {optional: true});
+...
 
 ngDoCheck() {
   if (this.ngControl) {
@@ -388,7 +389,7 @@ controlType = 'example-tel-input';
 This method is used by the `<mat-form-field>` to set element ids that should be used for the
 `aria-describedby` attribute of your control. The ids are controlled through the form field
 as hints or errors are conditionally displayed and should be reflected in the control's
-`aria-describedby` attribute for an improved accessibility experience. 
+`aria-describedby` attribute for an improved accessibility experience.
 
 The `setDescribedByIds` method is invoked whenever the control's state changes. Custom controls
 need to implement this method and update the `aria-describedby` attribute based on the specified
@@ -450,9 +451,8 @@ to the label element id provided by the parent `<mat-form-field>`.
 ```typescript
 export class MyTelInput implements MatFormFieldControl<MyTel> {
   ...
-
-  constructor(...
-              @Optional() public parentFormField: MatFormField) {
+  parentFormField = inject(MatFormField, {optional: true});
+  ...
 ```
 
 ```html
@@ -476,8 +476,8 @@ do is place it inside a `<mat-form-field>`
 ```
 
 We also get all the features that come with `<mat-form-field>` such as floating placeholder,
-prefix, suffix, hints, and errors (if we've given the form field an `NgControl` and correctly report
-the error state).
+prefix, suffix, hints, and errors (if we've given the form field an `NgControl` or `ngField`
+and correctly report the error state).
 
 ```html
 <mat-form-field>
