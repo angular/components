@@ -45,6 +45,9 @@ export const TEMPLATE_FILES = [
   'tsconfig.app.json',
   'tsconfig.json',
   'tsconfig.spec.json',
+  // We need a gitignore, because harness tests generate files in `dist`
+  // which can prevent users from forking the example (see 33836).
+  '.gitignore',
   'src/index.html',
   'src/main.ts',
   'src/styles.css',
