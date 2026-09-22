@@ -26,7 +26,7 @@ export abstract class MatFormFieldControl<T> {
   readonly id!: string;
 
   /** The placeholder for this control. */
-  readonly placeholder!: string;
+  readonly placeholder?: string | null;
 
   /** Gets the AbstractControlDirective for this control. */
   readonly ngControl: NgControl | AbstractControlDirective | null = null;
@@ -41,7 +41,7 @@ export abstract class MatFormFieldControl<T> {
   readonly shouldLabelFloat: boolean = false;
 
   /** Whether the control is required. */
-  readonly required: boolean = false;
+  readonly required?: boolean;
 
   /** Whether the control is disabled. */
   readonly disabled: boolean = false;
