@@ -17,20 +17,21 @@ just a starting point for us to learn.)
 
 ```ts
 class MyTel {
-  constructor(public area: string, public exchange: string, public subscriber: string) {}
+  constructor(readonly area: string, readonly exchange: string, readonly subscriber: string) {}
 }
 
 @Component({
   selector: 'example-tel-input',
   template: `
-    <div role="group" [formGroup]="parts">
-      <input class="area" formControlName="area" maxlength="3">
+    <div role="group" class="example-tel-input-container">
+      <input class="example-tel-input-element" [formField]="parts.area" size="3" aria-label="Area code">
       <span>&ndash;</span>
-      <input class="exchange" formControlName="exchange" maxlength="3">
+      <input class="example-tel-input-element" [formField]="parts.exchange" size="3" aria-label="Exchange code">
       <span>&ndash;</span>
-      <input class="subscriber" formControlName="subscriber" maxlength="4">
+      <input class="example-tel-input-element" [formField]="parts.subscriber" size="4" aria-label="Subscriber number">
     </div>
   `,
+  imports: [FormField],
   styles: [`
     div {
       display: flex;
@@ -46,29 +47,49 @@ class MyTel {
     }
   `],
 })
-export class MyTelInput {
-  parts: FormGroup;
+export class MyTelInput implements FormValueControl<MyTel | null> {
+  readonly partsModel = signal({
+    area: '',
+    exchange: '',
+    subscriber: '',
+  });
 
-  @Input()
-  get value(): MyTel | null {
-    let n = this.parts.value;
-    if (n.area.length == 3 && n.exchange.length == 3 && n.subscriber.length == 4) {
-      return new MyTel(n.area, n.exchange, n.subscriber);
-    }
-    return null;
-  }
-  set value(tel: MyTel | null) {
-    tel = tel || new MyTel('', '', '');
-    this.parts.setValue({area: tel.area, exchange: tel.exchange, subscriber: tel.subscriber});
-  }
+  readonly parts = form(this.partsModel, schemaPath => {
+    required(schemaPath.area);
+    minLength(schemaPath.area, 3);
+    maxLength(schemaPath.area, 3);
+    required(schemaPath.exchange);
+    minLength(schemaPath.exchange, 3);
+    maxLength(schemaPath.exchange, 3);
+    required(schemaPath.subscriber);
+    minLength(schemaPath.subscriber, 4);
+    maxLength(schemaPath.subscriber, 4);
+  });
 
-  constructor(fb: FormBuilder) {
-    const formBuilder = inject(FormBuilder);
+  readonly value = model<MyTel | null>(null);
 
-    this.parts = formBuilder.group({
-      'area': '',
-      'exchange': '',
-      'subscriber': '',
+  constructor() {
+    effect(() => {
+      const {area, exchange, subscriber} = this.partsModel();
+      this.value.set(this.parts().valid() ? new MyTel(area, exchange, subscriber) : null);
+    });
+
+    effect(() => {
+      const value = this.value() || new MyTel('', '', '');
+      untracked(() => {
+        const current = this.partsModel();
+        if (
+          current.area !== value.area ||
+          current.exchange !== value.exchange ||
+          current.subscriber !== value.subscriber
+        ) {
+          this.partsModel.set({
+            area: value.area,
+            exchange: value.exchange,
+            subscriber: value.subscriber,
+          });
+        }
+      });
     });
   }
 }
@@ -88,7 +109,7 @@ a provider to our component so that the form field will be able to inject it as 
   ...
   providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
 })
-export class MyTelInput implements MatFormFieldControl<MyTel> {
+export class MyTelInput implements FormValueControl<MyTel | null>, MatFormFieldControl<MyTel> {
   ...
 }
 ```
@@ -100,28 +121,21 @@ the `MatFormFieldControl` interface, see the
 
 ### Implementing the methods and properties of MatFormFieldControl
 
-#### `value`
-
-This property allows someone to set or get the value of our control. Its type should be the same
-type we used for the type parameter when we implemented `MatFormFieldControl`. Since our component
-already has a value property, we don't need to do anything for this one.
-
 #### `stateChanges`
 
-Because the `<mat-form-field>` uses the `OnPush` change detection strategy, we need to let it know
+Because the `<mat-form-field>` uses the `OnPush` change detection strategy, it needs to know
 when something happens in the form field control that may require the form field to run change
-detection. We do this via the `stateChanges` property. So far the only thing the form field needs to
-know about is when the value changes. We'll need to emit on the stateChanges stream when that
-happens, and as we continue flushing out these properties we'll likely find more places we need to
-emit. We should also make sure to complete `stateChanges` when our component is destroyed.
+detection.
+
+Note that `stateChanges` is **optional** and not necessary if your control's properties are
+implemented as signals (such as `focused`, `empty`, `required`, `disabled`, and `errorState`).
+Since `<mat-form-field>` reads those signals directly, it automatically reacts to their changes.
+
+If your control uses plain, non-signal properties that change over time, you can emit on the
+`stateChanges` stream:
 
 ```ts
-stateChanges = new Subject<void>();
-
-set value(tel: MyTel | null) {
-  ...
-  this.stateChanges.next();
-}
+readonly stateChanges = new Subject<void>();
 
 ngOnDestroy() {
   this.stateChanges.complete();
@@ -137,49 +151,52 @@ element and just generate a unique ID for it.
 ```ts
 static nextId = 0;
 
-@HostBinding() id = `example-tel-input-${MyTelInput.nextId++}`;
+readonly id = `example-tel-input-${MyTelInput.nextId++}`;
+```
+```ts
+@Component({
+  ...
+  host: {
+    '[id]': 'id',
+  },
+})
 ```
 
 #### `placeholder`
 
-This property allows us to tell the `<mat-form-field>` what to use as a placeholder. In this
-example, we'll do the same thing as `matInput` and `<mat-select>` and allow the user to specify it
-via an `@Input()`. Since the value of the placeholder may change over time, we need to make sure to
-trigger change detection in the parent form field by emitting on the `stateChanges` stream when the
-placeholder changes.
+If your control accepts a placeholder, you can expose it as a signal input:
 
 ```ts
-@Input()
-get placeholder() {
-  return this._placeholder;
-}
-set placeholder(plh) {
-  this._placeholder = plh;
-  this.stateChanges.next();
-}
-private _placeholder: string;
+readonly placeholder = input<string>('');
 ```
 
 #### `ngField`
 
-If your control is designed to work with Signal Forms (`@angular/forms/signals`) rather than
-reactive or template-driven forms, you can expose the `ngField` property instead of
-`ngControl`:
+When your control is built to work with Signal Forms (`@angular/forms/signals`), this property
+exposes the bound `Field` to the parent `<mat-form-field>`:
 
 ```ts
-readonly ngField = inject(FORM_FIELD, {optional: true, self: true});
+protected readonly _formFieldControl = inject(FORM_FIELD, {optional: true, self: true});
+
+get ngField(): Field<MyTel> | null {
+  return (this._formFieldControl?.field() as Field<MyTel>) ?? null;
+}
 ```
 
-`<mat-form-field>` will use `ngField` to read the signal form field's state (e.g. `valid` or `dirty`)
+`<mat-form-field>` will use `ngField` to read the signal form field's state (such as `valid`, `dirty`, `touched`, and `pending`)
 and automatically synchronize the corresponding CSS classes on the `<mat-form-field>` host.
 
 
 #### `ngControl`
 
 This property allows the form field control to specify the `@angular/forms` control that is bound
-to this component. Since we haven't set up our component to act as a `ControlValueAccessor`, we'll
-just set this to `null` in our component. (If your control works with Signal Forms, see
-[`ngField`](#ngField) instead).
+to this component. When your control is built for Signal Forms, you can set this to `null`:
+
+```ts
+readonly ngControl = null;
+```
+
+If you also want your component to support traditional Reactive or Template-driven forms (`formControl` and `ngModel`), you can implement `ControlValueAccessor` and inject `NgControl`:
 
 ```ts
 ngControl = inject(NgControl, {optional: true, self: true});
@@ -231,29 +248,22 @@ For additional information about `ControlValueAccessor` see the [API docs](https
 This property indicates whether the form field control should be considered to be in a
 focused state. When it is in a focused state, the form field is displayed with a solid color
 underline. For the purposes of our component, we want to consider it focused if any of the part
-inputs are focused. We can use the `focusin` and `focusout` events to easily check this. We also
-need to remember to emit on the `stateChanges` when the focused stated changes stream so change
-detection can happen.
+inputs are focused. We can use the `focusin` and `focusout` events to easily check this.
 
-In addition to updating the focused state, we use the `focusin` and `focusout` methods to update the
-internal touched state of our component, which we'll use to determine the error state.
+`focused` can be declared as either a `boolean` or a `Signal<boolean>`. When implemented as a signal,
+the form field automatically reacts to focus changes without needing to emit on `stateChanges`:
 
 ```ts
-focused = false;
+readonly focused = signal(false);
 
-onFocusIn(event: FocusEvent) {
-  if (!this.focused) {
-    this.focused = true;
-    this.stateChanges.next();
-  }
+onFocusIn() {
+  this.focused.set(true);
 }
 
 onFocusOut(event: FocusEvent) {
   if (!this._elementRef.nativeElement.contains(event.relatedTarget as Element)) {
-    this.touched = true;
-    this.focused = false;
-    this.onTouched();
-    this.stateChanges.next();
+    this._touched.set(true);
+    this.focused.set(false);
   }
 }
 ```
@@ -263,11 +273,13 @@ onFocusOut(event: FocusEvent) {
 This property indicates whether the form field control is empty. For our control, we'll consider it
 empty if all the parts are empty.
 
+`empty` can be declared as either a `boolean` or a `Signal<boolean>`:
+
 ```ts
-get empty() {
-  let n = this.parts.value;
-  return !n.area && !n.exchange && !n.subscriber;
-}
+readonly empty = computed(() => {
+  const {area, exchange, subscriber} = this.partsModel();
+  return !area && !exchange && !subscriber;
+});
 ```
 
 #### `shouldLabelFloat`
@@ -277,18 +289,32 @@ use the same logic as `matInput` and float the placeholder when the input is foc
 Since the placeholder will be overlapping our control when it's not floating, we should hide
 the `–` characters when it's not floating.
 
+`shouldLabelFloat` can be declared as either a `boolean` or a `Signal<boolean>`:
+
 ```ts
-@HostBinding('class.floating')
-get shouldLabelFloat() {
-  return this.focused || !this.empty;
-}
+readonly shouldLabelFloat = computed(() => {
+  const focused = this.focused();
+  const empty = this.empty();
+  return focused || !empty;
+});
+```
+
+We can apply a class to the host element when the label should float:
+
+```ts
+@Component({
+  ...
+  host: {
+    '[class.example-floating]': 'shouldLabelFloat()',
+  },
+})
 ```
 ```css
-span {
+.example-tel-input-spacer {
   opacity: 0;
   transition: opacity 200ms;
 }
-:host.floating span {
+:host.example-floating .example-tel-input-spacer {
   opacity: 1;
 }
 ```
@@ -296,51 +322,48 @@ span {
 #### `required`
 
 This property is used to indicate whether the input is required. `<mat-form-field>` uses this
-information to add a required indicator to the placeholder. Again, we'll want to make sure we run
-change detection if the required state changes.
+information to add a required indicator to the placeholder.
+
+`required` can be declared as either a `boolean` or a `Signal<boolean>`:
 
 ```ts
-@Input()
-get required() {
-  return this._required;
-}
-set required(req: BooleanInput) {
-  this._required = coerceBooleanProperty(req);
-  this.stateChanges.next();
-}
-private _required = false;
+readonly required = input<boolean, unknown>(false, {
+  transform: booleanAttribute,
+});
 ```
 
 #### `disabled`
 
-This property tells the form field when it should be in the disabled state. In addition to reporting
-the right state to the form field, we need to set the disabled state on the individual inputs that
-make up our component.
+This property tells the form field when it should be in the disabled state.
+
+`disabled` can be declared as either a `boolean` or a `Signal<boolean>`:
 
 ```ts
-@Input()
-get disabled(): boolean { return this._disabled; }
-set disabled(value: BooleanInput) {
-  this._disabled = coerceBooleanProperty(value);
-  this._disabled ? this.parts.disable() : this.parts.enable();
-  this.stateChanges.next();
-}
-private _disabled = false;
+readonly disabled = input<boolean, unknown>(false, {
+  transform: booleanAttribute,
+});
 ```
 
 #### `errorState`
 
-This property indicates whether the associated `NgControl` or `ngField` is in an error
-state. For example, we can show an error if the input is invalid and our component has been touched.
+This property indicates whether the associated `ngField` or `NgControl` is in an error
+state. For example, we can show an error if our component has been touched and its internal form is invalid.
+
+`errorState` can be declared as either a `boolean` or a `Signal<boolean>`. When implemented as a
+signal, `<mat-form-field>` automatically tracks its value without requiring manual change detection:
 
 ```ts
-get errorState(): boolean {
-  return this.parts.invalid && this.touched;
-}
+private readonly _touched = signal(false);
+
+readonly errorState = computed(() => {
+  const partsValid = this.parts().valid();
+  const touched = this._touched();
+  return !partsValid && touched;
+});
 ```
 
-However, there are some error triggers that we can't subscribe to (e.g. parent form submissions),
-to handle such cases we should re-evaluate `errorState` on every change detection cycle.
+For non-signal components, you can alternatively maintain a boolean `errorState` property and
+re-evaluate it during `ngDoCheck()`:
 
 ```ts
 /** Whether the component is in an error state. */
@@ -365,7 +388,7 @@ private updateErrorState() {
 
   if (this.errorState !== newState) {
     this.errorState = newState;
-    this.stateChanges.next(); // Notify listeners of state changes.
+    this.stateChanges?.next();
   }
 }
 ```
@@ -384,6 +407,15 @@ class `mat-form-field-type-example-tel-input`.
 controlType = 'example-tel-input';
 ```
 
+#### `autofilled`
+
+This optional property indicates whether the control is currently autofilled by the browser.
+Like the other properties, `autofilled` can be declared as either a `boolean` or a `Signal<boolean>`:
+
+```ts
+readonly autofilled = signal(false);
+```
+
 #### `setDescribedByIds(ids: string[])`
 
 This method is used by the `<mat-form-field>` to set element ids that should be used for the
@@ -397,11 +429,11 @@ element ids. Below is an example that shows how this can be achieved.
 
 Note that the method by default will not respect element ids that have been set manually on the
 control element through the `aria-describedby` attribute. To ensure that your control does not
-accidentally override existing element ids specified by consumers of your control, create an
-input called `userAriaDescribedby`  like followed:
+accidentally override existing element ids specified by consumers of your control, create a
+`userAriaDescribedBy` property (which can be a `string` or `Signal<string>`):
 
 ```ts
-@Input('aria-describedby') userAriaDescribedBy: string;
+readonly userAriaDescribedBy = input<string>('', {alias: 'aria-describedby'});
 ```
 
 The form field will then pick up the user specified `aria-describedby` ids and merge
@@ -415,17 +447,25 @@ setDescribedByIds(ids: string[]) {
 }
 ```
 
-#### `onContainerClick(event: MouseEvent)`
+#### `onContainerClick()`
 
 This method will be called when the form field is clicked on. It allows your component to hook in
-and handle that click however it wants. The method has one parameter, the `MouseEvent` for the
-click. In our case we'll just focus the first `<input>` if the user isn't about to click an
-`<input>` anyways.
+and handle that click however it wants. In our case we'll focus the first invalid `<input>`
+(or the first input if all parts are empty):
 
 ```ts
-onContainerClick(event: MouseEvent) {
-  if ((event.target as Element).tagName.toLowerCase() != 'input') {
-    this._elementRef.nativeElement.querySelector('input').focus();
+protected readonly _areaInput = viewChild.required<ElementRef<HTMLInputElement>>('area');
+protected readonly _exchangeInput = viewChild.required<ElementRef<HTMLInputElement>>('exchange');
+protected readonly _subscriberInput =
+  viewChild.required<ElementRef<HTMLInputElement>>('subscriber');
+
+onContainerClick() {
+  if (this.parts.subscriber().valid() || this.parts.exchange().valid()) {
+    this._subscriberInput().nativeElement.focus();
+  } else if (this.parts.area().valid()) {
+    this._exchangeInput().nativeElement.focus();
+  } else {
+    this._areaInput().nativeElement.focus();
   }
 }
 ```
@@ -449,40 +489,41 @@ In our concrete example, we add an attribute binding for `aria-labelledby` and b
 to the label element id provided by the parent `<mat-form-field>`.
 
 ```typescript
-export class MyTelInput implements MatFormFieldControl<MyTel> {
+export class MyTelInput implements FormValueControl<MyTel | null>, MatFormFieldControl<MyTel> {
   ...
-  parentFormField = inject(MatFormField, {optional: true});
+  protected readonly _formField = inject(MAT_FORM_FIELD, {optional: true});
   ...
+}
 ```
 
 ```html
 @Component({
   selector: 'example-tel-input',
   template: `
-    <div role="group" [formGroup]="parts"
-         [attr.aria-describedby]="describedBy"
-         [attr.aria-labelledby]="parentFormField?.getLabelId()">
+    <div role="group"
+         class="example-tel-input-container"
+         [attr.aria-labelledby]="_formField?.getLabelId()">
 ```
 
 ### Trying it out
 
 Now that we've fully implemented the interface, we're ready to try our component out! All we need to
-do is place it inside a `<mat-form-field>`
+do is place it inside a `<mat-form-field>` and bind it to a signal form field:
 
 ```html
 <mat-form-field>
-  <example-tel-input></example-tel-input>
+  <example-tel-input [formField]="form.tel"></example-tel-input>
 </mat-form-field>
 ```
 
 We also get all the features that come with `<mat-form-field>` such as floating placeholder,
-prefix, suffix, hints, and errors (if we've given the form field an `NgControl` or `ngField`
+prefix, suffix, hints, and errors (if we've given the form field an `ngField` or `NgControl`
 and correctly report the error state).
 
 ```html
 <mat-form-field>
-  <example-tel-input placeholder="Phone number" required></example-tel-input>
-  <mat-icon matPrefix>phone</mat-icon>
+  <example-tel-input [formField]="form.tel" placeholder="Phone number"></example-tel-input>
+  <mat-icon matSuffix>phone</mat-icon>
   <mat-hint>Include area code</mat-hint>
 </mat-form-field>
 ```
