@@ -333,9 +333,6 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
 }
 
 // @public
-export function getAttachedOverlays(): OverlayRef[];
-
-// @public
 export class GlobalPositionStrategy implements PositionStrategy {
     apply(): void;
     // (undocumented)
