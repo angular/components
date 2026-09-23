@@ -52,6 +52,17 @@ $_side-padding: 16px;
     }
   }
 
+  // Opt-in label color for multi-select selected options. Unlike single-select,
+  // no background-color change is applied here - the checkbox communicates selection.
+  // Token defaults to null, so this rule only takes effect when the user sets it.
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled).mat-mdc-option-multiple {
+    &:not(.mat-mdc-option-active,:focus,:hover) {
+      .mdc-list-item__primary-text {
+        color: token-utils.slot(option-multiple-selected-state-label-text-color, $fallbacks);
+      }
+    }
+  }
+
   .mat-pseudo-checkbox {
     --mat-pseudo-checkbox-minimal-selected-checkmark-color: #{
         token-utils.slot(option-selected-state-label-text-color, $fallbacks)};
