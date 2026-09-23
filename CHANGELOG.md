@@ -1,3 +1,12 @@
+<a name="22.1.8"></a>
+# 22.1.8 "rubidium-rhino" (2026-09-23)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [377256d87](https://github.com/angular/components/commit/377256d87a1b75297192686cbf2a9d35ce597e42) | fix | **accordion:** ensure right attribute is set when used as a host directive ([#33839](https://github.com/angular/components/pull/33839)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.1.7"></a>
 # 22.1.7 "argon-aristocrat" (2026-09-16)
 ### cdk
