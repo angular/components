@@ -8,23 +8,24 @@
       color: var(--mat-sys-primary);
     }
 
+    h1,
+    h2,
+    h3 {
+      font-weight: 400;
+      margin: 32px 0 16px;
+    }
+
     h1 {
       display: inline-block;
       font-size: 32px;
-      font-weight: 400;
-      margin: 32px 0 16px;
     }
 
     h2 {
       font-size: 28px;
-      margin: 32px 0 16px;
-      font-weight: 400;
     }
 
     h3 {
       font-size: 24px;
-      margin: 32px 0 16px;
-      font-weight: 400;
     }
 
     h4 {
@@ -92,11 +93,10 @@
 
   .docs-header-link {
     header-link {
-      // deduct -30px so the anchor icon will be positioned outside the content
-      margin-left: -30px;
-      // Slight margin to try and center the icon better.
-      margin-top: 2px;
-      display: inline-block;
+      // Slight margin so the anchor icon isn't flush against the heading text.
+      margin-left: 8px;
+      display: inline-flex;
+      align-items: center;
       vertical-align: middle;
 
       // stylelint-disable-next-line material/no-prefixes
