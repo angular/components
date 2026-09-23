@@ -29,8 +29,8 @@ import {
   PositionStrategy,
   ScrollStrategy,
   createOverlayRef,
-  getAttachedOverlays,
 } from './index';
+import {getAttachedOverlays} from './overlay-ref';
 
 describe('Overlay', () => {
   let injector: Injector;
