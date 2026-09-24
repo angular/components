@@ -6,11 +6,13 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, inject} from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {ActivatedRoute, Params, RouterLink} from '@angular/router';
 import {MatRipple} from '@angular/material/core';
 import {NgTemplateOutlet} from '@angular/common';
-import {combineLatest, Subscription} from 'rxjs';
+import {combineLatest} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {
   DocItem,
@@ -28,33 +30,31 @@ import {ComponentPageTitle} from '../page-title/page-title';
   imports: [NavigationFocus, RouterLink, MatRipple, NgTemplateOutlet],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-export class ComponentCategoryList implements OnInit, OnDestroy {
+export class ComponentCategoryList implements OnInit {
   private readonly _docItems = inject(DocumentationItems);
   private readonly _componentPageTitle = inject(ComponentPageTitle);
   private readonly _route = inject(ActivatedRoute);
+  private readonly _destroyRef = inject(DestroyRef);
 
   items: DocItem[] = [];
   section = '';
-  routeParamSubscription: Subscription = new Subscription();
   _categoryListSummary: string | undefined;
 
   ngOnInit() {
-    this.routeParamSubscription = combineLatest(
-      this._route.pathFromRoot.map(route => route.params),
-      Object.assign,
-    ).subscribe(async params => {
-      const sectionName = params['section'];
-      const section = SECTIONS[sectionName];
-      this._componentPageTitle.title = section.name;
-      this._categoryListSummary = section.summary;
-      this.section = sectionName;
-      this.items = await this._docItems.getItems(sectionName);
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.routeParamSubscription) {
-      this.routeParamSubscription.unsubscribe();
-    }
+    combineLatest(this._route.pathFromRoot.map(route => route.params))
+      .pipe(
+        map(allParams =>
+          allParams.reduce((merged, params) => ({...merged, ...params}), {} as Params),
+        ),
+        takeUntilDestroyed(this._destroyRef),
+      )
+      .subscribe(async params => {
+        const sectionName = params['section'];
+        const section = SECTIONS[sectionName];
+        this._componentPageTitle.title = section.name;
+        this._categoryListSummary = section.summary;
+        this.section = sectionName;
+        this.items = await this._docItems.getItems(sectionName);
+      });
   }
 }
