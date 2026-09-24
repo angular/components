@@ -8,7 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 
 /**
- * @title Highlight the first autocomplete option
+ * @title Highlight the first autocomplete option (reactive forms)
  */
 @Component({
   selector: 'autocomplete-auto-active-first-option-example',
