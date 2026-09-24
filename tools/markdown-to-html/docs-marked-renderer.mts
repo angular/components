@@ -38,8 +38,8 @@ export class DocsMarkdownRenderer extends Renderer {
       this._seenIds.add(headingId);
       return `
         <h${depth} id="${headingId}" class="docs-header-link">
-          <span header-link="${headingId}"></span>
           ${content}
+          <span header-link="${headingId}"></span>
         </h${depth}>
       `;
     }

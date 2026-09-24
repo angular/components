@@ -52,8 +52,8 @@
 
   {%- if doc.services.length -%}
     <h3 id="{$ doc.name $}-services" class="docs-header-link docs-api-h3">
-      <span header-link="services"></span>
       Services
+      <span header-link="services"></span>
     </h3>
     {% for service in doc.services %}
       {$ class(service) $}
@@ -62,8 +62,8 @@
 
   {%- if doc.components.length -%}
     <h3 id="{$ doc.name $}-components" class="docs-header-link docs-api-h3">
-      <span header-link="components"></span>
       Components
+      <span header-link="components"></span>
     </h3>
     {% for component in doc.components %}
       {$ class(component) $}
@@ -72,8 +72,8 @@
 
   {%- if doc.directives.length -%}
     <h3 id="{$ doc.name $}-directives" class="docs-header-link docs-api-h3">
-      <span header-link="directives"></span>
       Directives
+      <span header-link="directives"></span>
     </h3>
     {% for directive in doc.directives %}
       {$ class(directive) $}
@@ -82,8 +82,8 @@
 
   {%- if doc.classes.length -%}
     <h3 id="{$ doc.name $}-classes" class="docs-header-link docs-api-h3">
-      <span header-link="classes"></span>
       Classes
+      <span header-link="classes"></span>
     </h3>
     {% for other in doc.classes %}
       {$ class(other) $}
@@ -92,8 +92,8 @@
 
   {%- if doc.interfaces.length -%}
     <h3 id="{$ doc.name $}-interfaces" class="docs-header-link docs-api-h3">
-      <span header-link="interfaces"></span>
       Interfaces
+      <span header-link="interfaces"></span>
     </h3>
     {% for item in doc.interfaces %}
       {$ interface(item) $}
@@ -102,8 +102,8 @@
 
   {%- if doc.functions.length -%}
     <h3 id="{$ doc.name $}-functions" class="docs-header-link docs-api-h3">
-      <span header-link="functions"></span>
       Functions
+      <span header-link="functions"></span>
     </h3>
     {% for item in doc.functions %}
       {#
@@ -116,8 +116,8 @@
 
   {%- if doc.typeAliases.length -%}
     <h3 id="{$ doc.name $}-type_aliases" class="docs-header-link docs-api-h3">
-      <span header-link="type_aliases"></span>
       Type aliases
+      <span header-link="type_aliases"></span>
     </h3>
     {% for item in doc.typeAliases %}
       {$ typeAlias(item) $}
@@ -126,8 +126,8 @@
 
   {%- if doc.constants.length -%}
     <h3 id="{$ doc.name $}-constants" class="docs-header-link docs-api-h3">
-      <span header-link="constants"></span>
       Constants
+      <span header-link="constants"></span>
     </h3>
     {% for item in doc.constants %}
       {$ constant(item) $}

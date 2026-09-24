@@ -24,8 +24,8 @@ describe('DocsMarkdownRenderer', () => {
       `
         <div class="docs-markdown">
           <h3 id="header-3" class="docs-header-link">
-            <span header-link="header-3"></span>
             header 3
+            <span header-link="header-3"></span>
           </h3>
         </div>
       `,
@@ -35,8 +35,8 @@ describe('DocsMarkdownRenderer', () => {
       `
         <div class="docs-markdown">
           <h4 id="header-4" class="docs-header-link">
-            <span header-link="header-4"></span>
             header 4
+            <span header-link="header-4"></span>
           </h4>
         </div>
       `,
