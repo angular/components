@@ -1,4 +1,5 @@
 export {AutocompleteAutoActiveFirstOptionExample} from './autocomplete-auto-active-first-option/autocomplete-auto-active-first-option-example';
+export {AutocompleteAutoActiveFirstOptionSignalFormExample} from './autocomplete-auto-active-first-option-signal-form/autocomplete-auto-active-first-option-signal-form-example';
 export {AutocompleteDisplayExample} from './autocomplete-display/autocomplete-display-example';
 export {AutocompleteFilterExample} from './autocomplete-filter/autocomplete-filter-example';
 export {AutocompleteOptgroupExample} from './autocomplete-optgroup/autocomplete-optgroup-example';
