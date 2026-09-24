@@ -278,7 +278,7 @@ from `@angular/core`. If you want to override it, you can provide a new value fo
 `MAT_DATE_LOCALE` token:
 
 ```ts
-bootstapApplication(MyApp, {
+bootstrapApplication(MyApp, {
   providers: [{provide: MAT_DATE_LOCALE, useValue: 'en-GB'}],
 });
 ```
