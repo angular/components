@@ -177,10 +177,12 @@ div.mat-mdc-select-panel {
 }
 
 .mat-select-panel-animations-enabled {
-  animation: _mat-select-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+  // Note: explicitly setting the fill mode avoids a glitchy
+  // animation if legacy animations are enabled. See #33851.
+  animation: _mat-select-enter 120ms cubic-bezier(0, 0, 0.2, 1) forwards;
 
   &.mat-select-panel-exit {
-    animation: _mat-select-exit 100ms linear;
+    animation: _mat-select-exit 100ms linear forwards;
   }
 }
 
