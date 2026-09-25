@@ -60,6 +60,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "table.scss",
+    layer = "angular-material",
     deps = [
         ":flex_sass",
         ":m2",

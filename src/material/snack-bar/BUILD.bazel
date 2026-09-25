@@ -53,6 +53,7 @@ sass_library(
 sass_binary(
     name = "container_css",
     src = "snack-bar-container.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -64,6 +65,7 @@ sass_binary(
 sass_binary(
     name = "css",
     src = "simple-snack-bar.scss",
+    layer = "angular-material",
 )
 
 ng_project(
