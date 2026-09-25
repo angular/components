@@ -12,6 +12,9 @@ const exampleStartMarker = '<!-- ___exampleStart___ -->';
 /** Marker inserted after the end of an example. */
 const exampleEndMarker = '<!-- ___exampleEnd___ -->';
 
+/** Languages of code blocks that contain terminal commands. */
+const terminalLanguages = new Set(['bash', 'sh', 'shell']);
+
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
  * files that can be used in the Angular Material docs.
@@ -115,19 +118,22 @@ export class DocsMarkdownRenderer extends Renderer {
 
   /**
    * Transforms a markdown code block into the corresponding HTML output. Each code block gets a
-   * button that copies its content. The click is handled by the docs site's `DocViewer`.
+   * button that copies its content. The click is handled by the docs site's `DocViewer`. Code
+   * blocks with terminal commands are also marked with a class, so that a prompt can be shown in
+   * front of the command.
    */
   code(block: Tokens.Code): string {
     const langClass = block.lang ? ` class="language-${block.lang}"` : '';
+    const preClass = terminalLanguages.has(block.lang?.toLowerCase() ?? '')
+      ? ' class="docs-markdown-terminal"'
+      : '';
     const copyButton =
       '<button class="docs-markdown-copy-button" type="button" aria-label="Copy code"' +
       ' title="Copy code to the clipboard">' +
       '<span class="material-symbols-outlined" aria-hidden="true">content_copy</span>' +
       '</button>';
-    return (
-      `<pre><code${langClass}>${highlightCodeBlock(block.text, block.lang)}</code>` +
-      `${copyButton}</pre>`
-    );
+    const code = highlightCodeBlock(block.text, block.lang);
+    return `<pre${preClass}><code${langClass}>${code}</code>${copyButton}</pre>`;
   }
 
   /**

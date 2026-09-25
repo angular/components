@@ -116,6 +116,13 @@ describe('DocsMarkdownRenderer', () => {
     );
   });
 
+  it('marks code blocks with terminal commands', () => {
+    expect(transform('```bash\nng serve\n```')).toContain(
+      '<pre class="docs-markdown-terminal"><code class="language-bash">',
+    );
+    expect(transform('```ts\nconst a = 1;\n```')).toContain('<pre><code class="language-ts">');
+  });
+
   it('does not allow id links with no matching id element', () => {
     spyOn(console, 'error');
     spyOn(process, 'exit');

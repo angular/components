@@ -85,6 +85,17 @@
         font-size: 100%;
       }
 
+      // Show a prompt in front of terminal commands. It's a pseudo-element
+      // so it isn't included when the command is selected or copied.
+      &.docs-markdown-terminal code::before {
+        content: '$';
+        margin-right: 8px;
+        color: var(--mat-sys-on-surface-variant);
+
+        // stylelint-disable-next-line material/no-prefixes
+        user-select: none;
+      }
+
       .docs-markdown-copy-button {
         position: absolute;
         top: 5px;
