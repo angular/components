@@ -401,6 +401,7 @@ const DOCS: {[key: string]: DocItem[]} = {
       exampleSpecs: {
         prefix: 'tree-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-tree-testing.html'}],
     },
   ],
   [CDK]: [
