@@ -144,6 +144,11 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass!: MatCalendarCellClassFunction<D>;
 
+  /**
+   * Whether to show the month label above the calendar grid.
+   */
+  @Input() showLabel: boolean = true;
+
   /** Start of the comparison range. */
   @Input() comparisonStart: D | null = null;
 
@@ -401,11 +406,13 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
     this._setRanges(this.selected);
     this._todayDate.set(this._getCellCompareValue(this._dateAdapter.today()));
     this._monthLabel.set(
-      this._dateFormats.display.monthLabel
-        ? this._dateAdapter.format(this.activeDate, this._dateFormats.display.monthLabel)
-        : this._dateAdapter
-            .getMonthNames('short')
-            [this._dateAdapter.getMonth(this.activeDate)].toLocaleUpperCase(),
+      this.showLabel
+        ? this._dateFormats.display.monthLabel
+          ? this._dateAdapter.format(this.activeDate, this._dateFormats.display.monthLabel)
+          : this._dateAdapter
+              .getMonthNames('short')
+              [this._dateAdapter.getMonth(this.activeDate)].toLocaleUpperCase()
+        : '',
     );
 
     let firstOfMonth = this._dateAdapter.createDate(
