@@ -84,10 +84,29 @@
         font-size: 100%;
       }
 
-      code-block-copy-button {
+      .docs-markdown-copy-button {
         position: absolute;
         top: 5px;
         right: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--mat-sys-on-surface-variant);
+        cursor: pointer;
+
+        &:hover {
+          background: color-mix(in srgb, var(--mat-sys-on-surface-variant) 8%, transparent);
+        }
+
+        &:focus-visible {
+          outline: solid 2px var(--mat-sys-primary);
+        }
       }
     }
 

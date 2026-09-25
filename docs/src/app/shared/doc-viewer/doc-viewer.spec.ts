@@ -209,7 +209,7 @@ describe('DocViewer', () => {
     expect(clipboardSpy.copy).toHaveBeenCalled();
   });
 
-  it('should show copy icon button for code blocks', () => {
+  it('should copy the code block content when its copy button is clicked', () => {
     const fixture = TestBed.createComponent(DocViewerTestComponent);
     fixture.componentInstance.documentUrl = `http://material.angular.io/doc-with-code-block.html`;
     fixture.detectChanges();
@@ -218,16 +218,11 @@ describe('DocViewer', () => {
     http.expectOne(url).flush(FAKE_DOCS[url]);
 
     const docViewer = fixture.debugElement.query(By.directive(DocViewer));
-    expect(docViewer).not.toBeNull();
+    const copyIcon = docViewer.nativeElement.querySelector('.docs-markdown-copy-button span');
+    expect(copyIcon).toBeTruthy();
 
-    // Query all copy buttons within code blocks
-    const iconButtons = fixture.debugElement.queryAll(By.directive(MatIconButton));
-    // At least one icon button for copying code should exist
-    expect(iconButtons.length).toBeGreaterThan(0);
-
-    // Click on the first icon button to trigger copying the code
-    iconButtons[0].nativeNode.dispatchEvent(new MouseEvent('click'));
-    fixture.detectChanges();
+    // Click the icon inside the button to verify that the click is delegated to the button.
+    copyIcon.click();
     expect(clipboardSpy.copy).toHaveBeenCalledWith('const example = "test code";');
   });
 
@@ -285,7 +280,9 @@ const FAKE_DOCS: {[key: string]: string} = {
     </div>`,
   'http://material.angular.io/doc-with-code-block.html': `
     <div class="docs-markdown">
-      <pre><code>const example = "test code";</code></pre>
+      <pre><code>const example = "test code";</code><button class="docs-markdown-copy-button">
+        <span>content_copy</span>
+      </button></pre>
     </div>`,
 };
 

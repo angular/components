@@ -108,6 +108,14 @@ describe('DocsMarkdownRenderer', () => {
     );
   });
 
+  it('adds a copy button to code blocks', () => {
+    const output = transform('```ts\nconst a = 1;\n```');
+    expect(output).toContain('<pre><code class="language-ts">');
+    expect(output).toMatch(
+      /<\/code><button class="docs-markdown-copy-button" type="button" aria-label="Copy code"/,
+    );
+  });
+
   it('does not allow id links with no matching id element', () => {
     spyOn(console, 'error');
     spyOn(process, 'exit');
