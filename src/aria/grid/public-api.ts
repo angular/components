@@ -11,3 +11,8 @@ export {GridCell} from './grid-cell';
 export {GridRow} from './grid-row';
 export {GridCellWidget} from './grid-cell-widget';
 export {GRID, GRID_ROW, GRID_CELL} from './grid-tokens';
+export {
+  NgGridRowRegistryForCdk,
+  ProvideNgGridRowForCdkDirective,
+  RegisterGridRowForCdkDirective,
+} from './cdk-table-interop';
