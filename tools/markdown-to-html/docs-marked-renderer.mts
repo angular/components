@@ -113,9 +113,21 @@ export class DocsMarkdownRenderer extends Renderer {
     });
   }
 
+  /**
+   * Transforms a markdown code block into the corresponding HTML output. Each code block gets a
+   * button that copies its content. The click is handled by the docs site's `DocViewer`.
+   */
   code(block: Tokens.Code): string {
     const langClass = block.lang ? ` class="language-${block.lang}"` : '';
-    return `<pre><code${langClass}>${highlightCodeBlock(block.text, block.lang)}</code></pre>`;
+    const copyButton =
+      '<button class="docs-markdown-copy-button" type="button" aria-label="Copy code"' +
+      ' title="Copy code to the clipboard">' +
+      '<span class="material-symbols-outlined" aria-hidden="true">content_copy</span>' +
+      '</button>';
+    return (
+      `<pre><code${langClass}>${highlightCodeBlock(block.text, block.lang)}</code>` +
+      `${copyButton}</pre>`
+    );
   }
 
   /**
