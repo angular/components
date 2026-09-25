@@ -73,6 +73,13 @@ should be shown. (`true` indicating that they should be shown, and `false` indic
 
 <!-- example(input-error-state-matcher) -->
 
+Errors from a validator on a parent form group, such as a check that two fields match, are set on
+the group rather than on the input. Because the input's own control stays valid, these errors are
+not shown by default. To show them, use an `ErrorStateMatcher` that also checks the parent group's
+errors.
+
+<!-- example(input-parent-form-errors) -->
+
 A global error state matcher can be specified by setting the `ErrorStateMatcher` provider. This
 applies to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is available in order to
 globally cause input errors to show when the input is dirty and invalid.
