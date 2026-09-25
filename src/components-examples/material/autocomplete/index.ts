@@ -2,6 +2,7 @@ export {AutocompleteAutoActiveFirstOptionExample} from './autocomplete-auto-acti
 export {AutocompleteAutoActiveFirstOptionSignalFormExample} from './autocomplete-auto-active-first-option-signal-form/autocomplete-auto-active-first-option-signal-form-example';
 export {AutocompleteDisplayExample} from './autocomplete-display/autocomplete-display-example';
 export {AutocompleteFilterExample} from './autocomplete-filter/autocomplete-filter-example';
+export {AutocompleteLoadingExample} from './autocomplete-loading/autocomplete-loading-example';
 export {AutocompleteOptgroupExample} from './autocomplete-optgroup/autocomplete-optgroup-example';
 export {AutocompleteOverviewExample} from './autocomplete-overview/autocomplete-overview-example';
 export {AutocompletePlainInputExample} from './autocomplete-plain-input/autocomplete-plain-input-example';
