@@ -24,6 +24,9 @@ export interface MatChipsDefaultOptions {
   /** Whether icon indicators should be hidden for single-selection. */
   hideSingleSelectionIndicator?: boolean;
 
+  /** Whether icon indicators should be hidden for multiple and single selection */
+  hideSelectionIndicator?: boolean;
+
   /** Whether the chip input should be interactive while disabled by default. */
   inputDisabledInteractive?: boolean;
 }
