@@ -13,7 +13,9 @@ import {
   Portal,
   CdkPortalOutlet,
 } from '@angular/cdk/portal';
+import {Clipboard} from '@angular/cdk/clipboard';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {MatSnackBar} from '@angular/material/snack-bar';
 import {DomSanitizer} from '@angular/platform-browser';
 import {
   ApplicationRef,
@@ -68,6 +70,9 @@ class DocFetcher {
   `,
   imports: [CdkPortalOutlet],
   changeDetection: ChangeDetectionStrategy.Eager,
+  host: {
+    '(click)': '_handleClick($event)',
+  },
 })
 export class DocViewer implements OnDestroy {
   private _appRef = inject(ApplicationRef);
@@ -77,6 +82,8 @@ export class DocViewer implements OnDestroy {
   private _ngZone = inject(NgZone);
   private _domSanitizer = inject(DomSanitizer);
   private _docFetcher = inject(DocFetcher);
+  private _clipboard = inject(Clipboard);
+  private _snackbar = inject(MatSnackBar);
 
   private _portalHosts: DomPortalOutlet[] = [];
   private _documentFetchSubscription: Subscription | undefined;
@@ -213,6 +220,19 @@ export class DocViewer implements OnDestroy {
   private _clearLiveExamples() {
     this._portalHosts.forEach(h => h.dispose());
     this._portalHosts = [];
+  }
+
+  /** Copies the content of a code block when its copy button is clicked. */
+  protected _handleClick(event: MouseEvent) {
+    const button = (event.target as HTMLElement).closest('.docs-markdown-copy-button');
+    const code = button?.parentElement?.querySelector('code');
+
+    if (code) {
+      const message = this._clipboard.copy(code.textContent || '')
+        ? 'Copied code snippet'
+        : 'Failed to copy code snippet';
+      this._snackbar.open(message, undefined, {duration: 2500});
+    }
   }
 
   ngOnDestroy() {
