@@ -327,6 +327,7 @@ export interface InputModalityDetectorOptions {
 export class InteractivityChecker {
     isDisabled(element: HTMLElement): boolean;
     isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean;
+    isInert(element: HTMLElement): boolean;
     isTabbable(element: HTMLElement): boolean;
     isVisible(element: HTMLElement): boolean;
     // (undocumented)
