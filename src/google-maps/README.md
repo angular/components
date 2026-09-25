@@ -48,7 +48,7 @@ Include the [Dynamic Library Import script](https://developers.google.com/maps/d
 - [`MapTransitLayer`](./map-transit-layer/README.md)
 - [`MapBicyclingLayer`](./map-bicycling-layer/README.md)
 - [`MapDirectionsRenderer`](./map-directions-renderer/README.md)
-- [`MapHeatmapLayer`](./map-heatmap-layer/README.md)
+- `MapHeatmapLayer` (deprecated: Google Maps no longer supports the heatmap API, so it is a no-op)
 
 ## Services
 
