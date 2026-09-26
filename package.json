@@ -8,11 +8,11 @@
     "url": "https://github.com/angular/components.git"
   },
   "license": "MIT",
-  "packageManager": "pnpm@12.4.2",
+  "packageManager": "pnpm@12.6.0",
   "engines": {
     "npm": "Please use pnpm instead of NPM to install dependencies",
     "yarn": "Please use pnpm instead of Yarn to install dependencies",
-    "pnpm": "11.27.0"
+    "pnpm": "11.28.0"
   },
   "scripts": {
     "ng-dev": "node --no-warnings=ExperimentalWarning --loader ts-node/esm/transpile-only node_modules/@angular/ng-dev/bundles/cli.mjs",
@@ -87,7 +87,7 @@
     "@bazel/runfiles": "6.5.0",
     "@firebase/app-types": "^0.9.0",
     "@material/material-color-utilities": "^0.4.0",
-    "@modelcontextprotocol/server": "2.0.0",
+    "@modelcontextprotocol/server": "2.1.0",
     "@octokit/rest": "22.0.1",
     "@rollup/plugin-commonjs": "^29.0.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
@@ -107,7 +107,7 @@
     "dgeni": "^0.4.14",
     "dgeni-packages": "^0.30.0",
     "esbuild": "^0.28.0",
-    "firebase-tools": "15.30.2",
+    "firebase-tools": "15.31.0",
     "fs-extra": "^11.0.0",
     "glob": "^13.0.0",
     "highlight.js": "^11.0.0",
@@ -122,7 +122,7 @@
     "karma-jasmine": "^5.0.0",
     "karma-parallel": "^0.3.1",
     "karma-sourcemap-loader": "^0.4.0",
-    "magic-string": "1.4.1",
+    "magic-string": "1.4.2",
     "marked": "^18.0.0",
     "minimatch": "^10.0.3",
     "parse5": "^8.0.0",
@@ -132,7 +132,7 @@
     "protractor": "^7.0.0",
     "rollup": "^4.52.3",
     "rollup-plugin-dts": "6.5.1",
-    "rollup-plugin-sourcemaps2": "0.5.8",
+    "rollup-plugin-sourcemaps2": "0.5.9",
     "sass": "^1.99.0",
     "selenium-webdriver": "^3.6.0",
     "semver": "^7.3.5",
