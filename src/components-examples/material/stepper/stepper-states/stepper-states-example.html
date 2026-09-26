@@ -1,4 +1,4 @@
-<mat-stepper #stepper>
+<mat-stepper aria-label="Stepper with custom states" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Fill out your name</ng-template>
@@ -36,7 +36,7 @@
 </mat-stepper>
 
 <!-- #docregion states -->
-<mat-stepper>
+<mat-stepper aria-label="Stepper with custom state icons">
 <!-- #docregion label -->
   <mat-step label="Step 1" state="phone">
     <p>Put down your phones.</p>
