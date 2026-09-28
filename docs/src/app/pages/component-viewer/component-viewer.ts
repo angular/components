@@ -14,14 +14,16 @@ import {
   Directive,
   OnInit,
   ViewEncapsulation,
+  computed,
+  input,
   viewChild,
   viewChildren,
   inject,
   DestroyRef,
 } from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ActivatedRoute, Router, RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
-import {combineLatest, Observable, ReplaySubject} from 'rxjs';
+import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {Router, RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
+import {Observable, ReplaySubject} from 'rxjs';
 import {map, skip, switchMap} from 'rxjs/operators';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
@@ -53,25 +55,22 @@ export class ComponentViewer {
   readonly docItems = inject(DocumentationItems);
   private readonly _destroyRef = inject(DestroyRef);
 
+  /** Id of the doc item to display (e.g. button/checkbox). Bound from the `:id` route param. */
+  readonly id = input.required<string>();
+
+  /** Section the doc item belongs to (material/cdk). Bound from the `:section` route param. */
+  readonly section = input.required<string>();
+
   componentDocItem = new ReplaySubject<DocItem>(1);
   sections: Set<string> = new Set(['overview', 'api']);
 
   constructor() {
-    const route = inject(ActivatedRoute);
     const componentPageTitle = this.componentPageTitle;
     const docItems = this.docItems;
 
-    const routeAndParentParams = [route.params];
-    if (route.parent) {
-      routeAndParentParams.push(route.parent.params);
-    }
-    // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
-    // parent route for the section (material/cdk).
-    combineLatest(routeAndParentParams)
+    toObservable(computed(() => ({id: this.id(), section: this.section()})))
       .pipe(
-        switchMap(async params => {
-          const id = params[0]['id'];
-          const section = params[1]['section'];
+        switchMap(async ({id, section}) => {
           const doc = await docItems.getItemById(id, section);
           return {doc, section};
         }),

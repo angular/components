@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ActivatedRoute, Router} from '@angular/router';
-import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input} from '@angular/core';
+import {Router} from '@angular/router';
+import {GuideItems} from '../../shared/guide-items/guide-items';
 import {Footer} from '../../shared/footer/footer';
 
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -32,20 +31,18 @@ export class GuideViewer {
   private readonly _router = inject(Router);
   guideItems = inject(GuideItems);
 
-  guide = signal<GuideItem | undefined>(undefined);
+  /** Id of the guide to display. Bound from the `:id` route param. */
+  readonly id = input.required<string>();
+
+  readonly guide = computed(() => this.guideItems.getItemById(this.id()));
 
   constructor() {
-    const _route = inject(ActivatedRoute);
-    const guideItems = this.guideItems;
+    effect(() => {
+      const guide = this.guide();
 
-    _route.params.pipe(takeUntilDestroyed()).subscribe(p => {
-      const guideItem = guideItems.getItemById(p['id']);
-      if (guideItem) {
-        this.guide.set(guideItem);
-        this._componentPageTitle.title = guideItem.name;
-      }
-
-      if (!this.guide()) {
+      if (guide) {
+        this._componentPageTitle.title = guide.name;
+      } else {
         this._router.navigate(['/guides']);
       }
     });

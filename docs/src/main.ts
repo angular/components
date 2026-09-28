@@ -10,7 +10,7 @@ import {ErrorHandler, provideZoneChangeDetection} from '@angular/core';
 
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {bootstrapApplication} from '@angular/platform-browser';
-import {provideRouter, withInMemoryScrolling} from '@angular/router';
+import {provideRouter, withComponentInputBinding, withInMemoryScrolling} from '@angular/router';
 import {MaterialDocsApp} from './app/material-docs-app';
 import {MATERIAL_DOCS_ROUTES} from './app/routes';
 import {AnalyticsErrorReportHandler} from './app/shared/analytics/error-report-handler';
@@ -30,6 +30,9 @@ bootstrapApplication(MaterialDocsApp, {
         scrollPositionRestoration: 'enabled',
         anchorScrolling: 'enabled',
       }),
+      // Binds route params (e.g. `:section` and `:id`) to inputs of the routed components. Nested
+      // routes also receive the params of their parent routes, since the router inherits them.
+      withComponentInputBinding(),
     ),
     provideZoneChangeDetection(),
   ],

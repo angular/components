@@ -1,57 +1,60 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {ActivatedRoute, Params, provideRouter} from '@angular/router';
+import {Component} from '@angular/core';
+import {TestBed} from '@angular/core/testing';
+import {provideRouter, Router, withComponentInputBinding} from '@angular/router';
+import {RouterTestingHarness} from '@angular/router/testing';
 import {GuideViewer} from './guide-viewer';
 import {ComponentPageTitle} from '../page-title/page-title';
+import {GuideItems} from '../../shared/guide-items/guide-items';
 
-const guideItemsId = 'getting-started';
+@Component({template: ''})
+class GuideList {}
 
 describe('GuideViewer', () => {
-  let fixture: ComponentFixture<GuideViewer>;
-  let params: BehaviorSubject<Params>;
+  let harness: RouterTestingHarness;
+  let guideItems: GuideItems;
 
-  beforeEach(() => {
-    params = new BehaviorSubject<Params>({id: guideItemsId});
-
-    const mockActivatedRoute = {
-      fragment: new Observable(observer => {
-        observer.complete();
-      }),
-      params,
-    };
-
+  beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), {provide: ActivatedRoute, useValue: mockActivatedRoute}],
+      providers: [
+        provideRouter(
+          [
+            {path: 'guides', component: GuideList},
+            {path: 'guide/:id', component: GuideViewer},
+          ],
+          withComponentInputBinding(),
+        ),
+      ],
     });
+
+    harness = await RouterTestingHarness.create();
+    guideItems = TestBed.inject(GuideItems);
   });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(GuideViewer);
+  it('should set the guide based off route params', async () => {
+    const component = await harness.navigateByUrl('/guide/getting-started', GuideViewer);
+    expect(component.guide()).toEqual(guideItems.getItemById('getting-started'));
   });
 
-  it('should set the guide based off route params', () => {
-    const component = fixture.componentInstance;
-    fixture.detectChanges();
-    expect(component.guide()).toEqual(component.guideItems.getItemById(guideItemsId));
-  });
-
-  it('should set the page title to the guide name', () => {
-    const component = fixture.componentInstance;
-    fixture.detectChanges();
+  it('should set the page title to the guide name', async () => {
+    await harness.navigateByUrl('/guide/getting-started', GuideViewer);
     expect(TestBed.inject(ComponentPageTitle).title).toBe(
-      component.guideItems.getItemById(guideItemsId)!.name,
+      guideItems.getItemById('getting-started')!.name,
     );
   });
 
-  it('should update the guide and page title when the route params change', () => {
-    const component = fixture.componentInstance;
-    fixture.detectChanges();
+  it('should update the guide and page title when the route params change', async () => {
+    const component = await harness.navigateByUrl('/guide/getting-started', GuideViewer);
+    const reused = await harness.navigateByUrl('/guide/theming', GuideViewer);
 
-    params.next({id: 'theming'});
-    fixture.detectChanges();
-
-    const theming = component.guideItems.getItemById('theming')!;
+    const theming = guideItems.getItemById('theming')!;
+    expect(reused).toBe(component);
     expect(component.guide()).toEqual(theming);
     expect(TestBed.inject(ComponentPageTitle).title).toBe(theming.name);
+  });
+
+  it('should redirect to the guide list if the guide does not exist', async () => {
+    await harness.navigateByUrl('/guide/does-not-exist');
+    await harness.fixture.whenStable();
+    expect(TestBed.inject(Router).url).toBe('/guides');
   });
 });
