@@ -8,7 +8,7 @@
 
 import {Component} from '@angular/core';
 import {Route, Routes} from '@angular/router';
-import {CanActivateComponentSidenav} from './pages/component-sidenav/component-sidenav-can-load-guard';
+import {canActivateComponentSidenav} from './pages/component-sidenav/component-sidenav-can-load-guard';
 
 @Component({template: ''})
 export class RedirectPlaceholder {}
@@ -73,7 +73,7 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   },
   {
     path: ':section',
-    canActivate: [CanActivateComponentSidenav],
+    canActivate: [canActivateComponentSidenav],
     loadChildren: () =>
       import('./pages/component-sidenav/component-sidenav').then(m => m.componentSidenavRoutes),
   },
