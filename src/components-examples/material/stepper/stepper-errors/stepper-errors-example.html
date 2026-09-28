@@ -1,4 +1,4 @@
-<mat-stepper #stepper>
+<mat-stepper aria-label="Stepper with errors" #stepper>
   <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
     <form [formGroup]="firstFormGroup">
       <ng-template matStepLabel>Fill out your name</ng-template>
