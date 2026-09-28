@@ -6,13 +6,12 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {NgTemplateOutlet} from '@angular/common';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 
 import {SECTIONS} from '../documentation-items/documentation-items';
-import {Subscription} from 'rxjs';
 import {NavigationFocusService} from '../navigation-focus/navigation-focus.service';
 import {ThemePicker} from '../theme-picker/theme-picker';
 import {VersionPicker} from '../version-picker/version-picker';
@@ -36,10 +35,9 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
     NgTemplateOutlet,
   ],
 })
-export class NavBar implements OnDestroy {
+export class NavBar {
   private _navigationFocusService = inject(NavigationFocusService);
 
-  private _subscriptions = new Subscription();
   isNextVersion = location.hostname === 'next.material.angular.dev';
   skipLinkHref: string | null | undefined;
   skipLinkHidden = true;
@@ -54,9 +52,5 @@ export class NavBar implements OnDestroy {
 
   get sectionKeys() {
     return SECTIONS_KEYS;
-  }
-
-  ngOnDestroy() {
-    this._subscriptions.unsubscribe();
   }
 }
