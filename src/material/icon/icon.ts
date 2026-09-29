@@ -404,11 +404,15 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
    */
   private _prependPathToReferences(path: string) {
     const elements = this._elementsWithExternalReferences;
+    // A path starting with `//` would otherwise be interpreted as a protocol-relative URL.
+    // Prefix it with a dot segment so it stays on the current origin without changing the resolved
+    // path.
+    const normalizedPath = path.startsWith('//') ? `/.${path}` : path;
 
     if (elements) {
       elements.forEach((attrs, element) => {
         attrs.forEach(attr => {
-          element.setAttribute(attr.name, `url('${path}#${attr.value}')`);
+          element.setAttribute(attr.name, `url('${normalizedPath}#${attr.value}')`);
         });
       });
     }
