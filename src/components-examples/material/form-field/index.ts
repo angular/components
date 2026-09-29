@@ -4,6 +4,7 @@ export {
   MyTelInput,
 } from './form-field-custom-control/form-field-custom-control-example';
 export {FormFieldErrorExample} from './form-field-error/form-field-error-example';
+export {FormFieldErrorSignalFormExample} from './form-field-error-signal-form/form-field-error-signal-form-example';
 export {FormFieldHarnessExample} from './form-field-harness/form-field-harness-example';
 export {FormFieldHintExample} from './form-field-hint/form-field-hint-example';
 export {FormFieldLabelExample} from './form-field-label/form-field-label-example';
