@@ -8,7 +8,7 @@
     focusOnNavigation
     [tabPanel]="panel"
   >
-    @for (section of sections; track section) {
+    @for (section of sections(); track section) {
       <a
         mat-tab-link
         class="docs-component-viewer-section-tab"
