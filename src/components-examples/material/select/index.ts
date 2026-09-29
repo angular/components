@@ -2,6 +2,7 @@ export {SelectCustomTriggerExample} from './select-custom-trigger/select-custom-
 export {SelectDisabledExample} from './select-disabled/select-disabled-example';
 export {SelectErrorStateMatcherExample} from './select-error-state-matcher/select-error-state-matcher-example';
 export {SelectFormExample} from './select-form/select-form-example';
+export {SelectFormSignalFormExample} from './select-form-signal-form/select-form-signal-form-example';
 export {SelectHintErrorExample} from './select-hint-error/select-hint-error-example';
 export {SelectMultipleExample} from './select-multiple/select-multiple-example';
 export {SelectNoRippleExample} from './select-no-ripple/select-no-ripple-example';
