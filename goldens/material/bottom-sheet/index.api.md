@@ -19,6 +19,7 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { OverlayDisposeOnNavigation } from '@angular/cdk/overlay';
 import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
@@ -55,7 +56,7 @@ export class MatBottomSheetConfig<D = any> {
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string;
     bindings?: Binding[];
-    closeOnNavigation?: boolean;
+    closeOnNavigation?: OverlayDisposeOnNavigation;
     data?: D | null;
     direction?: Direction;
     disableClose?: boolean;

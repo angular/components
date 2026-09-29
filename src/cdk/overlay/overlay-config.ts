@@ -10,6 +10,17 @@ import {PositionStrategy} from './position/position-strategy';
 import {Direction, Directionality} from '../bidi';
 import {ScrollStrategy, NoopScrollStrategy} from './scroll/index';
 
+/**
+ * Value that can be used to configure the behavior of `OverlayConfig.disposeOnNavigation`.
+ * The value correspond to the following:
+ * - `true` or `pop-state` - Overlay is only disposed when the back/forward browser buttons are
+ * pressed.
+ * - `false` - Overlay does nothing on navigations.
+ * - `url-change` - Overlay closes on any URL change. Note that this may close overlays opened
+ * from route resolvers immediately.
+ */
+export type OverlayDisposeOnNavigation = boolean | 'url-change' | 'pop-state';
+
 /** Initial configuration used when creating an overlay. */
 export class OverlayConfig {
   /** Strategy with which to position the overlay. */
@@ -54,12 +65,8 @@ export class OverlayConfig {
    */
   direction?: Direction | Directionality;
 
-  /**
-   * Whether the overlay should be disposed of when the user goes backwards/forwards in history.
-   * Note that this usually doesn't include clicking on links (unless the user is using
-   * the `HashLocationStrategy`).
-   */
-  disposeOnNavigation?: boolean = false;
+  /** Whether the overlay should be disposed of when the user navigates. */
+  disposeOnNavigation?: OverlayDisposeOnNavigation = false;
 
   /**
    * Whether the overlay should be rendered as a native popover element,

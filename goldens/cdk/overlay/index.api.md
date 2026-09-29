@@ -55,7 +55,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     detachOverlay(): void;
     get dir(): Direction;
     disableClose: boolean;
-    disposeOnNavigation: boolean;
+    disposeOnNavigation: OverlayDisposeOnNavigation;
     flexibleDimensions: boolean;
     growAfterOpen: boolean;
     hasBackdrop: boolean;
@@ -114,7 +114,7 @@ export interface CdkConnectedOverlayConfig {
     // (undocumented)
     disableClose?: boolean;
     // (undocumented)
-    disposeOnNavigation?: boolean;
+    disposeOnNavigation?: OverlayDisposeOnNavigation;
     // (undocumented)
     flexibleDimensions?: boolean;
     // (undocumented)
@@ -391,7 +391,7 @@ export class OverlayConfig {
     backdropClass?: string | string[];
     direction?: Direction | Directionality;
     disableAnimations?: boolean;
-    disposeOnNavigation?: boolean;
+    disposeOnNavigation?: OverlayDisposeOnNavigation;
     eventPredicate?: (event: Event) => boolean;
     hasBackdrop?: boolean;
     height?: number | string;
@@ -439,6 +439,9 @@ export class OverlayContainer implements OnDestroy {
 export interface OverlayDefaultConfig {
     usePopover?: boolean;
 }
+
+// @public
+export type OverlayDisposeOnNavigation = boolean | 'url-change' | 'pop-state';
 
 // @public
 export class OverlayKeyboardDispatcher extends BaseOverlayDispatcher {
