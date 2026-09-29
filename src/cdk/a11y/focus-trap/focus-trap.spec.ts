@@ -9,7 +9,7 @@ import {
   inject,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {A11yModule, CdkTrapFocus, FocusTrap} from '../index';
 
@@ -215,7 +215,7 @@ describe('FocusTrap', () => {
   });
 
   describe('with autoCapture', () => {
-    it('should automatically capture and return focus on init / destroy', waitForAsync(() => {
+    it('should automatically capture and return focus on init / destroy', () => {
       const fixture = TestBed.createComponent(FocusTrapWithAutoCapture);
       fixture.detectChanges();
 
@@ -233,9 +233,9 @@ describe('FocusTrap', () => {
       fixture.detectChanges();
 
       expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-    }));
+    });
 
-    it('should capture focus if auto capture is enabled later on', waitForAsync(() => {
+    it('should capture focus if auto capture is enabled later on', () => {
       const fixture = TestBed.createComponent(FocusTrapWithAutoCapture);
       fixture.componentInstance.autoCaptureEnabled = false;
       fixture.componentInstance.showTrappedRegion = true;
@@ -256,9 +256,9 @@ describe('FocusTrap', () => {
       fixture.detectChanges();
 
       expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-    }));
+    });
 
-    it('should automatically capture and return focus on init / destroy inside the shadow DOM', waitForAsync(() => {
+    it('should automatically capture and return focus on init / destroy inside the shadow DOM', () => {
       if (!_supportsShadowDom()) {
         return;
       }
@@ -280,9 +280,9 @@ describe('FocusTrap', () => {
       fixture.detectChanges();
 
       expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-    }));
+    });
 
-    it('should capture focus if auto capture is enabled later on inside the shadow DOM', waitForAsync(() => {
+    it('should capture focus if auto capture is enabled later on inside the shadow DOM', () => {
       if (!_supportsShadowDom()) {
         return;
       }
@@ -307,7 +307,7 @@ describe('FocusTrap', () => {
       fixture.detectChanges();
 
       expect(getActiveElement()).toBe(buttonOutsideTrappedRegion);
-    }));
+    });
   });
 
   it('should put anchors inside the outlet when set at the root of a template portal', () => {

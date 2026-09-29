@@ -12,7 +12,7 @@ import {
   ViewChildren,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {TestBed, waitForAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatAccordion,
@@ -25,9 +25,9 @@ import {
 describe('MatAccordion', () => {
   let focusMonitor: FocusMonitor;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     focusMonitor = TestBed.inject(FocusMonitor);
-  }));
+  });
 
   it('should ensure only one item is expanded at a time', () => {
     const fixture = TestBed.createComponent(SetOfItems);

@@ -1,5 +1,5 @@
 import {Component, DebugElement, ChangeDetectionStrategy} from '@angular/core';
-import {waitForAsync, TestBed, ComponentFixture} from '@angular/core/testing';
+import {TestBed, ComponentFixture} from '@angular/core/testing';
 import {MatChipEditInput, MatChipsModule} from './index';
 import {By} from '@angular/platform-browser';
 
@@ -10,11 +10,11 @@ describe('MatChipEditInput', () => {
   let inputDebugElement: DebugElement;
   let inputInstance: MatChipEditInput;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(ChipEditInputContainer);
     inputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
     inputInstance = inputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
-  }));
+  });
 
   describe('on initialization', () => {
     it('should set the initial input text', () => {

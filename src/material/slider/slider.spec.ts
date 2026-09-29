@@ -22,7 +22,7 @@ import {
   ViewChildren,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MatSliderModule} from './slider-module';
@@ -106,13 +106,13 @@ describe('MatSlider', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should set the default values', () => {
       expect(slider.min).toBe(0);
@@ -177,14 +177,14 @@ describe('MatSlider', () => {
     let endInput: MatSliderRangeThumb;
     let startInput: MatSliderRangeThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(StandardRangeSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should set the default values', () => {
       checkInput(startInput, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
@@ -264,13 +264,13 @@ describe('MatSlider', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(SliderWithMinAndMax);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should have the correct initial values', () => {
       checkInput(input, {min: 25, max: 75, value: 25, translateX: 0});
@@ -343,14 +343,14 @@ describe('MatSlider', () => {
     let endInput: MatSliderRangeThumb;
     let startInput: MatSliderRangeThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(RangeSliderWithMinAndMax);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should have the correct initial values', () => {
       checkInput(startInput, {min: 25, max: 75, value: 25, translateX: 0});
@@ -545,13 +545,13 @@ describe('MatSlider', () => {
     let input: MatSliderThumb;
 
     let fixture: ComponentFixture<any>;
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(DisabledSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should be disabled', () => {
       expect(slider.disabled).toBeTrue();
@@ -587,14 +587,14 @@ describe('MatSlider', () => {
     let startInput: MatSliderThumb;
     let endInput: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       const fixture = createComponent(DisabledRangeSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should be disabled', () => {
       expect(slider.disabled).toBeTrue();
@@ -617,7 +617,7 @@ describe('MatSlider', () => {
     let thumbX: number;
     let thumbY: number;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       const fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
@@ -628,7 +628,7 @@ describe('MatSlider', () => {
       const thumbDimensions = thumbElement.getBoundingClientRect();
       thumbX = thumbDimensions.left + thumbDimensions.width / 2;
       thumbY = thumbDimensions.top + thumbDimensions.height / 2;
-    }));
+    });
 
     function isRippleVisible(selector: string) {
       flushRippleTransitions();
@@ -753,13 +753,13 @@ describe('MatSlider', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       const fixture = createComponent(SliderWithValue);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should set the default value from the attribute', () => {
       checkInput(input, {min: 0, max: 100, value: 50, translateX: 150});
@@ -776,14 +776,14 @@ describe('MatSlider', () => {
     let startInput: MatSliderThumb;
     let endInput: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       const fixture = createComponent(RangeSliderWithValue);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should set the correct initial values', async () => {
       checkInput(startInput, {min: 0, max: 75, value: 25, translateX: 75});
@@ -810,13 +810,13 @@ describe('MatSlider', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(SliderWithStep);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should update to the value based on the step', async () => {
       await slideToValue(slider, input, 30);
@@ -854,14 +854,14 @@ describe('MatSlider', () => {
     let startInput: MatSliderThumb;
     let endInput: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(RangeSliderWithStep);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should set the correct start value on slide', async () => {
       await slideToValue(slider, startInput, 30);
@@ -1048,13 +1048,13 @@ describe('MatSlider', () => {
     let fixture: ComponentFixture<SliderWithOneWayBinding>;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(SliderWithOneWayBinding);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       const slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should update when bound value changes', () => {
       fixture.componentInstance.value = 75;
@@ -1069,14 +1069,14 @@ describe('MatSlider', () => {
     let startInput: MatSliderThumb;
     let endInput: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(RangeSliderWithOneWayBinding);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       const slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should update when bound start value changes', () => {
       fixture.componentInstance.startValue = 30;
@@ -1127,14 +1127,14 @@ describe('MatSlider', () => {
     let sliderEl: HTMLElement;
     let fixture: ComponentFixture<StandardRangeSlider>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(StandardSlider, [provideFakeDirectionality('rtl')]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       sliderEl = sliderDebugElement.nativeElement;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('works in RTL languages', async () => {
       await setValueByClick(slider, input, 25, true);
@@ -1165,14 +1165,14 @@ describe('MatSlider', () => {
     let endInput: MatSliderThumb;
 
     let fixture: ComponentFixture<any>;
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(StandardRangeSlider, [provideFakeDirectionality('rtl')]);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('works in RTL languages', async () => {
       await setValueByClick(slider, startInput, 90, true);
@@ -1188,13 +1188,14 @@ describe('MatSlider', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = createComponent(SliderWithNgModel);
       fixture.detectChanges();
+      await fixture.whenStable();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should update the model', async () => {
       await slideToValue(slider, input, 19);
@@ -1232,14 +1233,15 @@ describe('MatSlider', () => {
     let startInput: MatSliderThumb;
     let endInput: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = createComponent(RangeSliderWithNgModel);
       fixture.detectChanges();
+      await fixture.whenStable();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should update the models on input value changes', async () => {
       await slideToValue(slider, startInput, 25);
@@ -1333,13 +1335,13 @@ describe('MatSlider', () => {
     let slider: MatSlider;
     let input: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(SliderWithFormControl);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should update the control on slide', async () => {
       expect(fixture.componentInstance.control.value).toBe(0);
@@ -1398,14 +1400,14 @@ describe('MatSlider', () => {
     let startInput: MatSliderThumb;
     let endInput: MatSliderThumb;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(RangeSliderWithFormControl);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should update the start input control on slide', async () => {
       expect(fixture.componentInstance.startInputControl.value).toBe(0);
@@ -1538,14 +1540,14 @@ describe('MatSlider', () => {
     let endInput: MatSliderRangeThumb;
     let fixture: ComponentFixture<RangeSliderWithTwoWayBinding>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(RangeSliderWithTwoWayBinding);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should sync the start value binding in both directions', async () => {
       expect(fixture.componentInstance.startValue).toBe(0);
@@ -1594,14 +1596,14 @@ describe('MatSlider', () => {
       return {ticks, active, inactive};
     }
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(SliderWithTickMarks);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       slider = sliderDebugElement.componentInstance;
       sliderEl = sliderDebugElement.nativeElement;
       input = slider._getInput(_MatThumb.END) as MatSliderThumb;
-    }));
+    });
 
     it('should have tick marks', () => {
       expect(slider._tickMarks.length).toBeTruthy();
@@ -1685,7 +1687,7 @@ describe('MatSlider', () => {
       return {ticks, active, inactive};
     }
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = createComponent(RangeSliderWithTickMarks);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
@@ -1693,7 +1695,7 @@ describe('MatSlider', () => {
       sliderEl = sliderDebugElement.nativeElement;
       endInput = slider._getInput(_MatThumb.END) as MatSliderRangeThumb;
       startInput = slider._getInput(_MatThumb.START) as MatSliderRangeThumb;
-    }));
+    });
 
     it('should render the correct number of active & inactive ticks', () => {
       startInput.value = 0;
