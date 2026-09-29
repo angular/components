@@ -8,7 +8,7 @@
 
 import {ViewContainerRef, Injector, StaticProvider, Type, Binding} from '@angular/core';
 import {Direction} from '../bidi';
-import {PositionStrategy, ScrollStrategy} from '../overlay';
+import {OverlayDisposeOnNavigation, PositionStrategy, ScrollStrategy} from '../overlay';
 import {Observable} from 'rxjs';
 import {BasePortalOutlet} from '../portal';
 import {FocusOrigin} from '../a11y';
@@ -140,12 +140,8 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
    */
   scrollStrategy?: ScrollStrategy;
 
-  /**
-   * Whether the dialog should close when the user navigates backwards or forwards through browser
-   * history. This does not apply to navigation via anchor element unless using URL-hash based
-   * routing (`HashLocationStrategy` in the Angular router).
-   */
-  closeOnNavigation?: boolean = true;
+  /** Whether the dialog should be disposed of when the user navigates. */
+  closeOnNavigation?: OverlayDisposeOnNavigation = true;
 
   /**
    * Whether the dialog should close when the dialog service is destroyed. This is useful if

@@ -27,6 +27,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OverlayDisposeOnNavigation } from '@angular/cdk/overlay';
 import { RestoreFocusValue } from '@angular/cdk/dialog';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
@@ -127,7 +128,7 @@ export class MatDialogConfig<D = any> {
     autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
     bindings?: Binding[];
-    closeOnNavigation?: boolean;
+    closeOnNavigation?: OverlayDisposeOnNavigation;
     closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = MatDialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     data?: D | null;
     delayFocusTrap?: boolean;

@@ -123,7 +123,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
     backdropClass?: string | string[];
     bindings?: Binding[];
     closeOnDestroy?: boolean;
-    closeOnNavigation?: boolean;
+    closeOnNavigation?: OverlayDisposeOnNavigation;
     closeOnOverlayDetachments?: boolean;
     closePredicate?: <Result = unknown, Component = unknown, Config extends DialogConfig = DialogConfig>(result: Result | undefined, config: Config, componentInstance: Component | null) => boolean;
     container?: Type<C> | {

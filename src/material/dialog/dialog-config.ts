@@ -8,7 +8,7 @@
 
 import {ViewContainerRef, Injector, Binding} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
-import {ScrollStrategy} from '@angular/cdk/overlay';
+import {OverlayDisposeOnNavigation, ScrollStrategy} from '@angular/cdk/overlay';
 import {DialogConfig, RestoreFocusValue} from '@angular/cdk/dialog';
 
 /** Options for where to set focus to automatically on dialog open */
@@ -138,12 +138,8 @@ export class MatDialogConfig<D = any> {
   /** Scroll strategy to be used for the dialog. */
   scrollStrategy?: ScrollStrategy;
 
-  /**
-   * Whether the dialog should close when the user goes backwards/forwards in history.
-   * Note that this usually doesn't include clicking on links (unless the user is using
-   * the `HashLocationStrategy`).
-   */
-  closeOnNavigation?: boolean = true;
+  /** Whether the bottom sheet should be disposed of when the user navigates. */
+  closeOnNavigation?: OverlayDisposeOnNavigation = true;
 
   /**
    * Duration of the enter animation in ms.
