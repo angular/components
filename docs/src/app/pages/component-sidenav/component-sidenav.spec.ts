@@ -1,8 +1,10 @@
 import {provideZoneChangeDetection} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {BreakpointObserver} from '@angular/cdk/layout';
 import {MatSidenav} from '@angular/material/sidenav';
 import {provideRouter, withComponentInputBinding} from '@angular/router';
 import {RouterTestingHarness} from '@angular/router/testing';
+import {of} from 'rxjs';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {ComponentSidenav, componentSidenavRoutes} from './component-sidenav';
 
@@ -12,7 +14,16 @@ describe('ComponentSidenav', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideRouter([]), provideZoneChangeDetection()],
+      providers: [
+        provideRouter([]),
+        provideZoneChangeDetection(),
+        {
+          provide: BreakpointObserver,
+          useValue: {
+            observe: () => of({matches: true, breakpoints: {}}),
+          },
+        },
+      ],
     });
 
     fixture = TestBed.createComponent(ComponentSidenav);
@@ -21,17 +32,9 @@ describe('ComponentSidenav', () => {
   });
 
   it('should close the sidenav on init', () => {
-    // Spy on window.mediaMatch and return stub
-    spyOn(window, 'matchMedia').and.returnValue({
-      matches: true,
-    } as any);
-
-    // TODO refactor this as none of these expectations are ever verified
-    waitForAsync(() => {
-      expect(component.sidenav() instanceof MatSidenav).toBeTruthy();
-      expect(component.isScreenSmall()).toBeTruthy();
-      expect(component.sidenav()!.opened).toBe(false);
-    });
+    expect(component.sidenav() instanceof MatSidenav).toBeTruthy();
+    expect(component.isScreenSmall()).toBeTruthy();
+    expect(component.sidenav()!.opened).toBe(false);
   });
 
   it('should show a link for each item in doc items categories', async () => {

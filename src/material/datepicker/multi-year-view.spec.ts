@@ -15,7 +15,7 @@ import {
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, signal, ViewChild, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {provideNativeDateAdapter} from '../core';
 import {JAN, MAR} from '../testing';
@@ -25,13 +25,13 @@ import {MatCalendarCellClassFunction} from './calendar-body';
 describe('MatMultiYearView', () => {
   let dir: WritableSignal<Direction>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     dir = signal<Direction>('ltr');
 
     TestBed.configureTestingModule({
       providers: [provideNativeDateAdapter(), provideFakeDirectionality(dir)],
     });
-  }));
+  });
 
   describe('standard multi-year view', () => {
     let fixture: ComponentFixture<StandardMultiYearView>;

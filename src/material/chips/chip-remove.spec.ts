@@ -1,7 +1,7 @@
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatChip, MatChipsModule} from './index';
 
@@ -10,14 +10,14 @@ describe('Chip Remove', () => {
   let testChip: TestChip;
   let chipNativeElement: HTMLElement;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     fixture = TestBed.createComponent(TestChip);
     testChip = fixture.debugElement.componentInstance;
     fixture.detectChanges();
 
     const chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
     chipNativeElement = chipDebugElement.nativeElement;
-  }));
+  });
 
   describe('basic behavior', () => {
     it('should apply a CSS class to the remove icon', () => {

@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ElementRef, inject, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {SharedResizeObserver} from './shared-resize-observer';
 
@@ -93,7 +93,7 @@ describe('SharedResizeObserver', () => {
     expect(observable1).not.toBe(observable3);
   });
 
-  it('should receive an initial size on subscription', waitForAsync(async () => {
+  it('should receive an initial size on subscription', async () => {
     const observable = resizeObserver.observe(el1);
     const resizeSpy1 = jasmine.createSpy('resize handler 1');
     observable.subscribe(resizeSpy1);
@@ -103,9 +103,9 @@ describe('SharedResizeObserver', () => {
     observable.subscribe(resizeSpy2);
     fixture.detectChanges();
     expect(resizeSpy2).toHaveBeenCalled();
-  }));
+  });
 
-  it('should receive events on resize', waitForAsync(async () => {
+  it('should receive events on resize', async () => {
     const resizeSpy = jasmine.createSpy('resize handler');
     resizeObserver.observe(el1).subscribe(resizeSpy);
     fixture.detectChanges();
@@ -113,9 +113,9 @@ describe('SharedResizeObserver', () => {
     currentObservers.get('content-box')?.triggerCallback(el1);
     fixture.detectChanges();
     expect(resizeSpy).toHaveBeenCalled();
-  }));
+  });
 
-  it('should not receive events for other elements', waitForAsync(async () => {
+  it('should not receive events for other elements', async () => {
     const resizeSpy1 = jasmine.createSpy('resize handler 1');
     const resizeSpy2 = jasmine.createSpy('resize handler 2');
     resizeObserver.observe(el1).subscribe(resizeSpy1);
@@ -127,7 +127,7 @@ describe('SharedResizeObserver', () => {
     fixture.detectChanges();
     expect(resizeSpy1).toHaveBeenCalled();
     expect(resizeSpy2).not.toHaveBeenCalled();
-  }));
+  });
 });
 
 @Component({

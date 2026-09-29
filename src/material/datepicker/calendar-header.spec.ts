@@ -1,6 +1,6 @@
 import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DateAdapter, provideNativeDateAdapter} from '../core';
 import {DEC, FEB, JAN} from '../testing';
@@ -10,12 +10,12 @@ import {MatDatepickerModule} from './datepicker-module';
 import {yearsPerPage} from './multi-year-view';
 
 describe('MatCalendarHeader', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MatDatepickerModule],
       providers: [MatDatepickerIntl, provideFakeDirectionality('ltr'), provideNativeDateAdapter()],
     });
-  }));
+  });
 
   describe('standard calendar', () => {
     let fixture: ComponentFixture<StandardCalendar>;

@@ -5,7 +5,7 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
 import {createFakeYtNamespace} from './fake-youtube-player';
 import {
@@ -42,13 +42,13 @@ describe('YoutubePlayer', () => {
   let testComponent: TestApp;
   let events: Required<YT.Events>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const fake = createFakeYtNamespace();
     playerCtorSpy = fake.playerCtorSpy;
     playerSpy = fake.playerSpy;
     ytWindow.YT = fake.namespace;
     events = fake.events;
-  }));
+  });
 
   function getVideoHost(componentFixture: ComponentFixture<unknown>): HTMLElement {
     // Not the most resilient selector, but we don't want to introduce any
