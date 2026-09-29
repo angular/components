@@ -7,7 +7,7 @@
  */
 
 import {Component} from '@angular/core';
-import {Route, Routes} from '@angular/router';
+import {CanActivateFn, Route, Routes} from '@angular/router';
 import {canActivateComponentSidenav} from './pages/component-sidenav/component-sidenav-can-load-guard';
 
 @Component({template: ''})
@@ -95,14 +95,16 @@ function adevRedirect(path: string) {
 }
 
 function externalRedirect(target: string | (() => string)): Partial<Route> {
+  // Typed explicitly, because `canActivate` also accepts deprecated class-based guards. Any function
+  // matches that type as well, so an inline guard wouldn't have its return value type checked.
+  const redirect: CanActivateFn = () => {
+    window.location.href = typeof target === 'string' ? target : target();
+    return false;
+  };
+
   return {
     // The router requires a `component`.
     component: RedirectPlaceholder,
-    canActivate: [
-      () => {
-        window.location.href = typeof target === 'string' ? target : target();
-        return false;
-      },
-    ],
+    canActivate: [redirect],
   };
 }
