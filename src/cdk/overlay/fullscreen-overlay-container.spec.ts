@@ -1,4 +1,4 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {
   Component,
   ViewChild,
@@ -16,7 +16,7 @@ describe('FullscreenOverlayContainer', () => {
   let fullscreenListeners: Set<Function>;
   let fakeDocument: any;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     fullscreenListeners = new Set();
 
     TestBed.configureTestingModule({
@@ -68,7 +68,7 @@ describe('FullscreenOverlayContainer', () => {
 
     injector = TestBed.inject(Injector);
     fakeDocument = TestBed.inject(DOCUMENT);
-  }));
+  });
 
   it('should open an overlay inside a fullscreen element and move it to the body', () => {
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);

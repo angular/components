@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
@@ -11,7 +11,7 @@ describe('MenuGroup', () => {
     let fixture: ComponentFixture<CheckboxMenu>;
     let menuItems: CdkMenuItemCheckbox[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(CheckboxMenu);
       fixture.detectChanges();
 
@@ -21,7 +21,7 @@ describe('MenuGroup', () => {
       menuItems = fixture.debugElement
         .queryAll(By.directive(CdkMenuItemCheckbox))
         .map(e => e.injector.get(CdkMenuItemCheckbox));
-    }));
+    });
 
     it('should not change state of sibling checked menuitemcheckbox', () => {
       menuItems[1].trigger();
@@ -34,7 +34,7 @@ describe('MenuGroup', () => {
     let fixture: ComponentFixture<MenuWithMultipleRadioGroups>;
     let menuItems: CdkMenuItemRadio[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(MenuWithMultipleRadioGroups);
       fixture.detectChanges();
 
@@ -44,7 +44,7 @@ describe('MenuGroup', () => {
       menuItems = fixture.debugElement
         .queryAll(By.directive(CdkMenuItemRadio))
         .map(e => e.injector.get(CdkMenuItemRadio));
-    }));
+    });
 
     it('should change state of sibling menuitemradio in same group', () => {
       menuItems[1].trigger({keepOpen: true});

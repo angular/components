@@ -6,7 +6,7 @@ import {
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DateAdapter, provideNativeDateAdapter} from '../core';
 import {DEC, FEB, JAN, JUL, NOV} from '../testing';
@@ -17,14 +17,14 @@ describe('MatCalendar', () => {
   let adapter: DateAdapter<Date>;
   let intl: MatDatepickerIntl;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [MatDatepickerIntl, provideFakeDirectionality('ltr'), provideNativeDateAdapter()],
     });
 
     adapter = TestBed.inject(DateAdapter);
     intl = TestBed.inject(MatDatepickerIntl);
-  }));
+  });
 
   describe('standard calendar', () => {
     let fixture: ComponentFixture<StandardCalendar>;
@@ -161,7 +161,7 @@ describe('MatCalendar', () => {
           expect(calendarBodyEl.getAttribute('tabindex')).toBe('-1');
         });
 
-        it('should not move focus to the active cell on init', waitForAsync(async () => {
+        it('should not move focus to the active cell on init', async () => {
           const activeCell = calendarBodyEl.querySelector(
             '.mat-calendar-body-active',
           )! as HTMLElement;
@@ -171,9 +171,9 @@ describe('MatCalendar', () => {
           await new Promise(resolve => setTimeout(resolve));
 
           expect(activeCell.focus).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should move focus to the active cell when the view changes', waitForAsync(async () => {
+        it('should move focus to the active cell when the view changes', async () => {
           calendarInstance.currentView = 'multi-year';
           fixture.detectChanges();
 
@@ -185,7 +185,7 @@ describe('MatCalendar', () => {
           await new Promise(resolve => setTimeout(resolve));
 
           expect(activeCell.focus).toHaveBeenCalled();
-        }));
+        });
 
         describe('year view', () => {
           beforeEach(() => {

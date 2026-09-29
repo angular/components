@@ -83,6 +83,8 @@ describe('TestbedHarnessEnvironment', () => {
           expect(await harness.getTaskStateResult()).toBe('result');
         });
 
+        // Keep `waitForAsync` here since we're testing the integration.
+        // tslint:disable-next-line:ban
         it('should be able to wait for tasks outside of Angular within async test zone', waitForAsync(() => {
           harness.getTaskStateResult().then(res => expect(res).toBe('result'));
         }));

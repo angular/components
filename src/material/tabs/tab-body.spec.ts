@@ -13,7 +13,7 @@ import {
   signal,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatRippleModule} from '../core';
 import {MatTabBody} from './tab-body';
@@ -21,10 +21,10 @@ import {MatTabBody} from './tab-body';
 describe('MatTabBody', () => {
   let dir: WritableSignal<Direction>;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     dir = signal('ltr');
     TestBed.configureTestingModule({providers: [provideFakeDirectionality(dir)]});
-  }));
+  });
 
   it('should be center position if origin is unchanged', () => {
     const fixture = TestBed.createComponent(SimpleTabBodyApp);

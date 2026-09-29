@@ -2,7 +2,7 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Platform} from '@angular/cdk/platform';
 import {CdkTable, CdkTableModule} from '@angular/cdk/table';
 import {Component, Type, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -50,7 +50,7 @@ describe('CdkTableScrollContainer', () => {
     dataRows = getRows(tableElement);
   });
 
-  it('sets scrollbar track margin for sticky headers', waitForAsync(async () => {
+  it('sets scrollbar track margin for sticky headers', async () => {
     component.stickyHeaders = ['header-1', 'header-3'];
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -76,9 +76,9 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+  });
 
-  it('sets scrollbar track margin for sticky footers', waitForAsync(async () => {
+  it('sets scrollbar track margin for sticky footers', async () => {
     component.stickyFooters = ['footer-1', 'footer-3'];
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -104,9 +104,9 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+  });
 
-  it('sets scrollbar track margin for sticky start columns', waitForAsync(async () => {
+  it('sets scrollbar track margin for sticky start columns', async () => {
     component.stickyStartColumns = ['column-1', 'column-3'];
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -134,9 +134,9 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+  });
 
-  it('sets scrollbar track margin for sticky end columns', waitForAsync(async () => {
+  it('sets scrollbar track margin for sticky end columns', async () => {
     component.stickyEndColumns = ['column-4', 'column-6'];
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -164,9 +164,9 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+  });
 
-  it('sets scrollbar track margin for a combination of sticky rows and columns', waitForAsync(async () => {
+  it('sets scrollbar track margin for a combination of sticky rows and columns', async () => {
     component.stickyHeaders = ['header-1'];
     component.stickyFooters = ['footer-3'];
     component.stickyStartColumns = ['column-1'];
@@ -202,7 +202,7 @@ describe('CdkTableScrollContainer', () => {
     expect(scrollerStyle.getPropertyValue('margin-right')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-bottom')).toBe('0px');
     expect(scrollerStyle.getPropertyValue('margin-left')).toBe('0px');
-  }));
+  });
 });
 
 interface TestData {

@@ -14,7 +14,7 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MatChipEditInput,
@@ -31,11 +31,11 @@ describe('Row Chips', () => {
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChipRow;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideFakeDirectionality('ltr')],
     });
-  }));
+  });
 
   describe('MatChipRow', () => {
     let testComponent: SingleChip;

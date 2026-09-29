@@ -6,7 +6,7 @@ import {
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MATERIAL_ANIMATIONS} from '../core';
 import {MatFormField} from '../form-field';
@@ -26,16 +26,13 @@ describe('MatChipInput', () => {
   let inputNativeElement: HTMLInputElement;
   let chipInputDirective: MatChipInput;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         provideFakeDirectionality('ltr'),
         {provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}},
       ],
     });
-  }));
-
-  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(TestChipInput);
     testChipInput = fixture.debugElement.componentInstance;
     fixture.detectChanges();
@@ -43,7 +40,7 @@ describe('MatChipInput', () => {
     inputDebugElement = fixture.debugElement.query(By.directive(MatChipInput))!;
     chipInputDirective = inputDebugElement.injector.get<MatChipInput>(MatChipInput);
     inputNativeElement = inputDebugElement.nativeElement;
-  }));
+  });
 
   describe('basic behavior', () => {
     it('emits the (chipEnd) on enter keyup', () => {

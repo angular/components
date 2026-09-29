@@ -1,4 +1,4 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {
   Component,
   Injector,
@@ -13,9 +13,9 @@ import {createOverlayRef, OverlayContainer} from './index';
 describe('OverlayContainer', () => {
   let overlayContainer: OverlayContainer;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     overlayContainer = TestBed.inject(OverlayContainer);
-  }));
+  });
 
   it('should remove the overlay container element from the DOM on destruction', () => {
     const fixture = TestBed.createComponent(TestComponentWithTemplatePortals);

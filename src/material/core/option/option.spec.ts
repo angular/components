@@ -1,4 +1,4 @@
-import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
@@ -205,7 +205,7 @@ describe('MatOption component', () => {
   describe('inside inert group', () => {
     let fixture: ComponentFixture<InsideGroup>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
         providers: [
@@ -218,7 +218,7 @@ describe('MatOption component', () => {
 
       fixture = TestBed.createComponent(InsideGroup);
       fixture.detectChanges();
-    }));
+    });
 
     it('should remove all accessibility-related attributes from the group', () => {
       const group: HTMLElement = fixture.nativeElement.querySelector('mat-optgroup');

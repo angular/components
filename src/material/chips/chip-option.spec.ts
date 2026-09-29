@@ -5,7 +5,7 @@ import {
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '../core';
 import {
@@ -28,7 +28,7 @@ describe('Option Chips', () => {
 
   let hideSingleSelectionIndicator: boolean | undefined;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     globalRippleOptions = {};
     const defaultOptions: MatChipsDefaultOptions = {
       separatorKeyCodes: [ENTER, SPACE],
@@ -42,7 +42,7 @@ describe('Option Chips', () => {
         {provide: MAT_CHIPS_DEFAULT_OPTIONS, useFactory: () => defaultOptions},
       ],
     });
-  }));
+  });
 
   describe('MatChipOption', () => {
     let testComponent: SingleChip;

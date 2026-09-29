@@ -1,6 +1,6 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {
@@ -25,7 +25,7 @@ describe('MatRadio', () => {
     let radioInstances: MatRadioButton[];
     let testComponent: RadiosInsideRadioGroup;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(RadiosInsideRadioGroup);
       fixture.detectChanges();
 
@@ -47,7 +47,7 @@ describe('MatRadio', () => {
       radioFormFieldElements = radioDebugElements.map(
         debugEl => debugEl.query(By.css('.mdc-form-field'))!.nativeElement,
       );
-    }));
+    });
 
     it('should set individual radio names based on the group name', () => {
       expect(groupInstance.name).toBeTruthy();
@@ -997,15 +997,16 @@ describe('MatRadio', () => {
     let radioDebugElements: DebugElement[];
     let radioInstances: MatRadioButton[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(async () => {
       fixture = TestBed.createComponent(InterleavedRadioGroup);
       fixture.detectChanges();
+      await fixture.whenStable();
 
       groupDebugElement = fixture.debugElement.query(By.directive(MatRadioGroup))!;
       groupInstance = groupDebugElement.injector.get<MatRadioGroup>(MatRadioGroup);
       radioDebugElements = fixture.debugElement.queryAll(By.directive(MatRadioButton));
       radioInstances = radioDebugElements.map(debugEl => debugEl.componentInstance);
-    }));
+    });
 
     it('should initialize selection of radios based on model value', () => {
       expect(groupInstance.selected).toBe(radioInstances[2]);
@@ -1023,7 +1024,7 @@ describe('MatRadio', () => {
 
 describe('MatRadioDefaultOverrides', () => {
   describe('when MAT_RADIO_DEFAULT_OPTIONS overridden', () => {
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [
           {
@@ -1032,7 +1033,7 @@ describe('MatRadioDefaultOverrides', () => {
           },
         ],
       });
-    }));
+    });
     it('should override default color in Component', () => {
       const fixture: ComponentFixture<DefaultRadioButton> =
         TestBed.createComponent(DefaultRadioButton);
