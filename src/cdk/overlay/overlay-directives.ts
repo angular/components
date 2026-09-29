@@ -30,7 +30,7 @@ import {_getEventTarget} from '../platform';
 import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import {createOverlayRef, OVERLAY_DEFAULT_CONFIG} from './overlay';
-import {OverlayConfig} from './overlay-config';
+import {OverlayConfig, OverlayDisposeOnNavigation} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
 import {ConnectedOverlayPositionChange, ViewportMargin} from './position/connected-position';
 import {
@@ -124,7 +124,7 @@ export interface CdkConnectedOverlayConfig {
   flexibleDimensions?: boolean;
   growAfterOpen?: boolean;
   push?: boolean;
-  disposeOnNavigation?: boolean;
+  disposeOnNavigation?: OverlayDisposeOnNavigation;
   usePopover?: FlexibleOverlayPopoverLocation | null;
   matchWidth?: boolean;
 }
@@ -246,8 +246,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input({alias: 'cdkConnectedOverlayPush', transform: booleanAttribute}) push: boolean = false;
 
   /** Whether the overlay should be disposed of when the user goes backwards/forwards in history. */
-  @Input({alias: 'cdkConnectedOverlayDisposeOnNavigation', transform: booleanAttribute})
-  disposeOnNavigation: boolean = false;
+  @Input({
+    alias: 'cdkConnectedOverlayDisposeOnNavigation',
+    transform: (value: unknown): OverlayDisposeOnNavigation =>
+      value === 'url-change' || value === 'pop-state' ? value : booleanAttribute(value),
+  })
+  disposeOnNavigation: OverlayDisposeOnNavigation = false;
 
   /** Whether the connected overlay should be rendered inside a popover element or the overlay container. */
   @Input({alias: 'cdkConnectedOverlayUsePopover'})

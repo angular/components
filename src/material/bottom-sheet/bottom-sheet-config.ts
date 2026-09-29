@@ -8,7 +8,7 @@
 
 import {Binding, InjectionToken, Injector, ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
-import {ScrollStrategy} from '@angular/cdk/overlay';
+import {OverlayDisposeOnNavigation, ScrollStrategy} from '@angular/cdk/overlay';
 import {RestoreFocusValue} from '@angular/cdk/dialog';
 
 /** Options for where to set focus to automatically on dialog open */
@@ -58,12 +58,8 @@ export class MatBottomSheetConfig<D = any> {
    */
   ariaModal?: boolean = false;
 
-  /**
-   * Whether the bottom sheet should close when the user goes backwards/forwards in history.
-   * Note that this usually doesn't include clicking on links (unless the user is using
-   * the `HashLocationStrategy`).
-   */
-  closeOnNavigation?: boolean = true;
+  /** Whether the bottom sheet should be disposed of when the user navigates. */
+  closeOnNavigation?: OverlayDisposeOnNavigation = true;
 
   /**
    * Where the bottom sheet should focus on open.

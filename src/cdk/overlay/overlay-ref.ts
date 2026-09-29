@@ -18,7 +18,7 @@ import {
   signal,
   untracked,
 } from '@angular/core';
-import {Observable, Subject, Subscription, SubscriptionLike} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {Direction, Directionality} from '../bidi';
 import {coerceArray, coerceCssPixelValue} from '../coercion';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '../portal';
@@ -54,7 +54,7 @@ export class OverlayRef implements PortalOutlet {
   private readonly _detachments = new Subject<void>();
   private _positionStrategy: PositionStrategy | undefined;
   private _scrollStrategy: ScrollStrategy | undefined;
-  private _locationChanges: SubscriptionLike = Subscription.EMPTY;
+  private _locationChanges: (() => void) | undefined;
   private _backdropRef: BackdropRef | null = null;
   private _detachContentMutationObserver: MutationObserver | undefined;
   private _detachContentAfterRenderRef: AfterRenderRef | undefined;
@@ -194,8 +194,14 @@ export class OverlayRef implements PortalOutlet {
     // Track this overlay by the keyboard dispatcher
     this._keyboardDispatcher.add(this);
 
-    if (this._config.disposeOnNavigation) {
-      this._locationChanges = this._location.subscribe(() => this.dispose());
+    if (
+      this._config.disposeOnNavigation === true ||
+      this._config.disposeOnNavigation === 'pop-state'
+    ) {
+      const subscription = this._location.subscribe(() => this.dispose());
+      this._locationChanges = () => subscription.unsubscribe();
+    } else if (this._config.disposeOnNavigation === 'url-change') {
+      this._locationChanges = this._location.onUrlChange(() => this.dispose());
     }
 
     this._outsideClickDispatcher.add(this);
@@ -258,7 +264,7 @@ export class OverlayRef implements PortalOutlet {
     // Keeping the host element in the DOM can cause scroll jank, because it still gets
     // rendered, even though it's transparent and unclickable which is why we remove it.
     this._detachContentWhenEmpty();
-    this._locationChanges.unsubscribe();
+    this._locationChanges?.();
     this._outsideClickDispatcher.remove(this);
 
     untracked(() => {
@@ -282,7 +288,7 @@ export class OverlayRef implements PortalOutlet {
 
     this._disposeScrollStrategy();
     this._backdropRef?.dispose();
-    this._locationChanges.unsubscribe();
+    this._locationChanges?.();
     this._keyboardDispatcher.remove(this);
     this._portalOutlet.dispose();
     this._attachments.complete();
