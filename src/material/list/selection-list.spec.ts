@@ -13,7 +13,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import {ComponentFixture, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {ThemePalette} from '../core';
 import {By} from '@angular/platform-browser';
@@ -1339,8 +1339,11 @@ describe('MatSelectionList with forms', () => {
         .toBe(false);
     });
 
-    // TODO: this seems tricky to switch away from `fakeAsync` for some reason.
-    it('should remove a selected option from the value on destroy', fakeAsync(() => {
+    it('should remove a selected option from the value on destroy', async () => {
+      // Flush the initial `ngModel` value before the test starts so that it doesn't overwrite the
+      // selection further down.
+      await fixture.whenStable();
+
       listOptions[1].selected = true;
       listOptions[2].selected = true;
 
@@ -1350,10 +1353,10 @@ describe('MatSelectionList with forms', () => {
 
       fixture.componentInstance.options.pop();
       fixture.detectChanges();
-      tick();
+      await fixture.whenStable();
 
       expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
-    }));
+    });
 
     it('should update the model if an option got selected via the model', async () => {
       expect(fixture.componentInstance.selectedOptions).toEqual([]);
