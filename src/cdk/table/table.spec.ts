@@ -16,7 +16,7 @@ import {
   signal,
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable, combineLatest, of as observableOf} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
@@ -694,16 +694,19 @@ describe('CdkTable', () => {
     ).not.toThrow();
   });
 
-  it('should throw an error if a column definition is requested but not defined after render', fakeAsync(() => {
+  it('should throw an error if a column definition is requested but not defined after render', async () => {
     const columnDefinitionMissingAfterRenderFixture = TestBed.createComponent(
       MissingColumnDefAfterRenderCdkTableApp,
     );
-    expect(() => {
-      columnDefinitionMissingAfterRenderFixture.detectChanges();
-      flush();
-      columnDefinitionMissingAfterRenderFixture.detectChanges();
-    }).toThrowError(getTableUnknownColumnError('column_a').message);
-  }));
+    columnDefinitionMissingAfterRenderFixture.detectChanges();
+
+    // Wait for the `setTimeout` in the component to add the missing column.
+    await new Promise(resolve => setTimeout(resolve));
+
+    expect(() => columnDefinitionMissingAfterRenderFixture.detectChanges()).toThrowError(
+      getTableUnknownColumnError('column_a').message,
+    );
+  });
 
   it('should throw an error if the row definitions are missing', () => {
     expect(() =>
@@ -820,17 +823,21 @@ describe('CdkTable', () => {
       expect(updatedRows[2].classList).toContain('default-row');
     });
 
-    it('should error if there is row data that does not have a matching row template', fakeAsync(() => {
-      const whenRowWithoutDefaultFixture = TestBed.createComponent(
-        WhenRowWithoutDefaultCdkTableApp,
-      );
-      const data = whenRowWithoutDefaultFixture.componentInstance.dataSource.data;
-      expect(() => {
+    it('should error if there is row data that does not have a matching row template', async () => {
+      // The error is thrown inside a subscription so RxJS reports it asynchronously.
+      await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+        const whenRowWithoutDefaultFixture = TestBed.createComponent(
+          WhenRowWithoutDefaultCdkTableApp,
+        );
+        const data = whenRowWithoutDefaultFixture.componentInstance.dataSource.data;
         whenRowWithoutDefaultFixture.detectChanges();
-        flush();
-        fixture.detectChanges();
-      }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
-    }));
+        await new Promise(resolve => setTimeout(resolve));
+
+        expect(globalErrorSpy).toHaveBeenCalledWith(
+          new Error(getTableMissingMatchingRowDefError(data[0]).message),
+        );
+      });
+    });
 
     it('should fail when multiple rows match data without multiTemplateDataRows', () => {
       let whenFixture = TestBed.createComponent(WhenRowMultipleDefaultsCdkTableApp);

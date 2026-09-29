@@ -1,4 +1,3 @@
-import {fakeAsync, flush} from '@angular/core/testing';
 import {of as observableOf} from 'rxjs';
 import {NestedTreeControl} from './nested-tree-control';
 
@@ -114,19 +113,19 @@ describe('CdkNestedTreeControl', () => {
         .toBe(totalNumber);
     });
 
-    // Note that this needs to be `fakeAsync` in order to
-    // catch the error inside an observable correctly.
-    it('should handle null children', fakeAsync(() => {
-      const nodes = generateData(3, 2);
+    it('should handle null children', async () => {
+      // Errors inside an observable are reported asynchronously so we need to check for global ones.
+      await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+        const nodes = generateData(3, 2);
 
-      nodes[1].children = null!;
-      treeControl.dataNodes = nodes;
+        nodes[1].children = null!;
+        treeControl.dataNodes = nodes;
 
-      expect(() => {
-        treeControl.expandAll();
-        flush();
-      }).not.toThrow();
-    }));
+        expect(() => treeControl.expandAll()).not.toThrow();
+        await new Promise(resolve => setTimeout(resolve));
+        expect(globalErrorSpy).not.toHaveBeenCalled();
+      });
+    });
 
     describe('with children array', () => {
       let getStaticChildren = (node: TestData) => node.children;

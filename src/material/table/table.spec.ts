@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTable, MatTableDataSource, MatTableModule} from './index';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable} from 'rxjs';
@@ -187,15 +187,18 @@ describe('MatTable', () => {
     expect(stuckCellElement.classList).toContain('mat-mdc-table-sticky');
   });
 
-  // Note: needs to be fakeAsync so it catches the error.
-  it('should not throw when a row definition is on an ng-container', fakeAsync(() => {
-    const fixture = TestBed.createComponent(TableWithNgContainerRow);
+  it('should not throw when a row definition is on an ng-container', async () => {
+    // Some of the table's logic runs asynchronously so we need to check for global errors.
+    await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+      const fixture = TestBed.createComponent(TableWithNgContainerRow);
 
-    expect(() => {
-      fixture.detectChanges();
-      tick();
-    }).not.toThrow();
-  }));
+      expect(() => fixture.detectChanges()).not.toThrow();
+      await fixture.whenStable();
+      await new Promise(resolve => setTimeout(resolve));
+
+      expect(globalErrorSpy).not.toHaveBeenCalled();
+    });
+  });
 
   it('should be able to render a flexbox-based table', () => {
     expect(() => {
