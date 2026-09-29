@@ -13,7 +13,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Platform, _supportsShadowDom} from '../../platform';
 import {CdkScrollable, ViewportRuler} from '../../scrolling';
 import {
@@ -1096,19 +1096,19 @@ export function defineCommonDropListTests(config: {
         .toBe(sourceCanvas.toDataURL());
     });
 
-    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
-    it('should not throw when cloning an invalid canvas', fakeAsync(() => {
-      const fixture = createComponent(DraggableWithInvalidCanvasInDropZone);
-      fixture.detectChanges();
-      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+    it('should not throw when cloning an invalid canvas', async () => {
+      await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+        const fixture = createComponent(DraggableWithInvalidCanvasInDropZone);
+        fixture.detectChanges();
+        const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
-      expect(() => {
-        startDraggingViaMouse(fixture, item);
-        tick();
-      }).not.toThrow();
+        expect(() => startDraggingViaMouse(fixture, item)).not.toThrow();
+        await wait(0);
 
-      expect(document.querySelector('.cdk-drag-preview canvas')).toBeTruthy();
-    }));
+        expect(globalErrorSpy).not.toHaveBeenCalled();
+        expect(document.querySelector('.cdk-drag-preview canvas')).toBeTruthy();
+      });
+    });
 
     it('should clone the content of descendant input elements', () => {
       const fixture = createComponent(DraggableWithInputsInDropZone);
@@ -2340,29 +2340,32 @@ export function defineCommonDropListTests(config: {
       ]);
     });
 
-    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
-    it('should not throw if an item is removed after dragging has started', fakeAsync(() => {
-      const fixture = createComponent(DraggableInDropZone);
-      fixture.detectChanges();
-      const dragItems = fixture.componentInstance.dragItems;
-      const firstElement = dragItems.first.element.nativeElement;
-      const lastItemRect = dragItems.last.element.nativeElement.getBoundingClientRect();
-
-      // Start dragging.
-      startDraggingViaMouse(fixture, firstElement);
-
-      // Remove the last item.
-      fixture.componentInstance.items.pop();
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(() => {
-        // Move the dragged item over where the remove item would've been.
-        dispatchMouseEvent(document, 'mousemove', lastItemRect.left + 1, lastItemRect.top + 1);
+    it('should not throw if an item is removed after dragging has started', async () => {
+      await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+        const fixture = createComponent(DraggableInDropZone);
         fixture.detectChanges();
-        flush();
-      }).not.toThrow();
-    }));
+        const dragItems = fixture.componentInstance.dragItems;
+        const firstElement = dragItems.first.element.nativeElement;
+        const lastItemRect = dragItems.last.element.nativeElement.getBoundingClientRect();
+
+        // Start dragging.
+        startDraggingViaMouse(fixture, firstElement);
+
+        // Remove the last item.
+        fixture.componentInstance.items.pop();
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+
+        expect(() => {
+          // Move the dragged item over where the remove item would've been.
+          dispatchMouseEvent(document, 'mousemove', lastItemRect.left + 1, lastItemRect.top + 1);
+          fixture.detectChanges();
+        }).not.toThrow();
+        await wait(0);
+
+        expect(globalErrorSpy).not.toHaveBeenCalled();
+      });
+    });
 
     it('should not be able to start a drag sequence while another one is still active', async () => {
       const fixture = createComponent(DraggableInDropZone);
@@ -4703,33 +4706,43 @@ export function defineCommonDropListTests(config: {
         .toBe(targetContainer);
     });
 
-    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
-    it('should throw if the items are not inside of the alternate container', fakeAsync(() => {
-      const fixture = createComponent(DraggableWithInvalidAlternateContainer);
-      fixture.detectChanges();
+    it('should throw if the items are not inside of the alternate container', async () => {
+      await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+        const fixture = createComponent(DraggableWithInvalidAlternateContainer);
+        fixture.detectChanges();
 
-      expect(() => {
         const item = fixture.componentInstance.dragItems.first.element.nativeElement;
         startDraggingViaMouse(fixture, item);
-        tick();
-      }).toThrowError(
-        /Invalid DOM structure for drop list\. All items must be placed directly inside of the element container/,
-      );
-    }));
+        await wait(0);
 
-    // TODO(crisbeto): this one is using `fakeAsync` because we throw an error from a subscription.
-    it('should throw if the alternate container cannot be found', fakeAsync(() => {
-      const fixture = createComponent(DraggableWithMissingAlternateContainer);
-      fixture.detectChanges();
+        expect(globalErrorSpy).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            message: jasmine.stringMatching(
+              /Invalid DOM structure for drop list\. All items must be placed directly inside of the element container/,
+            ),
+          }),
+        );
+      });
+    });
 
-      expect(() => {
+    it('should throw if the alternate container cannot be found', async () => {
+      await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
+        const fixture = createComponent(DraggableWithMissingAlternateContainer);
+        fixture.detectChanges();
+
         const item = fixture.componentInstance.dragItems.first.element.nativeElement;
         startDraggingViaMouse(fixture, item);
-        tick();
-      }).toThrowError(
-        /CdkDropList could not find an element container matching the selector "does-not-exist"/,
-      );
-    }));
+        await wait(0);
+
+        expect(globalErrorSpy).toHaveBeenCalledWith(
+          jasmine.objectContaining({
+            message: jasmine.stringMatching(
+              /CdkDropList could not find an element container matching the selector "does-not-exist"/,
+            ),
+          }),
+        );
+      });
+    });
   });
 
   describe('with an anchor', () => {
