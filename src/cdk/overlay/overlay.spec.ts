@@ -13,6 +13,8 @@ import {
   WritableSignal,
   inject,
   signal,
+  computed,
+  effect,
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -30,7 +32,7 @@ import {
   ScrollStrategy,
   createOverlayRef,
 } from './index';
-import {getAttachedOverlays} from './overlay-ref';
+import {attachedOverlays} from './overlay-ref';
 
 describe('Overlay', () => {
   let injector: Injector;
@@ -479,26 +481,150 @@ describe('Overlay', () => {
     expect(document.querySelector('.cdk-overlay-pane')).toBeFalsy();
   });
 
-  it('should track when an overlay is attached and detached', () => {
-    const overlayRef = createOverlayRef(injector);
-    expect(getAttachedOverlays()).toEqual([]);
+  describe('attachedOverlays signal', () => {
+    it('should track when an overlay is attached and detached', () => {
+      const overlayRef = createOverlayRef(injector);
+      expect(attachedOverlays()).toEqual([]);
 
-    overlayRef.attach(componentPortal);
-    expect(getAttachedOverlays()).toEqual([overlayRef]);
+      overlayRef.attach(componentPortal);
+      expect(attachedOverlays()).toEqual([overlayRef]);
 
-    overlayRef.detach();
-    expect(getAttachedOverlays()).toEqual([]);
-  });
+      overlayRef.detach();
+      expect(attachedOverlays()).toEqual([]);
+    });
 
-  it('should track when an overlay is attached and disposed', () => {
-    const overlayRef = createOverlayRef(injector);
-    expect(getAttachedOverlays()).toEqual([]);
+    it('should track when an overlay is attached and disposed', () => {
+      const overlayRef = createOverlayRef(injector);
+      expect(attachedOverlays()).toEqual([]);
 
-    overlayRef.attach(componentPortal);
-    expect(getAttachedOverlays()).toEqual([overlayRef]);
+      overlayRef.attach(componentPortal);
+      expect(attachedOverlays()).toEqual([overlayRef]);
 
-    overlayRef.dispose();
-    expect(getAttachedOverlays()).toEqual([]);
+      overlayRef.dispose();
+      expect(attachedOverlays()).toEqual([]);
+    });
+
+    it('should update computed signals derived from the attached overlays', () => {
+      const count = computed(() => attachedOverlays().length);
+      const first = createOverlayRef(injector);
+      const second = createOverlayRef(injector);
+      expect(count()).toBe(0);
+
+      first.attach(componentPortal);
+      expect(count()).toBe(1);
+
+      second.attach(templatePortal);
+      expect(count()).toBe(2);
+
+      first.detach();
+      expect(count()).toBe(1);
+
+      second.dispose();
+      expect(count()).toBe(0);
+    });
+
+    it('should preserve the attachment order', () => {
+      const first = createOverlayRef(injector);
+      const second = createOverlayRef(injector);
+
+      first.attach(componentPortal);
+      second.attach(templatePortal);
+      expect(attachedOverlays()).toEqual([first, second]);
+
+      first.detach();
+      first.attach(componentPortal);
+      expect(attachedOverlays()).toEqual([second, first]);
+
+      first.dispose();
+      second.dispose();
+    });
+
+    it('should re-run effects when overlays are attached and detached', () => {
+      const spy = jasmine.createSpy('effect spy');
+      const effectRef = effect(() => spy(attachedOverlays()), {injector});
+      const overlayRef = createOverlayRef(injector);
+
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith([]);
+
+      overlayRef.attach(componentPortal);
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenCalledWith([overlayRef]);
+
+      overlayRef.detach();
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(3);
+      expect(spy).toHaveBeenCalledWith([]);
+
+      overlayRef.attach(componentPortal);
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(4);
+      expect(spy).toHaveBeenCalledWith([overlayRef]);
+
+      overlayRef.dispose();
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(5);
+      expect(spy).toHaveBeenCalledWith([]);
+
+      effectRef.destroy();
+    });
+
+    it('should not throw when attaching and detaching inside a computed', () => {
+      const overlayRef = createOverlayRef(injector);
+      const trigger = signal(false);
+      const attached = computed(() => {
+        if (trigger()) {
+          overlayRef.attach(componentPortal);
+        } else {
+          overlayRef.detach();
+        }
+        return overlayRef.hasAttached();
+      });
+
+      expect(() => attached()).not.toThrow();
+      expect(attached()).toBe(false);
+
+      trigger.set(true);
+      expect(() => attached()).not.toThrow();
+      expect(attached()).toBe(true);
+      expect(attachedOverlays()).toEqual([overlayRef]);
+
+      trigger.set(false);
+      expect(() => attached()).not.toThrow();
+      expect(attached()).toBe(false);
+      expect(attachedOverlays()).toEqual([]);
+    });
+
+    it('should not make effects that attach overlays depend on the attached overlays', () => {
+      const spy = jasmine.createSpy('effect spy');
+      const overlayRef = createOverlayRef(injector);
+      const otherOverlayRef = createOverlayRef(injector);
+
+      const effectRef = effect(
+        () => {
+          spy();
+          overlayRef.attach(componentPortal);
+        },
+        {injector},
+      );
+
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(attachedOverlays()).toEqual([overlayRef]);
+
+      // Changing the attached overlays shouldn't cause the effect to re-run,
+      // because the write inside `attach` is untracked.
+      otherOverlayRef.attach(templatePortal);
+      TestBed.tick();
+      otherOverlayRef.dispose();
+      TestBed.tick();
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      effectRef.destroy();
+      overlayRef.dispose();
+    });
   });
 
   describe('positioning', () => {
