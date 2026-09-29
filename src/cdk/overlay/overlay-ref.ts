@@ -15,6 +15,8 @@ import {
   NgZone,
   Renderer2,
   afterNextRender,
+  signal,
+  untracked,
 } from '@angular/core';
 import {Observable, Subject, Subscription, SubscriptionLike} from 'rxjs';
 import {Direction, Directionality} from '../bidi';
@@ -37,12 +39,10 @@ export function isElement(value: any): value is Element {
   return value && (value as Element).nodeType === 1;
 }
 
-const attachedOverlays = new Set<OverlayRef>();
+const attachedOverlaysInternal = signal<readonly OverlayRef[]>([]);
 
-/** Gets all overlays that are currently attached. */
-export function getAttachedOverlays(): OverlayRef[] {
-  return Array.from(attachedOverlays);
-}
+/** Tracks all currently-attached overlays. */
+export const attachedOverlays = attachedOverlaysInternal.asReadonly();
 
 /**
  * Reference to an overlay that has been created with the Overlay service.
@@ -149,7 +149,11 @@ export class OverlayRef implements PortalOutlet {
     this._updateStackingOrder();
     this._updateElementSize();
     this._updateElementDirection();
-    attachedOverlays.add(this);
+
+    // Needs to be untracked in case an overlay is opened as a part of template rendering.
+    untracked(() => {
+      attachedOverlaysInternal.update(prev => (prev.includes(this) ? prev : [...prev, this]));
+    });
 
     if (this._scrollStrategy) {
       this._scrollStrategy.enable();
@@ -256,7 +260,11 @@ export class OverlayRef implements PortalOutlet {
     this._detachContentWhenEmpty();
     this._locationChanges.unsubscribe();
     this._outsideClickDispatcher.remove(this);
-    attachedOverlays.delete(this);
+
+    untracked(() => {
+      attachedOverlaysInternal.update(prev => prev.filter(o => o !== this));
+    });
+
     return detachmentResult;
   }
 
@@ -293,7 +301,10 @@ export class OverlayRef implements PortalOutlet {
     this._detachments.complete();
     this._completeDetachContent();
     this._disposed = true;
-    attachedOverlays.delete(this);
+
+    untracked(() => {
+      attachedOverlaysInternal.update(prev => prev.filter(o => o !== this));
+    });
   }
 
   /** Whether the overlay has attached content. */
