@@ -44,6 +44,7 @@
       {"name": ["CommonModule"], "message": "Import the necessary symbols directly instead."},
       {"name": ["*", "compileComponents"], "message": "`compileComponents` is not necessary."},
       {"name": ["*", "hasOwnProperty"], "message": "Use `Object.hasOwn` instead."},
+      {"name": ["waitForAsync"], "message": "`waitForAsync is no longer necessary`."},
       {
         "name": ["isDevMode"],
         "message": "Use `typeof ngDevMode === 'undefined' || ngDevMode` instead"
