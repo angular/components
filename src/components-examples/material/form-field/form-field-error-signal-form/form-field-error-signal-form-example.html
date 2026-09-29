@@ -1,0 +1,9 @@
+<div class="example-container">
+  <mat-form-field>
+    <mat-label>Enter your email</mat-label>
+    <input matInput placeholder="pat@example.com" [formField]="email" />
+    @for (error of email().errors(); track error) {
+      <mat-error>{{ error.message }}</mat-error>
+    }
+  </mat-form-field>
+</div>

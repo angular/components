@@ -5,7 +5,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {merge} from 'rxjs';
 
-/** @title Form field with error messages */
+/** @title Form field with error messages (reactive forms) */
 @Component({
   selector: 'form-field-error-example',
   templateUrl: 'form-field-error-example.html',
