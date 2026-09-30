@@ -1,3 +1,17 @@
+<a name="22.2.1"></a>
+# 22.2.1 "tellurium-telescope" (2026-09-30)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1a434cdc8](https://github.com/angular/components/commit/1a434cdc8adebd0f07af446e38edb2e56e25bfe6) | fix | **overlay:** allow users to opt into closing on any URL change ([#33893](https://github.com/angular/components/pull/33893)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [e06c8deed](https://github.com/angular/components/commit/e06c8deed898c85ad2e9f522d41f523faeb712c9) | fix | **icon:** keep FuncIRI references on current origin ([#33812](https://github.com/angular/components/pull/33812)) |
+| [a7a31a674](https://github.com/angular/components/commit/a7a31a674eebc8f288e4ada2e0954200e7e73c4d) | fix | **select:** glitchy animation when legacy animations are enabled ([#33874](https://github.com/angular/components/pull/33874)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.0"></a>
 # 22.2.0 "rubidium-rollercoaster" (2026-09-23)
 ### aria
