@@ -340,8 +340,8 @@ importers:
         specifier: ^11.0.0
         version: 11.0.4
       '@types/jasmine':
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^7.0.0
+        version: 7.0.0
       '@types/luxon':
         specifier: ^3.0.0
         version: 3.7.5
@@ -587,8 +587,8 @@ importers:
         specifier: ^1.12.1
         version: 1.28.1
       '@types/jasmine':
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^7.0.0
+        version: 7.0.0
       '@types/node':
         specifier: ^22.14.1
         version: 22.20.4
@@ -3831,6 +3831,9 @@ packages:
 
   '@types/jasmine@6.0.0':
     resolution: {integrity: sha512-18lgGsLmEh3VJk9eZ5wAjTISxdqzl6YOwu8UdMpolajN57QOCNbl+AbHUd+Yu9ItrsFdB+c8LSZSGNg8nHaguw==}
+
+  '@types/jasmine@7.0.0':
+    resolution: {integrity: sha512-6yNx9BsBSKiXO2yqLXs/GZDuD58Gkn6Ty26254FFOuw6B4XU5Xq8mAR0xFy8zHgAhqQd++y41fSJ8BdwrWXhqQ==}
 
   '@types/jsesc@2.5.1':
     resolution: {integrity: sha512-9VN+6yxLOPLOav+7PwjZbxiID2bVaeq0ED4qSQmdQTdjnXJSaCVKTR58t15oqH1H5t8Ng2ZX1SabJVoN9Q34bw==}
@@ -13227,6 +13230,8 @@ snapshots:
   '@types/http-errors@2.0.5': {}
 
   '@types/jasmine@6.0.0': {}
+
+  '@types/jasmine@7.0.0': {}
 
   '@types/jsesc@2.5.1': {}
 

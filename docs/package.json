@@ -59,7 +59,7 @@
     "@angular/cli": "catalog:",
     "@angular/compiler-cli": "catalog:",
     "@bazel/bazelisk": "^1.12.1",
-    "@types/jasmine": "^6.0.0",
+    "@types/jasmine": "^7.0.0",
     "@types/node": "^22.14.1",
     "@types/selenium-webdriver": "^3.0.17",
     "@types/shelljs": "0.10.0",
