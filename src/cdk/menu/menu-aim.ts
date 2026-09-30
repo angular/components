@@ -130,6 +130,12 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
 
   ngOnDestroy() {
     this._cleanupMousemove?.();
+
+    if (this._timeoutId !== null) {
+      clearTimeout(this._timeoutId);
+      this._timeoutId = null;
+    }
+
     this._destroyed.next();
     this._destroyed.complete();
   }
