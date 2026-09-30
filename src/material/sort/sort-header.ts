@@ -65,7 +65,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _focusMonitor = inject(FocusMonitor);
   private _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-  private _ariaDescriber = inject(AriaDescriber, {optional: true});
+  private _ariaDescriber = inject(AriaDescriber);
   private _renderChanges: Subscription | undefined;
   protected _animationsDisabled = _animationsDisabled();
 
@@ -165,7 +165,7 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     this._renderChanges?.unsubscribe();
 
     if (this._sortButton) {
-      this._ariaDescriber?.removeDescription(this._sortButton, this._sortActionDescription);
+      this._ariaDescriber.removeDescription(this._sortButton, this._sortActionDescription);
     }
   }
 
@@ -226,9 +226,8 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     // nothing to update in the DOM.
     if (this._sortButton) {
       // removeDescription will no-op if there is no existing message.
-      // TODO(jelbourn): remove optional chaining when AriaDescriber is required.
-      this._ariaDescriber?.removeDescription(this._sortButton, this._sortActionDescription);
-      this._ariaDescriber?.describe(this._sortButton, newDescription);
+      this._ariaDescriber.removeDescription(this._sortButton, this._sortActionDescription);
+      this._ariaDescriber.describe(this._sortButton, newDescription);
     }
 
     this._sortActionDescription = newDescription;
