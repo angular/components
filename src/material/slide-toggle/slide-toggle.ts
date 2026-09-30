@@ -225,16 +225,9 @@ export class MatSlideToggle
         this._focused = true;
         this._changeDetectorRef.markForCheck();
       } else if (!focusOrigin) {
-        // When a focused element becomes disabled, the browser *immediately* fires a blur event.
-        // Angular does not expect events to be raised during change detection, so any state
-        // change (such as a form control's ng-touched) will cause a changed-after-checked error.
-        // See https://github.com/angular/angular/issues/17793. To work around this, we defer
-        // telling the form control it has been touched until the next tick.
-        Promise.resolve().then(() => {
-          this._focused = false;
-          this._onTouched();
-          this._changeDetectorRef.markForCheck();
-        });
+        this._focused = false;
+        this._onTouched();
+        this._changeDetectorRef.markForCheck();
       }
     });
   }
