@@ -211,6 +211,9 @@ export class DropListRef<T = any> {
   /** Direction of the list's layout. */
   private _direction: Direction = 'ltr';
 
+  /** Dev mode only. Watches for DOM changes made by the consumer while an item is being dragged. */
+  private _childrenObserver: MutationObserver | undefined;
+
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
     private _dragDropRegistry: DragDropRegistry,
@@ -241,6 +244,11 @@ export class DropListRef<T = any> {
     this._scrollNode = null!;
     this._parentPositions.clear();
     this._dragDropRegistry.removeDropContainer(this);
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      this._childrenObserver?.disconnect();
+      this._childrenObserver = undefined;
+    }
   }
 
   /** Whether an item from this list is currently being dragged. */
@@ -617,6 +625,11 @@ export class DropListRef<T = any> {
     this._initialScrollSnap = styles.msScrollSnapType || styles.scrollSnapType || '';
     styles.scrollSnapType = styles.msScrollSnapType = 'none';
     this._sortStrategy.start(this._draggables);
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      this._childrenObserver = observeChildrenChangedWhileDragging(this._container, this._ngZone);
+    }
+
     this._cacheParentPositions();
     this._viewportScrollSubscription.unsubscribe();
     this._listenToScrollEvents();
@@ -634,6 +647,12 @@ export class DropListRef<T = any> {
   /** Resets the container to its initial state. */
   private _reset() {
     this._isDragging = false;
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      this._childrenObserver?.disconnect();
+      this._childrenObserver = undefined;
+    }
+
     const styles = this._container.style as DragCSSStyleDeclaration;
     styles.scrollSnapType = styles.msScrollSnapType = this._initialScrollSnap;
 
@@ -899,4 +918,53 @@ function getElementScrollDirections(
   }
 
   return [verticalScrollDirection, horizontalScrollDirection];
+}
+
+/**
+ * Dev mode only. The dragged element is moved out of the list for the duration of the drag, which
+ * means that a framework rendering the list can end up inserting a node next to an element that is
+ * no longer there. The resulting error points at the renderer instead of the code that changed the
+ * list, so warn about it while we still know what happened.
+ * @param container Element whose children should be watched.
+ * @param ngZone Zone in which the observer should be set up.
+ * @returns The observer, if the browser supports it.
+ */
+function observeChildrenChangedWhileDragging(
+  container: HTMLElement,
+  ngZone: NgZone,
+): MutationObserver | undefined {
+  if (typeof MutationObserver === 'undefined') {
+    return undefined;
+  }
+
+  const initialNodes = new Set<Node>(container.childNodes);
+
+  // The CDK moves its own nodes in and out of the list while dragging: comment markers, which
+  // are not elements, and the elements it flags with these classes.
+  const isConsumerNode = (node: Node) =>
+    node instanceof Element &&
+    !node.matches('.cdk-drag-placeholder, .cdk-drag-preview, .cdk-drag-anchor');
+
+  const isConsumerChange = (record: MutationRecord) =>
+    [...record.addedNodes].some(node => isConsumerNode(node) && !initialNodes.has(node)) ||
+    [...record.removedNodes].some(node => isConsumerNode(node) && initialNodes.has(node));
+
+  // Set up outside of the zone so that the callback doesn't trigger change detection.
+  return ngZone.runOutsideAngular(() => {
+    const observer = new MutationObserver(records => {
+      if (records.some(isConsumerChange)) {
+        // Warn only once per drag sequence.
+        observer.disconnect();
+        console.warn(
+          'CdkDropList: items were added to or removed from the list while an item was being ' +
+            'dragged. The dragged element is moved out of the list for the duration of the drag, ' +
+            'so changing the list at this point can leave the DOM out of sync with the framework ' +
+            'rendering it and throw. Change the list once the drag has ended instead.',
+        );
+      }
+    });
+
+    observer.observe(container, {childList: true});
+    return observer;
+  });
 }

@@ -17,7 +17,8 @@ import {
   assertEndToStartSorting,
   defineCommonDropListTests,
 } from './drop-list-shared.spec';
-import {createComponent, dragElementViaMouse} from './test-utils.spec';
+import {dispatchMouseEvent} from '../../testing/private';
+import {createComponent, dragElementViaMouse, startDraggingViaMouse, wait} from './test-utils.spec';
 
 describe('mixed drop list', () => {
   defineCommonDropListTests({
@@ -92,6 +93,36 @@ describe('mixed drop list', () => {
       getSortedSiblings,
       fixture.componentInstance.dragItems.map(item => item.element.nativeElement),
     );
+  });
+
+  it('should warn if the list is changed while an item is being dragged', async () => {
+    const fixture = createComponent(DraggableInHorizontalWrappingDropZone);
+    fixture.detectChanges();
+    const instance = fixture.componentInstance;
+    const dragItems = instance.dragItems;
+    const firstItem = dragItems.first;
+    const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+    spyOn(console, 'warn');
+    startDraggingViaMouse(fixture, firstItem.element.nativeElement);
+    dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+    fixture.detectChanges();
+
+    expect(console.warn).not.toHaveBeenCalled();
+
+    // Something outside of the drag sequence adds an item while the drag is still in progress.
+    instance.items = [...instance.items, 'New'];
+    fixture.componentRef.changeDetectorRef.markForCheck();
+    fixture.detectChanges(false);
+    await wait(0);
+
+    expect(console.warn).toHaveBeenCalledWith(
+      jasmine.stringContaining('items were added to or removed from the list'),
+    );
+
+    dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+    fixture.detectChanges();
+    await fixture.whenStable();
   });
 
   it('should move the placeholder as an item is being sorted to the left in a wrapping drop zone', async () => {
