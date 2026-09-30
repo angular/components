@@ -31,7 +31,7 @@ import {DragRef, Point, PreviewContainer} from '../drag-ref';
 import {moveItemInArray} from '../drag-utils';
 
 import {provideFakeDirectionality} from '@angular/cdk/testing/private/fake-directionality';
-import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
+import {NgFor, NgTemplateOutlet} from '@angular/common';
 import {CDK_DRAG_CONFIG, DragAxis, DragDropConfig, DropListOrientation} from './config';
 import {CdkDrag} from './drag';
 import {CdkDragPlaceholder} from './drag-placeholder';
@@ -5310,8 +5310,6 @@ class DraggableInScrollableParentContainer extends DraggableInDropZone implement
 })
 class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
 
-// TODO(crisbeto): `*ngIf` here can be removed after updating to a version of Angular that includes
-// https://github.com/angular/angular/pull/52515
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;" [cdkDropListLockAxis]="dropLockAxis()!">
@@ -5325,18 +5323,18 @@ class DraggableInDropZoneWithContainer extends DraggableInDropZone {}
           style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
             {{item.label}}
 
-            <ng-container *ngIf="renderCustomPreview">
+            @if (renderCustomPreview) {
               <ng-template cdkDragPreview [matchSize]="matchPreviewSize">
                 <div
                   class="custom-preview"
                   style="width: 50px; height: 50px; background: purple;">Custom preview</div>
               </ng-template>
-            </ng-container>
+            }
         </div>
       }
     </div>
   `,
-  imports: [CdkDropList, CdkDrag, CdkDragPreview, NgIf],
+  imports: [CdkDropList, CdkDrag, CdkDragPreview],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class DraggableInDropZoneWithCustomPreview {
