@@ -1,3 +1,9 @@
+<a name="22.3.0-next.0"></a>
+# 22.3.0-next.0 "tellurium-teleprompter" (2026-09-30)
+No user facing changes in this release
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.1"></a>
 # 22.2.1 "tellurium-telescope" (2026-09-30)
 ### cdk
