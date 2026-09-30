@@ -226,6 +226,14 @@ export class DragDropRegistry implements OnDestroy {
   }
 
   /**
+   * Runs any cleanup that the registered drop containers deferred after an item was dropped.
+   * @docs-private
+   */
+  _flushDropCleanup() {
+    this._dropInstances.forEach(instance => instance._flushDropCleanup());
+  }
+
+  /**
    * Gets a stream that will emit when any element on the page is scrolled while an item is being
    * dragged.
    * @param shadowRoot Optional shadow root that the current dragging sequence started from.

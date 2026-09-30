@@ -98,6 +98,14 @@ export class DropListRef<T = any> {
   hasAnchor: boolean = false;
 
   /**
+   * Whether cleaning up after an item has been dropped into the list should be deferred until
+   * `_flushDropCleanup` is called. Allows the cleanup to be synchronized with the rendering of the
+   * new order of the items so that the old order doesn't flash in between.
+   * @docs-private
+   */
+  _deferDropCleanup: boolean = false;
+
+  /**
    * Function that is used to determine whether an item
    * is allowed to be moved into a drop container.
    */
@@ -211,6 +219,9 @@ export class DropListRef<T = any> {
   /** Direction of the list's layout. */
   private _direction: Direction = 'ltr';
 
+  /** Cleanup functions that are waiting to be run after an item was dropped into the list. */
+  private _pendingDropCleanup: (() => void)[] = [];
+
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
     private _dragDropRegistry: DragDropRegistry,
@@ -227,6 +238,7 @@ export class DropListRef<T = any> {
 
   /** Removes the drop list functionality from the DOM element. */
   dispose() {
+    this._flushDropCleanup();
     this._stopScrolling();
     this._stopScrollTimers.complete();
     this._viewportScrollSubscription.unsubscribe();
@@ -312,7 +324,7 @@ export class DropListRef<T = any> {
     dropPoint: Point,
     event: MouseEvent | TouchEvent,
   ): void {
-    this._reset();
+    this._reset(true);
     this.dropped.next({
       item,
       currentIndex,
@@ -590,8 +602,37 @@ export class DropListRef<T = any> {
     this._stopScrollTimers.next();
   }
 
+  /**
+   * Runs a function that cleans up after an item was dropped into the list. The function will be
+   * called immediately, unless the cleanup is deferred through `_deferDropCleanup`.
+   * @docs-private
+   */
+  _scheduleDropCleanup(cleanup: () => void): void {
+    if (this._deferDropCleanup) {
+      this._pendingDropCleanup.push(cleanup);
+    } else {
+      cleanup();
+    }
+  }
+
+  /**
+   * Runs any cleanup that was deferred after an item was dropped into the list.
+   * @docs-private
+   */
+  _flushDropCleanup(): void {
+    const pending = this._pendingDropCleanup;
+
+    if (pending.length > 0) {
+      this._pendingDropCleanup = [];
+      pending.forEach(cleanup => cleanup());
+    }
+  }
+
   /** Starts the dragging sequence within the list. */
   private _draggingStarted() {
+    // Anything left over from a previous drop would throw off the measurements below.
+    this._flushDropCleanup();
+
     const styles = this._container.style as DragCSSStyleDeclaration;
     this.beforeStarted.next();
     this._isDragging = true;
@@ -631,14 +672,26 @@ export class DropListRef<T = any> {
     this._domRect = this._parentPositions.positions.get(this._container)!.clientRect!;
   }
 
-  /** Resets the container to its initial state. */
-  private _reset() {
+  /**
+   * Resets the container to its initial state.
+   * @param isDrop Whether the container is being reset because an item was dropped into it.
+   */
+  private _reset(isDrop = false) {
     this._isDragging = false;
     const styles = this._container.style as DragCSSStyleDeclaration;
     styles.scrollSnapType = styles.msScrollSnapType = this._initialScrollSnap;
 
     this._siblings.forEach(sibling => sibling._stopReceiving(this));
-    this._sortStrategy.reset();
+
+    if (isDrop) {
+      // The sort strategy is what shows the items in their new positions while dragging.
+      // Reset it together with the rest of the drag artifacts once the item is dropped.
+      const sortStrategy = this._sortStrategy;
+      this._scheduleDropCleanup(() => sortStrategy.reset());
+    } else {
+      this._sortStrategy.reset();
+    }
+
     this._stopScrolling();
     this._viewportScrollSubscription.unsubscribe();
     this._parentPositions.clear();
