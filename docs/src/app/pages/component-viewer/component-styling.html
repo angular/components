@@ -1,7 +1,7 @@
-@let item = docItem | async;
-@let data = dataStream | async;
-@let example = exampleStream | async;
-@let hasData = hasDataStream | async;
+@let item = docItem();
+@let data = tokenData();
+@let exampleHtml = example();
+@let hasData = hasTokens();
 
 @if (!item || !data) {
   Loading...
@@ -15,11 +15,11 @@
   } @else {
     the @for (current of data.themes; track current.name) {{{$last ? ' and ' : ($first ? '' : ', ')}}<code>{{current.overridesMixin}}</code>} mixins.
   }
-  {{data.themes.length === 1 ? 'This mixin accepts' : 'These mixins accept'}} a set of tokens that control how the components will look, either for the entire app or under a specific selector. {{example ? 'For example:' : ''}}
+  {{data.themes.length === 1 ? 'This mixin accepts' : 'These mixins accept'}} a set of tokens that control how the components will look, either for the entire app or under a specific selector. {{exampleHtml ? 'For example:' : ''}}
 
-  @if (example) {
+  @if (exampleHtml) {
     <div class="docs-markdown">
-      <pre [innerHTML]="example"></pre>
+      <pre [innerHTML]="exampleHtml"></pre>
     </div>
   }
 
