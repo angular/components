@@ -1,5 +1,6 @@
 export {SelectCustomTriggerExample} from './select-custom-trigger/select-custom-trigger-example';
 export {SelectDisabledExample} from './select-disabled/select-disabled-example';
+export {SelectDisabledSignalFormExample} from './select-disabled-signal-form/select-disabled-signal-form-example';
 export {SelectErrorStateMatcherExample} from './select-error-state-matcher/select-error-state-matcher-example';
 export {SelectFormExample} from './select-form/select-form-example';
 export {SelectFormSignalFormExample} from './select-form-signal-form/select-form-signal-form-example';

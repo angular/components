@@ -58,11 +58,17 @@ In some cases that `<mat-form-field>` may use the placeholder as the label (see 
 
 It is possible to disable the entire select or individual options in the select by using the
 disabled property on the `<select>` or `<mat-select>` and the `<option>` or `<mat-option>` elements respectively.
+
+For signal forms, the [`disabled`](https://angular.dev/api/forms/signals/disabled) rule sets the 
+disabled behavior of the `<select>` or `<mat-select>`, and the disabled property should not be bound 
+to the selects in the template. However, individual `<option>` or `<mat-option>` elements can be 
+bound as disabled in the template.
+
 When working with Reactive Forms, the select component can be disabled/enabled via form controls.
 This can be accomplished by creating a `FormControl` with the disabled property
 `FormControl({value: '', disabled: true})` or using `FormControl.enable()`, `FormControl.disable()`.
 
-<!-- example(select-disabled) -->
+<!-- example(select-disabled-signal-form) -->
 
 ### Resetting the select value
 
