@@ -17,6 +17,10 @@ $mat-dialog-container-max-height: 95vh !default;
 
 $fallbacks: m3-dialog.get-tokens();
 
+.mat-mdc-dialog-backdrop {
+  background-color: token-utils.slot(dialog-scrim-color, $fallbacks);
+}
+
 // Note that we disable fallback declarations, but we don't disable fallback
 // values, because there are a lot of internal apps that don't include a proper
 // theme in their tests.
@@ -260,4 +264,3 @@ $fallbacks: m3-dialog.get-tokens();
 .mat-mdc-dialog-component-host {
   display: contents;
 }
-
