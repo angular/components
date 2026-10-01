@@ -94,7 +94,7 @@
     "@schematics/angular": "catalog:",
     "@types/babel__core": "^7.20.5",
     "@types/fs-extra": "^11.0.0",
-    "@types/jasmine": "^6.0.0",
+    "@types/jasmine": "^7.0.0",
     "@types/luxon": "^3.0.0",
     "@types/node": "^22.14.1",
     "@types/selenium-webdriver": "^3.0.17",
