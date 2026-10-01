@@ -1,11 +1,12 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {Component, inject, signal} from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Component, inject} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {MatListModule} from '@angular/material/list';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import {map} from 'rxjs/operators';
 
 /** @title Responsive sidenav */
 @Component({
@@ -27,16 +28,12 @@ export class SidenavResponsiveExample {
        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   );
 
-  protected readonly isMobile = signal(true);
-
-  constructor() {
-    const breakpointObserver = inject(BreakpointObserver);
-
-    breakpointObserver
+  protected readonly isMobile = toSignal(
+    inject(BreakpointObserver)
       .observe('(max-width: 600px)')
-      .pipe(takeUntilDestroyed())
-      .subscribe(result => this.isMobile.set(result.matches));
-  }
+      .pipe(map(result => result.matches)),
+    {requireSync: true},
+  );
 
   protected readonly shouldRun = /(^|.)(stackblitz|webcontainer).(io|com)$/.test(
     window.location.host,
