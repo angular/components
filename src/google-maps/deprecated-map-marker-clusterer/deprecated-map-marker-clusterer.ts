@@ -215,33 +215,35 @@ export class DeprecatedMapMarkerClusterer
     new EventEmitter<MarkerClustererInstance>();
 
   ngOnInit() {
-    if (this._canInitialize) {
-      this._ngZone.runOutsideAngular(() => {
-        this._googleMap._resolveMap().then(map => {
-          if (
-            typeof MarkerClusterer !== 'function' &&
-            (typeof ngDevMode === 'undefined' || ngDevMode)
-          ) {
-            throw Error(
+    if (!this._canInitialize) {
+      return;
+    }
+
+    this._ngZone.runOutsideAngular(() => {
+      this._googleMap._resolveMap().then(map => {
+        if (typeof MarkerClusterer !== 'function') {
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            console.error(
               'MarkerClusterer class not found, cannot construct a marker cluster. ' +
                 'Please install the MarkerClustererPlus library: ' +
                 'https://github.com/googlemaps/js-markerclustererplus',
             );
           }
+          return;
+        }
 
-          // Create the object outside the zone so its events don't trigger change detection.
-          // We'll bring it back in inside the `MapEventManager` only for the events that the
-          // user has subscribed to.
-          this.markerClusterer = this._ngZone.runOutsideAngular(() => {
-            return new MarkerClusterer(map, [], this._combineOptions());
-          });
-
-          this._assertInitialized();
-          this._eventManager.setTarget(this.markerClusterer);
-          this.markerClustererInitialized.emit(this.markerClusterer);
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this.markerClusterer = this._ngZone.runOutsideAngular(() => {
+          return new MarkerClusterer(map, [], this._combineOptions());
         });
+
+        this._assertInitialized();
+        this._eventManager.setTarget(this.markerClusterer);
+        this.markerClustererInitialized.emit(this.markerClusterer);
       });
-    }
+    });
   }
 
   ngAfterContentInit() {
