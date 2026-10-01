@@ -1,5 +1,5 @@
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import type {MarkerClusterer, Renderer, Algorithm} from './map-marker-clusterer-types';
 
 import {DEFAULT_OPTIONS} from '../google-map/google-map';
@@ -46,19 +46,23 @@ describe('MapMarkerClusterer', () => {
     (window as any).markerClusterer = undefined;
   });
 
-  // We can't test this easily without `fakeAsync`.
-  it('throws an error if the clustering library has not been loaded', fakeAsync(() => {
+  it('throws an error if the clustering library has not been loaded', async () => {
+    const spy = spyOn(console, 'error');
     (window as any).markerClusterer = undefined;
     markerClustererConstructorSpy = createMarkerClustererConstructorSpy(
       markerClustererSpy,
       false,
     ).and.callThrough();
 
-    expect(() => {
-      fixture.detectChanges();
-      flush();
-    }).toThrowError(/MarkerClusterer class not found, cannot construct a marker cluster/);
-  }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(spy).toHaveBeenCalledWith(
+      jasmine.stringContaining(
+        'MarkerClusterer class not found, cannot construct a marker cluster',
+      ),
+    );
+  });
 
   it('initializes a Google Map Marker Clusterer', async () => {
     fixture.detectChanges();

@@ -125,12 +125,16 @@ export class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
   }
 
   private async _createCluster() {
-    if (!markerClusterer?.MarkerClusterer && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error(
-        'MarkerClusterer class not found, cannot construct a marker cluster. ' +
-          'Please install the MarkerClusterer library: ' +
-          'https://github.com/googlemaps/js-markerclusterer',
-      );
+    if (!markerClusterer?.MarkerClusterer) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.error(
+          'MarkerClusterer class not found, cannot construct a marker cluster. ' +
+            'Please install the MarkerClusterer library: ' +
+            'https://github.com/googlemaps/js-markerclusterer',
+        );
+      }
+
+      return;
     }
 
     const map = await this._googleMap._resolveMap();
