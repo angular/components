@@ -1511,6 +1511,55 @@ describe('MatInput with forms', () => {
     expect(formField._control.empty).toBe(false);
   });
 
+  for (const direction of ['ltr', 'rtl']) {
+    it(`should resize a truncated flex label when the form field grows in ${direction}`, async () => {
+      const fixture = TestBed.createComponent(MatInputWithTruncatedFlexLabel);
+      fixture.nativeElement.setAttribute('dir', direction);
+      const waitForFrames = async () => {
+        for (let i = 0; i < 3; i++) {
+          await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+        }
+      };
+      fixture.detectChanges();
+      await waitForFrames();
+
+      const text = fixture.nativeElement.querySelector('.label-text') as HTMLElement;
+      const label = fixture.nativeElement.querySelector('.mdc-floating-label') as HTMLElement;
+      const notch = fixture.nativeElement.querySelector(
+        '.mdc-notched-outline__notch',
+      ) as HTMLElement;
+      expect(text.clientWidth).toBeLessThan(text.scrollWidth);
+
+      fixture.componentInstance.width = 600;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      await waitForFrames();
+
+      expect(text.clientWidth)
+        .withContext('The label should expand without growing one pixel per resize callback.')
+        .toBe(text.scrollWidth);
+      expect(label.getBoundingClientRect().width).toBeLessThan(notch.getBoundingClientRect().width);
+
+      fixture.componentInstance.width = 120;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      await waitForFrames();
+      expect(text.clientWidth).toBeLessThan(text.scrollWidth);
+    });
+  }
+
+  it('should preserve label styles when measuring the outline notch', () => {
+    const fixture = TestBed.createComponent(MatInputWithTruncatedFlexLabel);
+    fixture.detectChanges();
+    const label = fixture.componentInstance.formField._floatingLabel!;
+    label.element.style.cssText = 'width: auto !important; max-width: 80px !important; color: red;';
+    const styles = label.element.style.cssText;
+
+    fixture.componentInstance.formField._refreshOutlineNotchWidth();
+
+    expect(label.element.style.cssText).toBe(styles);
+  });
+
   it('should update notch size after changing appearance to outline', async () => {
     const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
     const fixture = TestBed.createComponent(MatInputWithAppearance);
@@ -2230,6 +2279,26 @@ class MatInputWithLabelAndPlaceholder {
 class MatInputWithAppearance {
   @ViewChild(MatFormField) formField!: MatFormField;
   appearance!: MatFormFieldAppearance;
+}
+
+@Component({
+  template: `
+    <mat-form-field appearance="outline" floatLabel="always" [style.width.px]="width">
+      <mat-label style="display: flex; gap: 8px">
+        <span class="label-text" style="overflow: hidden; text-overflow: ellipsis">
+          A longer label that should expand when there is enough space
+        </span>
+        <span style="flex: none; width: 24px">?</span>
+      </mat-label>
+      <input matInput>
+    </mat-form-field>
+  `,
+  imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MatInputWithTruncatedFlexLabel {
+  @ViewChild(MatFormField) formField!: MatFormField;
+  width = 120;
 }
 
 @Component({
