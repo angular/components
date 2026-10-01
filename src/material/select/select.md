@@ -35,7 +35,7 @@ Including `FormField` (signal forms), `FormsModule` (`NgModel`) and `ReactiveFor
 `compareWith` function. (Additional information about using a custom `compareWith` function can be found in the 
 [Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).
 
-<!-- example(select-form) -->
+<!-- example(select-form-signal-form) -->
 
 ### Form field features
 
@@ -44,7 +44,7 @@ include error messages, hint text, prefix & suffix, and theming. For additional 
 these features, see the
 [form field documentation](https://material.angular.dev/components/form-field/overview).
 
-<!-- example(select-hint-error) -->
+<!-- example(select-hint-error-signal-form) -->
 
 ### Setting a static placeholder
 
