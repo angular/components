@@ -1243,10 +1243,6 @@ describe('MatTooltip', () => {
       platform.ANDROID = true;
     });
 
-    afterEach(() => {
-      jasmine.clock().uninstall();
-    });
-
     it('should have a delay when showing on touchstart', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
@@ -1288,58 +1284,52 @@ describe('MatTooltip', () => {
       expect(event.defaultPrevented).toBe(false);
     });
 
-    it('should close on touchend with a delay', () => {
-      jasmine.clock().install();
+    it('should close on touchend with a delay', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      jasmine.clock().tick(500); // Finish the open delay.
-      jasmine.clock().tick(0); // Finish the show delay.
+      await wait(500); // Finish the open delay.
+      await wait(0); // Finish the show delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
-      assertTooltipInstance(fixture.componentInstance.tooltip, true);
+      const tooltip = fixture.componentInstance.tooltip;
+      assertTooltipInstance(tooltip, true);
+      const hideSpy = spyOn(tooltip._tooltipInstance!, 'hide').and.callThrough();
 
       dispatchFakeEvent(button, 'touchend');
       fixture.detectChanges();
-      jasmine.clock().tick(1000); // 2/3 through the delay
-      assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
-      jasmine.clock().tick(500); // Finish the delay.
-      fixture.detectChanges();
-      finishCurrentTooltipAnimation(overlayContainerElement, false); // Finish the exit animation.
-
-      assertTooltipInstance(fixture.componentInstance.tooltip, false);
-      jasmine.clock().uninstall();
+      // The tooltip should start hiding using the `touchendHideDelay`, but remain visible for now.
+      expect(hideSpy).toHaveBeenCalledOnceWith(1500);
+      expect(tooltip._isTooltipVisible()).toBe(true);
+      assertTooltipInstance(tooltip, true);
     });
 
-    it('should close on touchcancel with a delay', () => {
-      jasmine.clock().install();
+    it('should close on touchcancel with a delay', async () => {
       const fixture = TestBed.createComponent(BasicTooltipDemo);
       fixture.detectChanges();
       const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
 
       dispatchFakeEvent(button, 'touchstart');
       fixture.detectChanges();
-      jasmine.clock().tick(500); // Finish the open delay.
-      jasmine.clock().tick(0); // Finish the show delay.
+      await wait(500); // Finish the open delay.
+      await wait(0); // Finish the show delay.
       fixture.detectChanges();
       finishCurrentTooltipAnimation(overlayContainerElement, true); // Finish the animation.
-      assertTooltipInstance(fixture.componentInstance.tooltip, true);
+      const tooltip = fixture.componentInstance.tooltip;
+      assertTooltipInstance(tooltip, true);
+      const hideSpy = spyOn(tooltip._tooltipInstance!, 'hide').and.callThrough();
 
       dispatchFakeEvent(button, 'touchcancel');
       fixture.detectChanges();
-      jasmine.clock().tick(1000); // 2/3 through the delay
-      assertTooltipInstance(fixture.componentInstance.tooltip, true);
 
-      jasmine.clock().tick(500); // Finish the delay.
-      fixture.detectChanges();
-      finishCurrentTooltipAnimation(overlayContainerElement, false); // Finish the exit animation.
-
-      assertTooltipInstance(fixture.componentInstance.tooltip, false);
-      jasmine.clock().uninstall();
+      // The tooltip should start hiding using the `touchendHideDelay`, but remain visible for now.
+      expect(hideSpy).toHaveBeenCalledOnceWith(1500);
+      expect(tooltip._isTooltipVisible()).toBe(true);
+      assertTooltipInstance(tooltip, true);
     });
 
     it('should disable native touch interactions', () => {
