@@ -62,16 +62,12 @@ describe('TestbedHarnessEnvironment', () => {
       });
 
       describe('harness', () => {
-        let harness: MainComponentHarness;
-
-        beforeEach(async () => {
-          harness = await TestbedHarnessEnvironment.harnessForFixture(
-            fixture,
-            MainComponentHarness,
-          );
-        });
+        function getHarness() {
+          return TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+        }
 
         it('can get elements outside of host', async () => {
+          const harness = await getHarness();
           const subcomponents = await harness.allLists();
           expect(subcomponents[0]).not.toBeNull();
           const globalEl = await subcomponents[0]!.globalElement();
@@ -80,23 +76,29 @@ describe('TestbedHarnessEnvironment', () => {
         });
 
         it('should be able to wait for tasks outside of Angular within native async/await', async () => {
+          const harness = await getHarness();
           expect(await harness.getTaskStateResult()).toBe('result');
         });
 
-        it('should be able to wait for tasks outside of Angular within async test zone', waitForAsync(() => {
+        it('should be able to wait for tasks outside of Angular within async test zone', waitForAsync(async () => {
+          const harness = await getHarness();
           harness.getTaskStateResult().then(res => expect(res).toBe('result'));
         }));
 
         it('should be able to wait for tasks outside of Angular within fakeAsync test zone', fakeAsync(async () => {
+          const harness = await getHarness();
+
           expect(await harness.getTaskStateResult()).toBe('result');
         }));
 
         it('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
+          const harness = await getHarness();
           const element = TestbedHarnessEnvironment.getNativeElement(await harness.host());
           expect(element.id).toContain('root');
         });
 
         it('should wait for async operation to complete in fakeAsync test', fakeAsync(async () => {
+          const harness = await getHarness();
           const asyncCounter = await harness.asyncCounter();
           expect(await asyncCounter.text()).toBe('5');
           await harness.increaseCounter(3);
