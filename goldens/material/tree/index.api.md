@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
 import { CdkNestedTreeNode } from '@angular/cdk/tree';
 import { CdkTree } from '@angular/cdk/tree';
 import { CdkTreeNode } from '@angular/cdk/tree';
@@ -19,13 +18,11 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/tree';
 import * as i2 from '@angular/cdk/bidi';
 import { Observable } from 'rxjs';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { TreeControl } from '@angular/cdk/tree';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
-export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, OnDestroy, OnInit {
+export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> {
     // @deprecated
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -33,12 +30,6 @@ export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> impleme
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndex: unknown;
-    // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     // (undocumented)
     node: T;
     get tabIndex(): number;
@@ -111,7 +102,7 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
 }
 
 // @public
-export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
+export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> {
     constructor();
     // @deprecated
     defaultTabIndex: number;
@@ -124,10 +115,6 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_tabIndexInputBinding: unknown;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     // @deprecated
     get tabIndexInputBinding(): number;
     set tabIndexInputBinding(value: number);
