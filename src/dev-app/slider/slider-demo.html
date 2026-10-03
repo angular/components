@@ -181,6 +181,19 @@
       </mat-slider>
   </mat-tab>
 
+  <mat-tab label="Long value indicators">
+    <h3>Five-digit value</h3>
+    <mat-slider min="0" max="10000" discrete>
+      <input matSliderThumb value="10000" aria-label="Five-digit value" />
+    </mat-slider>
+
+    <h3>Year range</h3>
+    <mat-slider min="1900" max="2100" discrete>
+      <input matSliderStartThumb value="2000" aria-label="Start year" />
+      <input matSliderEndThumb value="2026" aria-label="End year" />
+    </mat-slider>
+  </mat-tab>
+
   <mat-tab label="Slider in a dialog">
     <div class="demo-dialog-trigger-container">
       <button matButton="elevated" [color]="colorModel" (click)="openDialog()">Open dialog</button>

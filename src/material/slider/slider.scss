@@ -160,6 +160,7 @@ $fallbacks: m3-slider.get-tokens();
 
 .mdc-slider__value-indicator-text {
   text-align: center;
+  white-space: nowrap;
   width: token-utils.slot(slider-value-indicator-width, $fallbacks);
   transform: token-utils.slot(slider-value-indicator-text-transform, $fallbacks);
   font-family: token-utils.slot(slider-label-label-text-font, $fallbacks);
