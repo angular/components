@@ -104,7 +104,7 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
    */
   scrollToIndex(index: number, behavior: ScrollBehavior): void {
     if (this._viewport) {
-      this._viewport.scrollToOffset(index * this._itemSize, behavior);
+      this._viewport.scrollToOffset(index * this._itemSize, behavior, 'viewport');
     }
   }
 
