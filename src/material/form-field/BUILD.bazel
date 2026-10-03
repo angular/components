@@ -52,6 +52,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "form-field.scss",
+    layer = "angular-material",
     deps = [
         ":form_field_partials",
         "//src/material/core/style:vendor_prefixes",

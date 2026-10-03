@@ -1,0 +1,14 @@
+// Angular Material uses a fixed layer name so shipped component CSS and Sass-emitted theme
+// output can participate in the same app-authored @layer ordering.
+$private-layer-name: angular-material;
+
+/// Wraps emitted CSS in Angular Material's cascade layer.
+///
+/// Use this around Angular Material theme mixins such as `mat.theme`,
+/// `mat.all-component-themes`, or individual component theme mixins when you want their
+/// output to align with the layer used by Angular Material's shipped component CSS.
+@mixin theme-layer {
+  @layer #{$private-layer-name} {
+    @content;
+  }
+}
