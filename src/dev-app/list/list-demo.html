@@ -326,7 +326,17 @@
         Fries
       </mat-list-option>
     </mat-selection-list>
-
+    
+    <h4>Hidden selector and single selection</h4>
+  
+    <mat-selection-list [multiple]="false" hideSingleSelectionIndicator>
+      <mat-list-option [togglePosition]="togglePosition">
+        Boots
+        <mat-icon matListItemIcon>chevron_right</mat-icon>
+      </mat-list-option>
+      <mat-list-option [togglePosition]="togglePosition"> Shoes </mat-list-option>
+    </mat-selection-list>
+    
     <button matButton="elevated" (click)="toggleCheckboxPosition()">
       Toggle checkbox position
     </button>
