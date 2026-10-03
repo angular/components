@@ -29,6 +29,7 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//:node_modules/axe-core",
         "//src/aria/private/testing",
+        "//src/cdk/table",
         "//src/cdk/testing/private",
     ],
 )
