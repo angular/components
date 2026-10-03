@@ -6,6 +6,11 @@
 @function get-tokens($theme) {
   $system: m2-utils.get-system($theme);
   $density-scale: theming.clamp-density(map.get($system, density-scale), -2);
+  $touch-target-display: block;
+
+  @if $density-scale < 0 {
+    $touch-target-display: none;
+  }
 
   @return (
     base: (
@@ -43,7 +48,8 @@
       chip-container-height: map.get((
         0: 32px,
         -1: 28px,
-        -2: 24px), $density-scale)
+        -2: 24px), $density-scale),
+        chip-touch-target-display: $touch-target-display,
     ),
   );
 }
