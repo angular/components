@@ -3,6 +3,7 @@ import {TestBed} from '@angular/core/testing';
 import {provideRouter, Router, withComponentInputBinding} from '@angular/router';
 import {RouterTestingHarness} from '@angular/router/testing';
 import {GuideViewer} from './guide-viewer';
+import {guideResolver} from './guide-resolver';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 
@@ -19,7 +20,7 @@ describe('GuideViewer', () => {
         provideRouter(
           [
             {path: 'guides', component: GuideList},
-            {path: 'guide/:id', component: GuideViewer},
+            {path: 'guide/:id', component: GuideViewer, resolve: {guide: guideResolver}},
           ],
           withComponentInputBinding(),
         ),
@@ -32,7 +33,7 @@ describe('GuideViewer', () => {
 
   it('should set the guide based off route params', async () => {
     const component = await harness.navigateByUrl('/guide/getting-started', GuideViewer);
-    expect(component.guide()).toEqual(guideItems.getItemById('getting-started'));
+    expect(component.guide()).toEqual(guideItems.getItemById('getting-started')!);
   });
 
   it('should set the page title to the guide name', async () => {

@@ -15,6 +15,7 @@ import {
   OnInit,
   ViewEncapsulation,
   computed,
+  effect,
   input,
   viewChild,
   viewChildren,
@@ -22,10 +23,10 @@ import {
   DestroyRef,
 } from '@angular/core';
 import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
-import {Router, RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
-import {Observable, ReplaySubject} from 'rxjs';
-import {map, skip, switchMap} from 'rxjs/operators';
-import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
+import {RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
+import {Observable} from 'rxjs';
+import {map, skip} from 'rxjs/operators';
+import {DocItem} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
 
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -50,53 +51,33 @@ import {MatTabLink, MatTabNav, MatTabNavPanel} from '@angular/material/tabs';
   ],
 })
 export class ComponentViewer {
-  private _router = inject(Router);
   componentPageTitle = inject(ComponentPageTitle);
-  readonly docItems = inject(DocumentationItems);
-  private readonly _destroyRef = inject(DestroyRef);
 
-  /** Id of the doc item to display (e.g. button/checkbox). Bound from the `:id` route param. */
-  readonly id = input.required<string>();
+  /** Doc item to display. Bound from the route's resolved `docItem`. */
+  readonly docItem = input.required<DocItem>();
 
-  /** Section the doc item belongs to (material/cdk). Bound from the `:section` route param. */
-  readonly section = input.required<string>();
+  readonly componentDocItem: Observable<DocItem> = toObservable(this.docItem);
 
-  componentDocItem = new ReplaySubject<DocItem>(1);
-  sections: Set<string> = new Set(['overview', 'api']);
+  /** Tabs shown for the doc item. */
+  readonly sections = computed(() => {
+    const doc = this.docItem();
+    const sections = ['overview', 'api'];
+
+    if (doc.hasStyling) {
+      sections.push('styling');
+    }
+
+    if (doc.examples && doc.examples.length) {
+      sections.push('examples');
+    }
+
+    return sections;
+  });
 
   constructor() {
-    const componentPageTitle = this.componentPageTitle;
-    const docItems = this.docItems;
-
-    toObservable(computed(() => ({id: this.id(), section: this.section()})))
-      .pipe(
-        switchMap(async ({id, section}) => {
-          const doc = await docItems.getItemById(id, section);
-          return {doc, section};
-        }),
-        takeUntilDestroyed(this._destroyRef),
-      )
-      .subscribe(({doc, section}) => {
-        if (!doc) {
-          this._router.navigate(['/' + section]);
-          return;
-        }
-
-        this.componentDocItem.next(doc);
-        componentPageTitle.title = `${doc.name}`;
-
-        if (doc.hasStyling) {
-          this.sections.add('styling');
-        } else {
-          this.sections.delete('styling');
-        }
-
-        if (doc.examples && doc.examples.length) {
-          this.sections.add('examples');
-        } else {
-          this.sections.delete('examples');
-        }
-      });
+    effect(() => {
+      this.componentPageTitle.title = this.docItem().name;
+    });
   }
 }
 
