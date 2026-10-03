@@ -15,6 +15,9 @@ import {
   Output,
   Directive,
   ChangeDetectorRef,
+  DoCheck,
+  EnvironmentInjector,
+  afterNextRender,
   booleanAttribute,
   inject,
   Injector,
@@ -49,9 +52,10 @@ import {assertElementNode} from './assertions';
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   },
 })
-export class CdkDropList<T = any> implements OnDestroy {
+export class CdkDropList<T = any> implements OnDestroy, DoCheck {
   element = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _environmentInjector = inject(EnvironmentInjector);
   private _scrollDispatcher = inject(ScrollDispatcher);
   private _dir = inject(Directionality, {optional: true});
   private _group = inject<CdkDropListGroup<CdkDropList>>(CDK_DROP_LIST_GROUP, {
@@ -204,6 +208,7 @@ export class CdkDropList<T = any> implements OnDestroy {
 
     this._dropListRef = createDropListRef(injector, this.element);
     this._dropListRef.data = this;
+    this._dropListRef._deferDropCleanup = true;
 
     if (config) {
       this._assignDefaults(config);
@@ -271,6 +276,15 @@ export class CdkDropList<T = any> implements OnDestroy {
       // tslint:disable-next-line:no-bitwise
       return documentPosition & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
     });
+  }
+
+  ngDoCheck() {
+    // When an item is dropped, the list restores the DOM to how it was before the drag and it's up
+    // to the consumer to render the new order. We hold off on the cleanup until the list is checked,
+    // because `ngDoCheck` runs right before the items inside of it are re-rendered. This way the
+    // cleanup and the new order land in the same change detection, even when it runs
+    // asynchronously (e.g. in zoneless apps), and the user never sees the old order.
+    this._dropListRef._flushDropCleanup();
   }
 
   ngOnDestroy() {
@@ -407,6 +421,10 @@ export class CdkDropList<T = any> implements OnDestroy {
       // Mark for check since all of these events run outside of change
       // detection and we're not guaranteed for something else to have triggered it.
       this._changeDetectorRef.markForCheck();
+
+      // The cleanup is usually flushed in `ngDoCheck`. This is a fallback in case
+      // the list doesn't end up being checked (e.g. if its view is detached).
+      afterNextRender(() => ref._flushDropCleanup(), {injector: this._environmentInjector});
     });
 
     merge(ref.receivingStarted, ref.receivingStopped).subscribe(() =>

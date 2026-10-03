@@ -28,7 +28,7 @@ import {
 import {extendStyles} from '../dom/styling';
 import {CdkDragDrop, CdkDragEnter, CdkDragStart} from '../drag-events';
 import {DragRef, Point, PreviewContainer} from '../drag-ref';
-import {moveItemInArray} from '../drag-utils';
+import {moveItemInArray, transferArrayItem} from '../drag-utils';
 
 import {provideFakeDirectionality} from '@angular/cdk/testing/private/fake-directionality';
 import {NgFor, NgIf, NgTemplateOutlet} from '@angular/common';
@@ -879,6 +879,7 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
       await fixture.whenStable();
+      fixture.detectChanges();
 
       expect(item.parentNode)
         .withContext('Expected element to be moved back into its old parent')
@@ -1233,6 +1234,7 @@ export function defineCommonDropListTests(config: {
         .toBeTruthy();
 
       await wait(500);
+      fixture.detectChanges();
 
       expect(preview.parentNode)
         .withContext('Expected preview to be removed from the DOM if the transition timed out')
@@ -1346,6 +1348,7 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
       await fixture.whenStable();
+      fixture.detectChanges();
 
       expect(preview.parentNode)
         .withContext('Expected preview to be removed from the DOM immediately')
@@ -1374,6 +1377,7 @@ export function defineCommonDropListTests(config: {
         .toBeTruthy();
 
       await wait(1000);
+      fixture.detectChanges();
 
       expect(preview.parentNode)
         .withContext(
@@ -1406,6 +1410,7 @@ export function defineCommonDropListTests(config: {
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
       await fixture.whenStable();
+      fixture.detectChanges();
 
       expect(placeholder.parentNode)
         .withContext('Expected placeholder to be removed from the DOM')
@@ -3151,6 +3156,172 @@ export function defineCommonDropListTests(config: {
       documentElement.style.position = '';
       documentElement.style.top = '';
     });
+
+    it('should not show the old order of the items between the drop and the next change detection', async () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const dragItems = fixture.componentInstance.dragItems;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      expect(getItemsInVisualOrder(list)).toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      startDraggingViaMouse(fixture, dragItems.first.element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+
+      // Let the drop sequence finish without running change detection. This is
+      // what the user would see if the browser were to paint at this point.
+      await Promise.resolve();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+      expect(getItemsInVisualOrder(list)).toEqual(['One', 'Two', 'Zero', 'Three']);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(getItemsInVisualOrder(list)).toEqual(['One', 'Two', 'Zero', 'Three']);
+      expect(list.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+      expect(dragItems.map(item => item.element.nativeElement.style.transform)).toEqual([
+        '',
+        '',
+        '',
+        '',
+      ]);
+    });
+
+    it('should restore the old order of the items if the data was not updated after the drop', async () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.componentInstance.droppedSpy.and.stub();
+      fixture.detectChanges();
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const dragItems = fixture.componentInstance.dragItems;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, dragItems.first.element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      await Promise.resolve();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+      expect(getItemsInVisualOrder(list)).toEqual(['Zero', 'One', 'Two', 'Three']);
+      expect(list.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+    });
+
+    it('should clean up after the drop if change detection runs inside the `dropped` event', async () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const {droppedSpy, items} = fixture.componentInstance;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const dragItems = fixture.componentInstance.dragItems;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      droppedSpy.and.callFake((event: CdkDragDrop<string[]>) => {
+        moveItemInArray(items, event.previousIndex, event.currentIndex);
+        fixture.changeDetectorRef.detectChanges();
+      });
+
+      startDraggingViaMouse(fixture, dragItems.first.element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      await Promise.resolve();
+
+      expect(droppedSpy).toHaveBeenCalledTimes(1);
+      expect(getItemsInVisualOrder(list)).toEqual(['One', 'Two', 'Zero', 'Three']);
+      expect(list.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+    });
+
+    it('should clean up after the previous drop when a new drag sequence starts before change detection', async () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.componentInstance.droppedSpy.and.stub();
+      fixture.detectChanges();
+      const {droppedSpy} = fixture.componentInstance;
+      const dragItems = fixture.componentInstance.dragItems.toArray();
+      const firstItem = dragItems[0].element.nativeElement;
+      const secondItem = dragItems[1].element.nativeElement;
+      const thirdItemRect = dragItems[2].element.nativeElement.getBoundingClientRect();
+      const fourthItemRect = dragItems[3].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, firstItem);
+      dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      await Promise.resolve();
+
+      expect(droppedSpy).toHaveBeenCalledTimes(1);
+
+      // Start dragging the next item before the scheduler had a chance to render.
+      startDraggingViaMouse(fixture, secondItem);
+
+      expect(document.querySelectorAll('.cdk-drag-placeholder').length).toBe(1);
+      expect(document.querySelectorAll('.cdk-drag-preview').length).toBe(1);
+
+      dispatchMouseEvent(document, 'mousemove', fourthItemRect.left + 1, fourthItemRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', fourthItemRect.left + 1, fourthItemRect.top + 1);
+      await Promise.resolve();
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(droppedSpy).toHaveBeenCalledTimes(2);
+
+      const event: CdkDragDrop<unknown> = droppedSpy.calls.mostRecent().args[0];
+      expect(event.previousIndex).toBe(1);
+      expect(event.currentIndex).toBe(3);
+      expect(document.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+    });
+
+    it('should clean up after the drop if the drop list is not checked', async () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const dragItems = fixture.componentInstance.dragItems;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, dragItems.first.element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.detectChanges();
+      fixture.debugElement.injector.get(ChangeDetectorRef).detach();
+      dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      await Promise.resolve();
+      await fixture.whenStable();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+      expect(list.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+
+      // The list wasn't re-rendered so it should be back in the old order.
+      expect(getItemsInVisualOrder(list)).toEqual(['Zero', 'One', 'Two', 'Three']);
+    });
+
+    it('should clean up after the drop if the drop list is destroyed before the next change detection', async () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, dragItems.first.element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', thirdItemRect.left + 1, thirdItemRect.top + 1);
+      await Promise.resolve();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+      fixture.destroy();
+
+      expect(document.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+    });
   });
 
   describe('in a connected drop container', () => {
@@ -4594,6 +4765,49 @@ export function defineCommonDropListTests(config: {
       // isn't at its default location by searching for it at the `document` level.
       expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
     });
+
+    it('should not show the old order of the items between transferring an item and the next change detection', async () => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.componentInstance.droppedSpy.and.callFake((event: CdkDragDrop<string[]>) => {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+      });
+      fixture.detectChanges();
+      const [todoList, doneList] = fixture.componentInstance.dropInstances.map(
+        list => list.element.nativeElement,
+      );
+      const groups = fixture.componentInstance.groupedDragItems;
+      const targetRect = groups[1][1].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, groups[0][1].element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+      dispatchMouseEvent(document, 'mouseup', targetRect.left + 1, targetRect.top + 1);
+
+      // Let the drop sequence finish without running change detection. This is
+      // what the user would see if the browser were to paint at this point.
+      await Promise.resolve();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+      const expectedTodo = fixture.componentInstance.todo.slice();
+      const expectedDone = fixture.componentInstance.done.slice();
+      expect(expectedTodo).toEqual(['Zero', 'Two', 'Three']);
+      expect(expectedDone).toContain('One');
+      expect(getItemsInVisualOrder(todoList)).toEqual(expectedTodo);
+      expect(getItemsInVisualOrder(doneList)).toEqual(expectedDone);
+
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(getItemsInVisualOrder(todoList)).toEqual(expectedTodo);
+      expect(getItemsInVisualOrder(doneList)).toEqual(expectedDone);
+      expect(document.querySelector('.cdk-drag-placeholder')).toBeFalsy();
+      expect(document.querySelector('.cdk-drag-preview')).toBeFalsy();
+    });
   });
 
   describe('with nested drags', () => {
@@ -4904,6 +5118,18 @@ export function defineCommonDropListTests(config: {
       expect(getPlaceholder(fixture.nativeElement)).toBeFalsy();
     });
   });
+}
+
+/**
+ * Gets the text of the items inside of a drop list, in the order in which they're shown on the
+ * screen. Items that are hidden, like the item that's being dragged, are skipped.
+ */
+function getItemsInVisualOrder(list: HTMLElement): string[] {
+  return Array.from(list.children)
+    .filter(child => getComputedStyle(child).opacity !== '0')
+    .map(child => ({text: child.textContent!.trim(), rect: child.getBoundingClientRect()}))
+    .sort((a, b) => a.rect.top - b.rect.top || a.rect.left - b.rect.left)
+    .map(child => child.text);
 }
 
 export async function assertStartToEndSorting(

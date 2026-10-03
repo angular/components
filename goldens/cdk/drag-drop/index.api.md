@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -240,7 +241,7 @@ export interface CdkDragStart<T = any> {
 }
 
 // @public
-export class CdkDropList<T = any> implements OnDestroy {
+export class CdkDropList<T = any> implements OnDestroy, DoCheck {
     constructor();
     addItem(item: CdkDrag): void;
     autoScrollDisabled: boolean;
@@ -269,6 +270,8 @@ export class CdkDropList<T = any> implements OnDestroy {
     static ngAcceptInputType_hasAnchor: unknown;
     // (undocumented)
     static ngAcceptInputType_sortingDisabled: unknown;
+    // (undocumented)
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     orientation: DropListOrientation;
@@ -363,6 +366,7 @@ export class DragDropModule {
 
 // @public
 export class DragDropRegistry implements OnDestroy {
+    _flushDropCleanup(): void;
     getDragDirectiveForNode(node: Node): CdkDrag | null;
     isDragging(drag: DragRef): boolean;
     // (undocumented)
@@ -495,6 +499,7 @@ export class DropListRef<T = any> {
     _canReceive(item: DragRef, x: number, y: number): boolean;
     connectedTo(connectedTo: DropListRef[]): this;
     data: T;
+    _deferDropCleanup: boolean;
     disabled: boolean;
     dispose(): void;
     drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point, event: MouseEvent | TouchEvent): void;
@@ -522,6 +527,7 @@ export class DropListRef<T = any> {
         item: DragRef;
         container: DropListRef;
     }>;
+    _flushDropCleanup(): void;
     getItemAtIndex(index: number): DragRef | null;
     getItemIndex(item: DragRef): number;
     getScrollableParents(): readonly HTMLElement[];
@@ -540,6 +546,7 @@ export class DropListRef<T = any> {
         receiver: DropListRef;
         initiator: DropListRef;
     }>;
+    _scheduleDropCleanup(cleanup: () => void): void;
     readonly sorted: Subject<{
         previousIndex: number;
         currentIndex: number;

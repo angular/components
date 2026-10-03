@@ -1002,6 +1002,9 @@ export class DragRef<T = any> {
       return;
     }
 
+    // Finish cleaning up after any previous drops since they can throw off the measurements below.
+    this._dragDropRegistry._flushDropCleanup();
+
     // If we've got handles, we need to disable the tap highlight on the entire root element,
     // otherwise iOS will still add it, even though all the drag interactions on the handle
     // are disabled.
@@ -1048,15 +1051,21 @@ export class DragRef<T = any> {
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */
   private _cleanupDragArtifacts(event: MouseEvent | TouchEvent) {
-    // Restore the element's visibility and insert it at its old position in the DOM.
-    // It's important that we maintain the position, because moving the element around in the DOM
-    // can throw off `NgFor` which does smart diffing and re-creates elements only when necessary,
-    // while moving the existing elements in all other cases.
-    toggleVisibility(this._rootElement, true, dragImportantProperties);
-    this._marker.parentNode!.replaceChild(this._rootElement, this._marker);
+    const container = this._dropContainer!;
+    const rootElement = this._rootElement;
 
-    this._destroyPreview();
-    this._destroyPlaceholder();
+    // Insert the element at its old position in the DOM. It's important that we maintain the
+    // position, because moving the element around in the DOM can throw off `NgFor` which does
+    // smart diffing and re-creates elements only when necessary, while moving the existing
+    // elements in all other cases.
+    this._marker.parentNode!.replaceChild(rootElement, this._marker);
+
+    container._scheduleDropCleanup(() => {
+      toggleVisibility(rootElement, true, dragImportantProperties);
+      this._destroyPreview();
+      this._destroyPlaceholder();
+    });
+
     this._initialDomRect =
       this._boundaryRect =
       this._previewRect =
@@ -1065,7 +1074,6 @@ export class DragRef<T = any> {
 
     // Re-enter the NgZone since we bound `document` events on the outside.
     this._ngZone.run(() => {
-      const container = this._dropContainer!;
       const currentIndex = container.getItemIndex(this);
       const pointerPosition = this._getPointerPositionOnPage(event);
       const distance = this._getDragDistance(pointerPosition);
