@@ -1,0 +1,26 @@
+<form class="example-form">
+  @let options = filteredOptions | async;
+  <mat-form-field class="example-full-width">
+    <mat-label>State</mat-label>
+    <input type="text"
+           placeholder="Search states"
+           aria-label="State"
+           matInput
+           [formControl]="myControl"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      @if (!isLoading()) {
+        @for (option of options ?? []; track option) {
+          <mat-option [value]="option">{{option}}</mat-option>
+        }
+      }
+    </mat-autocomplete>
+    <mat-hint aria-live="polite">
+      @if (isLoading()) {
+        Loading...
+      } @else if (options?.length === 0) {
+        No results found
+      }
+    </mat-hint>
+  </mat-form-field>
+</form>
