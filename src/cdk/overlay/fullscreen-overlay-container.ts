@@ -56,10 +56,6 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
         this._fullScreenEventName = 'fullscreenchange';
       } else if (_document.webkitFullscreenEnabled) {
         this._fullScreenEventName = 'webkitfullscreenchange';
-      } else if (_document.mozFullScreenEnabled) {
-        this._fullScreenEventName = 'mozfullscreenchange';
-      } else if (_document.msFullscreenEnabled) {
-        this._fullScreenEventName = 'MSFullscreenChange';
       }
     }
 
@@ -72,13 +68,6 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
    */
   getFullscreenElement(): Element {
     const _document = this._document as any;
-
-    return (
-      _document.fullscreenElement ||
-      _document.webkitFullscreenElement ||
-      _document.mozFullScreenElement ||
-      _document.msFullscreenElement ||
-      null
-    );
+    return _document.fullscreenElement || _document.webkitFullscreenElement || null;
   }
 }
