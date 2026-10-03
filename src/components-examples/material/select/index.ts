@@ -1,7 +1,9 @@
 export {SelectCustomTriggerExample} from './select-custom-trigger/select-custom-trigger-example';
 export {SelectDisabledExample} from './select-disabled/select-disabled-example';
+export {SelectDisabledSignalFormExample} from './select-disabled-signal-form/select-disabled-signal-form-example';
 export {SelectErrorStateMatcherExample} from './select-error-state-matcher/select-error-state-matcher-example';
 export {SelectFormExample} from './select-form/select-form-example';
+export {SelectFormSignalFormExample} from './select-form-signal-form/select-form-signal-form-example';
 export {SelectHintErrorExample} from './select-hint-error/select-hint-error-example';
 export {SelectMultipleExample} from './select-multiple/select-multiple-example';
 export {SelectNoRippleExample} from './select-no-ripple/select-no-ripple-example';
@@ -13,4 +15,5 @@ export {SelectValueBindingExample} from './select-value-binding/select-value-bin
 export {SelectReactiveFormExample} from './select-reactive-form/select-reactive-form-example';
 export {SelectInitialValueExample} from './select-initial-value/select-initial-value-example';
 export {SelectSelectableNullExample} from './select-selectable-null/select-selectable-null-example';
+export {SelectHintErrorSignalFormExample} from './select-hint-error-signal-form/select-hint-error-signal-form-example';
 export {SelectHarnessExample} from './select-harness/select-harness-example';
