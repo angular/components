@@ -91,6 +91,31 @@ describe('M3 theme', () => {
     expect(nonVarProps).toEqual([]);
   });
 
+  it('should emit valid elevation classes when used with the system-level theme', () => {
+    const root = parse(
+      transpile(`
+        html {
+          @include mat.theme((
+            color: mat.$violet-palette,
+            typography: Roboto,
+            density: 0,
+          ));
+        }
+        @include mat.elevation-classes();
+      `),
+    );
+    const invalidValues: string[] = [];
+    root.walkDecls('box-shadow', decl => {
+      // Any reference to a token has to be wrapped in `var()`. A bare token name (e.g.
+      // `0px 2px 1px -1px --mat-sys-shadow`) is invalid CSS which makes the browser drop the
+      // entire declaration, resulting in no shadow at all.
+      if (/(^|[\s,(])--/.test(decl.value.replace(/var\(\s*--/g, 'var('))) {
+        invalidValues.push(decl.value);
+      }
+    });
+    expect(invalidValues).toEqual([]);
+  });
+
   it('should not have overlapping tokens between theme dimensions', () => {
     const css = transpile(`
         $theme: mat.define-theme();
