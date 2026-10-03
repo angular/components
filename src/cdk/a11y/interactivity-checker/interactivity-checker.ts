@@ -17,6 +17,11 @@ export class IsFocusableConfig {
    * Whether to count an element as focusable even if it is not currently visible.
    */
   ignoreVisibility: boolean = false;
+
+  /**
+   * Whether to count an element as focusable even if it is inert or inside an inert subtree.
+   */
+  ignoreInert?: boolean = false;
 }
 
 // The InteractivityChecker leans heavily on the ally.js accessibility utilities.
@@ -142,11 +147,13 @@ export class InteractivityChecker {
    * @returns Whether the element is focusable.
    */
   isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean {
-    // Perform checks in order of left to most expensive.
+    // Perform checks in order of least to most expensive.
     // Again, naive approach that does not capture many edge cases and browser quirks.
     return (
       isPotentiallyFocusable(element) &&
       !this.isDisabled(element) &&
+      // Inert elements (or descendants of inert elements) can't receive focus.
+      (config?.ignoreInert || !element.closest?.('[inert]')) &&
       (config?.ignoreVisibility || this.isVisible(element))
     );
   }
