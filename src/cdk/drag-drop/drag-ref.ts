@@ -1587,8 +1587,6 @@ export class DragRef<T = any> {
         shadowRoot ||
         documentRef.fullscreenElement ||
         (documentRef as any).webkitFullscreenElement ||
-        (documentRef as any).mozFullScreenElement ||
-        (documentRef as any).msFullscreenElement ||
         documentRef.body
       );
     }
