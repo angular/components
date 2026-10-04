@@ -6,6 +6,7 @@ export {SelectFormExample} from './select-form/select-form-example';
 export {SelectFormSignalFormExample} from './select-form-signal-form/select-form-signal-form-example';
 export {SelectHintErrorExample} from './select-hint-error/select-hint-error-example';
 export {SelectMultipleExample} from './select-multiple/select-multiple-example';
+export {SelectMultipleSignalFormExample} from './select-multiple-signal-form/select-multiple-signal-form-example';
 export {SelectNoRippleExample} from './select-no-ripple/select-no-ripple-example';
 export {SelectOptgroupExample} from './select-optgroup/select-optgroup-example';
 export {SelectOverviewExample} from './select-overview/select-overview-example';

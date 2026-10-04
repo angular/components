@@ -105,7 +105,7 @@ Using multiple selection with a native select element (`<select multiple>`) is d
 inside `<mat-form-field>`, as the inline listbox appearance is inconsistent with other
 Material Design components.
 
-<!-- example(select-multiple) -->
+<!-- example(select-multiple-signal-form) -->
 
 ### Customizing the trigger label
 
