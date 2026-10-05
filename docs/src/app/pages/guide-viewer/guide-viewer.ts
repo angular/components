@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {ChangeDetectionStrategy, Component, computed, effect, inject, input} from '@angular/core';
-import {Router} from '@angular/router';
-import {GuideItems} from '../../shared/guide-items/guide-items';
+import {ChangeDetectionStrategy, Component, effect, inject, input} from '@angular/core';
+import {GuideItem} from '../../shared/guide-items/guide-items';
 import {Footer} from '../../shared/footer/footer';
 
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -28,23 +27,13 @@ import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
 })
 export class GuideViewer {
   private readonly _componentPageTitle = inject(ComponentPageTitle);
-  private readonly _router = inject(Router);
-  guideItems = inject(GuideItems);
 
-  /** Id of the guide to display. Bound from the `:id` route param. */
-  readonly id = input.required<string>();
-
-  readonly guide = computed(() => this.guideItems.getItemById(this.id()));
+  /** Guide to display. Bound from the route's resolved `guide`. */
+  readonly guide = input.required<GuideItem>();
 
   constructor() {
     effect(() => {
-      const guide = this.guide();
-
-      if (guide) {
-        this._componentPageTitle.title = guide.name;
-      } else {
-        this._router.navigate(['/guides']);
-      }
+      this._componentPageTitle.title = this.guide().name;
     });
   }
 }

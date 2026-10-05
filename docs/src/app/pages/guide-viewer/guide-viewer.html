@@ -3,7 +3,7 @@
     <doc-viewer
       class="docs-guide-content"
       (contentRendered)="toc.addHeaders('Guide Content', $event); toc.updateScrollPosition()"
-      [document]="guide()?.document"
+      [document]="guide().document"
       focusOnNavigation
       id="guide-content"
       aria-label="Guide content"
