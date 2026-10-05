@@ -1052,6 +1052,30 @@ describe('Standalone CdkDrag', () => {
     expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
   });
 
+  it('should keep a touch drag within its boundary when another target is already touched', () => {
+    const fixture = createComponent(StandaloneDraggable);
+    fixture.componentInstance.boundary = '.wrapper';
+    fixture.detectChanges();
+    const dragElement = fixture.componentInstance.dragElement.nativeElement;
+    const rect = dragElement.getBoundingClientRect();
+    const outsideTouch = {pageX: rect.left + 400, pageY: rect.top + 400, identifier: 0};
+
+    const dispatchDragTouch = (type: string, x: number, y: number) => {
+      const event = createTouchEvent(type, x, y);
+      const touch = (event as TouchEvent).targetTouches[0];
+      Object.defineProperty(event, 'touches', {get: () => [outsideTouch, touch]});
+      dispatchEvent(dragElement, event);
+      fixture.detectChanges();
+    };
+
+    dispatchDragTouch('touchstart', rect.left + 10, rect.top + 10);
+    dispatchDragTouch('touchmove', rect.left + 310, rect.top + 310);
+    dispatchDragTouch('touchmove', rect.left + 310, rect.top + 310);
+    dispatchDragTouch('touchend', rect.left + 310, rect.top + 310);
+
+    expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+  });
+
   it('should allow for dragging to be constrained to an element while using constrainPosition', () => {
     const fixture = createComponent(StandaloneDraggable);
     fixture.componentInstance.boundary = '.wrapper';
