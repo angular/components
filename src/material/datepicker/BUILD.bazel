@@ -63,6 +63,7 @@ sass_library(
 sass_binary(
     name = "datepicker_content_css",
     src = "datepicker-content.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/material/core/tokens:token_utils",
@@ -72,6 +73,7 @@ sass_binary(
 sass_binary(
     name = "calendar_css",
     src = "calendar.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -83,6 +85,7 @@ sass_binary(
 sass_binary(
     name = "calendar_body_css",
     src = "calendar-body.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -94,6 +97,7 @@ sass_binary(
 sass_binary(
     name = "datepicker_toggle_css",
     src = "datepicker-toggle.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -104,11 +108,13 @@ sass_binary(
 sass_binary(
     name = "datepicker_actions_css",
     src = "datepicker-actions.scss",
+    layer = "angular-material",
 )
 
 sass_binary(
     name = "date_range_input_css",
     src = "date-range-input.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
