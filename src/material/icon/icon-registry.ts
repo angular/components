@@ -593,8 +593,9 @@ export class MatIconRegistry implements OnDestroy {
     // Copy over all the attributes from the `symbol` to the new SVG, except the id.
     for (let i = 0; i < attributes.length; i++) {
       const {name, value} = attributes[i];
+      const lowercasedName = name.toLowerCase();
 
-      if (name !== 'id') {
+      if (lowercasedName !== 'id' && !lowercasedName.startsWith('on')) {
         svg.setAttribute(name, value);
       }
     }
