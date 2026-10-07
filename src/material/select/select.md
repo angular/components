@@ -74,6 +74,9 @@ This can be accomplished by creating a `FormControl` with the disabled property
 
 If you want one of your options to reset the select's value, you can omit specifying its value.
 
+This behavior is likely not desired when binding to forms. An unspecified value for an option will set 
+the form's field value to `undefined`.
+
 <!-- example(select-reset) -->
 
 ### Allowing nullable options to be selected

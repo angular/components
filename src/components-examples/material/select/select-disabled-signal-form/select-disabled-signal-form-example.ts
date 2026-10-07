@@ -12,7 +12,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
   imports: [MatCheckboxModule, FormField, MatFormFieldModule, MatSelectModule, MatInputModule],
 })
 export class SelectDisabledSignalFormExample {
-  // TODO - more distinct name?
   protected form = form(signal({option: '', vehicle: '', disableField: false}), p => {
     disabled(p.option, {when: ({valueOf}) => valueOf(p.disableField)});
     disabled(p.vehicle, {when: ({valueOf}) => valueOf(p.disableField)});
