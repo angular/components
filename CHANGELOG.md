@@ -1,3 +1,22 @@
+<a name="22.2.2"></a>
+# 22.2.2 "calcium-car" (2026-10-07)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [237d951c6](https://github.com/angular/components/commit/237d951c6d2d7fffa54085ad0c157f2ccfb0ebb1) | fix | **drag-drop:** remove old prefixes for fullscreen elements |
+| [471f62afa](https://github.com/angular/components/commit/471f62afaf7200b8c92a630539260dbec45c1d34) | fix | **drag-drop:** use consistent touch coordinates for bounded dragging ([#33928](https://github.com/angular/components/pull/33928)) |
+| [9c62976ba](https://github.com/angular/components/commit/9c62976ba987cdc671be49cba410605fae417438) | fix | **overlay:** remove old prefixes for fullscreen elements |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [a069b18e1](https://github.com/angular/components/commit/a069b18e118011c8493d015574dc4a360c778c2d) | fix | **icon:** do not copy event attributes ([#33929](https://github.com/angular/components/pull/33929)) |
+### google-maps
+| Commit | Type | Description |
+| -- | -- | -- |
+| [5b8c5fd62](https://github.com/angular/components/commit/5b8c5fd6296291bafb801f9787f163a14b176724) | fix | use console.error instead of hard error ([#33917](https://github.com/angular/components/pull/33917)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.1"></a>
 # 22.2.1 "tellurium-telescope" (2026-09-30)
 ### cdk
