@@ -128,7 +128,7 @@ by setting the `disableRipple` property on `<mat-select>`.
 In order to facilitate easily styling the dropdown panel, `<mat-select>` has a `panelClass` property
 which can be used to apply additional CSS classes to the dropdown panel.
 
-<!-- example(select-panel-class) -->
+<!-- example(select-panel-class-signal-form) -->
 
 ### Changing when error messages are shown
 
