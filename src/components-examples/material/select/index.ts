@@ -3,6 +3,7 @@ export {SelectCustomTriggerSignalFormExample} from './select-custom-trigger-sign
 export {SelectDisabledExample} from './select-disabled/select-disabled-example';
 export {SelectDisabledSignalFormExample} from './select-disabled-signal-form/select-disabled-signal-form-example';
 export {SelectErrorStateMatcherExample} from './select-error-state-matcher/select-error-state-matcher-example';
+export {SelectErrorStateMatcherSignalFormExample} from './select-error-state-matcher-signal-form/select-error-state-matcher-signal-form-example';
 export {SelectFormExample} from './select-form/select-form-example';
 export {SelectFormSignalFormExample} from './select-form-signal-form/select-form-signal-form-example';
 export {SelectHintErrorExample} from './select-hint-error/select-hint-error-example';

@@ -144,7 +144,7 @@ this `<mat-select>` as well as the parent form and returns a boolean indicating 
 should be shown. (`true` indicating that they should be shown, and `false` indicating that they
 should not.)
 
-<!-- example(select-error-state-matcher) -->
+<!-- example(select-error-state-matcher-signal-form) -->
 
 A global error state matcher can be specified by setting the `ErrorStateMatcher` provider. This
 applies to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is available in order to
