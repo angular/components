@@ -1,9 +1,10 @@
 import {provideZoneChangeDetection} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {MatSidenav} from '@angular/material/sidenav';
-import {provideRouter} from '@angular/router';
-import {take} from 'rxjs/operators';
-import {ComponentSidenav} from './component-sidenav';
+import {provideRouter, withComponentInputBinding} from '@angular/router';
+import {RouterTestingHarness} from '@angular/router/testing';
+import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
+import {ComponentSidenav, componentSidenavRoutes} from './component-sidenav';
 
 describe('ComponentSidenav', () => {
   let fixture: ComponentFixture<ComponentSidenav>;
@@ -28,7 +29,7 @@ describe('ComponentSidenav', () => {
     // TODO refactor this as none of these expectations are ever verified
     waitForAsync(() => {
       expect(component.sidenav() instanceof MatSidenav).toBeTruthy();
-      component.isScreenSmall.pipe(take(1)).subscribe(isSmall => expect(isSmall).toBeTruthy());
+      expect(component.isScreenSmall()).toBeTruthy();
       expect(component.sidenav()!.opened).toBe(false);
     });
   });
@@ -40,5 +41,33 @@ describe('ComponentSidenav', () => {
       '.docs-component-viewer-sidenav li a',
     ).length;
     expect(totalLinks).toEqual(totalItems);
+  });
+});
+
+describe('ComponentSidenav routing', () => {
+  it('should list the items of the section from the route params', async () => {
+    TestBed.configureTestingModule({
+      providers: [
+        provideRouter(
+          [{path: ':section', children: componentSidenavRoutes}],
+          withComponentInputBinding(),
+        ),
+        provideZoneChangeDetection(),
+      ],
+    });
+
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/components/categories');
+    await harness.fixture.whenStable();
+    harness.detectChanges();
+
+    const items = await TestBed.inject(DocumentationItems).getItems('components');
+    const links = Array.from<HTMLAnchorElement>(
+      harness.routeNativeElement!.querySelectorAll('.docs-component-viewer-nav a'),
+    );
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(links.length).toBe(items.length);
+    expect(links.some(link => link.getAttribute('href')?.startsWith('/components/'))).toBe(true);
   });
 });
