@@ -83,7 +83,9 @@ you want the nullable options to be selectable, you can enable the `canSelectNul
 The default value for the input can be controlled application-wide through the `MAT_SELECT_CONFIG`
 injection token.
 
-<!-- example(select-selectable-null) -->
+<!-- example(select-selectable-null-signal-form) -->
+
+With signal forms, [do not use `null` as an empty value for complex objects.](https://angular.dev/guide/forms/signals/model-design#empty-value-for-a-complex-object)
 
 ### Creating groups of options
 
