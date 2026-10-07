@@ -13,6 +13,7 @@ export {SelectOptgroupExample} from './select-optgroup/select-optgroup-example';
 export {SelectOptgroupSignalFormExample} from './select-optgroup-signal-form/select-optgroup-signal-form-example';
 export {SelectOverviewExample} from './select-overview/select-overview-example';
 export {SelectPanelClassExample} from './select-panel-class/select-panel-class-example';
+export {SelectPanelClassSignalFormExample} from './select-panel-class-signal-form/select-panel-class-signal-form-example';
 export {SelectResetExample} from './select-reset/select-reset-example';
 export {SelectValueBindingExample} from './select-value-binding/select-value-binding-example';
 export {SelectReactiveFormExample} from './select-reactive-form/select-reactive-form-example';
