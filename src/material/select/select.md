@@ -114,7 +114,7 @@ Material Design components.
 If you want to display a custom trigger label inside a `<mat-select>`, you can use the
 `<mat-select-trigger>` element.
 
-<!-- example(select-custom-trigger) -->
+<!-- example(select-custom-trigger-signal-form) -->
 
 ### Disabling the ripple effect
 
