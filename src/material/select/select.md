@@ -138,11 +138,19 @@ with your `<select>` or `<mat-select>`. By default, these error messages are sho
 either the user has interacted with (touched) the element or the parent form has been submitted. If
 you wish to override this behavior (e.g. to show the error as soon as the invalid control is dirty
 or when a parent form group is invalid), you can use the `errorStateMatcher` property of the
-`<mat-select>`. The property takes an instance of an `ErrorStateMatcher` object. An
-`ErrorStateMatcher` must implement a single method `isErrorState` which takes the `FormControl` for
-this `<mat-select>` as well as the parent form and returns a boolean indicating whether errors
-should be shown. (`true` indicating that they should be shown, and `false` indicating that they
-should not.)
+`<mat-select>`. The property takes an instance of an `ErrorStateMatcher` object. 
+
+For reactive forms, an `ErrorStateMatcher` must implement a single method `isErrorState` which takes 
+the `FormControl` for this `<mat-select>` as well as the parent form and returns a boolean indicating 
+whether errors should be shown. (`true` indicating that they should be shown, and `false` indicating 
+that they should not.)
+
+For signal forms, an `ErrorStateMatcher` must still implement the method `isErrorState` for backwards 
+compatability with the reactive forms API, but it can be fullfilled with 
+`isErrorState() {return false}`. Then the custom matcher can implement `isSignalErrorState`, which 
+takes the `Field` for this `<mat-select>` as well as the parent form and returns a boolean indicating 
+whether errors should be shown. (`true` indicating that they should be shown, and `false` indicating 
+that they should not.)
 
 <!-- example(select-error-state-matcher-signal-form) -->
 
