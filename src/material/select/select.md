@@ -94,7 +94,7 @@ group can be set using the `label` property of `<mat-optgroup>`. Like individual
 elements, an entire `<mat-optgroup>` can be disabled or enabled by setting the `disabled` property
 on the group.
 
-<!-- example(select-optgroup) -->
+<!-- example(select-optgroup-signal-form) -->
 
 ### Multiple selection
 
