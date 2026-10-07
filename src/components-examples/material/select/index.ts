@@ -16,5 +16,6 @@ export {SelectValueBindingExample} from './select-value-binding/select-value-bin
 export {SelectReactiveFormExample} from './select-reactive-form/select-reactive-form-example';
 export {SelectInitialValueExample} from './select-initial-value/select-initial-value-example';
 export {SelectSelectableNullExample} from './select-selectable-null/select-selectable-null-example';
+export {SelectSelectableNullSignalFormExample} from './select-selectable-null-signal-form/select-selectable-null-signal-form-example';
 export {SelectHintErrorSignalFormExample} from './select-hint-error-signal-form/select-hint-error-signal-form-example';
 export {SelectHarnessExample} from './select-harness/select-harness-example';
