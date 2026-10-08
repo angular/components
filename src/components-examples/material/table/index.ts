@@ -1,5 +1,6 @@
 export {TableFlexBasicExample} from './table-flex-basic/table-flex-basic-example';
 export {TableBasicExample} from './table-basic/table-basic-example';
+export {TableRowspanExample} from './table-rowspan/table-rowspan-example';
 export {TableDynamicColumnsExample} from './table-dynamic-columns/table-dynamic-columns-example';
 export {TableExpandableRowsExample} from './table-expandable-rows/table-expandable-rows-example';
 export {TableFilteringExample} from './table-filtering/table-filtering-example';
