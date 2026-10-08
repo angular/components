@@ -12,6 +12,7 @@ import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angula
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDividerModule} from '@angular/material/divider';
 import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
 import {FloatLabelType} from '@angular/material/form-field';
 import {MatIconModule} from '@angular/material/icon';
@@ -40,6 +41,7 @@ type DisableDrinkOption = 'none' | 'first-middle-last' | 'all';
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
+    MatDividerModule,
     MatIconModule,
     MatInputModule,
     MatSelectModule,
