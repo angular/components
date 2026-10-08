@@ -33,7 +33,7 @@
     }
     <!--
       Each gridcell in the calendar contains a button, which signals to assistive technology that the
-      cell is interactable, as well as the selection state via `aria-pressed`. See #23476 for
+      cell is interactable, as well as the selection state via `aria-selected`. See #23476 for
       background.
     -->
     @for (item of row; track item.id; let colIndex = $index) {
@@ -66,7 +66,7 @@
             [class.mat-calendar-body-in-preview]="_isInPreview(item.compareValue)"
             [attr.aria-label]="item.ariaLabel"
             [attr.aria-disabled]="!item.enabled || null"
-            [attr.aria-pressed]="_isSelected(item.compareValue)"
+            [attr.aria-selected]="_isSelected(item.compareValue)"
             [attr.aria-current]="todayValue === item.compareValue ? 'date' : null"
             [attr.aria-describedby]="_getDescribedby(item.compareValue)"
             (click)="_cellClicked(item, $event)"
