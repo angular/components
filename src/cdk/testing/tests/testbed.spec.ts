@@ -87,6 +87,8 @@ describe('TestbedHarnessEnvironment', () => {
           harness.getTaskStateResult().then(res => expect(res).toBe('result'));
         }));
 
+        // Testing the integration with fakeAsync.
+        // tslint:disable-next-line:ban
         it('should be able to wait for tasks outside of Angular within fakeAsync test zone', fakeAsync(async () => {
           expect(await harness.getTaskStateResult()).toBe('result');
         }));
@@ -96,6 +98,8 @@ describe('TestbedHarnessEnvironment', () => {
           expect(element.id).toContain('root');
         });
 
+        // Testing the integration with fakeAsync.
+        // tslint:disable-next-line:ban
         it('should wait for async operation to complete in fakeAsync test', fakeAsync(async () => {
           const asyncCounter = await harness.asyncCounter();
           expect(await asyncCounter.text()).toBe('5');
