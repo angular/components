@@ -36,6 +36,7 @@
       ["fdescribe"],
       ["xit"],
       ["xdescribe"],
+      {"name": ["fakeAsync"], "message": "`fakeAsync` tests are no longer allowed."},
       {"name": ["first"], "message": "Use take(1) instead."},
       {"name": ["Object", "assign"], "message": "Use the spread operator instead."},
       {"name": ["*", "asObservable"], "message": "Cast to Observable type instead."},
