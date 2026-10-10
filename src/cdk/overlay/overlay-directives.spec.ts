@@ -1,9 +1,11 @@
 import {
+  ApplicationRef,
   Component,
   ElementRef,
   Injector,
   signal,
   ViewChild,
+  viewChild,
   WritableSignal,
   ChangeDetectionStrategy,
 } from '@angular/core';
@@ -217,6 +219,29 @@ describe('Overlay directives', () => {
       overlayDirective.origin = propOrderFixture.componentInstance.trigger;
       propOrderFixture.detectChanges();
     }).not.toThrow();
+  });
+
+  it('should not throw when the origin disappears behind an `@if` while the overlay is still open', () => {
+    fixture.destroy();
+
+    const originFixture = TestBed.createComponent(ConnectedOverlayOriginDisappearsTest);
+    // The initial render legitimately settles the `viewChild()` signal one tick after the
+    // template bindings that read it, which trips Angular's own (unrelated)
+    // `ExpressionChangedAfterItHasBeenChecked` check; skip that verification pass here so it
+    // doesn't mask the actual thing under test below.
+    originFixture.detectChanges(false);
+
+    expect(overlayContainerElement.textContent).toContain('Menu content');
+
+    // Mirrors a real app where the trigger sits behind `*ngIf`/`@if` and disappears (route
+    // navigation, parent condition flipping) while `[cdkConnectedOverlayOpen]` is still `true`
+    // for that same change-detection pass. `CdkConnectedOverlay.ngOnChanges` reacts to the
+    // `origin` input becoming `undefined` by calling `setOrigin(undefined)` and, since `open`
+    // is still `true`, synchronously calling `_position.apply()`.
+    originFixture.componentInstance.showTrigger.set(false);
+
+    expect(() => TestBed.inject(ApplicationRef).tick()).not.toThrow();
+    expect(originFixture.componentInstance.trigger()).toBeUndefined();
   });
 
   describe('inputs', () => {
@@ -846,4 +871,26 @@ class ConnectedOverlayDirectiveTest {
 class ConnectedOverlayPropertyInitOrder {
   @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
   @ViewChild('trigger') trigger!: CdkOverlayOrigin;
+}
+
+@Component({
+  template: `
+    @if (showTrigger()) {
+      <button #trigger>Toggle</button>
+    }
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="trigger()!"
+      [cdkConnectedOverlayOpen]="isOpen">
+      <p>Menu content</p>
+    </ng-template>
+  `,
+  imports: [OverlayModule],
+})
+class ConnectedOverlayOriginDisappearsTest {
+  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective!: CdkConnectedOverlay;
+  trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
+  showTrigger = signal(true);
+  isOpen = true;
 }
