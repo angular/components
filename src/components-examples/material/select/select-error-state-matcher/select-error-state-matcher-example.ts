@@ -27,8 +27,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   imports: [MatFormFieldModule, MatSelectModule, FormsModule, ReactiveFormsModule, MatInputModule],
 })
 export class SelectErrorStateMatcherExample {
-  selected = new FormControl('valid', [Validators.required, Validators.pattern('valid')]);
-
   selectFormControl = new FormControl('valid', [Validators.required, Validators.pattern('valid')]);
 
   nativeSelectFormControl = new FormControl('valid', [

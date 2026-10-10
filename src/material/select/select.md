@@ -35,7 +35,7 @@ Including `FormField` (signal forms), `FormsModule` (`NgModel`) and `ReactiveFor
 `compareWith` function. (Additional information about using a custom `compareWith` function can be found in the 
 [Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith)).
 
-<!-- example(select-form) -->
+<!-- example(select-form-signal-form) -->
 
 ### Form field features
 
@@ -44,7 +44,7 @@ include error messages, hint text, prefix & suffix, and theming. For additional 
 these features, see the
 [form field documentation](https://material.angular.dev/components/form-field/overview).
 
-<!-- example(select-hint-error) -->
+<!-- example(select-hint-error-signal-form) -->
 
 ### Setting a static placeholder
 
@@ -58,15 +58,24 @@ In some cases that `<mat-form-field>` may use the placeholder as the label (see 
 
 It is possible to disable the entire select or individual options in the select by using the
 disabled property on the `<select>` or `<mat-select>` and the `<option>` or `<mat-option>` elements respectively.
+
+For signal forms, the [`disabled`](https://angular.dev/api/forms/signals/disabled) rule sets the 
+disabled behavior of the `<select>` or `<mat-select>`, and the disabled property should not be bound 
+to the selects in the template. However, individual `<option>` or `<mat-option>` elements can be 
+bound as disabled in the template.
+
 When working with Reactive Forms, the select component can be disabled/enabled via form controls.
 This can be accomplished by creating a `FormControl` with the disabled property
 `FormControl({value: '', disabled: true})` or using `FormControl.enable()`, `FormControl.disable()`.
 
-<!-- example(select-disabled) -->
+<!-- example(select-disabled-signal-form) -->
 
 ### Resetting the select value
 
 If you want one of your options to reset the select's value, you can omit specifying its value.
+
+This behavior is likely not desired when binding to forms. An unspecified value for an option will set 
+the form's field value to `undefined`.
 
 <!-- example(select-reset) -->
 
@@ -77,7 +86,9 @@ you want the nullable options to be selectable, you can enable the `canSelectNul
 The default value for the input can be controlled application-wide through the `MAT_SELECT_CONFIG`
 injection token.
 
-<!-- example(select-selectable-null) -->
+<!-- example(select-selectable-null-signal-form) -->
+
+With signal forms, [do not use `null` as an empty value for complex objects.](https://angular.dev/guide/forms/signals/model-design#empty-value-for-a-complex-object)
 
 ### Creating groups of options
 
@@ -86,7 +97,7 @@ group can be set using the `label` property of `<mat-optgroup>`. Like individual
 elements, an entire `<mat-optgroup>` can be disabled or enabled by setting the `disabled` property
 on the group.
 
-<!-- example(select-optgroup) -->
+<!-- example(select-optgroup-signal-form) -->
 
 ### Multiple selection
 
@@ -99,14 +110,14 @@ Using multiple selection with a native select element (`<select multiple>`) is d
 inside `<mat-form-field>`, as the inline listbox appearance is inconsistent with other
 Material Design components.
 
-<!-- example(select-multiple) -->
+<!-- example(select-multiple-signal-form) -->
 
 ### Customizing the trigger label
 
 If you want to display a custom trigger label inside a `<mat-select>`, you can use the
 `<mat-select-trigger>` element.
 
-<!-- example(select-custom-trigger) -->
+<!-- example(select-custom-trigger-signal-form) -->
 
 ### Disabling the ripple effect
 
@@ -120,7 +131,7 @@ by setting the `disableRipple` property on `<mat-select>`.
 In order to facilitate easily styling the dropdown panel, `<mat-select>` has a `panelClass` property
 which can be used to apply additional CSS classes to the dropdown panel.
 
-<!-- example(select-panel-class) -->
+<!-- example(select-panel-class-signal-form) -->
 
 ### Changing when error messages are shown
 
@@ -130,13 +141,21 @@ with your `<select>` or `<mat-select>`. By default, these error messages are sho
 either the user has interacted with (touched) the element or the parent form has been submitted. If
 you wish to override this behavior (e.g. to show the error as soon as the invalid control is dirty
 or when a parent form group is invalid), you can use the `errorStateMatcher` property of the
-`<mat-select>`. The property takes an instance of an `ErrorStateMatcher` object. An
-`ErrorStateMatcher` must implement a single method `isErrorState` which takes the `FormControl` for
-this `<mat-select>` as well as the parent form and returns a boolean indicating whether errors
-should be shown. (`true` indicating that they should be shown, and `false` indicating that they
-should not.)
+`<mat-select>`. The property takes an instance of an `ErrorStateMatcher` object. 
 
-<!-- example(select-error-state-matcher) -->
+For reactive forms, an `ErrorStateMatcher` must implement a single method `isErrorState` which takes 
+the `FormControl` for this `<mat-select>` as well as the parent form and returns a boolean indicating 
+whether errors should be shown. (`true` indicating that they should be shown, and `false` indicating 
+that they should not.)
+
+For signal forms, an `ErrorStateMatcher` must still implement the method `isErrorState` for backwards 
+compatability with the reactive forms API, but it can be fullfilled with 
+`isErrorState() {return false}`. Then the custom matcher can implement `isSignalErrorState`, which 
+takes the `Field` for this `<mat-select>` as well as the parent form and returns a boolean indicating 
+whether errors should be shown. (`true` indicating that they should be shown, and `false` indicating 
+that they should not.)
+
+<!-- example(select-error-state-matcher-signal-form) -->
 
 A global error state matcher can be specified by setting the `ErrorStateMatcher` provider. This
 applies to all inputs. For convenience, `ShowOnDirtyErrorStateMatcher` is available in order to

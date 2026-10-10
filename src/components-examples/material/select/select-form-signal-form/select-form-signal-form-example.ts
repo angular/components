@@ -2,7 +2,7 @@ import {Component, signal} from '@angular/core';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
+import {form, FormField} from '@angular/forms/signals';
 
 interface Food {
   value: string;
@@ -15,24 +15,24 @@ interface Car {
 }
 
 /**
- * @title Select in a form (template-driven forms)
+ * @title Select in a form (signal forms)
  */
 @Component({
-  selector: 'select-form-example',
-  templateUrl: 'select-form-example.html',
-  imports: [FormsModule, MatFormFieldModule, MatSelectModule, MatInputModule],
+  selector: 'select-form-signal-form-example',
+  templateUrl: 'select-form-signal-form-example.html',
+  imports: [FormField, MatFormFieldModule, MatSelectModule, MatInputModule],
 })
-export class SelectFormExample {
-  selectedValue = signal('');
-  selectedCar = signal('');
+export class SelectFormSignalFormExample {
+  protected selectedValue = form(signal(''));
+  protected selectedCar = form(signal(''));
 
-  foods: Food[] = [
+  protected foods: Food[] = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
     {value: 'tacos-2', viewValue: 'Tacos'},
   ];
 
-  cars: Car[] = [
+  protected cars: Car[] = [
     {value: 'volvo', viewValue: 'Volvo'},
     {value: 'saab', viewValue: 'Saab'},
     {value: 'mercedes', viewValue: 'Mercedes'},

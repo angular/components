@@ -1,0 +1,32 @@
+<h4>mat select</h4>
+<mat-form-field>
+  <mat-label>Favorite animal</mat-label>
+  <mat-select [formField]="animalControl">
+    <mat-option>--</mat-option>
+    @for (animal of animals; track animal) {
+      <mat-option [value]="animal.name">{{animal.name}}</mat-option>
+    }
+  </mat-select>
+  @if (animalControl().getError('required')) {
+    <mat-error>Please choose an animal</mat-error>
+  }
+  @if (animalSound(); as animalSound) {
+    <mat-hint>{{animalSound}}</mat-hint>
+  }
+</mat-form-field>
+
+<h4>native html select</h4>
+<mat-form-field>
+  <mat-label>Select your car (required)</mat-label>
+  <select matNativeControl  [formField]="selectFormControl">
+    <option label="--select something --"></option>
+    <option value="saab">Saab</option>
+    <option value="mercedes">Mercedes</option>
+    <option value="audi">Audi</option>
+  </select>
+  @if (selectFormControl().getError('required')) {
+    <mat-error>This field is required</mat-error>
+  }
+  <mat-hint>You can pick up your favorite car here</mat-hint>
+</mat-form-field>
+
