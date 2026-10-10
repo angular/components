@@ -1,3 +1,4 @@
+import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {getSupportedInputTypes} from '@angular/cdk/platform';
 import {dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing/private';
 import {
@@ -1114,6 +1115,22 @@ describe('MatInput without forms', () => {
     expect(inFormField.classList).toContain('mat-mdc-form-field-input-control');
     expect(outsideFormField.classList).not.toContain('mat-mdc-form-field-input-control');
   });
+
+  it('should update the outline label offset when the direction changes', async () => {
+    const fixture = TestBed.createComponent(MatInputWithPrefixInsideDir);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const label = fixture.nativeElement.querySelector('.mdc-floating-label') as HTMLElement;
+    expect(label.style.transform).toContain('translateX(calc(1 *');
+
+    fixture.componentInstance.direction = 'rtl';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(label.style.transform).toContain('translateX(calc(-1 *');
+  });
 });
 
 describe('MatInput with forms', () => {
@@ -2215,6 +2232,23 @@ class MatInputWithLabel {}
 class MatInputWithLabelAndPlaceholder {
   floatLabel!: FloatLabelType;
   appearance!: MatFormFieldAppearance;
+}
+
+@Component({
+  template: `
+    <div [dir]="direction">
+      <mat-form-field appearance="outline">
+        <mat-label>My Label</mat-label>
+        <div matPrefix>Prefix</div>
+        <input matInput>
+      </mat-form-field>
+    </div>
+  `,
+  imports: [MatInputModule, BidiModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MatInputWithPrefixInsideDir {
+  direction: Direction = 'ltr';
 }
 
 @Component({
