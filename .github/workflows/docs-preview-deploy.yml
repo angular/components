@@ -41,7 +41,7 @@ jobs:
           npx -y firebase-tools@latest target:clear --config docs/firebase.json --project ${{env.PREVIEW_PROJECT}} hosting mat-aio
           npx -y firebase-tools@latest target:apply --config docs/firebase.json --project ${{env.PREVIEW_PROJECT}} hosting mat-aio ${{env.PREVIEW_SITE}}
 
-      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@9ea19241c41afc4579f2bc6983327f6b98ef3025 # main
+      - uses: angular/dev-infra/github-actions/previews/upload-artifacts-to-firebase@5fb5ac8b22fb074ec50302e64f24c8397ea3b632 # main
         with:
           github-token: '${{secrets.GITHUB_TOKEN}}'
           workflow-artifact-name: 'docs-preview'
