@@ -25,7 +25,6 @@ $fallbacks: m3-button-toggle.get-tokens();
   display: inline-flex;
   flex-direction: row;
   white-space: nowrap;
-  overflow: hidden;
   -webkit-tap-highlight-color: transparent;
   border-radius: token-utils.slot(button-toggle-legacy-shape, $fallbacks);
 
@@ -82,6 +81,11 @@ $fallbacks: m3-button-toggle.get-tokens();
     token-utils.slot(button-toggle-legacy-selected-state-text-color, $fallbacks)};
 
   &.cdk-keyboard-focused .mat-button-toggle-focus-overlay {
+    outline-width: 3px;
+    outline-style: solid;
+    outline-color: var(--sys-secondary);
+    outline-offset: 3px;
+    z-index: 2;
     opacity: token-utils.slot(button-toggle-legacy-focus-state-layer-opacity, $fallbacks);
   }
 
@@ -356,26 +360,35 @@ $fallbacks: m3-button-toggle.get-tokens();
   --mat-focus-indicator-border-radius: #{token-utils.slot(button-toggle-shape, $fallbacks)};
 }
 
-.mat-button-toggle-group-appearance-standard:not(.mat-button-toggle-vertical) .mat-button-toggle {
-  &:last-of-type .mat-button-toggle-button::before {
-    border-top-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
-    border-bottom-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+.mat-button-toggle-group:not(.mat-button-toggle-vertical) .mat-button-toggle {
+  &:last-of-type {
+    .mat-button-toggle-button::before, .mat-button-toggle-ripple {
+      border-top-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+      border-bottom-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+    }
   }
 
-  &:first-of-type .mat-button-toggle-button::before {
-    border-top-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
-    border-bottom-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+  &:first-of-type {
+    .mat-button-toggle-button::before, .mat-button-toggle-ripple {
+      border-top-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+      border-bottom-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+    }
   }
 }
 
-.mat-button-toggle-group-appearance-standard.mat-button-toggle-vertical .mat-button-toggle {
-  &:last-of-type .mat-button-toggle-button::before {
-    border-bottom-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
-    border-bottom-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+.mat-button-toggle-group.mat-button-toggle-vertical .mat-button-toggle {
+  &:last-of-type {
+    .mat-button-toggle-button::before, .mat-button-toggle-ripple {
+      border-bottom-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+      border-bottom-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+    }
   }
 
-  &:first-of-type .mat-button-toggle-button::before {
-    border-top-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
-    border-top-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+  &:first-of-type {
+    .mat-button-toggle-button::before, .mat-button-toggle-ripple {
+      border-top-right-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+      border-top-left-radius: token-utils.slot(button-toggle-shape, $fallbacks);
+    }
   }
 }
+
