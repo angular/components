@@ -2,7 +2,7 @@
   If there's not enough space in the first row, create a separate label row. We mark this row as
   aria-hidden because we don't want it to be read out as one of the weeks in the month.
 -->
-@if (_firstRowOffset < labelMinRequiredCells) {
+@if (_firstRowOffset < labelMinRequiredCells && label) {
   <tr aria-hidden="true">
     <td class="mat-calendar-body-label"
         [attr.colspan]="numCols"
