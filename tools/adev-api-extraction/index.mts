@@ -75,6 +75,21 @@ function main() {
   const filesWithoutExamples = srcs.split(',').filter(src => !src.startsWith(EXAMPLES_PATH));
   const compilerHost = createCompilerHost({options: compilerOptions});
 
+  // Compiled stylesheets aren't inputs of the action and don't affect the docs,
+  // so treat the missing ones as empty instead of failing the compilation.
+  const missingStylesheets = new Set<string>();
+  compilerHost.resourceNameToFileName = (resourceName, containingFile, fallbackResolve) => {
+    const fileName = fallbackResolve!(resourceName, containingFile);
+    if (fileName === null && resourceName.endsWith('.css')) {
+      const missingFileName = path.resolve(path.dirname(containingFile), resourceName);
+      missingStylesheets.add(missingFileName);
+      return missingFileName;
+    }
+    return fileName;
+  };
+  compilerHost.readResource = fileName =>
+    missingStylesheets.has(fileName) ? '' : compilerHost.readFile(fileName)!;
+
   const program: NgtscProgram = new NgtscProgram(
     filesWithoutExamples,
     compilerOptions,
