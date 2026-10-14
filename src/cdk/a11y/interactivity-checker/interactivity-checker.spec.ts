@@ -158,6 +158,56 @@ describe('InteractivityChecker', () => {
       });
     });
 
+    it('should return false for a focusable element with the inert attribute', () => {
+      const button = document.createElement('button');
+      button.setAttribute('inert', '');
+      testContainerElement.appendChild(button);
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected <button inert> not to be focusable')
+        .toBe(false);
+    });
+
+    it('should return false for a focusable element inside an inert container', () => {
+      testContainerElement.innerHTML = `<div inert>
+           <button></button>
+         </div>`;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected element with an inert ancestor not to be focusable')
+        .toBe(false);
+    });
+
+    it('should return true for a focusable element once inert is removed', () => {
+      testContainerElement.innerHTML = `<div inert>
+           <button></button>
+         </div>`;
+      const container = testContainerElement.firstElementChild as HTMLElement;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected element with an inert ancestor not to be focusable')
+        .toBe(false);
+
+      container.removeAttribute('inert');
+
+      expect(checker.isFocusable(button))
+        .withContext('Expected element to be focusable once inert is removed')
+        .toBe(true);
+    });
+
+    it('should return true for an inert element if inert is ignored', () => {
+      testContainerElement.innerHTML = `<div inert>
+           <button></button>
+         </div>`;
+      const button = testContainerElement.querySelector('button') as HTMLElement;
+
+      expect(checker.isFocusable(button, {ignoreVisibility: false, ignoreInert: true}))
+        .withContext('Expected element with an inert ancestor to be focusable if inert is ignored')
+        .toBe(true);
+    });
+
     it('should return false for a `display: none` element (isFocusable)', () => {
       testContainerElement.innerHTML = `<input style="display: none;">`;
       const input = testContainerElement.querySelector('input') as HTMLElement;
