@@ -66,14 +66,15 @@ def _extract_api_to_json(ctx):
                             break
 
             if not found_path:
-                candidates = [f for f in files if f.path.endswith("/index.d.ts")]
-                sorted_candidates = sorted(candidates, key = lambda f: len(f.path))
-                found_path = sorted_candidates[0].path
+                # Use the target's own entry point. The `index.d.ts` files of its transitive
+                # dependencies are in `files` as well, so it can't be found by name alone.
+                own_index = "%s/index.d.ts" % target.label.package
+                own_files = [f.path for f in files if f.short_path == own_index]
+                if not own_files:
+                    fail("Expected import_map target %s to provide %s." % (target.label, own_index))
+                found_path = own_files[0]
 
-            if found_path:
-                path_map[path] = found_path
-            else:
-                fail("Expected a single file in import_map target %s, but found %s. Could not determine entry point. Files: %s" % (target.label, len(files), [f.path for f in files]))
+            path_map[path] = found_path
     args.add(json.encode(path_map))
 
     # Pass the set of (optional) extra entries
