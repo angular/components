@@ -77,13 +77,22 @@ def _extract_api_to_json(ctx):
             path_map[path] = found_path
     args.add(json.encode(path_map))
 
+    # Pass the bin directory, so relative imports of files outside `srcs` (e.g. `../private`) can
+    # be resolved to the type declarations from `deps` and `import_map`.
+    args.add(ctx.bin_dir.path)
+
     # Pass the set of (optional) extra entries
     args.add_joined(ctx.files.extra_entries, join_with = ",")
+
+    deps_types = depset(transitive = [dep[JsInfo].transitive_types for dep in ctx.attr.deps])
 
     # Define an action that runs the nodejs_binary executable. This is
     # the main thing that this rule does.
     ctx.actions.run(
-        inputs = depset(ctx.files.srcs + ctx.files.extra_entries + import_map_files),
+        inputs = depset(
+            ctx.files.srcs + ctx.files.extra_entries + import_map_files,
+            transitive = [deps_types],
+        ),
         executable = ctx.executable._extract_api_to_json,
         outputs = [json_output],
         arguments = [args],
@@ -109,6 +118,13 @@ extract_api_to_json = rule(
                     TypeScript files.""",
             allow_empty = False,
             allow_files = True,
+        ),
+        "deps": attr.label_list(
+            doc = """Targets whose type declarations are used to resolve relative imports of
+                    files outside of `srcs`: usually the `ng_project` built from `srcs`, or the
+                    dependency that provides those files when that target can't be used (e.g.
+                    because it's test-only).""",
+            providers = [JsInfo],
         ),
         "output_name": attr.output(
             doc = """Name of the JSON output file.""",

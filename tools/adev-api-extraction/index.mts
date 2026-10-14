@@ -34,6 +34,7 @@ function main() {
     srcs,
     outputFilenameExecRootRelativePath,
     serializedPathMapWithExecRootRelativePaths,
+    binDir,
     extraEntriesSrcs,
   ] = rawParamLines;
 
@@ -60,6 +61,8 @@ function main() {
   const compilerOptions: CompilerOptions = {
     paths: resolvedPathMap,
     rootDir: '.',
+    // Resolves relative imports of files outside `srcs` (e.g. `../private`) to their declarations.
+    rootDirs: [path.resolve('.'), path.resolve(binDir)],
     skipLibCheck: true,
     target: ts.ScriptTarget.ES2022,
     // This is necessary because otherwise types that include `| null` are not included in the documentation.
@@ -71,6 +74,7 @@ function main() {
   // Code examples should not be fed to the compiler.
   const filesWithoutExamples = srcs.split(',').filter(src => !src.startsWith(EXAMPLES_PATH));
   const compilerHost = createCompilerHost({options: compilerOptions});
+
   const program: NgtscProgram = new NgtscProgram(
     filesWithoutExamples,
     compilerOptions,
@@ -85,6 +89,7 @@ function main() {
     }, []);
 
   const apiDoc = program.getApiDocumentation(entryPointExecRootRelativePath, privateModules);
+
   const extractedEntries = apiDoc.entries;
   const combinedEntries = extractedEntries.concat(extraEntries);
 
