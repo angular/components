@@ -7,7 +7,7 @@
  */
 
 import {computed, Directive, inject, input, OnDestroy, OnInit, signal} from '@angular/core';
-import {DeferredContent, ComboboxPopupPattern} from '@angular/aria/private';
+import {DeferredContent, ComboboxPopupPattern} from '../private';
 import type {Combobox} from './combobox';
 import type {ComboboxWidget} from './combobox-widget';
 import {COMBOBOX_POPUP} from './combobox-tokens';

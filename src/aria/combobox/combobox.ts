@@ -19,7 +19,7 @@ import {
   signal,
   Renderer2,
 } from '@angular/core';
-import {DeferredContentAware, ComboboxPattern, tabIndexTransform} from '@angular/aria/private';
+import {DeferredContentAware, ComboboxPattern, tabIndexTransform} from '../private';
 import type {ComboboxPopup} from './combobox-popup';
 
 /**
