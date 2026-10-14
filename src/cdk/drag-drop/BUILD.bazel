@@ -86,4 +86,5 @@ extract_api_to_json(
     output_name = "cdk_drag_drop.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = [":drag-drop"],
 )

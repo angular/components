@@ -257,7 +257,6 @@ def extract_api_to_json(**kwargs):
             "@angular/core": "//:node_modules/@angular/core",
             "@angular/core/*": "//:node_modules/@angular/core",
             "@angular/cdk/bidi": "//src/cdk/bidi",
-            "@angular/aria/private": "//src/aria/private",
         },
         **kwargs
     )
