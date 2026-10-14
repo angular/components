@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {readFileSync, writeFileSync} from 'fs';
+import {readFileSync, statSync, writeFileSync} from 'fs';
 import path from 'path';
 // @ts-ignore This compiles fine, but Webstorm doesn't like the ESM import in a CJS context.
 import {
@@ -50,12 +50,14 @@ function main() {
   for (const [importPath, filePath] of Object.entries(pathMap)) {
     resolvedPathMap[importPath] = [path.resolve(filePath)];
 
-    // In addition to the exact import path,
-    // also add wildcard mappings for subdirectories.
+    // In addition to the exact import path, also add wildcard mappings for subdirectories,
+    // unless the map has an explicit entry for them. They're relative to the mapped directory
+    // or, when a file is mapped, to the directory that contains it.
     const importPathWithWildcard = path.join(importPath, '*');
-    resolvedPathMap[importPathWithWildcard] = [
-      path.join(path.resolve(path.dirname(filePath)), '*'),
-    ];
+    if (!importPath.includes('*') && !(importPathWithWildcard in pathMap)) {
+      const dir = statSync(filePath).isDirectory() ? filePath : path.dirname(filePath);
+      resolvedPathMap[importPathWithWildcard] = [path.join(path.resolve(dir), '*')];
+    }
   }
 
   const compilerOptions: CompilerOptions = {
