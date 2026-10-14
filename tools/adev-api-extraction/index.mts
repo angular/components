@@ -107,6 +107,18 @@ function main() {
 
   const apiDoc = program.getApiDocumentation(entryPointExecRootRelativePath, privateModules);
 
+  // Angular errors (e.g. an unresolvable host directive) make the extractor silently treat
+  // directives as plain classes, so fail instead of producing incomplete docs.
+  const errors = program
+    .getNgSemanticDiagnostics()
+    .filter(diagnostic => diagnostic.category === ts.DiagnosticCategory.Error);
+  if (errors.length > 0) {
+    throw new Error(
+      `Angular compilation errors while extracting API docs for ${moduleName}:\n` +
+        ts.formatDiagnostics(errors, compilerHost),
+    );
+  }
+
   const extractedEntries = apiDoc.entries;
   const combinedEntries = extractedEntries.concat(extraEntries);
 
