@@ -69,6 +69,10 @@ $_fallback-size: 40px;
   .mdc-checkbox--disabled {
     cursor: default;
     pointer-events: none;
+
+    @include cdk.high-contrast {
+      color: GrayText;
+    }
   }
 
   .mdc-checkbox__background {
