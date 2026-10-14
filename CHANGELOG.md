@@ -1,3 +1,16 @@
+<a name="22.3.0-next.2"></a>
+# 22.3.0-next.2 "rhenium-roundabout" (2026-10-14)
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [92b97f6fb](https://github.com/angular/components/commit/92b97f6fb188fc2b686d027f50ae58dd8ff7812b) | fix | **a11y:** treat inert elements as non-focusable ([#33846](https://github.com/angular/components/pull/33846)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c0207b5d8](https://github.com/angular/components/commit/c0207b5d84a2903ed846b2ef82698f212bdf0b27) | fix | **chips:** implement touch-target pattern/styles on chip component ([#33614](https://github.com/angular/components/pull/33614)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.3"></a>
 # 22.2.3 "rhenium-rotor" (2026-10-14)
 ### cdk
