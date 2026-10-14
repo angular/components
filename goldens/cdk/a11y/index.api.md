@@ -343,6 +343,7 @@ export function isFakeTouchstartFromScreenReader(event: TouchEvent): boolean;
 
 // @public
 export class IsFocusableConfig {
+    ignoreInert?: boolean;
     ignoreVisibility: boolean;
 }
 
