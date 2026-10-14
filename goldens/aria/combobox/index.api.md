@@ -5,10 +5,6 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
-import { ComboboxPattern } from '@angular/aria/private';
-import { ComboboxPopupPattern } from '@angular/aria/private';
-import { DeferredContentAware } from '@angular/aria/private';
-import * as i1 from '@angular/aria/private';
 import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -56,7 +52,7 @@ export class ComboboxPopup implements OnInit, OnDestroy {
     _unregisterWidget(): void;
     readonly _widget: _angular_core.WritableSignal<ComboboxWidget | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopup, "ng-template[ngComboboxPopup]", ["ngComboboxPopup"], { "combobox": { "alias": "combobox"; "required": true; "isSignal": true; }; "popupType": { "alias": "popupType"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.DeferredContent; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<ComboboxPopup, "ng-template[ngComboboxPopup]", ["ngComboboxPopup"], { "combobox": { "alias": "combobox"; "required": true; "isSignal": true; }; "popupType": { "alias": "popupType"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof DeferredContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<ComboboxPopup, never>;
 }
