@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {provideNativeDateAdapter} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
@@ -13,6 +13,9 @@ const year = today.getFullYear();
   selector: 'date-range-picker-comparison-example',
   templateUrl: 'date-range-picker-comparison-example.html',
   styleUrl: 'date-range-picker-comparison-example.css',
+  // Use no encapsulation so the styles below can reach the calendar, which is
+  // rendered in an overlay outside of this component's DOM.
+  encapsulation: ViewEncapsulation.None,
   providers: [provideNativeDateAdapter()],
   imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule],
 })
