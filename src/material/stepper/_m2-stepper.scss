@@ -11,6 +11,7 @@
     base: (
       stepper-header-focus-state-layer-shape: 4px,
       stepper-header-hover-state-layer-shape: 4px,
+      stepper-header-icon-shape: 9999px,
     ),
     color: map.merge(private-get-color-palette-color-tokens($theme, primary), (
       stepper-container-color: map.get($system, surface),
