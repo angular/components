@@ -80,12 +80,6 @@ describe('Menu', () => {
   });
 
   describe('menu aim', () => {
-    // TODO(crisbeto): update the component to clear timeouts on destroy.
-    // Give some time for timeouts to be cleaned up.
-    afterEach(async () => {
-      await wait(350);
-    });
-
     /** A coordinate in the browser window */
     type Point = {x: number; y: number};
 
@@ -274,6 +268,33 @@ describe('Menu', () => {
         expect(numEnters).toBe(1);
         expect(nativeMenus.length).toBe(2);
         expect(nativeMenus[1].id).toBe('share_menu');
+      });
+
+      it('should not toggle a menu if the menu aim is destroyed while waiting', async () => {
+        openFileMenu();
+        openMenuOnHover(nativeEditTrigger!);
+        const editPosition = nativeEditTrigger!.getBoundingClientRect();
+        const sharePosition = nativeShareTrigger!.getBoundingClientRect();
+
+        // Move towards the edit submenu and stop on the share trigger so that
+        // the menu aim delays opening the share menu.
+        await hover(
+          {
+            x: editPosition.x + editPosition.width / 2,
+            y: editPosition.y + editPosition.height - 10,
+          },
+          {
+            x: sharePosition.x + sharePosition.width - 10,
+            y: sharePosition.y + sharePosition.height - 10,
+          },
+          nativeMenus[0],
+          0,
+        );
+
+        fixture.destroy();
+        await wait(350);
+
+        expect(document.querySelector('#share_menu')).toBeNull();
       });
 
       it('should not close the edit submenu when hovering into its items in time', async () => {
