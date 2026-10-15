@@ -87,7 +87,7 @@ $fallbacks: m3-stepper.get-tokens();
 }
 
 .mat-step-icon {
-  border-radius: 50%;
+  border-radius: token-utils.slot(stepper-header-icon-shape, $fallbacks);
   height: stepper-variables.$label-header-height;
   width: stepper-variables.$label-header-height;
   flex-shrink: 0;
