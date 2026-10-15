@@ -12,6 +12,7 @@ import {RouterTestingHarness} from '@angular/router/testing';
 import {Observable} from 'rxjs';
 import {filter, skip, take} from 'rxjs/operators';
 import {ComponentViewer} from './component-viewer';
+import {docItemResolver} from './doc-item-resolver';
 import {ComponentPageTitle} from '../page-title/page-title';
 
 /** Resolves with the first value emitted by an observable. */
@@ -48,7 +49,7 @@ describe('ComponentViewer', () => {
                   component: Shell,
                   children: [
                     {path: '', component: SectionPage},
-                    {path: ':id', component: ComponentViewer},
+                    {path: ':id', component: ComponentViewer, resolve: {docItem: docItemResolver}},
                   ],
                 },
               ],
@@ -62,10 +63,27 @@ describe('ComponentViewer', () => {
     harness = await RouterTestingHarness.create();
   });
 
-  it('should bind the id and section route params', async () => {
+  it('should resolve the doc item from the id and section route params', async () => {
     const component = await navigate('/cdk/overlay');
-    expect(component.id()).toBe('overlay');
-    expect(component.section()).toBe('cdk');
+    expect(component.docItem().id).toBe('overlay');
+    expect(component.docItem().packageName).toBe('cdk');
+  });
+
+  it('should show a tab for each section the doc item has', async () => {
+    const component = await navigate('/components/button');
+    const doc = component.docItem();
+    const expected = ['overview', 'api'];
+
+    if (doc.hasStyling) {
+      expected.push('styling');
+    }
+
+    if (doc.examples?.length) {
+      expected.push('examples');
+    }
+
+    expect(component.sections()).toEqual(expected);
+    expect(expected).toContain('examples');
   });
 
   it('should load the doc item for the route params', async () => {

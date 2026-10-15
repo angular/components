@@ -9,6 +9,7 @@
 import {Component} from '@angular/core';
 import {CanActivateFn, Route, Routes} from '@angular/router';
 import {canActivateComponentSidenav} from './pages/component-sidenav/component-sidenav-can-load-guard';
+import {guideResolver} from './pages/guide-viewer/guide-resolver';
 
 @Component({template: ''})
 export class RedirectPlaceholder {}
@@ -65,6 +66,7 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   {
     path: 'guide/:id',
     loadComponent: () => import('./pages/guide-viewer').then(m => m.GuideViewer),
+    resolve: {guide: guideResolver},
   },
   // Needs to be defined before `:section` so it gets picked first when redirecting a missing page.
   {
