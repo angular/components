@@ -52,10 +52,8 @@ jobs:
         run: node ./scripts/circleci/setup-angular-snapshots.js main
       - name: Install node modules
         run: pnpm install --no-frozen-lockfile
-      - name: Run linker tests using AOT
-        run: pnpm test-linker-aot
-      - name: Run linker tests using JIT
-        run: pnpm test-linker-jit
+      - name: Run linker test
+        run: pnpm bazel test //integration/linker:linker
 
   monitor-docs-site:
     runs-on: ubuntu-latest
