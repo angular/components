@@ -32,12 +32,13 @@ const ignorePackages = [
   '@angular/bazel',
 ];
 
-const {writeFileSync} = require('fs');
+const {readFileSync, writeFileSync} = require('fs');
 const {join} = require('path');
 
 const [tag] = process.argv.slice(2);
 const projectDir = join(__dirname, '../../');
 const packageJsonPath = join(projectDir, 'package.json');
+const pnpmWorkspacePath = join(projectDir, 'pnpm-workspace.yaml');
 const packageJson = require(packageJsonPath);
 const packageSuffix = tag ? ` (${tag})` : '';
 
@@ -65,15 +66,17 @@ const packagesToUpdate = packagesToConsider.reduce((result, name) => {
 console.log('Setting up snapshot builds for:\n');
 console.log(`  ${packagesToUpdate.map(p => `${p.name}${packageSuffix}`).join('\n  ')}\n`);
 
+const overrideLines = [];
+
 // Setup the snapshot version for each Angular package specified in the "package.json" file.
 packagesToUpdate.forEach(({name, repoName}) => {
-  const buildsUrl = `github:angular/${repoName}${tag ? `#${tag}` : ''}`;
+  const buildsUrl = `github:${repoName}${tag ? `#${tag}` : ''}`;
 
-  // Add overrides for each package in the format "**/{PACKAGE}" so that all
-  // nested versions of that specific Angular package will have the same version.
-  packageJson.pnpm.overrides[`**/${name}`] = buildsUrl;
+  // Add overrides for each package so that all nested versions of that
+  // specific Angular package will have the same version.
+  overrideLines.push(`  '${name}': '${buildsUrl}'`);
 
-  // Since the resolutions only cover the version of all nested installs, we also need
+  // Since the overrides only cover the version of all nested installs, we also need
   // to explicitly set the version for the package listed in the project "package.json".
   if (packageJson.devDependencies && packageJson.devDependencies[name]) {
     packageJson.devDependencies[name] = buildsUrl;
@@ -83,6 +86,17 @@ packagesToUpdate.forEach(({name, repoName}) => {
 });
 
 // Write changes to the "packageJson", so that we can install the new versions afterwards.
-writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2) + '\n');
 
-console.log('Successfully added the "resolutions" to the "package.json".');
+// Add the overrides and allow exotic subdependencies in "pnpm-workspace.yaml".
+let pnpmWorkspace = readFileSync(pnpmWorkspacePath, 'utf8');
+if (!pnpmWorkspace.includes('\noverrides:\n')) {
+  throw new Error('Could not find "overrides:" section in pnpm-workspace.yaml');
+}
+pnpmWorkspace = pnpmWorkspace.replace(
+  '\noverrides:\n',
+  `\nblockExoticSubdeps: false\noverrides:\n${overrideLines.join('\n')}\n`,
+);
+writeFileSync(pnpmWorkspacePath, pnpmWorkspace);
+
+console.log('Successfully added the "overrides" to the "pnpm-workspace.yaml".');
