@@ -153,7 +153,7 @@ mat-footer-row.mat-mdc-footer-row {
 // children. Otherwise, the cells grow larger than the row and the layout breaks.
 .mat-mdc-table mat-header-row.mat-mdc-header-row,
 .mat-mdc-table mat-row.mat-mdc-row,
-.mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+.mat-mdc-table mat-footer-row.mat-mdc-footer-row {
   height: unset;
 }
 
