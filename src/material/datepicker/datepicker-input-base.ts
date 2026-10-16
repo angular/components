@@ -341,10 +341,13 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
       if (value && !this.value) {
         this._cvaOnChange(date);
       }
+    }
 
-      if (lastValueWasValid !== this._lastValueValid) {
-        this._validatorOnChange();
-      }
+    // Re-run the validators if the parse state changed while the value stayed the same.
+    // This also covers going from one null to another (e.g. clearing an unparseable value),
+    // because signal forms skip value writes that don't change the value.
+    if (!hasChanged && lastValueWasValid !== this._lastValueValid) {
+      this._validatorOnChange();
     }
 
     if (hasChanged) {
