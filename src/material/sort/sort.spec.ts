@@ -209,6 +209,36 @@ describe('MatSort', () => {
       expect(sortHeaderElement.getAttribute('aria-sort')).toBe('none');
     });
 
+    it('should show the start direction as hint for unsorted headers', () => {
+      // Sort defaultA descending so the table's active direction is `desc`.
+      component.sort('defaultA');
+      component.sort('defaultA');
+      fixture.detectChanges();
+      expect(component.matSort.active).toBe('defaultA');
+      expect(component.matSort.direction).toBe('desc');
+
+      // Sorted header follows the active direction.
+      const sortedContainer = fixture.nativeElement.querySelector(
+        '#defaultA .mat-sort-header-container',
+      );
+      expect(sortedContainer.classList.contains('mat-sort-header-descending')).toBe(true);
+      expect(sortedContainer.classList.contains('mat-sort-header-ascending')).toBe(false);
+
+      // Unsorted header with default start (`asc`) hints `asc`, not the table's `desc`.
+      const unsortedContainer = fixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
+      expect(unsortedContainer.classList.contains('mat-sort-header-ascending')).toBe(true);
+      expect(unsortedContainer.classList.contains('mat-sort-header-descending')).toBe(false);
+
+      // Unsorted header with `start="desc"` hints `desc`.
+      const descStartContainer = fixture.nativeElement.querySelector(
+        '#overrideStart .mat-sort-header-container',
+      );
+      expect(descStartContainer.classList.contains('mat-sort-header-descending')).toBe(true);
+      expect(descStartContainer.classList.contains('mat-sort-header-ascending')).toBe(false);
+    });
+
     it('should not render the arrow if sorting is disabled for that column', async () => {
       const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
 

@@ -217,6 +217,15 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     return !this._isDisabled() || this._isSorted();
   }
 
+  /**
+   * Gets the direction the arrow should be pointing. If the header is sorted, the arrow
+   * points in the currently active sorted direction. Otherwise the arrow points in the
+   * direction the header would be sorted by if it was clicked (its start direction).
+   */
+  _getArrowDirection(): SortDirection {
+    return this._isSorted() ? this._sort.direction : this.start || this._sort.start;
+  }
+
   private _updateSortActionDescription(newDescription: string) {
     // We use AriaDescriber for the sort button instead of setting an `aria-label` because some
     // screen readers (notably VoiceOver) will read both the column header *and* the button's label
