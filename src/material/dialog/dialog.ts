@@ -142,6 +142,7 @@ export class MatDialog implements OnDestroy {
 
     const cdkRef = this._dialog.open<R, D, T>(componentOrTemplateRef, {
       ...config,
+      backdropClass: config.backdropClass || 'mat-mdc-dialog-backdrop',
       positionStrategy: createGlobalPositionStrategy(this._injector)
         .centerHorizontally()
         .centerVertically(),
