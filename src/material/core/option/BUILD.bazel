@@ -77,6 +77,7 @@ ng_project(
 sass_binary(
     name = "option_css",
     src = "option.scss",
+    layer = "angular-material",
     deps = [
         "//src/cdk:sass_lib",
         "//src/material/core/style:layout_common",
@@ -88,6 +89,7 @@ sass_binary(
 sass_binary(
     name = "optgroup_css",
     src = "optgroup.scss",
+    layer = "angular-material",
     deps = [
         "//src/material/core/tokens:token_utils",
     ],
