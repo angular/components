@@ -487,6 +487,17 @@ describe('AccordionGroup', () => {
     });
   });
 
+  describe('eager content', () => {
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(AccordionPanelWithEagerContent) as any;
+      await fixture.whenStable();
+    });
+
+    it('should render ngAccordionPanel content without ngAccordionContent', () => {
+      expect(fixture.nativeElement.textContent).toContain('Content');
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -527,19 +538,6 @@ describe('AccordionGroup', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'ngAccordionTrigger must not be nested inside its controlled ngAccordionPanel, otherwise it will become unreachable when collapsed.',
-      );
-    });
-
-    it('should warn when ngAccordionPanel is missing ngAccordionContent', () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [AccordionPanelWithoutContent],
-      });
-      const noContentFixture = TestBed.createComponent(AccordionPanelWithoutContent);
-      noContentFixture.detectChanges();
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'ngAccordionPanel must have an ngAccordionContent to render.',
       );
     });
 
@@ -737,7 +735,7 @@ class AccordionWithNestedTrigger {}
   imports: [AccordionGroup, AccordionTrigger, AccordionPanel],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-class AccordionPanelWithoutContent {}
+class AccordionPanelWithEagerContent {}
 
 @Component({
   template: `

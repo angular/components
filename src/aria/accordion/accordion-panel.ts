@@ -6,28 +6,19 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {
-  Directive,
-  ElementRef,
-  afterRenderEffect,
-  computed,
-  contentChild,
-  inject,
-  input,
-} from '@angular/core';
+import {Directive, ElementRef, afterRenderEffect, computed, inject, input} from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {DeferredContentAware, AccordionTriggerPattern, reportViolations} from '../private';
-import {AccordionContent} from './accordion-content';
 
 /**
  * The content panel of an accordion item that is conditionally visible.
  *
  * This directive is a container for the content that is shown or hidden. It should
  * expose a template reference that will be used by the corresponding `ngAccordionTrigger`.
- * The content within the panel should be provided using an `ng-template` with the
- * `ngAccordionContent` directive so that the content is not rendered on the page until the trigger
- * is expanded. It applies `role="region"` for accessibility and uses the `inert` attribute to hide
- * its content from assistive technologies when not visible.
+ * To render the content lazily, provide it using an `ng-template` with the `ngAccordionContent`
+ * directive so that it is not rendered on the page until the trigger is expanded. It applies
+ * `role="region"` for accessibility and uses the `inert` attribute to hide its content from
+ * assistive technologies when not visible.
  *
  * ```html
  * <div ngAccordionPanel #panel="ngAccordionPanel">
@@ -65,8 +56,6 @@ export class AccordionPanel {
   /** The DeferredContentAware host directive. */
   private readonly _deferredContentAware = inject(DeferredContentAware);
 
-  private readonly _accordionContent = contentChild(AccordionContent);
-
   /** A global unique identifier for the panel. */
   readonly id = input(inject(_IdGenerator).getId('ng-accordion-panel-', true));
 
@@ -94,9 +83,6 @@ export class AccordionPanel {
         read: () => {
           const violations: string[] = [];
 
-          if (!this._accordionContent()) {
-            violations.push('ngAccordionPanel must have an ngAccordionContent to render.');
-          }
           if (!this._pattern) {
             violations.push('ngAccordionPanel must have an ngAccordionTrigger to control it.');
           }
