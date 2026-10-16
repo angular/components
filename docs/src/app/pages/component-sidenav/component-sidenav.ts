@@ -10,17 +10,17 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
-  forwardRef,
   inject,
+  input,
+  resource,
   viewChild,
 } from '@angular/core';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {AsyncPipe} from '@angular/common';
 import {MatListItem, MatNavList} from '@angular/material/list';
 import {MatSidenav, MatSidenavContainer} from '@angular/material/sidenav';
-import {ActivatedRoute, Routes, RouterOutlet, RouterLinkActive, RouterLink} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {Routes, RouterOutlet, RouterLinkActive, RouterLink} from '@angular/router';
+import {map} from 'rxjs/operators';
 
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {Footer} from '../../shared/footer/footer';
@@ -36,7 +36,6 @@ import {
   ComponentViewer,
 } from '../component-viewer/component-viewer';
 import {ComponentStyling} from '../component-viewer/component-styling';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 // These constants are used by the ComponentSidenav for orchestrating the MatSidenav in a responsive
 // way. This includes hiding the sidenav, defaulting it to open, changing the mode from over to
@@ -49,49 +48,59 @@ const EXTRA_SMALL_WIDTH_BREAKPOINT = 720;
 const SMALL_WIDTH_BREAKPOINT = 959;
 
 @Component({
+  selector: 'app-component-nav',
+  templateUrl: './component-nav.html',
+  imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+export class ComponentNav {
+  private readonly _docItems = inject(DocumentationItems);
+
+  /** Section (material/cdk) whose items are listed. */
+  readonly section = input<string>();
+
+  /** Doc items of the section. */
+  readonly items = resource({
+    params: () => this.section(),
+    loader: ({params: section}) => this._docItems.getItems(section),
+    defaultValue: [],
+  });
+}
+
+@Component({
   selector: 'app-component-sidenav',
   templateUrl: './component-sidenav.html',
-  styleUrls: ['./component-sidenav.scss'],
+  styleUrl: './component-sidenav.scss',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatSidenav,
     MatSidenavContainer,
-    forwardRef(() => ComponentNav),
+    ComponentNav,
     ComponentPageHeader,
     RouterOutlet,
     Footer,
-    AsyncPipe,
   ],
 })
 export class ComponentSidenav {
-  docItems = inject(DocumentationItems);
-  private _navigationFocusService = inject(NavigationFocusService);
+  private readonly _breakpoints = inject(BreakpointObserver);
+
+  /** Section (material/cdk) of the current route. Bound from the route params. */
+  readonly section = input<string>();
+
+  readonly docItems = inject(DocumentationItems);
 
   readonly sidenav = viewChild(MatSidenav);
-  isExtraScreenSmall: Observable<boolean>;
-  isScreenSmall: Observable<boolean>;
+  readonly isExtraScreenSmall = this._matchesMaxWidth(EXTRA_SMALL_WIDTH_BREAKPOINT);
+  readonly isScreenSmall = this._matchesMaxWidth(SMALL_WIDTH_BREAKPOINT);
 
   constructor() {
-    const breakpoints = inject(BreakpointObserver);
-
-    this.isExtraScreenSmall = breakpoints
-      .observe(`(max-width: ${EXTRA_SMALL_WIDTH_BREAKPOINT}px)`)
-      .pipe(map(breakpoint => breakpoint.matches));
-    this.isScreenSmall = breakpoints
-      .observe(`(max-width: ${SMALL_WIDTH_BREAKPOINT}px)`)
-      .pipe(map(breakpoint => breakpoint.matches));
-
     // Close the sidenav on navigation when the screen is small.
-    this._navigationFocusService.navigationEndEvents
-      .pipe(
-        takeUntilDestroyed(),
-        map(() => this.isScreenSmall),
-      )
-      .subscribe(shouldCloseSideNav => {
-        const sidenav = this.sidenav();
-        if (shouldCloseSideNav && sidenav) {
-          sidenav.close();
+    inject(NavigationFocusService)
+      .navigationEndEvents.pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        if (this.isScreenSmall()) {
+          this.sidenav()?.close();
         }
       });
   }
@@ -99,22 +108,15 @@ export class ComponentSidenav {
   toggleSidenav(): void {
     this.sidenav()?.toggle();
   }
-}
 
-@Component({
-  selector: 'app-component-nav',
-  templateUrl: './component-nav.html',
-  imports: [MatNavList, MatListItem, RouterLinkActive, RouterLink, AsyncPipe],
-  changeDetection: ChangeDetectionStrategy.Eager,
-})
-export class ComponentNav {
-  private _docItems = inject(DocumentationItems);
-  private _route = inject(ActivatedRoute);
-  protected _params = this._route.params;
-
-  items = this._params.pipe(
-    switchMap(params => (params?.section ? this._docItems.getItems(params.section) : of([]))),
-  );
+  private _matchesMaxWidth(width: number) {
+    return toSignal(
+      this._breakpoints
+        .observe(`(max-width: ${width}px)`)
+        .pipe(map(breakpoint => breakpoint.matches)),
+      {requireSync: true},
+    );
+  }
 }
 
 export const componentSidenavRoutes: Routes = [
