@@ -556,6 +556,24 @@ describe('Standalone Menu Pattern', () => {
     });
   });
 
+  describe('disabled attribute', () => {
+    it('should treat a bare disabled attribute as disabled', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuItemDisabledAttributeExample],
+      });
+      const disabledFixture = TestBed.createComponent(MenuItemDisabledAttributeExample);
+      disabledFixture.detectChanges();
+
+      const items = disabledFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map(debugEl => debugEl.nativeElement as HTMLElement);
+
+      expect(items[0].getAttribute('aria-disabled')).toBe('false');
+      expect(items[1].getAttribute('aria-disabled')).toBe('true');
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -1486,3 +1504,15 @@ class CdkOverlayMenuExample {
 class MenuItemRoleOverrideExample {
   customRole = signal<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>('menuitemcheckbox');
 }
+
+@Component({
+  template: `
+    <div ngMenu>
+      <div ngMenuItem value="item0">Item 0</div>
+      <div ngMenuItem value="item1" disabled>Item 1</div>
+    </div>
+  `,
+  imports: [Menu, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuItemDisabledAttributeExample {}

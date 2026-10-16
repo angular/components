@@ -7,6 +7,7 @@
  */
 
 import {
+  booleanAttribute,
   computed,
   Directive,
   effect,
@@ -68,7 +69,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   readonly value = input<V | undefined>(undefined);
 
   /** Whether the menu item is disabled. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The search term associated with the menu item. */
   readonly searchTerm = model<string>('');
