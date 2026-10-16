@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {readFileSync, writeFileSync} from 'fs';
+import {readFileSync, statSync, writeFileSync} from 'fs';
 import path from 'path';
 // @ts-ignore This compiles fine, but Webstorm doesn't like the ESM import in a CJS context.
 import {
@@ -34,6 +34,7 @@ function main() {
     srcs,
     outputFilenameExecRootRelativePath,
     serializedPathMapWithExecRootRelativePaths,
+    binDir,
     extraEntriesSrcs,
   ] = rawParamLines;
 
@@ -49,17 +50,21 @@ function main() {
   for (const [importPath, filePath] of Object.entries(pathMap)) {
     resolvedPathMap[importPath] = [path.resolve(filePath)];
 
-    // In addition to the exact import path,
-    // also add wildcard mappings for subdirectories.
+    // In addition to the exact import path, also add wildcard mappings for subdirectories,
+    // unless the map has an explicit entry for them. They're relative to the mapped directory
+    // or, when a file is mapped, to the directory that contains it.
     const importPathWithWildcard = path.join(importPath, '*');
-    resolvedPathMap[importPathWithWildcard] = [
-      path.join(path.resolve(path.dirname(filePath)), '*'),
-    ];
+    if (!importPath.includes('*') && !(importPathWithWildcard in pathMap)) {
+      const dir = statSync(filePath).isDirectory() ? filePath : path.dirname(filePath);
+      resolvedPathMap[importPathWithWildcard] = [path.join(path.resolve(dir), '*')];
+    }
   }
 
   const compilerOptions: CompilerOptions = {
     paths: resolvedPathMap,
     rootDir: '.',
+    // Resolves relative imports of files outside `srcs` (e.g. `../private`) to their declarations.
+    rootDirs: [path.resolve('.'), path.resolve(binDir)],
     skipLibCheck: true,
     target: ts.ScriptTarget.ES2022,
     // This is necessary because otherwise types that include `| null` are not included in the documentation.
@@ -71,6 +76,22 @@ function main() {
   // Code examples should not be fed to the compiler.
   const filesWithoutExamples = srcs.split(',').filter(src => !src.startsWith(EXAMPLES_PATH));
   const compilerHost = createCompilerHost({options: compilerOptions});
+
+  // Compiled stylesheets aren't inputs of the action and don't affect the docs,
+  // so treat the missing ones as empty instead of failing the compilation.
+  const missingStylesheets = new Set<string>();
+  compilerHost.resourceNameToFileName = (resourceName, containingFile, fallbackResolve) => {
+    const fileName = fallbackResolve!(resourceName, containingFile);
+    if (fileName === null && resourceName.endsWith('.css')) {
+      const missingFileName = path.resolve(path.dirname(containingFile), resourceName);
+      missingStylesheets.add(missingFileName);
+      return missingFileName;
+    }
+    return fileName;
+  };
+  compilerHost.readResource = fileName =>
+    missingStylesheets.has(fileName) ? '' : compilerHost.readFile(fileName)!;
+
   const program: NgtscProgram = new NgtscProgram(
     filesWithoutExamples,
     compilerOptions,
@@ -85,6 +106,19 @@ function main() {
     }, []);
 
   const apiDoc = program.getApiDocumentation(entryPointExecRootRelativePath, privateModules);
+
+  // Angular errors (e.g. an unresolvable host directive) make the extractor silently treat
+  // directives as plain classes, so fail instead of producing incomplete docs.
+  const errors = program
+    .getNgSemanticDiagnostics()
+    .filter(diagnostic => diagnostic.category === ts.DiagnosticCategory.Error);
+  if (errors.length > 0) {
+    throw new Error(
+      `Angular compilation errors while extracting API docs for ${moduleName}:\n` +
+        ts.formatDiagnostics(errors, compilerHost),
+    );
+  }
+
   const extractedEntries = apiDoc.entries;
   const combinedEntries = extractedEntries.concat(extraEntries);
 

@@ -56,4 +56,5 @@ extract_api_to_json(
     output_name = "aria-grid.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = [":grid"],
 )

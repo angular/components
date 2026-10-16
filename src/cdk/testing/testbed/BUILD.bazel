@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "ng_web_test_suite", "ts_project")
-load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
+load("//tools:defaults.bzl", "extract_api_to_json", "ng_web_test_suite", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -50,4 +49,5 @@ extract_api_to_json(
     output_name = "cdk_testing_testbed.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = [":testbed"],
 )

@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "ts_project")
-load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
+load("//tools:defaults.bzl", "extract_api_to_json", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -35,4 +34,5 @@ extract_api_to_json(
     output_name = "cdk_testing_protractor.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = ["//src/cdk/testing"],
 )

@@ -66,23 +66,33 @@ def _extract_api_to_json(ctx):
                             break
 
             if not found_path:
-                candidates = [f for f in files if f.path.endswith("/index.d.ts")]
-                sorted_candidates = sorted(candidates, key = lambda f: len(f.path))
-                found_path = sorted_candidates[0].path
+                # Use the target's own entry point. The `index.d.ts` files of its transitive
+                # dependencies are in `files` as well, so it can't be found by name alone.
+                own_index = "%s/index.d.ts" % target.label.package
+                own_files = [f.path for f in files if f.short_path == own_index]
+                if not own_files:
+                    fail("Expected import_map target %s to provide %s." % (target.label, own_index))
+                found_path = own_files[0]
 
-            if found_path:
-                path_map[path] = found_path
-            else:
-                fail("Expected a single file in import_map target %s, but found %s. Could not determine entry point. Files: %s" % (target.label, len(files), [f.path for f in files]))
+            path_map[path] = found_path
     args.add(json.encode(path_map))
+
+    # Pass the bin directory, so relative imports of files outside `srcs` (e.g. `../private`) can
+    # be resolved to the type declarations from `deps` and `import_map`.
+    args.add(ctx.bin_dir.path)
 
     # Pass the set of (optional) extra entries
     args.add_joined(ctx.files.extra_entries, join_with = ",")
 
+    deps_types = depset(transitive = [dep[JsInfo].transitive_types for dep in ctx.attr.deps])
+
     # Define an action that runs the nodejs_binary executable. This is
     # the main thing that this rule does.
     ctx.actions.run(
-        inputs = depset(ctx.files.srcs + ctx.files.extra_entries + import_map_files),
+        inputs = depset(
+            ctx.files.srcs + ctx.files.extra_entries + import_map_files,
+            transitive = [deps_types],
+        ),
         executable = ctx.executable._extract_api_to_json,
         outputs = [json_output],
         arguments = [args],
@@ -108,6 +118,13 @@ extract_api_to_json = rule(
                     TypeScript files.""",
             allow_empty = False,
             allow_files = True,
+        ),
+        "deps": attr.label_list(
+            doc = """Targets whose type declarations are used to resolve relative imports of
+                    files outside of `srcs`: usually the `ng_project` built from `srcs`, or the
+                    dependency that provides those files when that target can't be used (e.g.
+                    because it's test-only).""",
+            providers = [JsInfo],
         ),
         "output_name": attr.output(
             doc = """Name of the JSON output file.""",

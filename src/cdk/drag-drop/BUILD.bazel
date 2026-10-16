@@ -1,12 +1,12 @@
 load(
     "//tools:defaults.bzl",
+    "extract_api_to_json",
     "markdown_to_html",
     "ng_project",
     "ng_web_test_suite",
     "sass_binary",
     "ts_project",
 )
-load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -86,4 +86,5 @@ extract_api_to_json(
     output_name = "cdk_drag_drop.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = [":drag-drop"],
 )

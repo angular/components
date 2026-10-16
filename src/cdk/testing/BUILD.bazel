@@ -1,6 +1,12 @@
 load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
-load("//tools:defaults.bzl", "markdown_to_html", "ng_web_test_suite", "protractor_web_test_suite", "ts_project")
-load("//tools/adev-api-extraction:extract_api_to_json.bzl", "extract_api_to_json")
+load(
+    "//tools:defaults.bzl",
+    "extract_api_to_json",
+    "markdown_to_html",
+    "ng_web_test_suite",
+    "protractor_web_test_suite",
+    "ts_project",
+)
 
 package(default_visibility = ["//visibility:public"])
 

@@ -256,8 +256,9 @@ def extract_api_to_json(**kwargs):
         import_map = {
             "@angular/core": "//:node_modules/@angular/core",
             "@angular/core/*": "//:node_modules/@angular/core",
+            "@angular/cdk/a11y": "//src/cdk/a11y",
             "@angular/cdk/bidi": "//src/cdk/bidi",
-            "@angular/aria/private": "//src/aria/private",
+            "rxjs": "//:node_modules/rxjs",
         },
         **kwargs
     )
