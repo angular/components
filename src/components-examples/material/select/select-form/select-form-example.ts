@@ -15,7 +15,7 @@ interface Car {
 }
 
 /**
- * @title Select in a form
+ * @title Select in a form (template-driven forms)
  */
 @Component({
   selector: 'select-form-example',
