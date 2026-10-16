@@ -1,4 +1,4 @@
-import {Component, DebugElement, signal, ChangeDetectionStrategy} from '@angular/core';
+import {Component, DebugElement, signal, ChangeDetectionStrategy, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Grid} from './grid';
@@ -7,6 +7,13 @@ import {GridCell} from './grid-cell';
 import {GridCellWidget} from './grid-cell-widget';
 import {GRID_ROW, GRID_CELL} from './grid-tokens';
 import {waitForMicrotasks} from '../private/testing/test-helpers';
+import {
+  NgGridRowRegistryForCdk,
+  ProvideNgGridRowForCdkDirective,
+  RegisterGridRowForCdkDirective,
+} from './cdk-table-interop';
+import {CdkTableModule} from '@angular/cdk/table';
+import {computed} from '../private';
 
 interface ModifierKeys {
   ctrlKey?: boolean;
@@ -99,10 +106,11 @@ describe('Grid directives', () => {
     selectionMode?: 'follow' | 'explicit';
     gridData?: RowConfig[];
     tabIndex?: number;
+    component?: Type<GridTestComponent>;
   }) {
     TestBed.resetTestingModule();
     TestBed.configureTestingModule({});
-    fixture = TestBed.createComponent(GridTestComponent);
+    fixture = TestBed.createComponent(opts?.component ?? GridTestComponent);
     const testComponent = fixture.componentInstance;
 
     if (opts?.disabled !== undefined) testComponent.disabled.set(opts.disabled);
@@ -1192,6 +1200,106 @@ describe('Grid directives', () => {
       expect(cells[1].nativeElement.getAttribute('role')).toBe('gridcell');
     });
   });
+
+  describe('CDK table interop', () => {
+    it('should set role="row" on the host element', async () => {
+      await setupGrid({component: CdkTableInteropTestComponent});
+      const row = gridElement.querySelector('tr') as HTMLElement;
+      expect(row.getAttribute('role')).toBe('row');
+    });
+
+    it('should activate the cell when the grid receives focusin', async () => {
+      await setupGrid({component: CdkTableInteropTestComponent});
+
+      // Let effect run to set default state which sets initial active cell
+      gridInstance._pattern.setDefaultStateEffect();
+
+      const cell1 = fixture.debugElement.query(By.directive(GridCell)).nativeElement;
+
+      // Dispatch focusin to the cell
+      cell1.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await fixture.whenStable();
+
+      expect(gridInstance._pattern.activeCell()?.element()).toBe(cell1);
+      expect(gridInstance._pattern.isFocused()).toBeTrue();
+    });
+
+    it('should deactivate the grid when focusout moves outside the grid', async () => {
+      await setupGrid({component: CdkTableInteropTestComponent});
+
+      const cell1 = fixture.debugElement.query(By.directive(GridCell)).nativeElement;
+
+      // Focus first
+
+      gridInstance._pattern.setDefaultStateEffect();
+      cell1.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+      await fixture.whenStable();
+      expect(gridInstance._pattern.isFocused()).toBeTrue();
+
+      // Focusout (blur)
+      // Add relatedTarget so we simulate moving focus out completely, otherwise the target doesn't update correctly
+      const focusOutEvent = new FocusEvent('focusout', {
+        bubbles: true,
+        relatedTarget: document.body,
+      });
+      cell1.dispatchEvent(focusOutEvent);
+      await fixture.whenStable();
+
+      expect(gridInstance._pattern.isFocused()).toBeFalse();
+    });
+
+    describe('keyboard interactions', () => {
+      describe('navigation keys', () => {
+        beforeEach(async () => {
+          await setupGrid({component: CdkTableInteropTestComponent});
+          // Let effect run to set default state which sets initial active cell
+          gridInstance._pattern.setDefaultStateEffect();
+          await fixture.whenStable();
+
+          // Start interactions from the middle cell (c1-1)
+          const centerCell = gridElement.querySelector('#c1-1') as HTMLElement;
+          centerCell.dispatchEvent(new FocusEvent('focusin', {bubbles: true}));
+          await fixture.whenStable();
+        });
+
+        it('should move focus up to the previous row on ArrowUp', async () => {
+          await up();
+
+          expect(getActiveCellId()).toBe('c0-1');
+        });
+
+        it('should move focus down to the next row on ArrowDown', async () => {
+          await down();
+
+          expect(getActiveCellId()).toBe('c2-1');
+        });
+
+        it('should move focus left to the previous column on ArrowLeft', async () => {
+          await left();
+
+          expect(getActiveCellId()).toBe('c1-0');
+        });
+
+        it('should move focus right to the next column on ArrowRight', async () => {
+          await right();
+
+          expect(getActiveCellId()).toBe('c1-2');
+        });
+
+        it('should move focus to the first cell in the row on Home', async () => {
+          await home();
+
+          expect(getActiveCellId()).toBe('c1-0');
+        });
+
+        it('should move focus to the last cell in the row on End', async () => {
+          await end();
+
+          expect(getActiveCellId()).toBe('c1-2');
+        });
+      });
+    });
+  });
 });
 
 @Component({
@@ -1307,3 +1415,45 @@ class MyCustomRow extends GridRow {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SubclassGridTestComponent {}
+
+@Component({
+  template: `
+    <table ngGrid role="grid" cdk-table [dataSource]="cdkGridData()">
+      <ng-container cdkColumnDef="id1">
+        <th ngGridCell ngProvideGridRowForCdk cdk-header-cell *cdkHeaderCellDef> ID1 </th>
+        <td [id]="row.id1" ngGridCell ngProvideGridRowForCdk cdk-cell-def *cdkCellDef="let row"> {{row.id1}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="id2">
+        <th ngGridCell ngProvideGridRowForCdk cdk-header-cell *cdkHeaderCellDef> ID2 </th>
+        <td [id]="row.id2" ngGridCell ngProvideGridRowForCdk cdk-cell-def *cdkCellDef="let row"> {{row.id2}} </td>
+      </ng-container>
+      <ng-container cdkColumnDef="id3">
+        <th ngGridCell ngProvideGridRowForCdk cdk-header-cell *cdkHeaderCellDef> ID3 </th>
+        <td [id]="row.id3" ngGridCell ngProvideGridRowForCdk cdk-cell-def *cdkCellDef="let row"> {{row.id3}} </td>
+      </ng-container>
+      <tr ngGridRow ngRegisterGridRowForCdk cdk-header-row *cdkHeaderRowDef="cdkColumns()"></tr>
+      <tr ngGridRow ngRegisterGridRowForCdk cdk-row *cdkRowDef="let row; columns: cdkColumns()"></tr>
+    </table>
+  `,
+  imports: [
+    CdkTableModule,
+    Grid,
+    GridRow,
+    GridCell,
+    ProvideNgGridRowForCdkDirective,
+    RegisterGridRowForCdkDirective,
+  ],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  providers: [NgGridRowRegistryForCdk],
+})
+class CdkTableInteropTestComponent extends GridTestComponent {
+  readonly cdkColumns = signal<string[]>(['id1', 'id2', 'id3']);
+  readonly cdkGridData = computed(() => {
+    const cdkData = this.gridData()
+      .map(data => data.cells)
+      .map(cells => cells.map(cell => cell.id))
+      .map(([id1, id2, id3]) => ({id1, id2, id3}));
+    console.log('cdkData', cdkData);
+    return cdkData;
+  });
+}
