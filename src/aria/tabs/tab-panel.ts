@@ -14,13 +14,11 @@ import {
   inject,
   input,
   afterRenderEffect,
-  contentChild,
   OnInit,
   OnDestroy,
 } from '@angular/core';
 import {TabPanelPattern, DeferredContentAware, reportViolations} from '../private';
 import {TABS} from './tab-tokens';
-import {TabContent} from './tab-content';
 
 /**
  * A TabPanel container for the resources of layered content associated with a tab.
@@ -89,8 +87,6 @@ export class TabPanel implements OnInit, OnDestroy {
     tab: this._tabPattern,
   });
 
-  private readonly _tabContent = contentChild(TabContent);
-
   constructor() {
     // Connect the panel's hidden state to the DeferredContentAware's visibility.
     afterRenderEffect({
@@ -105,9 +101,6 @@ export class TabPanel implements OnInit, OnDestroy {
         read: () => {
           const violations: string[] = [];
 
-          if (!this._tabContent()) {
-            violations.push('ngTabPanel must have an ngTabContent structural directive to render.');
-          }
           if (!this._tabs._tabMap().has(this.value())) {
             violations.push(
               `ngTabPanel with value '${this.value()}' does not have a corresponding ngTab.`,
