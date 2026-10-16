@@ -163,6 +163,44 @@ describe('FlexibleConnectedPositionStrategy', () => {
     originElement.remove();
   });
 
+  it('should position a popover relative to the viewport instead of the overlay container', () => {
+    const originElement = createPositionedBlockElement();
+    const container = overlayContainer.getContainerElement();
+    const originalHeight = container.style.height;
+
+    document.body.appendChild(originElement);
+    originElement.style.top = '200px';
+    originElement.style.left = '70px';
+    container.style.height = `${document.documentElement.clientHeight + 100}px`;
+
+    const positionStrategy = createFlexibleConnectedPositionStrategy(injector, originElement)
+      .withFlexibleDimensions(false)
+      .withPush(false)
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'bottom',
+        },
+      ]);
+
+    try {
+      attachOverlay({positionStrategy, usePopover: true});
+
+      expect(overlayRef.hostElement.getAttribute('popover')).toBe('manual');
+      expect(Math.floor(container.getBoundingClientRect().height)).toBe(
+        document.documentElement.clientHeight + 100,
+      );
+      expect(Math.floor(overlayRef.overlayElement.getBoundingClientRect().bottom)).toBe(
+        Math.floor(originElement.getBoundingClientRect().top),
+      );
+    } finally {
+      container.style.height = originalHeight;
+      originElement.remove();
+    }
+  });
+
   it('should calculate position with simulated zoom in Safari', () => {
     let containerElement = overlayContainer.getContainerElement();
     spyOn(containerElement, 'getBoundingClientRect').and.returnValue({
@@ -312,6 +350,51 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
       // Preconditions are set, now just run the full set of simple position tests.
       runSimplePositionTests();
+
+      it('should position an upward-flowing overlay relative to its container after scrolling', () => {
+        const container = overlayContainer.getContainerElement();
+        const originalHeight = container.style.height;
+        const originalTop = container.style.top;
+
+        // Simulate a mobile browser shifting and resizing the fixed overlay container while the
+        // page is scrolled. Its bottom remains aligned with the viewport, but its containing block
+        // is taller than the document element.
+        container.style.height = `${document.documentElement.clientHeight + 100}px`;
+        container.style.top = '-100px';
+
+        positionStrategy.withPositions([
+          {
+            originX: 'start',
+            originY: 'top',
+            overlayX: 'start',
+            overlayY: 'bottom',
+          },
+        ]);
+
+        try {
+          attachOverlay({positionStrategy, usePopover: false});
+
+          expect(Math.floor(container.getBoundingClientRect().height)).toBe(
+            document.documentElement.clientHeight + 100,
+          );
+
+          let originRect = originElement.getBoundingClientRect();
+          let overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+
+          expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.top));
+
+          window.scroll(2200, 2200);
+          overlayRef.updatePosition();
+
+          originRect = originElement.getBoundingClientRect();
+          overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+
+          expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.top));
+        } finally {
+          container.style.height = originalHeight;
+          container.style.top = originalTop;
+        }
+      });
     });
 
     describe('when near viewport edge', () => {
