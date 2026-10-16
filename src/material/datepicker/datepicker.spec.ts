@@ -13,6 +13,7 @@ import {createCloseScrollStrategy} from '@angular/cdk/overlay';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
+  clearElement,
   createKeyboardEvent,
   dispatchEvent,
   dispatchFakeEvent,
@@ -41,6 +42,7 @@ import {
   ReactiveFormsModule,
   Validator,
 } from '@angular/forms';
+import {FormField, form} from '@angular/forms/signals';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MATERIAL_ANIMATIONS, MAT_DATE_LOCALE, provideNativeDateAdapter} from '../core';
@@ -1099,6 +1101,47 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         expect(input.value).toBe('foo');
+      });
+    });
+
+    describe('datepicker with signal forms', () => {
+      let fixture: ComponentFixture<DatepickerWithSignalForms>;
+      let input: HTMLInputElement;
+
+      beforeEach(() => {
+        fixture = createComponent(DatepickerWithSignalForms, [provideNativeDateAdapter()]);
+        fixture.detectChanges();
+        input = fixture.nativeElement.querySelector('input');
+      });
+
+      function hasParseError() {
+        return fixture.componentInstance
+          .dateForm()
+          .errors()
+          .some(error => error.kind === 'matDatepickerParse');
+      }
+
+      it('should set the matDatepickerParse error when an invalid value is typed into an empty input', () => {
+        expect(hasParseError()).toBe(false);
+
+        typeInElement(input, 'foo');
+        fixture.detectChanges();
+
+        expect(hasParseError()).toBe(true);
+      });
+
+      it('should clear the matDatepickerParse error when an invalid value is erased', () => {
+        fixture.componentInstance.dateForm().value.set(new Date(2017, JAN, 1));
+        fixture.detectChanges();
+        expect(hasParseError()).toBe(false);
+
+        typeInElement(input, 'foo');
+        fixture.detectChanges();
+        expect(hasParseError()).toBe(true);
+
+        clearElement(input);
+        fixture.detectChanges();
+        expect(hasParseError()).toBe(false);
       });
     });
 
@@ -2513,6 +2556,17 @@ class DatepickerWithNgModel {
   selected: Date | null = null;
   @ViewChild('d') datepicker!: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput!: MatDatepickerInput<Date>;
+}
+
+@Component({
+  template: `
+    <input [formField]="dateForm" [matDatepicker]="d">
+    <mat-datepicker #d></mat-datepicker>
+  `,
+  imports: [MatDatepickerInput, MatDatepicker, FormField],
+})
+class DatepickerWithSignalForms {
+  readonly dateForm = form(signal<Date | null>(null));
 }
 
 @Component({
