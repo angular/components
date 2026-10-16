@@ -55,4 +55,5 @@ extract_api_to_json(
     output_name = "aria-tabs.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = [":tabs"],
 )

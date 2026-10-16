@@ -54,4 +54,5 @@ extract_api_to_json(
     output_name = "aria-toolbar.json",
     private_modules = [""],
     repo = "angular/components",
+    deps = [":toolbar"],
 )
