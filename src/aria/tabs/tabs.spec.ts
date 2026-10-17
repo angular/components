@@ -767,6 +767,22 @@ describe('Tabs', () => {
       expect(testComponent.selectedTab()).toBeUndefined();
     });
 
+    it('should make a remaining tab the Tab stop when the active tab is removed', async () => {
+      await click(tabElements[1]);
+      expect(isTabFocused(1)).toBe(true);
+
+      testComponent.tabsData.set([
+        {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
+        {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+      ]);
+      await fixture.whenStable();
+      defineTestVariables();
+
+      expect(isTabFocused(0)).toBe(true);
+      expect(tabElements[0].getAttribute('tabindex')).toBe('0');
+      expect(tabElements[1].getAttribute('tabindex')).toBe('-1');
+    });
+
     it('should maintain selection when a new tab is added', async () => {
       expect(testComponent.selectedTab()).toBe('tab2');
 
