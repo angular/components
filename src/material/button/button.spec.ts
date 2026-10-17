@@ -10,6 +10,7 @@ import {
   MatButtonConfig,
   MatButtonModule,
   MatFabDefaultOptions,
+  MatIconButtonAppearance,
 } from './index';
 
 describe('MatButton', () => {
@@ -117,6 +118,49 @@ describe('MatButton', () => {
     const button = fixture.nativeElement.querySelector('.default-appearance') as HTMLElement;
     fixture.detectChanges();
     expect(button.classList).toContain('mat-mdc-outlined-button');
+  });
+
+  it('should apply the icon button appearance classes', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+
+    const defaultIconButton = fixture.nativeElement.querySelector('.default-icon-button');
+    const filledIconButton = fixture.nativeElement.querySelector('.filled-icon-button');
+    const legacyIconButton = fixture.nativeElement.querySelector('.legacy-icon-button');
+    const tonalIconAnchor = fixture.nativeElement.querySelector('.tonal-icon-anchor');
+
+    expect(defaultIconButton.classList).not.toContain('mat-mdc-icon-button-filled');
+    expect(defaultIconButton.classList).not.toContain('mat-mdc-icon-button-tonal');
+    expect(filledIconButton.classList).toContain('mat-mdc-icon-button-filled');
+    expect(legacyIconButton.classList).toContain('mat-mdc-icon-button-filled');
+    expect(tonalIconAnchor.classList).toContain('mat-mdc-icon-button-tonal');
+  });
+
+  it('should be able to change the icon button appearance dynamically', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const iconButton = fixture.nativeElement.querySelector('.dynamic-icon-button') as HTMLElement;
+    fixture.detectChanges();
+
+    expect(iconButton.classList).not.toContain('mat-mdc-icon-button-filled');
+    expect(iconButton.classList).not.toContain('mat-mdc-icon-button-tonal');
+
+    fixture.componentInstance.iconButtonAppearance = 'filled';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(iconButton.classList).toContain('mat-mdc-icon-button-filled');
+    expect(iconButton.classList).not.toContain('mat-mdc-icon-button-tonal');
+
+    fixture.componentInstance.iconButtonAppearance = 'tonal';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(iconButton.classList).not.toContain('mat-mdc-icon-button-filled');
+    expect(iconButton.classList).toContain('mat-mdc-icon-button-tonal');
+
+    fixture.componentInstance.iconButtonAppearance = '';
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    expect(iconButton.classList).not.toContain('mat-mdc-icon-button-filled');
+    expect(iconButton.classList).not.toContain('mat-mdc-icon-button-tonal');
   });
 
   describe('button[mat-fab]', () => {
@@ -540,6 +584,21 @@ describe('MatFabDefaultOptions', () => {
     </button>
     <button class="dynamic" [matButton]="appearance">Dynamic button</button>
     <button class="default-appearance" matButton>Dynamic button</button>
+    <button class="default-icon-button" matIconButton>
+      Default icon button
+    </button>
+    <button class="filled-icon-button" matIconButton="filled">
+      Filled icon button
+    </button>
+    <button class="legacy-icon-button" mat-icon-button="filled">
+      Legacy icon button
+    </button>
+    <a class="tonal-icon-anchor" href="https://www.google.com" matIconButton="tonal">
+      Tonal icon anchor
+    </a>
+    <button class="dynamic-icon-button" [matIconButton]="iconButtonAppearance">
+      Dynamic icon button
+    </button>
   `,
   imports: [MatButtonModule],
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -553,6 +612,7 @@ class TestApp {
   extended = false;
   disabledInteractive = false;
   appearance: MatButtonAppearance = 'text';
+  iconButtonAppearance: MatIconButtonAppearance | '' = '';
   showProgress = false;
 
   increment() {
