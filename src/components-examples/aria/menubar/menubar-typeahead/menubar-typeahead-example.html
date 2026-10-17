@@ -1,0 +1,204 @@
+<p class="example-instructions">
+  Focus the menu bar and type a letter to jump between top-level items (e.g. "v" to jump to Vegetables).
+  Open a menu first, then type to see the submenu switch automatically.
+</p>
+
+<div ngMenuBar>
+  <div
+    ngMenuItem
+    #fruitsEl
+    #fruitsItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Fruits" searchTerm="Fruits"
+    [submenu]="fruitsMenu()"
+  >
+    Fruits
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: fruitsEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #fruitsMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Apple" searchTerm="Apple">
+          <span class="example-label">Apple</span>
+        </div>
+
+        <div ngMenuItem value="Banana" searchTerm="Banana">
+          <span class="example-label">Banana</span>
+        </div>
+
+        <div ngMenuItem #citrusEl value="Citrus" searchTerm="Citrus" [submenu]="citrusMenu()">
+          <span class="example-label">Citrus</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_right</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!fruitsItem.expanded()"
+          [cdkConnectedOverlay]="{origin: citrusEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #citrusMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Orange" searchTerm="Orange">
+                <span class="example-label">Orange</span>
+              </div>
+
+              <div ngMenuItem value="Lemon" searchTerm="Lemon">
+                <span class="example-label">Lemon</span>
+              </div>
+
+              <div ngMenuItem value="Grapefruit" searchTerm="Grapefruit">
+                <span class="example-label">Grapefruit</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem value="Mango" searchTerm="Mango">
+          <span class="example-label">Mango</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #vegetablesEl
+    #vegetablesItem="ngMenuItem"
+    class="menu-bar-item"
+    value="Vegetables" searchTerm="Vegetables"
+    [submenu]="vegetablesMenu()"
+  >
+    Vegetables
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: vegetablesEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #vegetablesMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Carrot" searchTerm="Carrot">
+          <span class="example-label">Carrot</span>
+        </div>
+
+        <div ngMenuItem value="Broccoli" searchTerm="Broccoli">
+          <span class="example-label">Broccoli</span>
+        </div>
+
+        <div ngMenuItem #leafyEl value="Leafy greens" searchTerm="Leafy greens" [submenu]="leafyMenu()">
+          <span class="example-label">Leafy greens</span>
+          <span class="example-icon example-arrow material-symbols-outlined" translate="no">arrow_right</span>
+        </div>
+
+        <ng-template
+          [cdkConnectedOverlayOpen]="!!vegetablesItem.expanded()"
+          [cdkConnectedOverlay]="{origin: leafyEl, usePopover: 'inline'}"
+          [cdkConnectedOverlayPositions]="[{originX: 'end', originY: 'top', overlayY: 'top', overlayX: 'start', offsetX: 6}]"
+          cdkAttachPopoverAsChild
+        >
+          <div ngMenu #leafyMenu="ngMenu">
+            <ng-template ngMenuContent>
+              <div ngMenuItem value="Spinach" searchTerm="Spinach">
+                <span class="example-label">Spinach</span>
+              </div>
+
+              <div ngMenuItem value="Kale" searchTerm="Kale">
+                <span class="example-label">Kale</span>
+              </div>
+
+              <div ngMenuItem value="Lettuce" searchTerm="Lettuce">
+                <span class="example-label">Lettuce</span>
+              </div>
+            </ng-template>
+          </div>
+        </ng-template>
+
+        <div ngMenuItem value="Tomato" searchTerm="Tomato">
+          <span class="example-label">Tomato</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #grainsEl
+    class="menu-bar-item"
+    value="Grains" searchTerm="Grains"
+    [submenu]="grainsMenu()"
+  >
+    Grains
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: grainsEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #grainsMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Rice" searchTerm="Rice">
+          <span class="example-label">Rice</span>
+        </div>
+
+        <div ngMenuItem value="Wheat" searchTerm="Wheat">
+          <span class="example-label">Wheat</span>
+        </div>
+
+        <div ngMenuItem value="Oats" searchTerm="Oats">
+          <span class="example-label">Oats</span>
+        </div>
+
+        <div ngMenuItem value="Quinoa" searchTerm="Quinoa">
+          <span class="example-label">Quinoa</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+
+  <div
+    ngMenuItem
+    #drinksEl
+    class="menu-bar-item"
+    value="Drinks" searchTerm="Drinks"
+    [submenu]="drinksMenu()"
+  >
+    Drinks
+  </div>
+
+  <ng-template
+    [cdkConnectedOverlayOpen]="true"
+    [cdkConnectedOverlay]="{origin: drinksEl, usePopover: 'inline'}"
+    [cdkConnectedOverlayPositions]="[{originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top', offsetY: 6}]"
+    cdkAttachPopoverAsChild
+  >
+    <div ngMenu #drinksMenu="ngMenu">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Water" searchTerm="Water">
+          <span class="example-label">Water</span>
+        </div>
+
+        <div ngMenuItem value="Juice" searchTerm="Juice">
+          <span class="example-label">Juice</span>
+        </div>
+
+        <div ngMenuItem value="Tea" searchTerm="Tea">
+          <span class="example-label">Tea</span>
+        </div>
+
+        <div ngMenuItem value="Coffee" searchTerm="Coffee">
+          <span class="example-label">Coffee</span>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</div>
