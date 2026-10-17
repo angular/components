@@ -202,7 +202,7 @@ export class CdkVirtualScrollViewport extends CdkVirtualScrollable implements On
     scrollable: CdkVirtualScrollable;
     readonly scrolledIndexChange: Observable<number>;
     scrollToIndex(index: number, behavior?: ScrollBehavior): void;
-    scrollToOffset(offset: number, behavior?: ScrollBehavior): void;
+    scrollToOffset(offset: number, behavior?: ScrollBehavior, relativeTo?: 'viewport' | 'scrollingContainer'): void;
     setRenderedContentOffset(offset: number, to?: 'to-start' | 'to-end'): void;
     setRenderedRange(range: ListRange): void;
     setTotalContentSize(size: number): void;
