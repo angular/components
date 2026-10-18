@@ -934,6 +934,23 @@ export class MatSelect
 
   /** Handles keyboard events when the selected is open. */
   private _handleOpenKeydown(event: KeyboardEvent): void {
+    const target = _getEventTarget<HTMLElement>(event);
+    const isInputTarget =
+      target &&
+      (target.nodeName === 'INPUT' ||
+        target.nodeName === 'TEXTAREA' ||
+        target.getAttribute('contenteditable') === 'true');
+
+    // If typing inside an input/textarea element in the panel, avoid intercepting keystrokes.
+    if (isInputTarget) {
+      if (event.keyCode === ESCAPE && !hasModifierKey(event)) {
+        event.preventDefault();
+        this.close();
+        this.focus();
+      }
+      return;
+    }
+
     const manager = this._keyManager;
     const keyCode = event.keyCode;
     const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
