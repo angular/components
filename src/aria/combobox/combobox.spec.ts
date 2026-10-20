@@ -1319,6 +1319,11 @@ describe('Combobox', () => {
       expect(comboboxElement.getAttribute('aria-expanded')).toBe('true');
     });
   });
+
+  it('should not throw when destroyed before the first change detection', () => {
+    const fixture = TestBed.createComponent(ComboboxListboxExample);
+    expect(() => fixture.destroy()).not.toThrow();
+  });
 });
 
 @Component({
