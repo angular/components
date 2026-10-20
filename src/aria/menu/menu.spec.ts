@@ -799,6 +799,42 @@ describe('Menu Trigger Pattern', () => {
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Apple');
     });
   });
+
+  it('should keep nested submenus open when the DOM inside them changes', async () => {
+    const nestedFixture = TestBed.createComponent(NestedMenuExample);
+    await nestedFixture.whenStable();
+
+    const getNestedItem = (text: string) =>
+      nestedFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map(debugEl => debugEl.nativeElement as HTMLElement)
+        .find(item => item.textContent?.trim() === text)!;
+
+    const press = async (text: string, key: string) => {
+      getNestedItem(text).dispatchEvent(new KeyboardEvent('keydown', {key, bubbles: true}));
+      await nestedFixture.whenStable();
+    };
+
+    const trigger = nestedFixture.debugElement.query(By.directive(MenuTrigger))
+      .nativeElement as HTMLElement;
+    trigger.focus();
+    trigger.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter', bubbles: true}));
+    await nestedFixture.whenStable();
+    await press('Apple', 'ArrowDown');
+    await press('Berries', 'ArrowRight');
+    await press('Blueberry', 'ArrowDown');
+    await press('Strawberry', 'ArrowRight');
+
+    const wildStrawberry = getNestedItem('Wild Strawberry');
+    expect(document.activeElement).toBe(wildStrawberry);
+
+    nestedFixture.componentInstance.showBadge.set(true);
+    await waitForMicrotasks();
+    await nestedFixture.whenStable();
+
+    expect(getNestedItem('Strawberry').getAttribute('aria-expanded')).toBe('true');
+    expect(document.activeElement).toBe(wildStrawberry);
+  });
 });
 
 describe('CDK Overlay Menu Pattern', () => {
@@ -1369,6 +1405,36 @@ class MenuBarExample {}
 })
 class ShuffledMenuExample {
   items = signal([{value: 'Apple'}, {value: 'Banana'}, {value: 'Cherry'}]);
+}
+
+@Component({
+  template: `
+    <button ngMenuTrigger [menu]="rootMenu">Open</button>
+
+    <div ngMenu [expansionDelay]="0" #rootMenu="ngMenu">
+      <div ngMenuItem value="Apple">Apple</div>
+      <div ngMenuItem value="Berries" [submenu]="berriesMenu">Berries</div>
+
+      <div ngMenu [expansionDelay]="0" #berriesMenu="ngMenu">
+        <div ngMenuItem value="Blueberry">Blueberry</div>
+        <div ngMenuItem value="Strawberry" [submenu]="strawberryMenu">Strawberry</div>
+
+        <div ngMenu [expansionDelay]="0" #strawberryMenu="ngMenu">
+          <div ngMenuItem value="Wild Strawberry">
+            Wild Strawberry
+            @if (showBadge()) {
+              <span></span>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  imports: [Menu, MenuItem, MenuTrigger],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class NestedMenuExample {
+  showBadge = signal(false);
 }
 
 @Component({

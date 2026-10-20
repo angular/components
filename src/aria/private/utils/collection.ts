@@ -21,11 +21,14 @@ export class SortedCollection<T extends HasElement> {
   private readonly _version = signal(0);
   private _observer?: MutationObserver;
 
-  readonly orderedItems: Signal<T[]> = computed(() => {
-    this._version(); // Track DOM changes
-    const itemsArray = Array.from(this._items());
-    return itemsArray.sort(sortDirectives);
-  });
+  readonly orderedItems: Signal<T[]> = computed(
+    () => {
+      this._version(); // Track DOM changes
+      const itemsArray = Array.from(this._items());
+      return itemsArray.sort(sortDirectives);
+    },
+    {equal: (a, b) => a.length === b.length && a.every((item, i) => item === b[i])},
+  );
 
   register(item: T) {
     this._items.update(set => {

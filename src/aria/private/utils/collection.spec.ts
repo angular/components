@@ -74,6 +74,15 @@ describe('SortedCollection with real directives', () => {
     expect(orderedItems[0].value).toBe('C');
     expect(orderedItems[2].value).toBe('A');
   });
+
+  it('should keep the same ordered items when the DOM changes without moving items', async () => {
+    const orderedItems = collectionDirective._collection.orderedItems();
+
+    collectionDirective.element.appendChild(document.createElement('span'));
+    await waitForMicrotasks();
+
+    expect(collectionDirective._collection.orderedItems()).toBe(orderedItems);
+  });
 });
 
 @Component({
