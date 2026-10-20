@@ -35,6 +35,9 @@ import {COMBOBOX_POPUP} from './combobox-tokens';
 export class ComboboxPopup implements OnInit, OnDestroy {
   private readonly _deferredContent = inject(DeferredContent);
 
+  /** The combobox that the popup is registered with. */
+  private _registeredCombobox: Combobox | undefined;
+
   /** The combobox that the popup belongs to. */
   readonly combobox = input.required<Combobox>();
 
@@ -60,12 +63,13 @@ export class ComboboxPopup implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this.combobox()._registerPopup(this);
-    this._deferredContent.deferredContentAware.set(this.combobox());
+    this._registeredCombobox = this.combobox();
+    this._registeredCombobox._registerPopup(this);
+    this._deferredContent.deferredContentAware.set(this._registeredCombobox);
   }
 
   ngOnDestroy() {
-    this.combobox()._unregisterPopup();
+    this._registeredCombobox?._unregisterPopup();
   }
 
   /** Registers a widget with the popup. */
