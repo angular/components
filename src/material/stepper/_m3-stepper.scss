@@ -19,6 +19,7 @@ $prefix: (mat, stepper);
     base: (
       stepper-header-focus-state-layer-shape: map.get($system, corner-medium),
       stepper-header-hover-state-layer-shape: map.get($system, corner-medium),
+      stepper-header-icon-shape: map.get($system, corner-full),
     ),
     color: (
       stepper-header-error-state-icon-background-color: transparent,
