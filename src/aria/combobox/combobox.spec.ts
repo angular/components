@@ -178,6 +178,20 @@ describe('Combobox', () => {
         expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
       });
 
+      it('should handle each ArrowDown pressed back to back', async () => {
+        await down(); // Open popup
+        const press = () =>
+          inputElement.dispatchEvent(
+            new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}),
+          );
+        press();
+        press();
+        press();
+        await fixture.whenStable();
+        const options = getOptions();
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[3].id);
+      });
+
       it('should navigate to the previous item on ArrowUp when open', async () => {
         await down(); // Open
         await down(); // Move to next item
