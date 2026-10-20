@@ -46,7 +46,8 @@ $fallbacks: m3-datepicker.get-tokens();
   flex: 1 1 auto;
 }
 
-.mat-calendar-period-button {
+// Note: this needs extra specificity in order to override the base styles from the Material button.
+button.mat-calendar-period-button {
   min-width: 0;
   margin: 0 8px;
 
