@@ -29,3 +29,15 @@ html {
 @include api.api-styles;
 @include markdown.markdown-styles;
 @include tables.table-styles;
+
+// Skip the cross-fade between pages (see `withViewTransitions` in `main.ts`) for users who
+// prefer reduced motion. The new page then replaces the old one instantly.
+@media (prefers-reduced-motion: reduce) {
+  // stylelint-disable selector-pseudo-element-no-unknown -- View Transitions pseudo-elements.
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  // stylelint-enable selector-pseudo-element-no-unknown
+}
