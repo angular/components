@@ -1,3 +1,18 @@
+<a name="22.3.0-next.3"></a>
+# 22.3.0-next.3 "titanium-tarantula" (2026-10-21)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [bbc575074](https://github.com/angular/components/commit/bbc575074e9395be8631e9e0545a7361f2b4383a) | fix | **combobox:** error when popup is destroyed before first change detection ([#33974](https://github.com/angular/components/pull/33974)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [9fb490792](https://github.com/angular/components/commit/9fb490792ecd2dc528c9c97769f71cbeb9a6b708) | feat | **stepper:** add a styling token for header icon shape ([#33963](https://github.com/angular/components/pull/33963)) |
+| [d1a4c23fd](https://github.com/angular/components/commit/d1a4c23fdd1efb9cf4f7aa79b296a0bda85e5bf3) | fix | **datepicker:** increse specificity of period button styles ([#33970](https://github.com/angular/components/pull/33970)) |
+| [3f9f22ba9](https://github.com/angular/components/commit/3f9f22ba985eb7f85e812aa66a75ec7b143fd756) | fix | **datepicker:** update parse error with signal forms when value stays null ([#33951](https://github.com/angular/components/pull/33951)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.4"></a>
 # 22.2.4 "titanium-trousers" (2026-10-21)
 ### aria
