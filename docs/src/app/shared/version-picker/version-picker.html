@@ -4,7 +4,7 @@
   <mat-icon>arrow_drop_down</mat-icon>
 </button>
 <mat-menu #versionPicker="matMenu" xPosition="before" class="docs-version-picker-menu">
-  @for (version of docVersions | async; track version) {
+  @for (version of docVersions(); track version) {
     <button mat-menu-item (click)="onVersionChanged(version)">{{version.title}}</button>
   }
 </mat-menu>
