@@ -1,3 +1,17 @@
+<a name="22.2.4"></a>
+# 22.2.4 "titanium-trousers" (2026-10-21)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [14d931161](https://github.com/angular/components/commit/14d931161b4530ec6b5ba3525fdc2f3544cdf7d7) | fix | **combobox:** error when popup is destroyed before first change detection ([#33974](https://github.com/angular/components/pull/33974)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [3f2b67450](https://github.com/angular/components/commit/3f2b674506ccd2e9539088f35dd8fdb272448dae) | fix | **datepicker:** increse specificity of period button styles ([#33970](https://github.com/angular/components/pull/33970)) |
+| [feb80c272](https://github.com/angular/components/commit/feb80c272974b542f3ee70ff376055eadb8e5302) | fix | **datepicker:** update parse error with signal forms when value stays null ([#33951](https://github.com/angular/components/pull/33951)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.3.0-next.2"></a>
 # 22.3.0-next.2 "rhenium-roundabout" (2026-10-14)
 ### cdk
