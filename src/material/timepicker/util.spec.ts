@@ -193,5 +193,41 @@ describe('timepicker utilities', () => {
       const options = generateOptions(adapter, formats, min, max, 3600).map(o => o.label);
       expect(options).toEqual(['1:00 PM']);
     });
+
+    it('should generate a list of options including unavailable items', () => {
+      const min = new Date(2024, 0, 1, 9, 0, 0, 0);
+      const max = new Date(2024, 0, 1, 22, 0, 0, 0);
+      const options = generateOptions(adapter, formats, min, max, 3600, true);
+      const enabledOptions = options.filter(o => !o.disabled).map(o => o.label);
+      expect(enabledOptions).toEqual([
+        '9:00 AM',
+        '10:00 AM',
+        '11:00 AM',
+        '12:00 PM',
+        '1:00 PM',
+        '2:00 PM',
+        '3:00 PM',
+        '4:00 PM',
+        '5:00 PM',
+        '6:00 PM',
+        '7:00 PM',
+        '8:00 PM',
+        '9:00 PM',
+        '10:00 PM',
+      ]);
+      const disabledOptions = options.filter(o => o.disabled).map(o => o.label);
+      expect(disabledOptions).toEqual([
+        '12:00 AM',
+        '1:00 AM',
+        '2:00 AM',
+        '3:00 AM',
+        '4:00 AM',
+        '5:00 AM',
+        '6:00 AM',
+        '7:00 AM',
+        '8:00 AM',
+        '11:00 PM',
+      ]);
+    });
   });
 });
