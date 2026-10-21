@@ -36,6 +36,7 @@ import {
   ComponentViewer,
 } from '../component-viewer/component-viewer';
 import {ComponentStyling} from '../component-viewer/component-styling';
+import {docItemResolver} from '../component-viewer/doc-item-resolver';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 // These constants are used by the ComponentSidenav for orchestrating the MatSidenav in a responsive
@@ -131,6 +132,7 @@ export const componentSidenavRoutes: Routes = [
       {
         path: ':id',
         component: ComponentViewer,
+        resolve: {docItem: docItemResolver},
         children: [
           {path: '', redirectTo: 'overview', pathMatch: 'full'},
           {path: 'overview', component: ComponentOverview, pathMatch: 'full'},
