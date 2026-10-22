@@ -14,6 +14,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -22,7 +23,7 @@ import { Validator } from '@angular/forms';
 export const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOptions>;
 
 // @public (undocumented)
-export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
+export class MatCheckbox implements OnInit, AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption {
     constructor();
     protected _animationClasses: {
         uncheckedToChecked: string;
@@ -85,6 +86,8 @@ export class MatCheckbox implements AfterViewInit, OnChanges, ControlValueAccess
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges<this>): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     _onBlur(): void;
     // (undocumented)
