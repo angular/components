@@ -251,6 +251,74 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(triggerEl);
   });
 
+  it('should not restore focus to the trigger if clicking an item moved focus into another overlay', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    triggerEl.click();
+    fixture.detectChanges();
+
+    // Simulates an overlay, like a dialog, that the item opens and moves focus into.
+    const otherPane = document.createElement('div');
+    const otherPaneButton = document.createElement('button');
+    otherPane.classList.add('cdk-overlay-pane');
+    otherPane.appendChild(otherPaneButton);
+    overlayContainerElement.appendChild(otherPane);
+
+    const item = overlayContainerElement.querySelector('.mat-mdc-menu-item') as HTMLElement;
+    item.addEventListener('click', () => otherPaneButton.focus());
+    item.click();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(otherPaneButton);
+    otherPane.remove();
+  });
+
+  it('should restore focus to the trigger if clicking an item moved focus outside of an overlay', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+    const button = document.createElement('button');
+    document.body.appendChild(button);
+
+    triggerEl.click();
+    fixture.detectChanges();
+
+    const item = overlayContainerElement.querySelector('.mat-mdc-menu-item') as HTMLElement;
+    item.addEventListener('click', () => button.focus());
+    item.click();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(triggerEl);
+    button.remove();
+  });
+
+  it('should restore focus to a trigger inside an overlay if clicking an item moved focus within that overlay', () => {
+    const fixture = TestBed.createComponent(SimpleMenu);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    // Simulates a menu inside an overlay, like a dialog.
+    const pane = document.createElement('div');
+    const paneButton = document.createElement('button');
+    pane.classList.add('cdk-overlay-pane');
+    pane.appendChild(fixture.nativeElement);
+    pane.appendChild(paneButton);
+    overlayContainerElement.appendChild(pane);
+
+    triggerEl.click();
+    fixture.detectChanges();
+
+    const item = overlayContainerElement.querySelector('.mat-mdc-menu-item') as HTMLElement;
+    item.addEventListener('click', () => paneButton.focus());
+    item.click();
+    fixture.detectChanges();
+
+    expect(document.activeElement).toBe(triggerEl);
+    pane.remove();
+  });
+
   it('should move focus to another item if the active item is destroyed', () => {
     const fixture = TestBed.createComponent(MenuWithRepeatedItems);
     fixture.detectChanges();
@@ -2192,6 +2260,23 @@ describe('MatMenu', () => {
       expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
         .withContext('Expected no open menus')
         .toBe(0);
+    });
+
+    it('should restore focus to the root trigger when an item in a sub-menu is clicked', () => {
+      const rootTrigger = instance.rootTriggerEl.nativeElement;
+      rootTrigger.click();
+      fixture.detectChanges();
+
+      instance.levelOneTrigger.openMenu();
+      fixture.detectChanges();
+
+      const menus = overlay.querySelectorAll('.mat-mdc-menu-panel');
+      const item = menus[1].querySelector('.mat-mdc-menu-item') as HTMLElement;
+      item.focus();
+      item.click();
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(rootTrigger);
     });
 
     it('should close all of the menus when the user tabs away', async () => {

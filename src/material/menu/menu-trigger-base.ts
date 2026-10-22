@@ -278,6 +278,9 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
       return;
     }
 
+    // Check where focus is before detaching the overlay, because detaching can move it.
+    const focusMovedToOtherOverlay = reason === 'click' && this._hasFocusMovedToOtherOverlay();
+
     this._closingActionsSubscription.unsubscribe();
     this._pendingRemoval?.unsubscribe();
 
@@ -308,9 +311,11 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
     // Always restore focus if the user is navigating using the keyboard or the menu was opened
     // programmatically. We don't restore for non-root triggers, because it can prevent focus
     // from making it back to the root trigger when closing a long chain of menus by clicking
-    // on the backdrop.
+    // on the backdrop. We also don't restore if clicking on an item moved focus into a different
+    // overlay (e.g. a dialog opened by the item), because it'd pull focus out of that overlay.
     if (
       this.restoreFocus &&
+      !focusMovedToOtherOverlay &&
       (reason === 'keydown' || !this._openedBy || !this._triggersSubmenu())
     ) {
       this.focus(this._openedBy);
@@ -318,6 +323,22 @@ export abstract class MatMenuTriggerBase implements OnDestroy {
 
     this._openedBy = undefined;
     this._setIsMenuOpen(false);
+  }
+
+  /**
+   * Checks whether focus is inside an overlay other than a menu or the overlay containing the
+   * trigger, e.g. because a menu item opened a dialog that focused its content.
+   */
+  private _hasFocusMovedToOtherOverlay(): boolean {
+    const trigger = this._element.nativeElement;
+    const focusedElement = trigger.ownerDocument?.activeElement;
+
+    if (!focusedElement || focusedElement.closest('.mat-mdc-menu-panel')) {
+      return false;
+    }
+
+    const pane = focusedElement.closest('.cdk-overlay-pane');
+    return !!pane && !pane.contains(trigger);
   }
 
   // set state rather than toggle to support triggers sharing a menu
