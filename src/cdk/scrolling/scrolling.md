@@ -9,6 +9,55 @@ This marks the element as a `Scrollable` and registers it with the `ScrollDispat
 dispatcher, then, allows components to share both event listeners and knowledge of all of the
 scrollable containers in the application.
 
+#### Reacting to scroll events
+`CdkScrollable` exposes an `elementScrolled` stream that emits whenever its element is scrolled.
+Use it together with `measureScrollOffset`, which returns the scroll position relative to a given
+edge of the element, to respond to the user scrolling. The stream completes when the directive is
+destroyed.
+
+<!-- example(cdk-scrollable-overview) -->
+
+To react to scrolling in any of the scrollable containers in the application, inject the
+`ScrollDispatcher` and subscribe to `scrolled`. It emits the `CdkScrollable` that was scrolled, or
+`undefined` when the page itself is scrolled. If you only care about the containers around a
+particular element, use `ancestorScrolled` instead, which only emits for those containers and the
+page. `ancestorScrolled` looks up the containers at the time it is called, so call it in `ngOnInit`
+or later, once the containers have been registered.
+
+Both streams are throttled to one event every 20 milliseconds by default. You can change this by
+passing a different time in milliseconds. Unsubscribe once you no longer need the events, because
+the dispatcher keeps a global scroll listener as long as the stream has subscribers.
+
+```ts
+import {Component, DestroyRef, ElementRef, OnInit, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
+
+@Component({
+  selector: 'my-component',
+  template: '...',
+})
+export class MyComponent implements OnInit {
+  private _scrollDispatcher = inject(ScrollDispatcher);
+  private _elementRef = inject(ElementRef);
+  private _destroyRef = inject(DestroyRef);
+
+  ngOnInit() {
+    this._scrollDispatcher
+      .ancestorScrolled(this._elementRef)
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe(() => {
+        // Respond to the scroll event.
+      });
+  }
+}
+```
+
+Scroll events are emitted outside of the Angular zone to avoid running change detection on every
+scroll. Updating a class property in response to a scroll event won't refresh the view on its own,
+so store the values that your template uses in signals, or call `ChangeDetectorRef.markForCheck`
+after updating them.
+
 ### ViewportRuler
 The `ViewportRuler` is a service that can be injected and used to measure the bounds of the browser
 viewport.

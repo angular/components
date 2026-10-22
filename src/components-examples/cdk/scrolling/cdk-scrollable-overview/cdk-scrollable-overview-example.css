@@ -1,0 +1,11 @@
+.example-container {
+  height: 200px;
+  width: 200px;
+  margin-bottom: 8px;
+  overflow: auto;
+  border: 1px solid black;
+}
+
+.example-item {
+  height: 50px;
+}

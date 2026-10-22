@@ -1,3 +1,4 @@
+export {CdkScrollableOverviewExample} from './cdk-scrollable-overview/cdk-scrollable-overview-example';
 export {CdkVirtualScrollAppendOnlyExample} from './cdk-virtual-scroll-append-only/cdk-virtual-scroll-append-only-example';
 export {CdkVirtualScrollContextExample} from './cdk-virtual-scroll-context/cdk-virtual-scroll-context-example';
 export {CdkVirtualScrollCustomStrategyExample} from './cdk-virtual-scroll-custom-strategy/cdk-virtual-scroll-custom-strategy-example';
