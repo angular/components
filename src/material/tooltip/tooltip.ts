@@ -786,6 +786,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     // first tap from firing its click event or can cause the tooltip to open for clicks.
     if (!this._isTouchPlatform()) {
       this._addListener('mouseenter', (event: MouseEvent) => {
+        // Untrusted (test-dispatched) events skip the check. See `_isPointerOverTrigger`.
+        if (event.isTrusted && !this._isPointerOverTrigger(event)) {
+          return;
+        }
         this._setupPointerExitEventsIfNeeded();
         let point = undefined;
         if (event.x !== undefined && event.y !== undefined) {
@@ -812,6 +816,30 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
         }, this._defaultOptions?.touchLongPressShowDelay ?? DEFAULT_LONGPRESS_DELAY);
       });
     }
+  }
+
+  /**
+   * Checks whether the pointer is over the trigger's own surface, as opposed to a popover-based
+   * overlay nested inside it (e.g. an open `mat-select` panel). Such an overlay's full-viewport
+   * backdrop ends up as a DOM descendant of the trigger, and `mouseenter` fires on ancestors of
+   * whatever the pointer lands on, so without this check, hovering anywhere on the page would
+   * count as hovering the trigger while such an overlay is open.
+   */
+  private _isPointerOverTrigger(event: MouseEvent): boolean {
+    const nativeElement = this._elementRef.nativeElement;
+    const target = this._document.elementFromPoint(event.clientX, event.clientY);
+
+    if (!target || !nativeElement.contains(target)) {
+      return false;
+    }
+
+    // Ignore points inside a popover-based overlay nested in the trigger (e.g. an open
+    // `mat-select` panel), that's not part of the trigger's own surface, even though it's
+    // technically a DOM descendant of it.
+    const nestedPopover = target.closest('[popover]');
+    return (
+      !nestedPopover || nestedPopover === nativeElement || !nativeElement.contains(nestedPopover)
+    );
   }
 
   private _setupPointerExitEventsIfNeeded() {
