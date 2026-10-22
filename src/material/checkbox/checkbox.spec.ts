@@ -1,7 +1,8 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {ChangeDetectionStrategy, Component, DebugElement} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FormField, form, required} from '@angular/forms/signals';
 import {ThemePalette} from '../core';
 import {By} from '@angular/platform-browser';
 import {
@@ -1105,6 +1106,55 @@ describe('MatCheckbox', () => {
     });
   });
 
+  describe('with signal forms', () => {
+    let checkboxDebugElement: DebugElement;
+    let checkboxInstance: MatCheckbox;
+    let testComponent: CheckboxWithSignalForms;
+    let inputElement: HTMLInputElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(CheckboxWithSignalForms);
+      fixture.detectChanges();
+
+      checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
+      checkboxInstance = checkboxDebugElement.componentInstance;
+      testComponent = fixture.debugElement.componentInstance;
+      inputElement = <HTMLInputElement>checkboxDebugElement.nativeElement.querySelector('input');
+    });
+
+    it('should produce a single `required` error when used with signal forms', () => {
+      expect(checkboxInstance.checked).toBe(false);
+      expect(checkboxInstance.required).toBe(true);
+      expect(inputElement.required).toBe(true);
+      expect(testComponent.form().valid()).toBe(false);
+      expect(
+        testComponent
+          .form()
+          .errors()
+          .map(e => e.kind),
+      ).toEqual(['required']);
+
+      inputElement.click();
+      fixture.detectChanges();
+
+      expect(checkboxInstance.checked).toBe(true);
+      expect(testComponent.form().valid()).toBe(true);
+      expect(testComponent.form().errors().length).toBe(0);
+
+      inputElement.click();
+      fixture.detectChanges();
+
+      expect(checkboxInstance.checked).toBe(false);
+      expect(testComponent.form().valid()).toBe(false);
+      expect(
+        testComponent
+          .form()
+          .errors()
+          .map(e => e.kind),
+      ).toEqual(['required']);
+    });
+  });
+
   describe('without label', () => {
     let checkboxInnerContainer: HTMLElement;
 
@@ -1359,3 +1409,14 @@ class CheckboxWithTabindexAttr {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithStaticAriaAttributes {}
+
+@Component({
+  template: `<mat-checkbox [formField]="form"></mat-checkbox>`,
+  imports: [MatCheckbox, FormField],
+})
+class CheckboxWithSignalForms {
+  readonly isChecked = signal(false);
+  readonly form = form(this.isChecked, path => {
+    required(path);
+  });
+}
