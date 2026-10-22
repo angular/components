@@ -74,6 +74,16 @@ describe('SortedCollection with real directives', () => {
     expect(orderedItems[0].value).toBe('C');
     expect(orderedItems[2].value).toBe('A');
   });
+
+  it('should not update collection if the DOM changes but the items have not moved', async () => {
+    const collection = collectionDirective._collection;
+    const previousItems = collection.orderedItems();
+
+    collectionDirective.element.appendChild(document.createElement('div'));
+    await waitForMicrotasks();
+
+    expect(collection.orderedItems()).toBe(previousItems);
+  });
 });
 
 @Component({
@@ -97,9 +107,7 @@ class TestCollectionComponent implements HasElement, OnDestroy {
 
 @Component({
   selector: 'testItem',
-  template: `
-    <div>{{value}}</div>
-  `,
+  template: `<div>{{value}}</div>`,
 })
 class TestItemComponent implements HasElement, OnDestroy {
   readonly element = inject(ElementRef).nativeElement as HTMLElement;
