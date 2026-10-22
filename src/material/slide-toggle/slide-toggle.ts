@@ -24,6 +24,8 @@ import {
   ViewEncapsulation,
   inject,
   HostAttributeToken,
+  Injector,
+  OnInit,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -45,6 +47,7 @@ import {
   MatRipple,
 } from '../core';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {FORM_FIELD, FormField} from '@angular/forms/signals';
 
 /** Change event object emitted by a slide toggle. */
 export class MatSlideToggleChange {
@@ -91,12 +94,14 @@ export class MatSlideToggleChange {
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatSlideToggle
-  implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator
+  implements OnInit, OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator
 {
   private _elementRef = inject(ElementRef);
   protected _focusMonitor = inject(FocusMonitor);
   protected _changeDetectorRef = inject(ChangeDetectorRef);
   defaults = inject<MatSlideToggleDefaultOptions>(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS);
+  private readonly _injector = inject(Injector);
+  private _signalFormField: FormField<unknown> | null = null;
 
   private _onChange = (_: any) => {};
   private _onTouched = () => {};
@@ -219,6 +224,10 @@ export class MatSlideToggle
     this._labelId = this._uniqueId + '-label';
   }
 
+  ngOnInit() {
+    this._signalFormField = this._injector.get(FORM_FIELD, undefined, {optional: true, self: true});
+  }
+
   ngAfterContentInit() {
     this._focusMonitor.monitor(this._elementRef, true).subscribe(focusOrigin => {
       if (focusOrigin === 'keyboard' || focusOrigin === 'program') {
@@ -266,7 +275,9 @@ export class MatSlideToggle
 
   /** Implemented as a part of Validator. */
   validate(control: AbstractControl<boolean>): ValidationErrors | null {
-    return this.required && control.value !== true ? {'required': true} : null;
+    return this.required && control.value !== true && !this._signalFormField
+      ? {'required': true}
+      : null;
   }
 
   /** Implemented as a part of Validator. */

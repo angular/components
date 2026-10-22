@@ -1,9 +1,10 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FormField, form, required} from '@angular/forms/signals';
 import {By} from '@angular/platform-browser';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
 import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
@@ -807,6 +808,54 @@ describe('MatSlideToggle with forms', () => {
       expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('with signal forms', () => {
+    let fixture: ComponentFixture<SlideToggleWithSignalForms>;
+    let testComponent: SlideToggleWithSignalForms;
+    let slideToggle: MatSlideToggle;
+    let buttonElement: HTMLButtonElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SlideToggleWithSignalForms);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+      slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle))!.componentInstance;
+      buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
+    });
+
+    it('should produce a single `required` error when used with signal forms', () => {
+      expect(slideToggle.checked).toBe(false);
+      expect(slideToggle.required).toBe(true);
+      expect(buttonElement.getAttribute('aria-required')).toBe('true');
+      expect(testComponent.form().valid()).toBe(false);
+      expect(
+        testComponent
+          .form()
+          .errors()
+          .map(e => e.kind),
+      ).toEqual(['required']);
+
+      buttonElement.click();
+      fixture.detectChanges();
+
+      expect(slideToggle.checked).toBe(true);
+      expect(testComponent.form().valid()).toBe(true);
+      expect(testComponent.form().errors().length).toBe(0);
+
+      buttonElement.click();
+      fixture.detectChanges();
+
+      expect(slideToggle.checked).toBe(false);
+      expect(testComponent.form().valid()).toBe(false);
+      expect(
+        testComponent
+          .form()
+          .errors()
+          .map(e => e.kind),
+      ).toEqual(['required']);
+    });
+  });
 });
 
 @Component({
@@ -934,3 +983,14 @@ class SlideToggleWithModelAndChangeEvent {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithStaticAriaAttributes {}
+
+@Component({
+  template: `<mat-slide-toggle [formField]="form"></mat-slide-toggle>`,
+  imports: [MatSlideToggle, FormField],
+})
+class SlideToggleWithSignalForms {
+  readonly isChecked = signal(false);
+  readonly form = form(this.isChecked, path => {
+    required(path);
+  });
+}
