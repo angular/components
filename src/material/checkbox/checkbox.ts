@@ -26,6 +26,8 @@ import {
   inject,
   HostAttributeToken,
   signal,
+  Injector,
+  OnInit,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -47,6 +49,7 @@ import {
   MatCheckboxDefaultOptions,
 } from './checkbox-config';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
+import {FORM_FIELD, FormField} from '@angular/forms/signals';
 
 /**
  * Represents the different states that require custom transitions between them.
@@ -106,7 +109,7 @@ export class MatCheckboxChange {
   imports: [MatRipple, _MatInternalFormField],
 })
 export class MatCheckbox
-  implements AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
+  implements OnInit, AfterViewInit, OnChanges, ControlValueAccessor, Validator, FocusableOption
 {
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
@@ -115,6 +118,8 @@ export class MatCheckbox
   private _options = inject<MatCheckboxDefaultOptions>(MAT_CHECKBOX_DEFAULT_OPTIONS, {
     optional: true,
   });
+  private readonly _injector = inject(Injector);
+  private _signalFormField: FormField<unknown> | null = null;
 
   /** Focuses the checkbox. */
   focus() {
@@ -251,6 +256,10 @@ export class MatCheckbox
     }
   }
 
+  ngOnInit() {
+    this._signalFormField = this._injector.get(FORM_FIELD, undefined, {optional: true, self: true});
+  }
+
   ngAfterViewInit() {
     this._syncIndeterminate(this.indeterminate);
   }
@@ -346,7 +355,9 @@ export class MatCheckbox
 
   // Implemented as a part of Validator.
   validate(control: AbstractControl<boolean>): ValidationErrors | null {
-    return this.required && control.value !== true ? {'required': true} : null;
+    return this.required && control.value !== true && !this._signalFormField
+      ? {'required': true}
+      : null;
   }
 
   // Implemented as a part of Validator.
