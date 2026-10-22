@@ -16,6 +16,7 @@ import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -24,7 +25,7 @@ import { Validator } from '@angular/forms';
 export const MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatSlideToggleDefaultOptions>;
 
 // @public (undocumented)
-export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator {
+export class MatSlideToggle implements OnInit, OnDestroy, AfterContentInit, OnChanges, ControlValueAccessor, Validator {
     constructor();
     ariaDescribedby: string;
     ariaLabel: string | null;
@@ -78,6 +79,8 @@ export class MatSlideToggle implements OnDestroy, AfterContentInit, OnChanges, C
     ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     _noopAnimations: boolean;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
