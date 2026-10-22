@@ -1,7 +1,8 @@
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {ChangeDetectionStrategy, Component, DebugElement} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DebugElement, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FormField, form, required} from '@angular/forms/signals';
 import {ThemePalette} from '../core';
 import {By} from '@angular/platform-browser';
 import {
@@ -1105,6 +1106,29 @@ describe('MatCheckbox', () => {
     });
   });
 
+  describe('with signal forms', () => {
+    it('should only report the required error from the schema', () => {
+      const fixture = TestBed.createComponent(CheckboxWithSignalForms);
+      fixture.detectChanges();
+
+      const errors = fixture.componentInstance.agreeForm().errors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].kind).toBe('required');
+      expect(errors[0].message).toBe('You must agree');
+    });
+
+    it('should clear the required error when checked', () => {
+      const fixture = TestBed.createComponent(CheckboxWithSignalForms);
+      fixture.detectChanges();
+
+      fixture.nativeElement.querySelector('input').click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.agreeForm().value()).toBe(true);
+      expect(fixture.componentInstance.agreeForm().errors()).toEqual([]);
+    });
+  });
+
   describe('without label', () => {
     let checkboxInnerContainer: HTMLElement;
 
@@ -1359,3 +1383,11 @@ class CheckboxWithTabindexAttr {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class CheckboxWithStaticAriaAttributes {}
+
+@Component({
+  template: `<mat-checkbox [formField]="agreeForm">Agree</mat-checkbox>`,
+  imports: [MatCheckbox, FormField],
+})
+class CheckboxWithSignalForms {
+  agreeForm = form(signal(false), path => required(path, {message: 'You must agree'}));
+}

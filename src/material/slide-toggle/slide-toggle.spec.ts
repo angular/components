@@ -1,9 +1,10 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, signal} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FormField, form, required} from '@angular/forms/signals';
 import {By} from '@angular/platform-browser';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
 import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
@@ -728,6 +729,29 @@ describe('MatSlideToggle with forms', () => {
     });
   });
 
+  describe('with signal forms', () => {
+    it('should only report the required error from the schema', () => {
+      const fixture = TestBed.createComponent(SlideToggleWithSignalForms);
+      fixture.detectChanges();
+
+      const errors = fixture.componentInstance.agreeForm().errors();
+      expect(errors.length).toBe(1);
+      expect(errors[0].kind).toBe('required');
+      expect(errors[0].message).toBe('You must agree');
+    });
+
+    it('should clear the required error when checked', () => {
+      const fixture = TestBed.createComponent(SlideToggleWithSignalForms);
+      fixture.detectChanges();
+
+      fixture.nativeElement.querySelector('button').click();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.agreeForm().value()).toBe(true);
+      expect(fixture.componentInstance.agreeForm().errors()).toEqual([]);
+    });
+  });
+
   describe('with form element', () => {
     let fixture: ComponentFixture<any>;
     let testComponent: SlideToggleWithForm;
@@ -934,3 +958,11 @@ class SlideToggleWithModelAndChangeEvent {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SlideToggleWithStaticAriaAttributes {}
+
+@Component({
+  template: `<mat-slide-toggle [formField]="agreeForm">Agree</mat-slide-toggle>`,
+  imports: [MatSlideToggle, FormField],
+})
+class SlideToggleWithSignalForms {
+  agreeForm = form(signal(false), path => required(path, {message: 'You must agree'}));
+}

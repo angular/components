@@ -26,6 +26,7 @@ import {
   inject,
   HostAttributeToken,
   signal,
+  Injector,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -35,6 +36,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import {FORM_FIELD} from '@angular/forms/signals';
 import {
   MatRipple,
   _MatInternalFormField,
@@ -111,6 +113,7 @@ export class MatCheckbox
   _elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
   private _ngZone = inject(NgZone);
+  private _injector = inject(Injector);
   protected _animationsDisabled = _animationsDisabled();
   private _options = inject<MatCheckboxDefaultOptions>(MAT_CHECKBOX_DEFAULT_OPTIONS, {
     optional: true,
@@ -346,6 +349,14 @@ export class MatCheckbox
 
   // Implemented as a part of Validator.
   validate(control: AbstractControl<boolean>): ValidationErrors | null {
+    // Signal forms validate `required` through the schema and set the `required` input from it,
+    // so reporting the error here as well would add a duplicate without the schema's message.
+    // Note that the field is looked up lazily, because injecting it eagerly results in a circular
+    // dependency (the field injects the component as its value accessor).
+    if (this._injector.get(FORM_FIELD, null, {optional: true, self: true})) {
+      return null;
+    }
+
     return this.required && control.value !== true ? {'required': true} : null;
   }
 

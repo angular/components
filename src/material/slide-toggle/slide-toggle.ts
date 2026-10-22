@@ -24,6 +24,7 @@ import {
   ViewEncapsulation,
   inject,
   HostAttributeToken,
+  Injector,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -33,6 +34,7 @@ import {
   ValidationErrors,
   Validator,
 } from '@angular/forms';
+import {FORM_FIELD} from '@angular/forms/signals';
 import {_IdGenerator, FocusMonitor} from '@angular/cdk/a11y';
 import {
   MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS,
@@ -96,6 +98,7 @@ export class MatSlideToggle
   private _elementRef = inject(ElementRef);
   protected _focusMonitor = inject(FocusMonitor);
   protected _changeDetectorRef = inject(ChangeDetectorRef);
+  private _injector = inject(Injector);
   defaults = inject<MatSlideToggleDefaultOptions>(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS);
 
   private _onChange = (_: any) => {};
@@ -266,6 +269,14 @@ export class MatSlideToggle
 
   /** Implemented as a part of Validator. */
   validate(control: AbstractControl<boolean>): ValidationErrors | null {
+    // Signal forms validate `required` through the schema and set the `required` input from it,
+    // so reporting the error here as well would add a duplicate without the schema's message.
+    // Note that the field is looked up lazily, because injecting it eagerly results in a circular
+    // dependency (the field injects the component as its value accessor).
+    if (this._injector.get(FORM_FIELD, null, {optional: true, self: true})) {
+      return null;
+    }
+
     return this.required && control.value !== true ? {'required': true} : null;
   }
 
