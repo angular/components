@@ -78,9 +78,18 @@ You can add icons to chips to identify entities (like individuals) and provide a
 
 You can add two additional icons to an individual chip. A chip has two slots to display icons using content projection. All variants of chips support adding icons including `<mat-chip>`, `<mat-chip-option>`, and `<mat-chip-row>`.
 
-A chip has a front slot for adding an avatar image. To add an avatar, nest an element with `matChipAvatar` attribute inside of `<mat-chip>`.
+A chip has a front slot for adding an avatar image or a leading icon. To use it, nest an element with the `matChipAvatar` attribute inside of the chip. Content without this attribute is rendered as part of the chip's text.
 
 <!-- example(chips-avatar) -->
+
+Icons can be added to the front slot the same way.
+
+```html
+<mat-chip>
+  <mat-icon matChipAvatar>event</mat-icon>
+  Meeting
+</mat-chip>
+```
 
 You can add an additional icon to the back slot by nesting an element with either the `matChipTrailingIcon` or `matChipRemove` attribute.
 

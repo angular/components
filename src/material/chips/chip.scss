@@ -446,6 +446,11 @@ $fallbacks: m3-chip.get-tokens();
     font-size: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
   }
 
+  // `mat-icon` clips its content which, combined with the avatar shape, cuts off its corners.
+  .mat-mdc-standard-chip &.mat-icon {
+    overflow: visible;
+  }
+
   .mdc-evolution-chip--selected & {
     opacity: 0;
   }
