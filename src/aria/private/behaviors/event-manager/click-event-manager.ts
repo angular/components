@@ -17,20 +17,16 @@ import {
 
 /**
  * Gets whether an event could be a simulated click event.
- *
- * Screen readers and keyboard activation (Enter/Space) often dispatch fake click
- * events. We distinguish them by checking if `event.detail` is zero or if
- * `event.pointerType` is missing.
  */
-export function isFakeClick(event: PointerEvent): boolean {
-  return event.detail === 0 || !event.pointerType;
+function isFakeClick(event: MouseEvent): boolean {
+  return event.detail === 0 && event.screenX === 0 && event.screenY === 0;
 }
 
 /**
  * Gets whether an event is a programmatic click (e.g. triggered by .click() or .dispatchEvent()).
  * Programmatic events are untrusted.
  */
-export function isProgrammaticClick(event: Event): boolean {
+function isProgrammaticClick(event: Event): boolean {
   return !event.isTrusted;
 }
 
@@ -85,7 +81,7 @@ export class ClickEventManager<T extends PointerEvent> extends EventManager<T> {
     };
   }
 
-  _isMatch(event: T, modifiers: ModifierInputs) {
+  private _isMatch(event: T, modifiers: ModifierInputs) {
     const isAllowed = isProgrammaticClick(event) || !isFakeClick(event);
     return isAllowed && hasModifiers(event, modifiers);
   }
