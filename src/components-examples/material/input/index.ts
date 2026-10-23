@@ -5,5 +5,6 @@ export {InputErrorsSignalFormExample} from './input-errors-signal-form/input-err
 export {InputFormExample} from './input-form/input-form-example';
 export {InputHintExample} from './input-hint/input-hint-example';
 export {InputOverviewExample} from './input-overview/input-overview-example';
+export {InputParentFormErrorsExample} from './input-parent-form-errors/input-parent-form-errors-example';
 export {InputPrefixSuffixExample} from './input-prefix-suffix/input-prefix-suffix-example';
 export {InputHarnessExample} from './input-harness/input-harness-example';
