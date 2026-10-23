@@ -78,7 +78,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
     constructor();
     readonly active: _angular_core.Signal<boolean>;
     close(): void;
-    readonly disabled: _angular_core.InputSignal<boolean>;
+    readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly expanded: _angular_core.Signal<boolean | null>;
     readonly hasPopup: _angular_core.Signal<boolean>;
