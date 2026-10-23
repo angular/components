@@ -1295,12 +1295,44 @@ describe('MatDialog', () => {
   });
 
   describe('backdropClass option', () => {
+    it('should use the Material scrim color for the default backdrop', () => {
+      overlayContainerElement.style.setProperty('--mat-sys-scrim', 'rgb(255, 0, 0)');
+      dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+      viewContainerFixture.detectChanges();
+
+      const backdrop = overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!;
+      expect(backdrop.classList).toContain('mat-mdc-dialog-backdrop');
+      expect(getComputedStyle(backdrop).backgroundColor).toBe('color(srgb 1 0 0 / 0.32)');
+    });
+
+    it('should allow overriding the dialog scrim token', () => {
+      overlayContainerElement.style.setProperty('--mat-dialog-scrim-color', 'rgb(1, 2, 3)');
+      dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+      viewContainerFixture.detectChanges();
+
+      const backdrop = overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!;
+      expect(getComputedStyle(backdrop).backgroundColor).toBe('rgb(1, 2, 3)');
+    });
+
+    it('should preserve multiple custom backdrop classes without the default scrim class', () => {
+      dialog.open(PizzaMsg, {
+        backdropClass: ['custom-backdrop-class', 'another-backdrop-class'],
+        viewContainerRef: testViewContainerRef,
+      });
+      viewContainerFixture.detectChanges();
+
+      const backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop')!;
+      expect(backdrop.classList).toContain('custom-backdrop-class');
+      expect(backdrop.classList).toContain('another-backdrop-class');
+      expect(backdrop.classList).not.toContain('mat-mdc-dialog-backdrop');
+    });
+
     it('should have default backdrop class', () => {
       dialog.open(PizzaMsg, {backdropClass: '', viewContainerRef: testViewContainerRef});
 
       viewContainerFixture.detectChanges();
 
-      expect(overlayContainerElement.querySelector('.cdk-overlay-dark-backdrop')).toBeTruthy();
+      expect(overlayContainerElement.querySelector('.mat-mdc-dialog-backdrop')).toBeTruthy();
     });
 
     it('should have custom backdrop class', () => {
