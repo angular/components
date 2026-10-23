@@ -27,4 +27,5 @@ sass_library(
 sass_binary(
     name = "selection_column_scss",
     src = "selection-column.scss",
+    layer = "angular-material",
 )
