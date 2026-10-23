@@ -15,7 +15,7 @@ import {DeferredContent} from '../private';
  *
  * This directive should be applied to an `ng-template` inside an `ngAccordionPanel`.
  * It allows the content of the panel to be lazily rendered, improving performance
- * by only creating the content when the panel is first expanded.
+ * by only creating the content when the panel is expanded.
  *
  * ```html
  * <div ngAccordionPanel>
