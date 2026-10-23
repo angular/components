@@ -245,11 +245,7 @@ export class SeleniumWebDriverElement implements TestElement {
   async matchesSelector(selector: string): Promise<boolean> {
     await this._stabilize();
     return this._executeScript(
-      (element: Element, s: string) =>
-        (Element.prototype.matches || (Element.prototype as any).msMatchesSelector).call(
-          element,
-          s,
-        ),
+      (element: Element, s: string) => element.matches(s),
       this.element(),
       selector,
     );
