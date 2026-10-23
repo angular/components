@@ -1050,6 +1050,36 @@ describe('MatDrawerContainer', () => {
     expect(container.classList).not.toContain('mat-drawer-transition');
   });
 
+  it('should not inherit initial transitions from an outer drawer container', async () => {
+    TestBed.resetTestingModule().configureTestingModule({
+      imports: [DynamicallyNestedDrawer],
+    });
+    const fixture = TestBed.createComponent(DynamicallyNestedDrawer);
+    fixture.detectChanges();
+    await wait(250);
+
+    fixture.componentInstance.showInner = true;
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    const inner = fixture.nativeElement.querySelector('.inner-container');
+    const drawer = inner.querySelector('.mat-drawer');
+    const content = inner.querySelector('.mat-drawer-content');
+    const backdrop = inner.querySelector('.mat-drawer-backdrop');
+
+    for (const element of [drawer, content, backdrop]) {
+      expect(getComputedStyle(element).transitionDuration)
+        .withContext('A newly rendered nested drawer should skip its initial transition')
+        .toBe('0s');
+    }
+
+    await wait(250);
+    for (const element of [drawer, content, backdrop]) {
+      expect(getComputedStyle(element).transitionDuration)
+        .withContext('Subsequent user toggles should still be animated')
+        .toBe('0.4s');
+    }
+  });
+
   it('should recalculate the margin if a drawer changes size while open in autosize mode', async () => {
     const fixture = TestBed.createComponent(AutosizeDrawer);
     fixture.detectChanges();
@@ -1480,6 +1510,27 @@ class NestedDrawerContainers {
   @ViewChild('outerDrawer') outerDrawer!: MatDrawer;
   @ViewChild('innerContainer') innerContainer!: MatDrawerContainer;
   @ViewChild('innerDrawer') innerDrawer!: MatDrawer;
+}
+
+@Component({
+  template: `
+    <mat-drawer-container>
+      <mat-drawer opened mode="side">Outer drawer</mat-drawer>
+      <mat-drawer-content>
+        @if (showInner) {
+          <mat-drawer-container class="inner-container" hasBackdrop>
+            <mat-drawer opened mode="side">Inner drawer</mat-drawer>
+            <mat-drawer-content>Inner content</mat-drawer-content>
+          </mat-drawer-container>
+        }
+      </mat-drawer-content>
+    </mat-drawer-container>
+  `,
+  imports: [MatSidenavModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class DynamicallyNestedDrawer {
+  showInner = false;
 }
 
 @Component({
