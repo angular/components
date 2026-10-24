@@ -190,8 +190,8 @@ abstract class MatDateRangeInputPartBase<D>
     return source !== this._rangeInput._startInput && source !== this._rangeInput._endInput;
   }
 
-  protected override _assignValueProgrammatically(value: D | null, reformat: boolean) {
-    super._assignValueProgrammatically(value, reformat);
+  protected override _assignValueProgrammatically(value: D | null) {
+    super._assignValueProgrammatically(value);
     const opposite = (
       this === (this._rangeInput._startInput as MatDateRangeInputPartBase<D>)
         ? this._rangeInput._endInput
