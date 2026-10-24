@@ -2,6 +2,7 @@ import {provideFakeDirectionality} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {MatIconModule} from '../icon';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
 describe('MatChip', () => {
@@ -141,6 +142,14 @@ describe('MatChip', () => {
       expect(chipInstance.value).toBeNull();
     });
   });
+
+  it('should not clip the corners of icon avatars', () => {
+    fixture = TestBed.createComponent(ChipWithIconAvatar);
+    fixture.detectChanges();
+
+    const avatar = fixture.nativeElement.querySelector('.mat-mdc-chip-avatar');
+    expect(getComputedStyle(avatar).overflow).toBe('visible');
+  });
 });
 
 @Component({
@@ -196,3 +205,14 @@ class BasicChipWithStaticTabindex {}
 class BasicChipWithBoundTabindex {
   tabindex = 12;
 }
+
+@Component({
+  template: `
+    <mat-chip-set>
+      <mat-chip><mat-icon matChipAvatar>event</mat-icon>Event</mat-chip>
+    </mat-chip-set>
+  `,
+  imports: [MatChipsModule, MatIconModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ChipWithIconAvatar {}
