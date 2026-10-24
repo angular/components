@@ -138,14 +138,30 @@ function estimateScrollWidth(element: HTMLElement): number {
   // This check ensures we only clone the node when necessary.
   const htmlEl = element as HTMLElement;
   if (htmlEl.offsetParent !== null) {
-    return htmlEl.scrollWidth;
+    return measureIntrinsicWidth(htmlEl);
   }
 
   const clone = htmlEl.cloneNode(true) as HTMLElement;
   clone.style.setProperty('position', 'absolute');
   clone.style.setProperty('transform', 'translate(-9999px, -9999px)');
   document.documentElement.appendChild(clone);
-  const scrollWidth = clone.scrollWidth;
+  const scrollWidth = measureIntrinsicWidth(clone);
   clone.remove();
   return scrollWidth;
+}
+
+/** Measures the label independently of the notch that constrains its current width. */
+function measureIntrinsicWidth(element: HTMLElement): number {
+  const previousStyles = element.style.cssText;
+
+  try {
+    // A flex child with overflow hidden does not contribute its full width to the label's
+    // scrollWidth. Unconstrain the label while measuring to avoid growing the notch one pixel
+    // at a time as the label and notch resize each other.
+    element.style.setProperty('width', 'max-content', 'important');
+    element.style.setProperty('max-width', 'none', 'important');
+    return element.scrollWidth;
+  } finally {
+    element.style.cssText = previousStyles;
+  }
 }
