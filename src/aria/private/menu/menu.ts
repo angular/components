@@ -338,9 +338,8 @@ export class MenuPattern<V> {
     this.hasBeenInteracted.set(true);
 
     const target = event && _getEventTarget(event);
-    const focusedItem = target && this.inputs.items().find(item =>
-      item.element()?.contains(target),
-    );
+    const focusedItem =
+      target && this.inputs.items().find(item => item.element()?.contains(target));
 
     if (focusedItem) {
       this.listBehavior.goto(focusedItem, {focusElement: false});
