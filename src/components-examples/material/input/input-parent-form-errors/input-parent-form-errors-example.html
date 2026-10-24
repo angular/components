@@ -1,0 +1,19 @@
+<form class="example-form" [formGroup]="passwordForm">
+  <mat-form-field class="example-full-width">
+    <mat-label>Password</mat-label>
+    <input type="password" matInput formControlName="password">
+    @if (passwordForm.controls.password.hasError('required')) {
+      <mat-error>Password is <strong>required</strong></mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Confirm password</mat-label>
+    <input type="password" matInput formControlName="confirmPassword" [errorStateMatcher]="matcher">
+    @if (passwordForm.controls.confirmPassword.hasError('required')) {
+      <mat-error>Please confirm your password</mat-error>
+    } @else if (passwordForm.hasError('passwordsMismatch')) {
+      <mat-error>Passwords don't match</mat-error>
+    }
+  </mat-form-field>
+</form>
