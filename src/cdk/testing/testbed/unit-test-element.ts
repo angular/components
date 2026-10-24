@@ -266,11 +266,7 @@ export class UnitTestElement implements TestElement {
   /** Checks whether this element matches the given selector. */
   async matchesSelector(selector: string): Promise<boolean> {
     await this._stabilize();
-    const elementPrototype = Element.prototype as any;
-    return (elementPrototype['matches'] || elementPrototype['msMatchesSelector']).call(
-      this.element,
-      selector,
-    );
+    return this.element.matches(selector);
   }
 
   /** Checks whether the element is focused. */
