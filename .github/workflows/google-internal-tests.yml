@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
-      - uses: angular/dev-infra/github-actions/google-internal-tests@9ea19241c41afc4579f2bc6983327f6b98ef3025 # main
+      - uses: angular/dev-infra/github-actions/google-internal-tests@1183a2e680543c3795d135a250ef4ae7e754c244 # main
         with:
           run-tests-guide-url: http://go/angular-material-presubmit
           github-token: ${{ secrets.GITHUB_TOKEN }}
