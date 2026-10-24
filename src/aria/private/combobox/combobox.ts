@@ -91,6 +91,12 @@ export class ComboboxPattern {
   /** A relay for keyboard events to the popup. */
   readonly keyboardEventRelay = signal<KeyboardEvent | undefined>(undefined);
 
+  /**
+   * Events waiting to be relayed to the popup. The relay signal only holds the latest event, so
+   * events that arrive before the relay effect runs are queued here to avoid dropping them.
+   */
+  private _pendingRelayEvents: KeyboardEvent[] = [];
+
   /** Whether the combobox is focused. */
   readonly isFocused = signal(false);
 
@@ -137,25 +143,25 @@ export class ComboboxPattern {
       .on(
         'ArrowLeft',
         e => {
-          this.keyboardEventRelay.set(e);
+          this._relayKeyboardEvent(e);
         },
         {preventDefault: this.popupType() !== 'listbox', ignoreRepeat: false},
       )
       .on(
         'ArrowRight',
         e => {
-          this.keyboardEventRelay.set(e);
+          this._relayKeyboardEvent(e);
         },
         {preventDefault: this.popupType() !== 'listbox', ignoreRepeat: false},
       )
-      .on('ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on('ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on(Modifier.Shift, 'ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on(Modifier.Shift, 'ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on('Home', e => this.keyboardEventRelay.set(e))
-      .on('End', e => this.keyboardEventRelay.set(e))
-      .on('PageUp', e => this.keyboardEventRelay.set(e))
-      .on('PageDown', e => this.keyboardEventRelay.set(e))
+      .on('ArrowUp', e => this._relayKeyboardEvent(e), {ignoreRepeat: false})
+      .on('ArrowDown', e => this._relayKeyboardEvent(e), {ignoreRepeat: false})
+      .on(Modifier.Shift, 'ArrowUp', e => this._relayKeyboardEvent(e), {ignoreRepeat: false})
+      .on(Modifier.Shift, 'ArrowDown', e => this._relayKeyboardEvent(e), {ignoreRepeat: false})
+      .on('Home', e => this._relayKeyboardEvent(e))
+      .on('End', e => this._relayKeyboardEvent(e))
+      .on('PageUp', e => this._relayKeyboardEvent(e))
+      .on('PageDown', e => this._relayKeyboardEvent(e))
       .on('Escape', () => {
         if (!this.inputs.alwaysExpanded()) {
           this.inputs.expanded.set(false);
@@ -163,18 +169,18 @@ export class ComboboxPattern {
       });
 
     if (!this.readonly()) {
-      manager.on('Enter', e => this.keyboardEventRelay.set(e));
+      manager.on('Enter', e => this._relayKeyboardEvent(e));
     }
 
     if (!this.isEditable() && !this.readonly()) {
       manager
-        .on(' ', e => this.keyboardEventRelay.set(e))
-        .on([Modifier.Ctrl, Modifier.Meta], 'a', e => this.keyboardEventRelay.set(e))
-        .on([Modifier.Ctrl, Modifier.Meta], 'A', e => this.keyboardEventRelay.set(e))
-        .on(Modifier.Shift, 'Home', e => this.keyboardEventRelay.set(e))
-        .on(Modifier.Shift, 'End', e => this.keyboardEventRelay.set(e))
+        .on(' ', e => this._relayKeyboardEvent(e))
+        .on([Modifier.Ctrl, Modifier.Meta], 'a', e => this._relayKeyboardEvent(e))
+        .on([Modifier.Ctrl, Modifier.Meta], 'A', e => this._relayKeyboardEvent(e))
+        .on(Modifier.Shift, 'Home', e => this._relayKeyboardEvent(e))
+        .on(Modifier.Shift, 'End', e => this._relayKeyboardEvent(e))
         .on(/^.$/, e => {
-          this.keyboardEventRelay.set(e);
+          this._relayKeyboardEvent(e);
         });
     }
 
@@ -194,6 +200,12 @@ export class ComboboxPattern {
 
   constructor(readonly inputs: ComboboxInputs) {
     this.value = inputs.value;
+  }
+
+  /** Queues a keyboard event to be relayed to the popup. */
+  private _relayKeyboardEvent(event: KeyboardEvent) {
+    this._pendingRelayEvents.push(event);
+    this.keyboardEventRelay.set(event);
   }
 
   /** Handles keydown events for the combobox. */
@@ -269,14 +281,19 @@ export class ComboboxPattern {
     const event = this.keyboardEventRelay();
     if (event === undefined) return;
 
+    const events = this._pendingRelayEvents;
+    this._pendingRelayEvents = [];
+
     // Reset isDeleting when the user navigates, so that the highlight effect can run again.
     this.isDeleting.set(false);
 
     untracked(() => {
       const popup = this.inputs.popup();
       if (this.isExpanded()) {
-        const relayedEvent = new KeyboardEvent(event.type, event);
-        popup?.controlTarget()?.dispatchEvent(relayedEvent);
+        const target = popup?.controlTarget();
+        for (const pendingEvent of events) {
+          target?.dispatchEvent(new KeyboardEvent(pendingEvent.type, pendingEvent));
+        }
       }
     });
   }
