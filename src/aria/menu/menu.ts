@@ -67,7 +67,7 @@ import {MENU_COMPONENT} from './menu-tokens';
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(mouseout)': '_pattern.onMouseOut($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn($event)',
     '(click)': '_pattern.onClick($event)',
   },
   hostDirectives: [

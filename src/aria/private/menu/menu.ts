@@ -333,9 +333,18 @@ export class MenuPattern<V> {
   }
 
   /** Handles focusin events for the menu. */
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.isFocused.set(true);
     this.hasBeenInteracted.set(true);
+
+    const target = event && _getEventTarget(event);
+    const focusedItem = target && this.inputs.items().find(item =>
+      item.element()?.contains(target),
+    );
+
+    if (focusedItem) {
+      this.listBehavior.goto(focusedItem, {focusElement: false});
+    }
   }
 
   /** Handles the focusout event for the menu. */
