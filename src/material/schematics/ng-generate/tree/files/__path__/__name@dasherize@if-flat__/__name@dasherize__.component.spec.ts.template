@@ -1,4 +1,4 @@
-import { <% if(!standalone) { %>waitForAsync, <% } %>ComponentFixture, TestBed } from '@angular/core/testing';<% if(!standalone) { %>
+import { ComponentFixture, TestBed } from '@angular/core/testing';<% if(!standalone) { %>
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTreeModule } from '@angular/material/tree';<% } %>
@@ -9,7 +9,7 @@ describe('<%= classify(name) %>Component', () => {
   let component: <%= classify(name) %>Component;
   let fixture: ComponentFixture<<%= classify(name) %>Component>;<% if(!standalone) { %>
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [<%= classify(name) %>Component],
       imports: [
@@ -18,7 +18,7 @@ describe('<%= classify(name) %>Component', () => {
         MatTreeModule,
       ]
     });
-  }));<% } %>
+  });<% } %>
 
   beforeEach(() => {
     fixture = TestBed.createComponent(<%= classify(name) %>Component);
