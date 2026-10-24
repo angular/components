@@ -16,7 +16,7 @@ import {
   inject,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {Subject} from 'rxjs';
 import {dispatchFakeEvent} from '../testing/private';
 
@@ -960,11 +960,11 @@ describe('CdkVirtualScrollViewport', () => {
     let testComponent: DelayedInitializationVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(DelayedInitializationVirtualScroll);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
-    }));
+    });
 
     it('should call custom trackBy when virtual for is added after init', async () => {
       await finishInit(fixture);
@@ -987,14 +987,14 @@ describe('CdkVirtualScrollViewport', () => {
     let viewport: CdkVirtualScrollViewport;
     let contentWrapperEl: HTMLElement;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(VirtualScrollWithAppendOnly);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
       contentWrapperEl = fixture.nativeElement.querySelector(
         '.cdk-virtual-scroll-content-wrapper',
       ) as HTMLElement;
-    }));
+    });
 
     it('should not remove item that have already been rendered', async () => {
       await finishInit(fixture);

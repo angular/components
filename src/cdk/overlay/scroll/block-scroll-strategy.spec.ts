@@ -1,5 +1,5 @@
 import {Component, Injector, ChangeDetectionStrategy} from '@angular/core';
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {ComponentPortal, PortalModule} from '../../portal';
 import {Platform} from '../../platform';
 import {ViewportRuler} from '../../scrolling';
@@ -21,7 +21,7 @@ describe('BlockScrollStrategy', () => {
   let forceScrollElement: HTMLElement;
   let overlayContainer: OverlayContainer;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     const injector = TestBed.inject(Injector);
     const overlayConfig = new OverlayConfig({scrollStrategy: createBlockScrollStrategy(injector)});
 
@@ -37,7 +37,7 @@ describe('BlockScrollStrategy', () => {
     forceScrollElement.style.width = '100px';
     forceScrollElement.style.height = '3000px';
     forceScrollElement.style.background = 'rebeccapurple';
-  }));
+  });
 
   afterEach(() => {
     overlayRef.dispose();

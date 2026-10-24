@@ -21,7 +21,7 @@ import {
   provideFakeDirectionality,
 } from '@angular/cdk/testing/private';
 import {Component, signal, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MAT_DATE_FORMATS, provideNativeDateAdapter} from '../core';
 import {DEC, FEB, JAN, MAR, NOV} from '../testing';
@@ -37,7 +37,7 @@ describe('MatMonthView', () => {
   describe('standard providers', () => {
     let dir: WritableSignal<Direction>;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       dir = signal<Direction>('ltr');
 
       TestBed.configureTestingModule({
@@ -47,7 +47,7 @@ describe('MatMonthView', () => {
           {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy},
         ],
       });
-    }));
+    });
 
     describe('standard month view', () => {
       let fixture: ComponentFixture<StandardMonthView>;
@@ -796,7 +796,7 @@ describe('MatMonthView', () => {
     let fixture: ComponentFixture<StandardMonthView>;
     let monthViewNativeElement: Element;
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [
           provideNativeDateAdapter(),
@@ -825,7 +825,7 @@ describe('MatMonthView', () => {
 
       let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView))!;
       monthViewNativeElement = monthViewDebugElement.nativeElement;
-    }));
+    });
 
     it('has correct month label', () => {
       let labelEl = monthViewNativeElement.querySelector('.mat-calendar-body-label')!;

@@ -1,4 +1,4 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {Component, ViewChild, signal, inject, ChangeDetectionStrategy} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index';
@@ -6,13 +6,13 @@ import {BidiModule, Directionality, Dir, Direction, DIR_DOCUMENT} from './index'
 describe('Directionality', () => {
   let fakeDocument: FakeDocument;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     fakeDocument = {body: {}, documentElement: {}};
 
     TestBed.configureTestingModule({
       providers: [{provide: DIR_DOCUMENT, useFactory: () => fakeDocument}],
     });
-  }));
+  });
 
   describe('Service', () => {
     it('should read dir from the html element if not specified on the body', () => {

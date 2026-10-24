@@ -5,7 +5,7 @@ import {
   dispatchKeyboardEvent,
 } from '@angular/cdk/testing/private';
 import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
@@ -16,7 +16,7 @@ import {
 import {MATERIAL_ANIMATIONS} from '../core';
 
 describe('MatExpansionPanel', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         {
@@ -25,7 +25,7 @@ describe('MatExpansionPanel', () => {
         },
       ],
     });
-  }));
+  });
 
   it('should expand and collapse the panel', async () => {
     const fixture = TestBed.createComponent(PanelWithContent);

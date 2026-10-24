@@ -1,12 +1,12 @@
-import {TestBed, waitForAsync} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {GuideItems} from './guide-items';
 
 describe('GuideItems', () => {
   let guideItems: GuideItems;
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     guideItems = TestBed.inject(GuideItems);
-  }));
+  });
 
   it('should get a list of all guide items', () => {
     expect(guideItems.getAllItems()).toBeDefined();

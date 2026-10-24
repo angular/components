@@ -11,7 +11,7 @@ import {
   provideZoneChangeDetection,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {MATERIAL_ANIMATIONS, MatOption, ThemePalette} from '../core';
@@ -43,23 +43,22 @@ describe('MatAutocomplete Zone.js integration', () => {
       fixture.detectChanges();
     });
 
-    it('should show the panel when the first open is after the initial zone stabilization', waitForAsync(() => {
+    it('should show the panel when the first open is after the initial zone stabilization', async () => {
       // Note that we're running outside the Angular zone, in order to be able
       // to test properly without the subscription from `_subscribeToClosingActions`
       // giving us a false positive.
-      fixture.ngZone!.runOutsideAngular(() => {
+      await fixture.ngZone!.runOutsideAngular(async () => {
         fixture.componentInstance.trigger.openPanel();
 
-        Promise.resolve().then(() => {
-          expect(fixture.componentInstance.panel.showPanel)
-            .withContext(`Expected panel to be visible.`)
-            .toBe(true);
-        });
+        await Promise.resolve();
+        expect(fixture.componentInstance.panel.showPanel)
+          .withContext(`Expected panel to be visible.`)
+          .toBe(true);
       });
-    }));
+    });
   });
 
-  it('should emit from `autocomplete.closed` after click outside inside the NgZone', waitForAsync(async () => {
+  it('should emit from `autocomplete.closed` after click outside inside the NgZone', async () => {
     const inZoneSpy = jasmine.createSpy('in zone spy');
 
     const fixture = createComponent(SimpleAutocomplete);
@@ -79,7 +78,7 @@ describe('MatAutocomplete Zone.js integration', () => {
     expect(inZoneSpy).toHaveBeenCalledWith(true);
 
     subscription.unsubscribe();
-  }));
+  });
 });
 
 @Component({

@@ -1,4 +1,4 @@
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
   Component,
   ElementRef,
@@ -45,14 +45,14 @@ describe('MenuBar', () => {
     let fixture: ComponentFixture<MenuBarRadioGroup>;
     let menuItems: CdkMenuItemRadio[];
 
-    beforeEach(waitForAsync(() => {
+    beforeEach(() => {
       fixture = TestBed.createComponent(MenuBarRadioGroup);
       fixture.detectChanges();
 
       menuItems = fixture.debugElement
         .queryAll(By.directive(CdkMenuItemRadio))
         .map(element => element.injector.get(CdkMenuItemRadio));
-    }));
+    });
 
     it('should toggle menuitemradio items', () => {
       expect(menuItems[0].checked).toBeTrue();

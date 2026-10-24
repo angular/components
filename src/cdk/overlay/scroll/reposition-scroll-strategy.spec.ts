@@ -1,4 +1,4 @@
-import {waitForAsync, TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {Component, Injector, ChangeDetectionStrategy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {ComponentPortal, PortalModule} from '../../portal';
@@ -19,7 +19,7 @@ describe('RepositionScrollStrategy', () => {
   let componentPortal: ComponentPortal<PastaMsg>;
   let scrolledSubject = new Subject();
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         {
@@ -34,7 +34,7 @@ describe('RepositionScrollStrategy', () => {
     injector = TestBed.inject(Injector);
     overlayContainer = TestBed.inject(OverlayContainer);
     componentPortal = new ComponentPortal(PastaMsg);
-  }));
+  });
 
   afterEach(() => {
     overlayRef.dispose();
