@@ -1,3 +1,21 @@
+<a name="22.3.0-next.4"></a>
+# 22.3.0-next.4 "bromine-boomerang" (2026-10-28)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [8fc6eacef](https://github.com/angular/components/commit/8fc6eacef5a50c522458ccb61242b090ffaa84aa) | fix | **menu:** avoid re-rendering when unrelated elements are added ([#33996](https://github.com/angular/components/pull/33996)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [79af796a9](https://github.com/angular/components/commit/79af796a9aa6c9348a045cda76532c13798717db) | fix | **checkbox:** duplicate required error with signal forms |
+| [19c161027](https://github.com/angular/components/commit/19c1610274069dc8d40e7a947995027348acc752) | fix | **slide-toggle:** duplicate required error with signal forms |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [14c794436](https://github.com/angular/components/commit/14c79443646df6ade944f421c97906bc10a1d55c) | fix | update fake event detection in aria ([#34004](https://github.com/angular/components/pull/34004)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.5"></a>
 # 22.2.5 "bromine-broom" (2026-10-28)
 ### aria
