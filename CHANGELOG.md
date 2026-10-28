@@ -1,3 +1,21 @@
+<a name="22.2.5"></a>
+# 22.2.5 "bromine-broom" (2026-10-28)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1edc5bfd7](https://github.com/angular/components/commit/1edc5bfd7c345360ab92b154a56524e6a8283e87) | fix | **menu:** avoid re-rendering when unrelated elements are added ([#33996](https://github.com/angular/components/pull/33996)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [cdaa1c3bd](https://github.com/angular/components/commit/cdaa1c3bda7c3973333cbc230e897981962f1e1c) | fix | **checkbox:** duplicate required error with signal forms |
+| [f70c3ccdd](https://github.com/angular/components/commit/f70c3ccdd874c872b36684a17e0b250e5339b186) | fix | **slide-toggle:** duplicate required error with signal forms |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [549036362](https://github.com/angular/components/commit/54903636252d58519cd467bed61cb8a7e1bd4fb9) | fix | update fake event detection in aria ([#34004](https://github.com/angular/components/pull/34004)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.4"></a>
 # 22.2.4 "titanium-trousers" (2026-10-21)
 ### aria
