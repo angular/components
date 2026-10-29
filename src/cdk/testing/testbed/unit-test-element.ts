@@ -254,7 +254,7 @@ export class UnitTestElement implements TestElement {
 
       if (option.selected !== wasSelected) {
         hasChanged = true;
-        dispatchFakeEvent(this.element, 'change');
+        dispatchFakeEvent(this.element, 'change', true);
       }
     }
 

@@ -450,6 +450,12 @@ export function crossEnvironmentSpecs(
       expect(await value.text()).toBe('Input: Yi');
     });
 
+    it('should dispatch input events that bubble when sending keys', async () => {
+      const [input, bubbledEvent] = await parallel(() => [harness.input(), harness.bubbledEvent()]);
+      await input.sendKeys('Yi');
+      expect(await bubbledEvent.text()).toBe('Bubbled event: input|input');
+    });
+
     it('focuses the element before sending key', async () => {
       const input = await harness.input();
       await input.sendKeys('Yi');
@@ -575,6 +581,16 @@ export function crossEnvironmentSpecs(
       await select.selectOptions(0, 2);
       expect(await value.text()).toBe('Multi-select: one,three');
       expect(await changeEventCounter.text()).toBe('Change events: 2');
+    });
+
+    it('should dispatch change events that bubble when selecting options', async () => {
+      const [select, bubbledEvent] = await parallel(() => [
+        harness.multiSelect(),
+        harness.bubbledEvent(),
+      ]);
+
+      await select.selectOptions(0);
+      expect(await bubbledEvent.text()).toBe('Bubbled event: change|multi-select');
     });
 
     it('should check if selector matches', async () => {

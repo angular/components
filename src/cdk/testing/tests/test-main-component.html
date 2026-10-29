@@ -21,7 +21,7 @@
   <div id="asyncCounter">{{asyncCounter}}</div>
 </div>
 <span id="contenteditable" contenteditable>initial value</span>
-<div class="inputs">
+<div class="inputs" (input)="onBubbledEvent($event)" (change)="onBubbledEvent($event)">
   <input [(ngModel)]="input" id="input" aria-label="input" (keydown)="onKeyDown($event)" />
   <span class="special-key">{{specialKey}}</span>
   <div id="value">Input: {{input}}</div>
@@ -52,6 +52,7 @@
   </select>
   <div id="multi-select-value">Multi-select: {{multiSelect}}</div>
   <div id="multi-select-change-counter">Change events: {{multiSelectChangeEventCount}}</div>
+  <div id="bubbled-event">Bubbled event: {{bubbledEvent}}</div>
   <div (myCustomEvent)="basicEvent = basicEvent + 1" id="custom-event-basic">
     Basic event: {{basicEvent}}
   </div>

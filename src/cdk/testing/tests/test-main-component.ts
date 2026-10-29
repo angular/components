@@ -47,6 +47,7 @@ export class TestMainComponent implements OnDestroy {
   singleSelectChangeEventCount = 0;
   multiSelect: string[] = [];
   multiSelectChangeEventCount = 0;
+  bubbledEvent = '';
   basicEvent = 0;
   customEventData: string | null = null;
   _shadowDomSupported = _supportsShadowDom();
@@ -113,6 +114,10 @@ export class TestMainComponent implements OnDestroy {
     this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
       .map(key => (event.getModifierState(key) ? key.toLowerCase() : ''))
       .join('-');
+  }
+
+  onBubbledEvent(event: Event) {
+    this.bubbledEvent = `${event.type}|${(event.target as HTMLElement).id}`;
   }
 
   onCustomEvent(event: any) {
