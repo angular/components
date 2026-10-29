@@ -103,7 +103,7 @@ describe('ScrollDispatcher', () => {
       scroll.register(scrollable);
       scroll.deregister(scrollable);
 
-      dispatchFakeEvent(fixture.componentInstance.scrollingElement.nativeElement, 'scroll');
+      dispatchFakeEvent(fixture.componentInstance.scrollingElement.nativeElement, 'scroll', false);
       fixture.detectChanges();
 
       expect(scrollSpy).not.toHaveBeenCalled();
