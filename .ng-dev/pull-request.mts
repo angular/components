@@ -13,4 +13,5 @@ export const pullRequest: PullRequestConfig = {
     default: 'squash',
     labels: [{pattern: 'merge: preserve commits', method: 'rebase'}],
   },
+  requiredStatuses: [{type: 'status', name: 'google-internal-tests'}],
 };
