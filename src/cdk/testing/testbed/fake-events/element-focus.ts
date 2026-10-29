@@ -9,14 +9,29 @@
 import {dispatchFakeEvent} from './dispatch-events';
 
 function triggerFocusChange(element: HTMLElement, event: 'focus' | 'blur') {
+  const hasFocus = document.activeElement === element;
+
+  if ((event === 'focus' && hasFocus) || (event === 'blur' && !hasFocus)) {
+    return;
+  }
+
   let eventFired = false;
   const handler = () => (eventFired = true);
   element.addEventListener(event, handler);
   element[event]();
   element.removeEventListener(event, handler);
+
+  // Some browsers won't move focus if the browser window is blurred while other will move it
+  // asynchronously. If that is the case, we fake the event sequence as a fallback.
   if (!eventFired) {
-    dispatchFakeEvent(element, event);
+    simulateFocusSequence(element, event);
   }
+}
+
+/** Simulates the full event sequence for a focus event. */
+function simulateFocusSequence(element: HTMLElement, event: 'focus' | 'blur') {
+  dispatchFakeEvent(element, event);
+  dispatchFakeEvent(element, event === 'focus' ? 'focusin' : 'focusout');
 }
 
 /**
@@ -28,8 +43,8 @@ function triggerFocusChange(element: HTMLElement, event: 'focus' | 'blur') {
 // TODO: Check if this element focus patching is still needed for local testing,
 // where browser is not necessarily focused.
 export function patchElementFocus(element: HTMLElement) {
-  element.focus = () => dispatchFakeEvent(element, 'focus');
-  element.blur = () => dispatchFakeEvent(element, 'blur');
+  element.focus = () => simulateFocusSequence(element, 'focus');
+  element.blur = () => simulateFocusSequence(element, 'blur');
 }
 
 /** @docs-private */
