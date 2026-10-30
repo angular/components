@@ -1072,35 +1072,18 @@ describe('MatDatepicker', () => {
         expect(formControl.hasError('matDatepickerParse')).toBe(true);
       });
 
-      it('should not re-format the input value if the forms module re-assigns the same date', () => {
+      it('should clear an invalid value when the control is reset', () => {
         const input = fixture.nativeElement.querySelector('input');
-        const date = new Date(2017, JAN, 1);
-        testComponent.formControl.setValue(date);
+        typeInElement(input, 'foo');
         fixture.detectChanges();
-        expect(input.value).toContain('2017');
-
-        // Note: this isn't how users would behave, but it captures
-        // the sequence of events with signal forms.
-        input.value = 'foo';
-        testComponent.formControl.setValue(date);
-        fixture.detectChanges();
-
+        expect(testComponent.formControl.value).toBeNull();
         expect(input.value).toBe('foo');
-      });
 
-      it('should not re-format the input value if the forms module re-assigns null', () => {
-        const input = fixture.nativeElement.querySelector('input');
-        testComponent.formControl.setValue(null);
+        testComponent.formControl.reset();
         fixture.detectChanges();
+
         expect(input.value).toBe('');
-
-        // Note: this isn't how users would behave, but it captures
-        // the sequence of events with signal forms.
-        input.value = 'foo';
-        testComponent.formControl.setValue(null);
-        fixture.detectChanges();
-
-        expect(input.value).toBe('foo');
+        expect(testComponent.formControl.hasError('matDatepickerParse')).toBe(false);
       });
     });
 
@@ -1128,6 +1111,33 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         expect(hasParseError()).toBe(true);
+      });
+
+      it('should not clear an invalid value while the user is typing', () => {
+        typeInElement(input, 'foo');
+        fixture.detectChanges();
+
+        expect(input.value).toBe('foo');
+        expect(fixture.componentInstance.dateForm().value()).toBeNull();
+      });
+
+      it('should not re-format a valid value while the user is typing', () => {
+        typeInElement(input, '01/01/2017');
+        fixture.detectChanges();
+
+        expect(input.value).toBe('01/01/2017');
+        expect(fixture.componentInstance.dateForm().value()).toEqual(new Date(2017, JAN, 1));
+      });
+
+      it('should clear an invalid value when the form is reset', () => {
+        typeInElement(input, 'foo');
+        fixture.detectChanges();
+        expect(input.value).toBe('foo');
+
+        fixture.componentInstance.dateForm().reset();
+        fixture.detectChanges();
+
+        expect(input.value).toBe('');
       });
 
       it('should clear the matDatepickerParse error when an invalid value is erased', () => {
