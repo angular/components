@@ -616,6 +616,21 @@ describe('Tabs', () => {
         expect(tabElements[1].getAttribute('aria-selected')).toBe('true');
       });
 
+      it('should act on the tab that receives external focus', async () => {
+        await updateTabs({selectedTab: 'tab1'});
+
+        tabElements[2].focus();
+        await fixture.whenStable();
+        expect(isTabFocused(2)).toBe(true);
+
+        await enter();
+        expect(testComponent.selectedTab()).toBe('tab3');
+
+        await left();
+        expect(isTabFocused(1)).toBe(true);
+        expect(testComponent.selectedTab()).toBe('tab3');
+      });
+
       it('should select focused tab on Enter', async () => {
         await updateTabs({selectedTab: 'tab1'});
         expect(testComponent.selectedTab()).toBe('tab1');

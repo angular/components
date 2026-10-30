@@ -268,8 +268,13 @@ export class TabListPattern {
   }
 
   /** Handles focusin events for the tablist. */
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.hasBeenInteracted.set(true);
+
+    const item = event && this._getItem(event);
+    if (item) {
+      this.navigationBehavior.goto(item, {focusElement: false});
+    }
   }
 
   /** Opens the given tab or the current active tab. */
@@ -295,8 +300,8 @@ export class TabListPattern {
     }
   }
 
-  /** Returns the tab item associated with the given pointer event. */
-  private _getItem(e: PointerEvent) {
+  /** Returns the tab item associated with the given event. */
+  private _getItem(e: Event) {
     const target = _getEventTarget<Element>(e);
     if (!target) {
       return;
