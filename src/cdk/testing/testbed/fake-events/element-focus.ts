@@ -15,7 +15,7 @@ function triggerFocusChange(element: HTMLElement, event: 'focus' | 'blur') {
   element[event]();
   element.removeEventListener(event, handler);
   if (!eventFired) {
-    dispatchFakeEvent(element, event);
+    dispatchFakeEvent(element, event, false);
   }
 }
 
@@ -28,8 +28,8 @@ function triggerFocusChange(element: HTMLElement, event: 'focus' | 'blur') {
 // TODO: Check if this element focus patching is still needed for local testing,
 // where browser is not necessarily focused.
 export function patchElementFocus(element: HTMLElement) {
-  element.focus = () => dispatchFakeEvent(element, 'focus');
-  element.blur = () => dispatchFakeEvent(element, 'blur');
+  element.focus = () => dispatchFakeEvent(element, 'focus', false);
+  element.blur = () => dispatchFakeEvent(element, 'blur', false);
 }
 
 /** @docs-private */

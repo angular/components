@@ -163,7 +163,7 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
     if (isInput && key.key && key.key.length === 1) {
       if (enterValueIncrementally) {
         (element as HTMLInputElement | HTMLTextAreaElement).value += key.key;
-        dispatchFakeEvent(element, 'input');
+        dispatchFakeEvent(element, 'input', true);
       }
     }
     dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers, key.code);
@@ -171,7 +171,7 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
 
   // Since we weren't dispatching `input` events while sending the keys, we have to do it now.
   if (!enterValueIncrementally) {
-    dispatchFakeEvent(element, 'input');
+    dispatchFakeEvent(element, 'input', true);
   }
 }
 
@@ -182,5 +182,5 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any[]) 
 export function clearElement(element: HTMLInputElement | HTMLTextAreaElement) {
   triggerFocus(element as HTMLElement);
   element.value = '';
-  dispatchFakeEvent(element, 'input');
+  dispatchFakeEvent(element, 'input', true);
 }
