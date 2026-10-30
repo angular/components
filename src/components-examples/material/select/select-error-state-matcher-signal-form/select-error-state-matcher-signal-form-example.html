@@ -1,0 +1,32 @@
+<h4>mat-select</h4>
+<mat-form-field>
+  <mat-label>Choose one</mat-label>
+  <mat-select [formField]="selectFormField" [errorStateMatcher]="matcher">
+    <mat-option>Clear</mat-option>
+    <mat-option value="valid">Valid option</mat-option>
+    <mat-option value="invalid">Invalid option</mat-option>
+  </mat-select>
+  <mat-hint>Errors appear instantly!</mat-hint>
+  @if (selectFormField().getError('required')) {
+    <mat-error>You must make a selection</mat-error>
+  }
+  @if (selectFormField().getError('pattern') && !selectFormField().getError('required')) {
+    <mat-error>Your selection is invalid</mat-error>
+  }
+</mat-form-field>
+
+<h4>native html select</h4>
+<mat-form-field class="demo-full-width">
+  <mat-label>Choose one</mat-label>
+  <select matNativeControl [formField]="nativeSelectFormField" [errorStateMatcher]="matcher">
+    <option value=""></option>
+    <option value="valid" selectFormField>Valid option</option>
+    <option value="invalid">Invalid option</option>
+  </select>
+  @if (nativeSelectFormField().getError('required')) {
+    <mat-error>You must make a selection</mat-error>
+  }
+  @if (nativeSelectFormField().getError('pattern') && !nativeSelectFormField().getError('required')) {
+    <mat-error>Your selection is invalid</mat-error>
+  }
+</mat-form-field>
