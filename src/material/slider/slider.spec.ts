@@ -1044,6 +1044,78 @@ describe('MatSlider', () => {
     });
   });
 
+  describe('long value indicators', () => {
+    for (const range of [false, true]) {
+      for (const direction of ['ltr', 'rtl'] as const) {
+        it(`should fit and center long labels (range: ${range}, direction: ${direction})`, () => {
+          const component = range
+            ? DiscreteRangeSliderWithDisplayWith
+            : DiscreteSliderWithDisplayWith;
+          const fixture = createComponent(component, [provideFakeDirectionality(direction)]);
+          fixture.nativeElement.dir = direction;
+          fixture.componentInstance.displayWith = () => '1';
+          fixture.detectChanges();
+          const slider: MatSlider = fixture.debugElement.query(
+            By.directive(MatSlider),
+          ).componentInstance;
+
+          const thumbs: HTMLElement[] = Array.from(
+            fixture.nativeElement.querySelectorAll('.mdc-slider__thumb'),
+          );
+
+          for (const thumb of thumbs) {
+            thumb.classList.add('mdc-slider__thumb--with-indicator');
+            // Measure the final layout without waiting for the entrance animation.
+            thumb.querySelector<HTMLElement>('.mdc-slider__value-indicator')!.style.transition =
+              'none';
+          }
+
+          const initialRect = thumbs[0]
+            .querySelector('.mdc-slider__value-indicator')!
+            .getBoundingClientRect();
+
+          for (const label of ['2026', '10000', 'September 2026', '1']) {
+            fixture.componentInstance.displayWith = () => label;
+            fixture.changeDetectorRef.markForCheck();
+            fixture.detectChanges();
+            for (const position of [_MatThumb.START, _MatThumb.END]) {
+              const input = slider._getInput(position) as MatSliderThumb | undefined;
+              if (input) {
+                input.value = input.value === 200 ? 199 : input.value + 1;
+              }
+            }
+            fixture.detectChanges();
+
+            for (const thumb of thumbs) {
+              const indicator = thumb.querySelector('.mdc-slider__value-indicator')!;
+              const text = thumb.querySelector('.mdc-slider__value-indicator-text')!;
+              const textRange = document.createRange();
+              textRange.selectNodeContents(text);
+
+              const indicatorRect = indicator.getBoundingClientRect();
+              const textRect = textRange.getBoundingClientRect();
+              const thumbRect = thumb.getBoundingClientRect();
+
+              expect(text.textContent).toBe(label);
+              expect(textRect.left).withContext(label).toBeGreaterThan(indicatorRect.left);
+              expect(textRect.right).withContext(label).toBeLessThan(indicatorRect.right);
+              expect(textRect.height).withContext(label).toBeLessThan(indicatorRect.height);
+              expect(indicatorRect.height).withContext(label).toBeCloseTo(initialRect.height, 0);
+              if (label === '1') {
+                expect(indicatorRect.width).toBeCloseTo(initialRect.width, 0);
+              } else {
+                expect(indicatorRect.width).withContext(label).toBeGreaterThan(initialRect.width);
+              }
+              expect(indicatorRect.left + indicatorRect.width / 2)
+                .withContext(label)
+                .toBeCloseTo(thumbRect.left + thumbRect.width / 2, 0);
+            }
+          }
+        });
+      }
+    }
+  });
+
   describe('slider with value property binding', () => {
     let fixture: ComponentFixture<SliderWithOneWayBinding>;
     let input: MatSliderThumb;
