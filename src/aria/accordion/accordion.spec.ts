@@ -487,6 +487,57 @@ describe('AccordionGroup', () => {
     });
   });
 
+  describe('with interactive content inside a panel', () => {
+    let link: HTMLElement;
+    let button: HTMLElement;
+    let input: HTMLElement;
+
+    const dispatchKeydown = async (key: string, target: HTMLElement) => {
+      const event = new KeyboardEvent('keydown', {bubbles: true, cancelable: true, key});
+      target.dispatchEvent(event);
+      await fixture.whenStable();
+      return event;
+    };
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(AccordionWithInteractiveContent);
+      testComponent = fixture.componentInstance;
+      groupElement = fixture.nativeElement.querySelector('[ngAccordionGroup]') as HTMLElement;
+      testComponent.expandItem('item-1');
+      await setupTriggerAndPanels();
+
+      link = panelElements[0].querySelector('a')!;
+      button = panelElements[0].querySelector('button')!;
+      input = panelElements[0].querySelector('input')!;
+      triggerElements[1].focus();
+      await fixture.whenStable();
+      expect(isTriggerExpanded(0)).toBeTrue();
+    });
+
+    it('should not toggle the panel or prevent default on Enter from a link', async () => {
+      const event = await dispatchKeydown('Enter', link);
+
+      expect(event.defaultPrevented).toBeFalse();
+      expect(isTriggerExpanded(0)).toBeTrue();
+    });
+
+    it('should not toggle the panel or prevent default on Space from a button', async () => {
+      const event = await dispatchKeydown(' ', button);
+
+      expect(event.defaultPrevented).toBeFalse();
+      expect(isTriggerExpanded(0)).toBeTrue();
+    });
+
+    it('should not move focus or prevent default on Home and End from an input', async () => {
+      const homeEvent = await dispatchKeydown('Home', input);
+      const endEvent = await dispatchKeydown('End', input);
+
+      expect(homeEvent.defaultPrevented).toBeFalse();
+      expect(endEvent.defaultPrevented).toBeFalse();
+      expect(isTriggerActive(1)).toBeTrue();
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -695,6 +746,30 @@ class AccordionGroupWithIfs extends AccordionGroupWithLoop {
   includeSecond = signal(true);
   includeThird = signal(true);
 }
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      @for (item of items(); track item.panelId) {
+        <div>
+          <button ngAccordionTrigger [panel]="panel" [(expanded)]="item.expanded">
+            {{ item.header }}
+          </button>
+          <div ngAccordionPanel #panel="ngAccordionPanel">
+            <ng-template ngAccordionContent>
+              <a href="javascript:void(0)">Link inside panel</a>
+              <button type="button">Button inside panel</button>
+              <input aria-label="Input inside panel" />
+            </ng-template>
+          </div>
+        </div>
+      }
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithInteractiveContent extends AccordionGroupWithLoop {}
 
 @Component({
   template: `

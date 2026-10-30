@@ -93,6 +93,9 @@ export class AccordionGroupPattern {
 
   /** Handles keydown events on the trigger, delegating to the group if not disabled. */
   onKeydown(event: KeyboardEvent): void {
+    const target = _getEventTarget<Element>(event);
+    if (target !== this.inputs.element() && !this._findTriggerPattern(target)) return;
+
     this.keydown().handle(event);
   }
 
