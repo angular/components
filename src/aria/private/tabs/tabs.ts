@@ -246,7 +246,8 @@ export class TabListPattern {
 
   /** Sets the default active state of the tablist before receiving interaction for the first time. */
   setDefaultStateEffect(): void {
-    if (this.hasBeenInteracted()) return;
+    const activeTab = this.activeTab();
+    if (this.hasBeenInteracted() && activeTab && this.inputs.items().includes(activeTab)) return;
 
     this.setDefaultState();
   }
