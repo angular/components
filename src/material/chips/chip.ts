@@ -43,11 +43,18 @@ import {
 } from '../core';
 import {Subject, Subscription, merge} from 'rxjs';
 import {MatChipAction, MatChipContent} from './chip-action';
-import {MatChipAvatar, MatChipEdit, MatChipRemove, MatChipTrailingIcon} from './chip-icons';
+import {
+  MatChipAvatar,
+  MatChipEdit,
+  MatChipLeadingIcon,
+  MatChipRemove,
+  MatChipTrailingIcon,
+} from './chip-icons';
 import {
   MAT_CHIP,
   MAT_CHIP_AVATAR,
   MAT_CHIP_EDIT,
+  MAT_CHIP_LEADING_ICON,
   MAT_CHIP_REMOVE,
   MAT_CHIP_TRAILING_ICON,
 } from './tokens';
@@ -74,10 +81,11 @@ export interface MatChipEvent {
     '[class.mdc-evolution-chip]': '!_isBasicChip',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
-    '[class.mdc-evolution-chip--with-primary-graphic]': 'leadingIcon',
-    '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
-    '[class.mdc-evolution-chip--with-avatar]': 'leadingIcon',
-    '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
+    '[class.mdc-evolution-chip--with-primary-graphic]': '_hasLeadingGraphic()',
+    '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon || avatar',
+    '[class.mdc-evolution-chip--with-avatar]': 'avatar',
+    '[class.mat-mdc-chip-with-avatar]': 'avatar',
+    '[class.mat-mdc-chip-with-leading-icon]': 'leadingIcon',
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-disabled]': 'disabled',
     '[class.mat-mdc-basic-chip]': '_isBasicChip',
@@ -131,7 +139,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
 
   /** All avatars present in the chip. */
   @ContentChildren(MAT_CHIP_AVATAR, {descendants: true})
-  protected _allLeadingIcons!: QueryList<MatChipAvatar>;
+  protected _allAvatars!: QueryList<MatChipAvatar>;
+
+  /** All leading icons present in the chip. */
+  @ContentChildren(MAT_CHIP_LEADING_ICON, {descendants: true})
+  protected _allLeadingIcons!: QueryList<MatChipLeadingIcon>;
 
   /** All trailing icons present in the chip. */
   @ContentChildren(MAT_CHIP_TRAILING_ICON, {descendants: true})
@@ -230,8 +242,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   /** The unstyled chip selector for this component. */
   protected basicChipAttrName = 'mat-basic-chip';
 
+  /** The chip's avatar. */
+  @ContentChild(MAT_CHIP_AVATAR) avatar!: MatChipAvatar;
+
   /** The chip's leading icon. */
-  @ContentChild(MAT_CHIP_AVATAR) leadingIcon!: MatChipAvatar;
+  @ContentChild(MAT_CHIP_LEADING_ICON) leadingIcon!: MatChipLeadingIcon;
 
   /** The chip's leading edit icon. */
   @ContentChild(MAT_CHIP_EDIT) editIcon!: MatChipEdit;
@@ -286,6 +301,7 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
     // Since the styling depends on the presence of some
     // actions, we have to mark for check on changes.
     this._actionChanges = merge(
+      this._allAvatars.changes,
       this._allLeadingIcons.changes,
       this._allTrailingIcons.changes,
       this._allEditIcons.changes,
@@ -298,12 +314,12 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
   }
 
   ngOnDestroy() {
-      this.destroyed.emit({chip: this});
-      this.destroyed.complete();
-      this._focusMonitor.stopMonitoring(this._elementRef);
-      this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
-      this._actionChanges?.unsubscribe();
-    }
+    this.destroyed.emit({chip: this});
+    this.destroyed.complete();
+    this._focusMonitor.stopMonitoring(this._elementRef);
+    this._rippleLoader?.destroyRipple(this._elementRef.nativeElement);
+    this._actionChanges?.unsubscribe();
+  }
 
   /**
    * Allows for programmatic removal of the chip.
@@ -327,6 +343,11 @@ export class MatChip implements OnInit, AfterViewInit, AfterContentInit, DoCheck
       !this._hasInteractiveActions() ||
       !!this._globalRippleOptions?.disabled
     );
+  }
+
+  /** Returns whether the chip has a leading icon or avatar. */
+  _hasLeadingGraphic() {
+    return !!(this.leadingIcon || this.avatar);
   }
 
   /** Returns whether the chip has a trailing icon. */

@@ -140,6 +140,55 @@ describe('MatChip', () => {
 
       expect(chipInstance.value).toBeNull();
     });
+
+    it('should support a leading icon', () => {
+      testComponent.showLeadingIcon = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(chipInstance.leadingIcon).toBeTruthy();
+      expect(chipNativeElement.classList).toContain('mat-mdc-chip-with-leading-icon');
+      expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-icon');
+      expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+      expect(chipNativeElement.classList).not.toContain('mat-mdc-chip-with-avatar');
+      expect(chipNativeElement.classList).not.toContain('mdc-evolution-chip--with-avatar');
+      expect(
+        chipNativeElement.querySelector('.mat-mdc-chip-graphic [matChipLeadingIcon]'),
+      ).toBeTruthy();
+    });
+
+    it('should support an avatar', () => {
+      testComponent.showAvatar = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(chipInstance.avatar).toBeTruthy();
+      expect(chipNativeElement.classList).toContain('mat-mdc-chip-with-avatar');
+      expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-avatar');
+      expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+      expect(chipNativeElement.classList).not.toContain('mat-mdc-chip-with-leading-icon');
+      expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic [matChipAvatar]')).toBeTruthy();
+    });
+
+    it('should support both leading and trailing icons', () => {
+      testComponent.showLeadingIcon = true;
+      testComponent.showTrailingIcon = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(chipInstance.leadingIcon).toBeTruthy();
+      expect(chipInstance.trailingIcon).toBeTruthy();
+      expect(chipNativeElement.classList).toContain('mat-mdc-chip-with-leading-icon');
+      expect(chipNativeElement.classList).toContain('mat-mdc-chip-with-trailing-icon');
+      expect(
+        chipNativeElement.querySelector('.mat-mdc-chip-graphic [matChipLeadingIcon]'),
+      ).toBeTruthy();
+      expect(
+        chipNativeElement.querySelector(
+          '.mdc-evolution-chip__cell--trailing [matChipTrailingIcon]',
+        ),
+      ).toBeTruthy();
+    });
   });
 });
 
@@ -152,6 +201,15 @@ describe('MatChip', () => {
                   [color]="color" [disabled]="disabled"
                   (destroyed)="chipDestroy($event)"
                   (removed)="chipRemove($event)" [value]="value" [disableRipple]="rippleDisabled">
+            @if (showLeadingIcon) {
+              <span matChipLeadingIcon>leading</span>
+            }
+            @if (showAvatar) {
+              <span matChipAvatar>avatar</span>
+            }
+            @if (showTrailingIcon) {
+              <span matChipTrailingIcon>trailing</span>
+            }
             {{name}}
           </mat-chip>
         </div>
@@ -167,6 +225,9 @@ class SingleChip {
   color: string = 'primary';
   removable: boolean = true;
   shouldShow: boolean = true;
+  showLeadingIcon = false;
+  showAvatar = false;
+  showTrailingIcon = false;
   value: any;
   rippleDisabled: boolean = false;
 

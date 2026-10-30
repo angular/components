@@ -47,6 +47,13 @@ export const MAT_CHIPS_DEFAULT_OPTIONS = new InjectionToken<MatChipsDefaultOptio
 export const MAT_CHIP_AVATAR = new InjectionToken('MatChipAvatar');
 
 /**
+ * Injection token that can be used to reference instances of `MatChipLeadingIcon`. It serves as
+ * alternative token to the actual `MatChipLeadingIcon` class which could cause unnecessary
+ * retention of the class and its directive metadata.
+ */
+export const MAT_CHIP_LEADING_ICON = new InjectionToken('MatChipLeadingIcon');
+
+/**
  * Injection token that can be used to reference instances of `MatChipTrailingIcon`. It serves as
  * alternative token to the actual `MatChipTrailingIcon` class which could cause unnecessary
  * retention of the class and its directive metadata.

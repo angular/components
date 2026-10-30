@@ -9,7 +9,13 @@
 import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {Directive} from '@angular/core';
 import {MatChipAction, MatChipContent} from './chip-action';
-import {MAT_CHIP_AVATAR, MAT_CHIP_EDIT, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON} from './tokens';
+import {
+  MAT_CHIP_AVATAR,
+  MAT_CHIP_EDIT,
+  MAT_CHIP_LEADING_ICON,
+  MAT_CHIP_REMOVE,
+  MAT_CHIP_TRAILING_ICON,
+} from './tokens';
 
 /** Avatar image within a chip. */
 @Directive({
@@ -21,6 +27,17 @@ import {MAT_CHIP_AVATAR, MAT_CHIP_EDIT, MAT_CHIP_REMOVE, MAT_CHIP_TRAILING_ICON}
   providers: [{provide: MAT_CHIP_AVATAR, useExisting: MatChipAvatar}],
 })
 export class MatChipAvatar {}
+
+/** Non-interactive leading icon in a chip. */
+@Directive({
+  selector: 'mat-chip-leading-icon, [matChipLeadingIcon]',
+  host: {
+    'class': 'mat-mdc-chip-leading-icon mdc-evolution-chip__icon mdc-evolution-chip__icon--primary',
+    'aria-hidden': 'true',
+  },
+  providers: [{provide: MAT_CHIP_LEADING_ICON, useExisting: MatChipLeadingIcon}],
+})
+export class MatChipLeadingIcon {}
 
 /** Non-interactive trailing icon in a chip. */
 @Directive({

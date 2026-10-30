@@ -49,4 +49,6 @@ export interface ChipRemoveHarnessFilters extends BaseHarnessFilters {}
 
 export interface ChipAvatarHarnessFilters extends BaseHarnessFilters {}
 
+export interface ChipLeadingIconHarnessFilters extends BaseHarnessFilters {}
+
 export interface ChipEditInputHarnessFilters extends BaseHarnessFilters {}

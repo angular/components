@@ -17,9 +17,11 @@ import {
   ChipAvatarHarnessFilters,
   ChipEditHarnessFilters,
   ChipHarnessFilters,
+  ChipLeadingIconHarnessFilters,
   ChipRemoveHarnessFilters,
 } from './chip-harness-filters';
 import {MatChipEditHarness} from './chip-edit-harness';
+import {MatChipLeadingIconHarness} from './chip-leading-icon-harness';
 import {MatChipRemoveHarness} from './chip-remove-harness';
 
 /** Harness for interacting with a mat-chip in tests. */
@@ -49,7 +51,8 @@ export class MatChipHarness extends ContentContainerComponentHarness {
   /** Gets a promise for the text content the option. */
   async getText(): Promise<string> {
     return (await this.host()).text({
-      exclude: '.mat-mdc-chip-avatar, .mat-mdc-chip-trailing-icon, .mat-icon',
+      exclude:
+        '.mat-mdc-chip-avatar, .mat-mdc-chip-leading-icon, .mat-mdc-chip-trailing-icon, .mat-icon',
     });
   }
 
@@ -86,5 +89,15 @@ export class MatChipHarness extends ContentContainerComponentHarness {
    */
   async getAvatar(filter: ChipAvatarHarnessFilters = {}): Promise<MatChipAvatarHarness | null> {
     return this.locatorForOptional(MatChipAvatarHarness.with(filter))();
+  }
+
+  /**
+   * Gets the leading icon inside a chip.
+   * @param filter Optionally filters which leading icons are included.
+   */
+  async getLeadingIcon(
+    filter: ChipLeadingIconHarnessFilters = {},
+  ): Promise<MatChipLeadingIconHarness | null> {
+    return this.locatorForOptional(MatChipLeadingIconHarness.with(filter))();
   }
 }
