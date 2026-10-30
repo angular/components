@@ -107,7 +107,7 @@
     "esbuild": "^0.28.0",
     "firebase-tools": "15.34.1",
     "fs-extra": "^11.0.0",
-    "glob": "^13.0.0",
+    "glob": "^14.0.0",
     "highlight.js": "^11.0.0",
     "husky": "^9.0.1",
     "jasmine": "^7.0.0",
