@@ -10,3 +10,4 @@ export {ChipsReactiveFormExample} from './chips-reactive-form/chips-reactive-for
 export {ChipsSignalFormExample} from './chips-signal-form/chips-signal-form-example';
 export {ChipsTemplateFormExample} from './chips-template-form/chips-template-form-example';
 export {ChipsAvatarExample} from './chips-avatar/chips-avatar-example';
+export {ChipsIconsExample} from './chips-icons/chips-icons-example';

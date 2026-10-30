@@ -50,7 +50,8 @@ export class MatChipSelectionChange {
     '[class.mat-mdc-chip-selected]': 'selected',
     '[class.mat-mdc-chip-multiple]': '_chipListMultiple',
     '[class.mat-mdc-chip-disabled]': 'disabled',
-    '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
+    '[class.mat-mdc-chip-with-avatar]': 'avatar',
+    '[class.mat-mdc-chip-with-leading-icon]': 'leadingIcon',
     '[class.mdc-evolution-chip--disabled]': 'disabled',
     '[class.mdc-evolution-chip--selected]': 'selected',
     // This class enables the transition on the checkmark. Usually MDC adds it when selection
@@ -59,9 +60,9 @@ export class MatChipSelectionChange {
     // because they also have an exit animation that we don't care about.
     '[class.mdc-evolution-chip--selecting]': '!_animationsDisabled',
     '[class.mdc-evolution-chip--with-trailing-action]': '_hasTrailingIcon()',
-    '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon',
+    '[class.mdc-evolution-chip--with-primary-icon]': 'leadingIcon || avatar',
     '[class.mdc-evolution-chip--with-primary-graphic]': '_hasLeadingGraphic()',
-    '[class.mdc-evolution-chip--with-avatar]': 'leadingIcon',
+    '[class.mdc-evolution-chip--with-avatar]': 'avatar',
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-with-trailing-icon]': '_hasTrailingIcon()',
     '[attr.tabindex]': 'null',
@@ -181,8 +182,8 @@ export class MatChipOption extends MatChip implements OnInit {
     }
   }
 
-  _hasLeadingGraphic() {
-    if (this.leadingIcon) {
+  override _hasLeadingGraphic() {
+    if (this.leadingIcon || this.avatar) {
       return true;
     }
 

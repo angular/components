@@ -12,9 +12,9 @@
     [disabled]="disabled"
     [attr.aria-description]="ariaDescription"
     [attr.aria-label]="ariaLabel">
-  @if (leadingIcon) {
+  @if (_hasLeadingGraphic()) {
     <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic">
-      <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
+      <ng-content select="mat-chip-avatar, [matChipAvatar], mat-chip-leading-icon, [matChipLeadingIcon]"></ng-content>
     </span>
   }
 

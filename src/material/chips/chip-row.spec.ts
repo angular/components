@@ -81,6 +81,21 @@ describe('Row Chips', () => {
         expect(chipNativeElement.classList).toContain('mat-warn');
       });
 
+      it('supports a leading icon', () => {
+        testComponent.showLeadingIcon = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+
+        expect(chipInstance.leadingIcon).toBeTruthy();
+        expect(chipNativeElement.classList).toContain('mat-mdc-chip-with-leading-icon');
+        expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-icon');
+        expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+        expect(chipNativeElement.classList).not.toContain('mat-mdc-chip-with-avatar');
+        expect(
+          chipNativeElement.querySelector('.mat-mdc-chip-graphic [matChipLeadingIcon]'),
+        ).toBeTruthy();
+      });
+
       it('allows removal', () => {
         spyOn(testComponent, 'chipRemove');
 
@@ -514,6 +529,9 @@ describe('Row Chips', () => {
             @if (showEditIcon) {
               <button matChipEdit>edit</button>
             }
+            @if (showLeadingIcon) {
+              <span matChipLeadingIcon>leading</span>
+            }
             {{name}}
             @if (removable) {
               <button matChipRemove>x</button>
@@ -542,6 +560,7 @@ class SingleChip {
   shouldShow: boolean = true;
   editable: boolean = false;
   showEditIcon: boolean = false;
+  showLeadingIcon = false;
   useCustomEditInput: boolean = true;
   showTrailingIcon = false;
   ariaLabel: string | null = null;

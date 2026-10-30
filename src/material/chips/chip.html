@@ -2,9 +2,9 @@
 
 <span class="mdc-evolution-chip__cell mdc-evolution-chip__cell--primary">
   <span matChipContent>
-    @if (leadingIcon) {
+    @if (_hasLeadingGraphic()) {
       <span class="mdc-evolution-chip__graphic mat-mdc-chip-graphic">
-        <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
+        <ng-content select="mat-chip-avatar, [matChipAvatar], mat-chip-leading-icon, [matChipLeadingIcon]"></ng-content>
       </span>
     }
     <span class="mdc-evolution-chip__text-label mat-mdc-chip-action-label">

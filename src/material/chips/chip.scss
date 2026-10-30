@@ -509,6 +509,10 @@ $fallbacks: m3-chip.get-tokens();
   opacity: token-utils.slot(chip-with-avatar-disabled-avatar-opacity, $fallbacks);
 }
 
+.mdc-evolution-chip--disabled:not(.mdc-evolution-chip--selected) .mat-mdc-chip-leading-icon {
+  opacity: token-utils.slot(chip-with-icon-disabled-icon-opacity, $fallbacks);
+}
+
 .mdc-evolution-chip--disabled .mdc-evolution-chip__icon--trailing {
   opacity: token-utils.slot(chip-with-trailing-icon-disabled-trailing-icon-opacity, $fallbacks);
 }
@@ -588,6 +592,7 @@ $fallbacks: m3-chip.get-tokens();
   // to all elements on the page which can cause the graphic to be clipped.
   // Set an explicit `box-sizing` in order to avoid these issues.
   .mat-mdc-chip-graphic,
+  .mat-mdc-chip-leading-icon,
   .mat-mdc-chip-trailing-icon {
     box-sizing: content-box;
   }

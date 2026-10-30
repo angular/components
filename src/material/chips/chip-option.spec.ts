@@ -12,6 +12,7 @@ import {
   MAT_CHIPS_DEFAULT_OPTIONS,
   MatChipAvatar,
   MatChipEvent,
+  MatChipLeadingIcon,
   MatChipListbox,
   MatChipOption,
   MatChipSelectionChange,
@@ -373,6 +374,18 @@ describe('Option Chips', () => {
         expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();
         expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
       });
+
+      it('displays checkmark graphic when leading icon is provided', () => {
+        testComponent.selected = true;
+        testComponent.leadingIconLabel = 'star';
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+
+        expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic')).toBeTruthy();
+        expect(chipNativeElement.classList).toContain('mdc-evolution-chip--with-primary-graphic');
+        expect(chipNativeElement.classList).toContain('mat-mdc-chip-with-leading-icon');
+        expect(chipNativeElement.classList).not.toContain('mat-mdc-chip-with-avatar');
+      });
     });
 
     it('should contain a focus indicator inside the text label', () => {
@@ -395,12 +408,15 @@ describe('Option Chips', () => {
             @if (avatarLabel) {
               <span class="avatar" matChipAvatar>{{avatarLabel}}</span>
             }
+            @if (leadingIconLabel) {
+              <span class="leading-icon" matChipLeadingIcon>{{leadingIconLabel}}</span>
+            }
             {{name}}
           </mat-chip-option>
         </div>
       }
     </mat-chip-listbox>`,
-  imports: [MatChipListbox, MatChipOption, MatChipAvatar],
+  imports: [MatChipListbox, MatChipOption, MatChipAvatar, MatChipLeadingIcon],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SingleChip {
@@ -414,6 +430,7 @@ class SingleChip {
   ariaLabel: string | null = null;
   ariaDescription: string | null = null;
   avatarLabel: string | null = null;
+  leadingIconLabel: string | null = null;
 
   chipDestroy: (event?: MatChipEvent) => void = () => {};
   chipSelectionChange: (event?: MatChipSelectionChange) => void = () => {};

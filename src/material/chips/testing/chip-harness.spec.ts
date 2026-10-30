@@ -6,6 +6,7 @@ import {MatIconModule} from '../../icon';
 import {MatIconHarness} from '../../icon/testing';
 import {MatChipsModule} from '../index';
 import {MatChipHarness} from './chip-harness';
+import {MatChipLeadingIconHarness} from './chip-leading-icon-harness';
 
 describe('MatChipHarness', () => {
   let fixture: ComponentFixture<ChipHarnessTest>;
@@ -19,23 +20,24 @@ describe('MatChipHarness', () => {
 
   it('should get correct number of chip harnesses', async () => {
     const harnesses = await loader.getAllHarnesses(MatChipHarness);
-    expect(harnesses.length).toBe(5);
+    expect(harnesses.length).toBe(6);
   });
 
   it('should get the chip text content', async () => {
     const harnesses = await loader.getAllHarnesses(MatChipHarness);
     expect(await harnesses[0].getText()).toBe('Basic Chip');
     expect(await harnesses[1].getText()).toBe('Chip');
-    expect(await harnesses[2].getText()).toBe('Chip with avatar');
-    expect(await harnesses[3].getText()).toBe('Disabled Chip');
-    expect(await harnesses[4].getText()).toBe('Chip Row');
+    expect(await harnesses[2].getText()).toBe('Chip with leading icon');
+    expect(await harnesses[3].getText()).toBe('Chip with avatar');
+    expect(await harnesses[4].getText()).toBe('Disabled Chip');
+    expect(await harnesses[5].getText()).toBe('Chip Row');
   });
 
   it('should be able to remove a chip', async () => {
     const removeChipSpy = spyOn(fixture.componentInstance, 'removeChip');
 
     const harnesses = await loader.getAllHarnesses(MatChipHarness);
-    await harnesses[4].remove();
+    await harnesses[5].remove();
 
     expect(removeChipSpy).toHaveBeenCalledTimes(1);
   });
@@ -43,7 +45,7 @@ describe('MatChipHarness', () => {
   it('should get the disabled state of a chip', async () => {
     const harnesses = await loader.getAllHarnesses(MatChipHarness);
     const disabledStates = await parallel(() => harnesses.map(harness => harness.isDisabled()));
-    expect(disabledStates).toEqual([false, false, false, true, false]);
+    expect(disabledStates).toEqual([false, false, false, false, true, false]);
   });
 
   it('should get the remove button of a chip', async () => {
@@ -63,6 +65,25 @@ describe('MatChipHarness', () => {
     expect(await avatarHost?.getAttribute('aria-label')).toBe('Coronavirus');
   });
 
+  it('should find leading icon in chip', async () => {
+    const chip = await loader.getHarness(
+      MatChipHarness.with({
+        selector: '.mat-mdc-chip-with-leading-icon',
+      }),
+    );
+    const leadingIcon = await chip.getLeadingIcon();
+    expect(leadingIcon).toBeTruthy();
+    const leadingIconHost = await leadingIcon?.host();
+    expect(await leadingIconHost?.text()).toBe('leading_icon');
+  });
+
+  it('should find leading icon with loader', async () => {
+    const leadingIcon = await loader.getHarness(MatChipLeadingIconHarness);
+    expect(leadingIcon).toBeTruthy();
+    const host = await leadingIcon.host();
+    expect(await host.text()).toBe('leading_icon');
+  });
+
   it('should find icon in chip', async () => {
     const chip = await loader.getHarness(
       MatChipHarness.with({
@@ -80,6 +101,7 @@ describe('MatChipHarness', () => {
   template: `
     <mat-basic-chip>Basic Chip</mat-basic-chip>
     <mat-chip>Chip <span matChipTrailingIcon>trailing_icon</span></mat-chip>
+    <mat-chip><span matChipLeadingIcon>leading_icon</span> Chip with leading icon</mat-chip>
     <mat-chip class="mat-mdc-chip-with-icon-avatar">
       <mat-icon matChipAvatar aria-label="Coronavirus" aria-hidden="false">coronavirus</mat-icon>
       Chip with avatar
