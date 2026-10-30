@@ -26,18 +26,23 @@
     "zone.js": "~0.16.2"
   },
   "devDependencies": {
-    "@angular/cli": "^22.2.0",
     "@angular/build": "^22.2.0",
+    "@angular/cli": "^22.2.0",
     "@angular/compiler-cli": "^22.2.0",
+    "@oxc-parser/binding-wasm32-wasi": "0.150.0",
+    "@rolldown/binding-wasm32-wasi": "1.2.15",
     "@types/jasmine": "~5.1.0",
     "@types/luxon": "^3.0.0",
     "@types/node": "^26.6.2",
     "jasmine-core": "~5.8.0",
-    "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
-    "karma-jasmine": "~5.0.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "karma-jasmine": "~5.0.0",
+    "karma": "~6.4.0",
     "typescript": "~6.0.3"
+  },
+  "overrides": {
+    "@napi-rs/wasm-runtime": "1.2.2"
   }
 }
