@@ -1740,6 +1740,48 @@ describe('MatFormField without label', () => {
   });
 });
 
+describe('MatFormField label alignment', () => {
+  let fixture: ComponentFixture<MatInputWithAppearance>;
+  let formField: HTMLElement;
+  let wrapper: HTMLElement;
+  let label: HTMLElement;
+
+  /** Distance between the center of the resting label and the center of the form field. */
+  function getLabelOffsetFromCenter(): number {
+    const wrapperRect = wrapper.getBoundingClientRect();
+    const labelRect = label.getBoundingClientRect();
+    return labelRect.top + labelRect.height / 2 - (wrapperRect.top + wrapperRect.height / 2);
+  }
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(MatInputWithAppearance);
+    fixture.componentInstance.appearance = 'outline';
+    fixture.detectChanges();
+
+    formField = fixture.nativeElement.querySelector('.mat-mdc-form-field');
+    wrapper = fixture.nativeElement.querySelector('.mat-mdc-text-field-wrapper');
+    label = fixture.nativeElement.querySelector('.mat-mdc-floating-label');
+  });
+
+  it('should center the resting label irrespective of the outline width', () => {
+    expect(Math.abs(getLabelOffsetFromCenter())).toBeLessThan(1);
+
+    formField.style.setProperty('--mat-form-field-outlined-outline-width', '8px');
+
+    // Sanity check that the token is actually being applied so that the assertion below
+    // can't pass because the form field styles aren't loaded.
+    const notch = fixture.nativeElement.querySelector('.mdc-notched-outline__notch');
+    expect(getComputedStyle(notch).borderTopWidth).toBe('8px');
+    expect(Math.abs(getLabelOffsetFromCenter())).toBeLessThan(1);
+  });
+
+  it('should center the resting label irrespective of the label font size', () => {
+    formField.style.setProperty('--mat-form-field-outlined-label-text-size', '10px');
+    expect(getComputedStyle(label).fontSize).toBe('10px');
+    expect(Math.abs(getLabelOffsetFromCenter())).toBeLessThan(1);
+  });
+});
+
 @Component({
   template: `
     <mat-form-field [floatLabel]="floatLabel">
