@@ -43,6 +43,11 @@ app-component-viewer {
   position: relative;
   min-height: 500px;
 
+  // Keeps anchor targets from scrolling underneath the sticky section tabs.
+  [id] {
+    scroll-margin-top: 64px;
+  }
+
   // Display outlet components with toc as flex and switch to
   // vertical direction on small screens
   component-overview,
