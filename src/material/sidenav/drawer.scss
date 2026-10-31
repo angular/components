@@ -22,6 +22,14 @@ $fallbacks: m3-sidenav.get-tokens();
 }
 
 .mat-drawer-container {
+  // Scope transition timing to the nearest container so an outer container cannot animate
+  // newly rendered nested drawers before their own initial render has finished.
+  --mat-drawer-transition-duration: 0ms;
+
+  &.mat-drawer-transition {
+    --mat-drawer-transition-duration: #{variables.$swift-ease-out-duration};
+  }
+
   // We need a stacking context here so that the backdrop and drawers are clipped to the
   // MatDrawerContainer. This creates a new z-index stack so we use low numbered z-indices.
   // We create another stacking context in the '.mat-drawer-content' and in each drawer so that
@@ -85,7 +93,7 @@ $fallbacks: m3-sidenav.get-tokens();
 
   .mat-drawer-transition & {
     transition: {
-      duration: variables.$swift-ease-out-duration;
+      duration: var(--mat-drawer-transition-duration);
       timing-function: variables.$swift-ease-out-timing-function;
       property: background-color, visibility;
     }
@@ -109,7 +117,7 @@ $fallbacks: m3-sidenav.get-tokens();
 
   .mat-drawer-transition & {
     transition: {
-      duration: variables.$swift-ease-out-duration;
+      duration: var(--mat-drawer-transition-duration);
       timing-function: variables.$swift-ease-out-timing-function;
       property: transform, margin-left, margin-right;
     }
@@ -185,7 +193,7 @@ $fallbacks: m3-sidenav.get-tokens();
   }
 
   .mat-drawer-transition & {
-    transition: transform 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: transform var(--mat-drawer-transition-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
   }
 
   &:not(.mat-drawer-opened):not(.mat-drawer-animating) {
