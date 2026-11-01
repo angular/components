@@ -63,7 +63,7 @@ export class Dialog implements OnDestroy {
   private _openDialogsAtThisLevel: DialogRef<any, any>[] = [];
   private readonly _afterAllClosedAtThisLevel = new Subject<void>();
   private readonly _afterOpenedAtThisLevel = new Subject<DialogRef>();
-  private _ariaHiddenElements = new Map<Element, string | null>();
+  private readonly _ariaHiddenElementsAtThisLevel = new Map<Element, string | null>();
   private _scrollStrategy = inject(DIALOG_SCROLL_STRATEGY);
 
   /** Keeps track of the currently-open dialogs. */
@@ -373,7 +373,9 @@ export class Dialog implements OnDestroy {
       // If all the dialogs were closed, remove/restore the `aria-hidden`
       // to a the siblings and emit to the `afterAllClosed` stream.
       if (!this.openDialogs.length) {
-        this._ariaHiddenElements.forEach((previousValue, element) => {
+        const ariaHiddenElements = this._getAriaHiddenElements();
+
+        ariaHiddenElements.forEach((previousValue, element) => {
           if (previousValue) {
             element.setAttribute('aria-hidden', previousValue);
           } else {
@@ -381,7 +383,7 @@ export class Dialog implements OnDestroy {
           }
         });
 
-        this._ariaHiddenElements.clear();
+        ariaHiddenElements.clear();
 
         if (emitEvent) {
           this._getAfterAllClosed().next();
@@ -395,6 +397,7 @@ export class Dialog implements OnDestroy {
     // Ensure that the overlay container is attached to the DOM.
     if (overlayContainer.parentElement) {
       const siblings = overlayContainer.parentElement.children;
+      const ariaHiddenElements = this._getAriaHiddenElements();
 
       for (let i = siblings.length - 1; i > -1; i--) {
         const sibling = siblings[i];
@@ -406,7 +409,7 @@ export class Dialog implements OnDestroy {
           !sibling.hasAttribute('aria-live') &&
           !sibling.hasAttribute('popover')
         ) {
-          this._ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
+          ariaHiddenElements.set(sibling, sibling.getAttribute('aria-hidden'));
           sibling.setAttribute('aria-hidden', 'true');
         }
       }
@@ -416,6 +419,15 @@ export class Dialog implements OnDestroy {
   private _getAfterAllClosed(): Subject<void> {
     const parent = this._parentDialog;
     return parent ? parent._getAfterAllClosed() : this._afterAllClosedAtThisLevel;
+  }
+
+  /**
+   * Gets the elements that were hidden from assistive technology while dialogs are open.
+   * Shared with the parent dialog, because the list of open dialogs is shared as well.
+   */
+  private _getAriaHiddenElements(): Map<Element, string | null> {
+    const parent = this._parentDialog;
+    return parent ? parent._getAriaHiddenElements() : this._ariaHiddenElementsAtThisLevel;
   }
 }
 
