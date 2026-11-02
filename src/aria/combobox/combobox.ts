@@ -130,18 +130,12 @@ export class Combobox extends DeferredContentAware implements OnInit {
   constructor() {
     super();
 
-    afterRenderEffect({write: () => this._pattern.keyboardEventRelayEffect()});
-    afterRenderEffect(() => {
-      this.contentVisible.set(this._pattern.isExpanded());
-    });
+    afterRenderEffect(() => this._pattern.keyboardEventRelayEffect());
+    afterRenderEffect(() => this.contentVisible.set(this._pattern.isExpanded()));
 
     if (this._pattern.isEditable()) {
-      afterRenderEffect(() => {
-        this._renderer.setProperty(this.element, 'value', this.value());
-      });
-      afterRenderEffect(() => {
-        this._pattern.highlightEffect();
-      });
+      afterRenderEffect(() => this._renderer.setProperty(this.element, 'value', this.value()));
+      afterRenderEffect(() => this._pattern.highlightEffect());
     }
   }
 
