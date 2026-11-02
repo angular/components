@@ -193,7 +193,7 @@ describe('MatNativeSelectHarness', () => {
 
 @Component({
   template: `
-    <mat-form-field>
+    <mat-form-field floatLabel="always">
       <mat-label>Favorite food</mat-label>
       <select
         id="food"
