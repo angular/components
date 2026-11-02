@@ -244,17 +244,20 @@ export class UnitTestElement implements TestElement {
     const options = this.element.querySelectorAll('option');
     const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
 
-    for (let i = 0; i < options.length; i++) {
-      const option = options[i];
-      const wasSelected = option.selected;
+    if (options.length && indexes.size) {
+      // Reset the value so all the selected states are cleared.
+      for (let i = 0; i < options.length; i++) {
+        options[i].selected = false;
+      }
 
-      // We have to go through `option.selected`, because `HTMLSelectElement.value` doesn't
-      // allow for multiple options to be selected, even in `multiple` mode.
-      option.selected = indexes.has(i);
-
-      if (option.selected !== wasSelected) {
-        hasChanged = true;
-        dispatchFakeEvent(this.element, 'change', true);
+      for (let i = 0; i < options.length; i++) {
+        if (indexes.has(i)) {
+          // We have to go through `option.selected`, because `HTMLSelectElement.value` doesn't
+          // allow for multiple options to be selected, even in `multiple` mode.
+          options[i].selected = true;
+          hasChanged = true;
+          dispatchFakeEvent(this.element, 'change', true);
+        }
       }
     }
 
