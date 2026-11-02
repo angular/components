@@ -15,7 +15,11 @@ import {ComboboxPopup} from './combobox-popup';
 import {ComboboxWidget} from './combobox-widget';
 
 import {Listbox, Option} from '../listbox';
-import {runAccessibilityChecks} from '@angular/cdk/testing/private';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  runAccessibilityChecks,
+} from '@angular/cdk/testing/private';
 import {Tree, TreeItem, TreeItemGroup} from '../tree';
 import {NgTemplateOutlet} from '@angular/common';
 import {Grid, GridRow, GridCell, GridCellWidget} from '../grid';
@@ -299,6 +303,48 @@ describe('Combobox', () => {
 
           expect(fixture.componentInstance.value()).toEqual([]);
           expect(inputElement.value).toBe('Appl');
+        });
+
+        it('should not select a removed option if Enter is pressed in the same render as filter', async () => {
+          fixture.componentInstance.alwaysExpanded.set(true);
+          await fixture.whenStable();
+
+          await focus();
+          inputElement.value = 'California';
+          dispatchFakeEvent(inputElement, 'input', true);
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'Enter');
+          await fixture.whenStable();
+          await fixture.whenStable();
+
+          expect(fixture.componentInstance.valueChanges).toEqual([['California']]);
+        });
+
+        it('should select the new active option if Enter is pressed in the same render as filter after navigating', async () => {
+          await down(); // Opens and focuses Alabama
+          await down(); // Focuses Alaska
+
+          inputElement.value = 'California';
+          dispatchFakeEvent(inputElement, 'input', true);
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'Enter');
+          await fixture.whenStable();
+          await fixture.whenStable();
+
+          expect(fixture.componentInstance.valueChanges).toEqual([['California']]);
+        });
+
+        it('should not emit a selection if Enter is pressed in the same render that filters out all options', async () => {
+          fixture.componentInstance.alwaysExpanded.set(true);
+          await fixture.whenStable();
+
+          // Note: this goes directly thorugh the dispatch helpers to match #34041.
+          await focus();
+          inputElement.value = 'Nonexistent';
+          dispatchFakeEvent(inputElement, 'input', true);
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'Enter');
+          await fixture.whenStable();
+          await fixture.whenStable();
+
+          expect(fixture.componentInstance.valueChanges).toEqual([]);
         });
       });
 
@@ -1345,7 +1391,18 @@ describe('Combobox', () => {
   />
 
   <ng-template ngComboboxPopup [combobox]="combobox">
-    <div ngComboboxWidget #listbox="ngListbox" ngListbox id="listbox" focusMode="activedescendant" selectionMode="explicit" [(value)]="value" (click)="onCommit()" (keydown.enter)="onCommit()" [activeDescendant]="listbox.activeDescendant()">
+    <div
+      ngComboboxWidget
+      #listbox="ngListbox"
+      ngListbox
+      id="listbox"
+      focusMode="activedescendant"
+      selectionMode="explicit"
+      [(value)]="value"
+      (valueChange)="valueChanges.push($event)"
+      (click)="onCommit()"
+      (keydown.enter)="onCommit()"
+      [activeDescendant]="listbox.activeDescendant()">
       @for (option of options(); track option) {
         <div
           ngOption
@@ -1362,16 +1419,17 @@ describe('Combobox', () => {
   imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
 })
 class ComboboxListboxExample {
-  readonly = signal(false);
-  disabled = signal(false);
-  softDisabled = signal(true);
-  alwaysExpanded = signal(false);
-  tabIndex = signal<number | undefined>(undefined);
-  popupExpanded = signal(false);
-  searchString = signal('');
-  value = signal<string[]>([]);
+  readonly readonly = signal(false);
+  readonly disabled = signal(false);
+  readonly softDisabled = signal(true);
+  readonly alwaysExpanded = signal(false);
+  readonly tabIndex = signal<number | undefined>(undefined);
+  readonly popupExpanded = signal(false);
+  readonly searchString = signal('');
+  readonly value = signal<string[]>([]);
+  readonly valueChanges: (readonly string[])[] = [];
 
-  options = computed(() =>
+  readonly options = computed(() =>
     states.filter(state => state.toLowerCase().startsWith(this.searchString().toLowerCase())),
   );
 
