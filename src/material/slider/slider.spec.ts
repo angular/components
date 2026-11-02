@@ -1722,6 +1722,38 @@ describe('MatSlider', () => {
       expect(tickEls.inactive.length).toBe(100);
     });
   });
+
+  describe('slider with tick marks that does not have a width', () => {
+    it('should not compute the tick marks until the slider has a width', () => {
+      const fixture = createComponent(SliderWithTickMarks);
+      fixture.nativeElement.style.display = 'none';
+      fixture.detectChanges();
+      const slider = fixture.componentInstance.slider;
+      expect(slider._tickMarks.length).toBe(0);
+
+      slider.max = 1000;
+      expect(slider._tickMarks.length).toBe(0);
+
+      fixture.nativeElement.style.display = '';
+      slider._onResize();
+      expect(slider._tickMarks.length).toBe(1001);
+    });
+
+    it('should not compute the tick marks of a range slider until it has a width', () => {
+      const fixture = createComponent(RangeSliderWithTickMarks);
+      fixture.nativeElement.style.display = 'none';
+      fixture.detectChanges();
+      const slider = fixture.componentInstance.slider;
+      expect(slider._tickMarks.length).toBe(0);
+
+      slider.max = 1000;
+      expect(slider._tickMarks.length).toBe(0);
+
+      fixture.nativeElement.style.display = '';
+      slider._onResize();
+      expect(slider._tickMarks.length).toBe(1001);
+    });
+  });
 });
 
 const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
