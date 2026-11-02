@@ -366,7 +366,7 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   @Input() displayWith: (value: number) => string = (value: number) => `${value}`;
 
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
-  _tickMarks!: _MatTickMark[];
+  _tickMarks: _MatTickMark[] = [];
 
   /** Whether animations have been disabled. */
   _noopAnimations = _animationsDisabled();
@@ -874,6 +874,9 @@ export class MatSlider implements AfterViewInit, OnDestroy, _MatSlider {
   _updateTickMarkUI(): void {
     if (
       !this.showTickMarks ||
+      // Tick marks aren't rendered until the slider has a width (e.g. they never are on the
+      // server) so skip computing them until then since it can be expensive for large ranges.
+      !this._cachedWidth ||
       this.step === undefined ||
       this.min === undefined ||
       this.max === undefined
