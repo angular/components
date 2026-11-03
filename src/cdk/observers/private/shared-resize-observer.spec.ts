@@ -31,17 +31,15 @@ describe('SharedResizeObserver', () => {
     unobserve() {}
     disconnect() {}
 
-    triggerCallback(target: Element) {
+    triggerCallback(...targets: Element[]) {
       this._callback(
-        [
-          {
-            target,
-            borderBoxSize: [],
-            contentBoxSize: [],
-            devicePixelContentBoxSize: [],
-            contentRect: {} as DOMRect,
-          },
-        ],
+        targets.map(target => ({
+          target,
+          borderBoxSize: [],
+          contentBoxSize: [],
+          devicePixelContentBoxSize: [],
+          contentRect: {} as DOMRect,
+        })),
         this,
       );
     }
@@ -127,6 +125,23 @@ describe('SharedResizeObserver', () => {
     fixture.detectChanges();
     expect(resizeSpy1).toHaveBeenCalled();
     expect(resizeSpy2).not.toHaveBeenCalled();
+  });
+
+  it('should emit only entries for the observed element when multiple elements resize', () => {
+    const el1Entries: ResizeObserverEntry[][] = [];
+    resizeObserver.observe(el1).subscribe(entries => el1Entries.push(entries));
+    resizeObserver.observe(el2).subscribe();
+    fixture.detectChanges();
+
+    currentObservers.get('content-box')?.triggerCallback(el1, el2);
+    fixture.detectChanges();
+
+    expect(el1Entries.length).toBeGreaterThan(0);
+    for (const batch of el1Entries) {
+      for (const entry of batch) {
+        expect(entry.target).toBe(el1);
+      }
+    }
   });
 });
 
