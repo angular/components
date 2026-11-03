@@ -7,7 +7,7 @@
  */
 import {inject, Service, NgZone, OnDestroy, RendererFactory2} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
-import {filter, shareReplay, takeUntil} from 'rxjs/operators';
+import {filter, map, shareReplay, takeUntil} from 'rxjs/operators';
 
 /**
  * Handler that logs "ResizeObserver loop limit exceeded" errors.
@@ -63,7 +63,8 @@ class SingleBoxSharedResizeObserver {
             this._elementObservables.delete(target);
           };
         }).pipe(
-          filter(entries => entries.some(entry => entry.target === target)),
+          map(entries => entries.filter(entry => entry.target === target)),
+          filter(entries => entries.length > 0),
           // Share a replay of the last event so that subsequent calls to observe the same element
           // receive initial sizing info like the first one. Also enable ref counting so the
           // element will be automatically unobserved when there are no more subscriptions.
