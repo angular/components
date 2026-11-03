@@ -61,11 +61,6 @@ import {AccordionTrigger} from './accordion-trigger';
 @Directive({
   selector: '[ngAccordionGroup]',
   exportAs: 'ngAccordionGroup',
-  host: {
-    '(keydown)': '_pattern.onKeydown($event)',
-    '(click)': '_pattern.onClick($event)',
-    '(focusin)': '_pattern.onFocus($event)',
-  },
   providers: [{provide: ACCORDION_GROUP, useExisting: AccordionGroup}],
 })
 export class AccordionGroup implements OnDestroy {
