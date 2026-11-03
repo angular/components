@@ -146,6 +146,38 @@ describe('Portals', () => {
       expect(testAppComponent.portalOutlet.hasAttached()).toBe(false);
     });
 
+    it('should insert a DOM portal at the location of an ng-template outlet rather than at the end of the parent', () => {
+      const customFixture = TestBed.createComponent(DomPortalPositionTestApp);
+      customFixture.detectChanges();
+
+      const testApp = customFixture.componentInstance;
+      const domPortal = new DomPortal(testApp.domSource);
+      const container = customFixture.nativeElement.querySelector(
+        '.portal-container',
+      ) as HTMLElement;
+      const siblingBefore = container.querySelector('.sibling-before')!;
+      const siblingAfter = container.querySelector('.sibling-after')!;
+      const domElement = testApp.domSource.nativeElement;
+
+      testApp.portal = domPortal;
+      customFixture.changeDetectorRef.markForCheck();
+      customFixture.detectChanges();
+
+      expect(domElement.nextElementSibling)
+        .withContext('Expected DOM portal element to be inserted before subsequent siblings')
+        .toBe(siblingAfter);
+      expect(siblingAfter.previousElementSibling)
+        .withContext('Expected sibling after to be preceded by DOM portal element')
+        .toBe(domElement);
+
+      testApp.portal = undefined;
+      customFixture.changeDetectorRef.markForCheck();
+      customFixture.detectChanges();
+
+      expect(container.contains(domElement)).toBe(false);
+      expect(siblingBefore.nextElementSibling).toBe(siblingAfter);
+    });
+
     it('should throw when trying to load an element without a parent into a DOM portal via a CdkPortalOutlet', () => {
       const testAppComponent = fixture.componentInstance;
       const element = document.createElement('div');
@@ -926,7 +958,6 @@ class PortalTestApp {
   }
 }
 
-/** Test-bed component that contains a portal outlet and a couple of template portals. */
 @Component({
   template: `
     <div class="portal-container">
@@ -938,4 +969,25 @@ class PortalTestApp {
 })
 class UnboundPortalTestApp {
   @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;
+}
+
+@Component({
+  template: `
+    <div class="portal-container">
+      <span class="sibling-before">Before</span>
+      <ng-template [cdkPortalOutlet]="portal"/>
+      <span class="sibling-after">After</span>
+    </div>
+
+    <div class="dom-source-parent">
+      <p #domSource>DOM Portal Content</p>
+    </div>
+  `,
+  imports: [CdkPortalOutlet],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class DomPortalPositionTestApp {
+  @ViewChild(CdkPortalOutlet) portalOutlet!: CdkPortalOutlet;
+  @ViewChild('domSource') domSource!: ElementRef<HTMLElement>;
+  portal: DomPortal | undefined;
 }
