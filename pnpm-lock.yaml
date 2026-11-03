@@ -289,8 +289,8 @@ importers:
         specifier: 'catalog:'
         version: 22.2.4(@angular/compiler-cli@22.2.4(@angular/compiler@22.2.4)(typescript@6.0.2))(@angular/compiler@22.2.4)
       '@angular/ng-dev':
-        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#a53423acd0cec521dcd8edd376b7b6b485ace6cd
-        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a53423acd0cec521dcd8edd376b7b6b485ace6cd(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))
+        specifier: https://github.com/angular/dev-infra-private-ng-dev-builds.git#316b8f89d5da8b8e3b58e646581c31b19c229205
+        version: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/316b8f89d5da8b8e3b58e646581c31b19c229205(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))
       '@angular/platform-server':
         specifier: 'catalog:'
         version: 22.2.4(@angular/common@22.2.4(@angular/compiler-cli@22.2.4(@angular/compiler@22.2.4)(typescript@6.0.2))(@angular/core@22.2.4(@angular/compiler@22.2.4)(rxjs@6.6.7)(zone.js@0.16.3))(rxjs@6.6.7))(@angular/compiler-cli@22.2.4(@angular/compiler@22.2.4)(typescript@6.0.2))(@angular/compiler@22.2.4)(@angular/core@22.2.4(@angular/compiler@22.2.4)(rxjs@6.6.7)(zone.js@0.16.3))(@angular/platform-browser@22.2.4(@angular/common@22.2.4(@angular/compiler-cli@22.2.4(@angular/compiler@22.2.4)(typescript@6.0.2))(@angular/core@22.2.4(@angular/compiler@22.2.4)(rxjs@6.6.7)(zone.js@0.16.3))(rxjs@6.6.7))(@angular/compiler-cli@22.2.4(@angular/compiler@22.2.4)(typescript@6.0.2))(@angular/core@22.2.4(@angular/compiler@22.2.4)(rxjs@6.6.7)(zone.js@0.16.3)))(rxjs@6.6.7)
@@ -1068,9 +1068,9 @@ packages:
       '@angular/compiler': 22.2.4
       '@angular/compiler-cli': 22.2.4
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a53423acd0cec521dcd8edd376b7b6b485ace6cd':
-    resolution: {gitHosted: true, integrity: sha512-S9R+TLW26DFNQX/ntfOFTn3Httw5Jr/ubro5vAFz3eaWq2SNqzYn3EdsKvrNgJ9u+HGIFxLoK1e9xhkwAXJ/4A==, tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a53423acd0cec521dcd8edd376b7b6b485ace6cd}
-    version: 0.0.0-5708c4df037871bab3ce15d27e020dbdbe9fe0fc
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/316b8f89d5da8b8e3b58e646581c31b19c229205':
+    resolution: {gitHosted: true, integrity: sha512-yo06mQvc0kWISHqDpf31zeMvzFP73fn2vb3Nw7bheb3MpK8BUtx3Jcny+Q72CivxdB2pHBAc08QIiPSreWWROQ==, tarball: https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/316b8f89d5da8b8e3b58e646581c31b19c229205}
+    version: 0.0.0-4b4b82ac5abe501bf51f5fcd41dedb2df08f72b2
     hasBin: true
 
   '@angular/platform-browser-dynamic@22.2.4':
@@ -2566,6 +2566,9 @@ packages:
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
     engines: {node: '>=18.0.0'}
+
+  '@isaacs/nonrecursive-glob-match@1.0.3':
+    resolution: {integrity: sha512-SI7kyKHq4XXDRozw+r9GlRZkia1ZkFrpLW98r2IC2Bpr8YkFGE3fvjzmxCG0x78A++69HmDNrDvSMYBZmHGpKA==}
 
   '@istanbuljs/schema@0.1.6':
     resolution: {integrity: sha512-+Sg6GCR/wy1oSmQDFq4LQDAhm3ETKnorxN+y5nbLULOR3P0c14f2Wurzj3/xqPXtasLFfHd5iRFQ7AJt4KH2cw==}
@@ -7395,6 +7398,10 @@ packages:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
 
+  minimatch@11.0.3:
+    resolution: {integrity: sha512-iny/40PEGkNJQ5/Pv6z3nm6FbRAby32GeZRjCUJk2WnNDbgPSTcdI+DDvLqsgBdD4cD5sMtMheqPPnehCCa8Nw==}
+    engines: {node: 18 || 20 || >=22}
+
   minimatch@3.0.8:
     resolution: {integrity: sha512-6FsRAQsxQ61mw+qP1ZzbL9Bc78x2p5OqNgNpnoAFLTrX8n5Kxph0CsnhmKKNXTWjXqU5L0pGPR7hYk+XWZr60Q==}
 
@@ -10415,7 +10422,7 @@ snapshots:
       tinyglobby: 0.2.17
       yargs: 18.2.0
 
-  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/a53423acd0cec521dcd8edd376b7b6b485ace6cd(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))':
+  '@angular/ng-dev@https://codeload.github.com/angular/dev-infra-private-ng-dev-builds/tar.gz/316b8f89d5da8b8e3b58e646581c31b19c229205(@modelcontextprotocol/sdk@1.32.2(supports-color@11.0.0))':
     dependencies:
       '@actions/core': 3.0.1
       '@conventional-changelog/git-client': 3.2.0(conventional-commits-filter@6.0.1)(conventional-commits-parser@7.1.3)
@@ -10455,7 +10462,7 @@ snapshots:
       jasmine-core: 6.3.0
       jasmine-reporters: 2.5.2
       jsonc-parser: 3.3.1
-      minimatch: 10.2.6
+      minimatch: 11.0.3
       multimatch: 8.0.0
       nock: 15.0.5(supports-color@11.0.0)
       semver: 7.8.5
@@ -12275,6 +12282,8 @@ snapshots:
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
       minipass: 7.1.3
+
+  '@isaacs/nonrecursive-glob-match@1.0.3': {}
 
   '@istanbuljs/schema@0.1.6': {}
 
@@ -17363,6 +17372,11 @@ snapshots:
 
   minimatch@10.2.6:
     dependencies:
+      brace-expansion: 5.0.12
+
+  minimatch@11.0.3:
+    dependencies:
+      '@isaacs/nonrecursive-glob-match': 1.0.3
       brace-expansion: 5.0.12
 
   minimatch@3.0.8:
