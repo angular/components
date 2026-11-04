@@ -1,3 +1,16 @@
 .example-form-field {
   margin: 0 8px 16px 0;
 }
+
+/**
+ * Override the comparison-range background so it is visually distinct from
+ * the primary selection range in every M3 theme (including Azure & Blue,
+ * where `tertiary-container` and `primary-container` are hard to tell apart).
+ *
+ * Using an amber tint here matches the colour that Material 2 used and gives
+ * a clear "second campaign" reading at a glance.
+ */
+date-range-picker-comparison-example {
+  --mat-datepicker-calendar-date-in-comparison-range-state-background-color: rgba(249, 171, 0, 0.2);
+  --mat-datepicker-calendar-date-in-overlap-range-state-background-color: rgba(249, 171, 0, 0.5);
+}
