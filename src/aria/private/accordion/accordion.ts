@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 
-import {_getEventTarget} from '@angular/cdk/platform';
-import {KeyboardEventManager, ClickEventManager} from '../behaviors/event-manager';
+import {ClickEventManager, KeyboardEventManager} from '../behaviors/event-manager';
 import {ExpansionItem, ListExpansion, ListExpansionInputs} from '../behaviors/expansion/expansion';
 import {ListFocus, ListFocusInputs, ListFocusItem} from '../behaviors/list-focus/list-focus';
 import {
@@ -53,70 +52,6 @@ export class AccordionGroupPattern {
     });
   }
 
-  /** The key used to navigate to the previous accordion trigger. */
-  readonly prevKey = computed(() => {
-    if (this.inputs.orientation() === 'vertical') {
-      return 'ArrowUp';
-    }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
-  });
-
-  /** The key used to navigate to the next accordion trigger. */
-  readonly nextKey = computed(() => {
-    if (this.inputs.orientation() === 'vertical') {
-      return 'ArrowDown';
-    }
-    return this.inputs.textDirection() === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
-  });
-
-  /** The keydown event manager for the accordion trigger. */
-  readonly keydown = computed(() => {
-    return new KeyboardEventManager()
-      .on(this.prevKey, () => this.navigationBehavior.prev(), {ignoreRepeat: false})
-      .on(this.nextKey, () => this.navigationBehavior.next(), {ignoreRepeat: false})
-      .on('Home', () => this.navigationBehavior.first())
-      .on('End', () => this.navigationBehavior.last())
-      .on(' ', () => this.toggle())
-      .on('Enter', () => this.toggle());
-  });
-
-  /** The click event manager for the accordion trigger. */
-  readonly click = computed(() => {
-    return new ClickEventManager<PointerEvent>().on((e: PointerEvent) => {
-      const item = this._findTriggerPattern(_getEventTarget(e));
-      if (!item) return;
-
-      this.navigationBehavior.goto(item);
-      this.expansionBehavior.toggle(item);
-    });
-  });
-
-  /** Handles keydown events on the trigger, delegating to the group if not disabled. */
-  onKeydown(event: KeyboardEvent): void {
-    this.keydown().handle(event);
-  }
-
-  /** Handles click events on the trigger, delegating to the group if not disabled. */
-  onClick(event: PointerEvent): void {
-    this.click().handle(event);
-  }
-
-  /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */
-  onFocus(event: FocusEvent): void {
-    const item = this._findTriggerPattern(_getEventTarget(event));
-    if (!item) return;
-    if (!this.focusBehavior.isFocusable(item)) return;
-
-    this.focusBehavior.focus(item);
-  }
-
-  /** Toggles the expansion state of the active accordion item. */
-  toggle() {
-    const activeItem = this.inputs.activeItem();
-    if (activeItem === undefined) return;
-    this.expansionBehavior.toggle(activeItem);
-  }
-
   /** Expands all accordion panels if multi-expandable. */
   expandAll() {
     this.expansionBehavior.openAll();
@@ -141,24 +76,6 @@ export class AccordionGroupPattern {
     }
 
     return violations;
-  }
-
-  /** Finds the trigger pattern for a given element. */
-  private _findTriggerPattern(
-    element: Element | null | undefined,
-  ): AccordionTriggerPattern | undefined {
-    let target = element;
-
-    while (target) {
-      const pattern = this.inputs.items().find(t => t.element() === target);
-      if (pattern) {
-        return pattern;
-      }
-
-      target = target.parentElement?.closest('[ngAccordionTrigger]');
-    }
-
-    return undefined;
   }
 }
 
@@ -207,10 +124,69 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     () => this.disabled() && !this.inputs.accordionGroup().inputs.softDisabled(),
   );
 
+  /** The key used to navigate to the previous accordion trigger. */
+  private readonly _prevKey = computed(() => {
+    if (this.inputs.accordionGroup().inputs.orientation() === 'vertical') {
+      return 'ArrowUp';
+    }
+    return this.inputs.accordionGroup().inputs.textDirection() === 'rtl'
+      ? 'ArrowRight'
+      : 'ArrowLeft';
+  });
+
+  /** The key used to navigate to the next accordion trigger. */
+  private readonly _nextKey = computed(() => {
+    if (this.inputs.accordionGroup().inputs.orientation() === 'vertical') {
+      return 'ArrowDown';
+    }
+    return this.inputs.accordionGroup().inputs.textDirection() === 'rtl'
+      ? 'ArrowLeft'
+      : 'ArrowRight';
+  });
+
+  /** The keydown event manager for the accordion trigger. */
+  readonly keydown = computed(() => {
+    const group = this.inputs.accordionGroup();
+    return new KeyboardEventManager()
+      .on(this._prevKey, () => group.navigationBehavior.prev(), {ignoreRepeat: false})
+      .on(this._nextKey, () => group.navigationBehavior.next(), {ignoreRepeat: false})
+      .on('Home', () => group.navigationBehavior.first())
+      .on('End', () => group.navigationBehavior.last())
+      .on(' ', () => this.toggle())
+      .on('Enter', () => this.toggle());
+  });
+
+  /** The click event manager for the accordion trigger. */
+  readonly click = computed(() => {
+    return new ClickEventManager<PointerEvent>().on(() => {
+      const group = this.inputs.accordionGroup();
+      group.navigationBehavior.goto(this);
+      group.expansionBehavior.toggle(this);
+    });
+  });
+
   constructor(readonly inputs: AccordionTriggerInputs) {
     this.id = inputs.id;
     this.expanded = inputs.expanded;
     this.controls = inputs.accordionPanelId;
+  }
+
+  /** Handles keydown events on the trigger, delegating to the group if not disabled. */
+  onKeydown(event: KeyboardEvent): void {
+    if (!this.active()) {
+      this.inputs.accordionGroup().focusBehavior.focus(this, {focusElement: false});
+    }
+    this.keydown().handle(event);
+  }
+
+  /** Handles click events on the trigger, delegating to the group if not disabled. */
+  onClick(event: PointerEvent): void {
+    this.click().handle(event);
+  }
+
+  /** Handles focus events on the trigger. This ensures the tabbing changes the active index. */
+  onFocus(): void {
+    this.inputs.accordionGroup().focusBehavior.focus(this, {focusElement: false});
   }
 
   /** Opens the accordion panel. */

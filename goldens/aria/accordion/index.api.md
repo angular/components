@@ -75,7 +75,7 @@ export class AccordionTrigger implements OnInit, OnDestroy {
     ngOnInit(): void;
     readonly panel: _angular_core.InputSignal<AccordionPanel>;
     readonly panelId: _angular_core.Signal<string>;
-    _pattern: AccordionTriggerPattern;
+    readonly _pattern: AccordionTriggerPattern;
     toggle(): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<AccordionTrigger, "[ngAccordionTrigger]", ["ngAccordionTrigger"], { "panel": { "alias": "panel"; "required": true; "isSignal": true; }; "id": { "alias": "id"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, never, never, true, never>;

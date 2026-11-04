@@ -52,10 +52,11 @@ import {AccordionPanel} from './accordion-panel';
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.disabled]': '_pattern.hardDisabled() ? true : null',
     '[attr.tabindex]': '_pattern.tabIndex()',
+    '(keydown)': '_pattern.onKeydown($event)',
+    '(click)': '_pattern.onClick($event)',
+    '(focus)': '_pattern.onFocus()',
 
-    // `AccordionGroupPattern` depends on this to find the closest
-    // trigger so ensure that it is set. It's usually there for normal usage,
-    // but it might not be when the trigger is a host directive.
+    // Ensure the attribute is applied even when used as a host directive.
     'ngAccordionTrigger': '',
   },
 })
@@ -84,11 +85,16 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   /** Whether the corresponding panel is expanded. */
   readonly expanded = model<boolean>(false);
 
+  /** The UI pattern instance for this trigger. */
+  readonly _pattern: AccordionTriggerPattern = new AccordionTriggerPattern({
+    ...this,
+    element: () => this.element,
+    accordionGroup: () => this._accordionGroup._pattern,
+    accordionPanelId: this.panelId,
+  });
+
   /** Whether the trigger is active. */
   readonly active = computed(() => this._pattern.active());
-
-  /** The UI pattern instance for this trigger. */
-  _pattern!: AccordionTriggerPattern;
 
   constructor() {
     // Automatically prevent form submission.
@@ -120,13 +126,6 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._pattern = new AccordionTriggerPattern({
-      ...this,
-      element: () => this.element,
-      accordionGroup: () => this._accordionGroup._pattern,
-      accordionPanelId: this.panelId,
-    });
-
     this.panel()._pattern = this._pattern;
 
     this._accordionGroup._collection.register(this);
