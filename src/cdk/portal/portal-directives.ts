@@ -140,7 +140,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     // specifies its own) we need to move the component into the outlet, otherwise it'll be rendered
     // inside of the alternate view container.
     if (viewContainerRef !== this._viewContainerRef) {
-      this._getRootNode().appendChild((ref.hostView as EmbeddedViewRef<any>).rootNodes[0]);
+      this._insertContent((ref.hostView as EmbeddedViewRef<any>).rootNodes[0]);
     }
 
     super.setDisposeFn(() => ref.destroy());
@@ -185,30 +185,24 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     // Anchor used to save the element's previous position so
     // that we can restore it when the portal is detached.
     const anchorNode = this._document.createComment('dom-portal');
-
     portal.setAttachedHost(this);
     element.parentNode!.insertBefore(anchorNode, element);
-    this._getRootNode().appendChild(element);
+    this._insertContent(element);
     this._attachedPortal = portal;
-
-    super.setDisposeFn(() => {
-      if (anchorNode.parentNode) {
-        anchorNode.parentNode!.replaceChild(element, anchorNode);
-      }
-    });
+    super.setDisposeFn(() => anchorNode.parentNode?.replaceChild(element, anchorNode));
   };
 
   /** Gets the root node of the portal outlet. */
-  private _getRootNode(): HTMLElement {
+  private _insertContent(content: Element): void {
     const nativeElement: Node = this._viewContainerRef.element.nativeElement;
 
     // The directive could be set on a template which will result in a comment
     // node being the root. Use the comment's parent node if that is the case.
-    return (
-      nativeElement.nodeType === nativeElement.ELEMENT_NODE
-        ? nativeElement
-        : nativeElement.parentNode!
-    ) as HTMLElement;
+    if (nativeElement.nodeType === nativeElement.ELEMENT_NODE) {
+      nativeElement.appendChild(content);
+    } else {
+      nativeElement.parentNode?.insertBefore(content, nativeElement);
+    }
   }
 }
 
