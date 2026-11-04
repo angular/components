@@ -321,9 +321,6 @@ importers:
       '@modelcontextprotocol/server':
         specifier: 2.4.0
         version: 2.4.0
-      '@octokit/rest':
-        specifier: 22.0.1
-        version: 22.0.1
       '@rollup/plugin-commonjs':
         specifier: ^29.0.0
         version: 29.0.3(rollup@4.67.4)
