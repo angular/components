@@ -825,3 +825,41 @@ class AccordionPanelWithoutTrigger {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AccordionWithMultipleExpandedItems {}
+
+describe('Accordion destruction', () => {
+  it('should destroy a trigger before the first change detection', () => {
+    const fixture = TestBed.createComponent(StaticAccordion);
+
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+
+  it('should clear the panel association when destroying an initialized trigger', async () => {
+    const fixture = TestBed.createComponent(StaticAccordion);
+    await fixture.whenStable();
+
+    const panel = fixture.debugElement
+      .query(By.directive(AccordionPanel))
+      .injector.get(AccordionPanel);
+    const trigger = fixture.debugElement
+      .query(By.directive(AccordionTrigger))
+      .injector.get(AccordionTrigger);
+    expect(panel._pattern).toBe(trigger._pattern);
+
+    expect(() => fixture.destroy()).not.toThrow();
+    expect(panel._pattern).toBeUndefined();
+  });
+});
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button ngAccordionTrigger [panel]="panel">Trigger</button>
+      <div ngAccordionPanel #panel="ngAccordionPanel">
+        <ng-template ngAccordionContent>Content</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class StaticAccordion {}
