@@ -1,3 +1,25 @@
+<a name="22.2.6"></a>
+# 22.2.6 "zinc-zoologist" (2026-11-04)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [883fd65024e08](https://github.com/angular/components/commit/883fd65024e088dfcf288ec567f51b2c887a4ab1) | fix | **accordion:** move listeners to trigger ([#34053](https://github.com/angular/components/pull/34053)) |
+| [e7dc3254ce3b0](https://github.com/angular/components/commit/e7dc3254ce3b0f94288277795152bfa56947a39f) | fix | **combobox:** prevent selecting filtered-out options on Enter ([#34045](https://github.com/angular/components/pull/34045)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [fefbe067b2b6e](https://github.com/angular/components/commit/fefbe067b2b6e103cacc65a337ae69c7c9e903d1) | fix | **observers:** do not replay other element entries ([#34050](https://github.com/angular/components/pull/34050)) |
+| [b93e452da2e13](https://github.com/angular/components/commit/b93e452da2e13947c314ff477fc5fa2b8941a25c) | fix | **portal:** insert DOM portal in right location ([#34055](https://github.com/angular/components/pull/34055)) |
+| [3ed6bca260716](https://github.com/angular/components/commit/3ed6bca26071663784057ef15c4fbe7c6dc625d7) | fix | **testing:** enable bubbling for input-related events ([#34020](https://github.com/angular/components/pull/34020)) |
+| [ee54e1deb454f](https://github.com/angular/components/commit/ee54e1deb454f70269ec4411b41f1e8c4380a2de) | fix | **testing:** option selection with latest angular version ([#34040](https://github.com/angular/components/pull/34040)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [d078eefde8e2b](https://github.com/angular/components/commit/d078eefde8e2bc03779fd019e00beebeedacaee0) | fix | **schematics:** remove waitForAsync from generated tests |
+| [1c66cc4927efc](https://github.com/angular/components/commit/1c66cc4927efc7c3b059df825214d76f653ac7aa) | fix | **slider:** prevent out of memory errors from tick marks on the server ([#34037](https://github.com/angular/components/pull/34037)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.5"></a>
 # 22.2.5 "bromine-broom" (2026-10-28)
 ### aria
