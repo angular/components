@@ -17,21 +17,13 @@ export interface AccordionGroupInputs extends Omit<ListNavigationInputs<Accordio
 // @public
 export class AccordionGroupPattern {
     constructor(inputs: AccordionGroupInputs);
-    readonly click: SignalLike<ClickEventManager<PointerEvent>>;
     collapseAll(): void;
     expandAll(): void;
     readonly expansionBehavior: ListExpansion;
     readonly focusBehavior: ListFocus<AccordionTriggerPattern>;
     // (undocumented)
     readonly inputs: AccordionGroupInputs;
-    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<AccordionTriggerPattern>;
-    readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
-    onClick(event: PointerEvent): void;
-    onFocus(event: FocusEvent): void;
-    onKeydown(event: KeyboardEvent): void;
-    readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
-    toggle(): void;
     validate(): string[];
 }
 
@@ -45,6 +37,7 @@ export interface AccordionTriggerInputs extends Omit<ListNavigationItem & ListFo
 export class AccordionTriggerPattern implements ListNavigationItem, ListFocusItem, ExpansionItem {
     constructor(inputs: AccordionTriggerInputs);
     readonly active: SignalLike<boolean>;
+    readonly click: SignalLike<ClickEventManager<PointerEvent>>;
     close(): void;
     readonly controls: SignalLike<string>;
     readonly disabled: SignalLike<boolean>;
@@ -55,6 +48,10 @@ export class AccordionTriggerPattern implements ListNavigationItem, ListFocusIte
     readonly id: SignalLike<string>;
     // (undocumented)
     readonly inputs: AccordionTriggerInputs;
+    readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
+    onClick(event: PointerEvent): void;
+    onFocus(): void;
+    onKeydown(event: KeyboardEvent): void;
     open(): void;
     readonly tabIndex: SignalLike<-1 | 0>;
     toggle(): void;

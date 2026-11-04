@@ -12,7 +12,6 @@ import {AccordionGroup} from './accordion-group';
 describe('AccordionGroup', () => {
   let fixture: ComponentFixture<AccordionGroupWithLoop>;
   let testComponent: AccordionGroupWithLoop;
-  let groupElement: HTMLElement;
 
   let triggerElements: HTMLElement[];
   let panelElements: HTMLElement[];
@@ -22,8 +21,8 @@ describe('AccordionGroup', () => {
     await fixture.whenStable();
   };
 
-  const keydown = async (key: string, target = groupElement) => {
-    target.dispatchEvent(new KeyboardEvent('keydown', {bubbles: true, key}));
+  const keydown = async (key: string, target = document.activeElement as HTMLElement) => {
+    target.dispatchEvent(new KeyboardEvent('keydown', {bubbles: true, cancelable: true, key}));
     await fixture.whenStable();
   };
 
@@ -36,7 +35,6 @@ describe('AccordionGroup', () => {
 
   async function setupAccordionGroup() {
     testComponent = fixture.componentInstance as AccordionGroupWithLoop;
-    groupElement = fixture.nativeElement.querySelector('[ngAccordionGroup]') as HTMLElement;
 
     await setupTriggerAndPanels();
   }
@@ -403,6 +401,59 @@ describe('AccordionGroup', () => {
         await enterKey(triggerElements[0]);
         expect(isTriggerExpanded(0)).toBeFalse();
       });
+
+      it('should ignore keyboard and click events from unrelated elements inside the group', async () => {
+        await click(triggerElements[0]);
+        expect(isTriggerExpanded(0)).toBeTrue();
+        expect(isTriggerActive(0)).toBeTrue();
+
+        const panelButton = panelElements[0].querySelector('button')!;
+        const panelInput = panelElements[0].querySelector('input')!;
+
+        panelButton.focus();
+        await fixture.whenStable();
+
+        const enterEvent = new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          key: 'Enter',
+        });
+        panelButton.dispatchEvent(enterEvent);
+        await fixture.whenStable();
+
+        expect(enterEvent.defaultPrevented).toBeFalse();
+        expect(isTriggerExpanded(0)).toBeTrue();
+
+        const spaceEvent = new KeyboardEvent('keydown', {
+          bubbles: true,
+          cancelable: true,
+          key: ' ',
+        });
+        panelButton.dispatchEvent(spaceEvent);
+        await fixture.whenStable();
+
+        expect(spaceEvent.defaultPrevented).toBeFalse();
+        expect(isTriggerExpanded(0)).toBeTrue();
+
+        await click(panelButton);
+        expect(isTriggerExpanded(0)).toBeTrue();
+
+        panelInput.focus();
+        await fixture.whenStable();
+
+        for (const key of ['Home', 'End', 'ArrowDown', 'ArrowUp']) {
+          const navEvent = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key,
+          });
+          panelInput.dispatchEvent(navEvent);
+          await fixture.whenStable();
+
+          expect(navEvent.defaultPrevented).toBeFalse();
+          expect(document.activeElement).toBe(panelInput);
+        }
+      });
     });
   });
 
@@ -412,7 +463,6 @@ describe('AccordionGroup', () => {
     beforeEach(async () => {
       fixture = TestBed.createComponent(AccordionGroupWithIfs);
       testComponent = fixture.componentInstance as AccordionGroupWithIfs;
-      groupElement = fixture.nativeElement.querySelector('[ngAccordionGroup]') as HTMLElement;
 
       await setupTriggerAndPanels();
     });
@@ -594,6 +644,8 @@ describe('AccordionGroup', () => {
           >
             <ng-template ngAccordionContent>
               {{ item.content }}
+              <button type="button">Action</button>
+              <input aria-label="Test input" />
             </ng-template>
           </div>
         </div>

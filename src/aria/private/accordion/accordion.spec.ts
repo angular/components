@@ -13,7 +13,7 @@ import {
   AccordionTriggerPattern,
 } from './accordion';
 import {signal, SignalLike, WritableSignalLike} from '../behaviors/signal-like/signal-like';
-import {createKeyboardEvent} from '@angular/cdk/testing/private';
+import {createKeyboardEvent, createMouseEvent} from '@angular/cdk/testing/private';
 import {ModifierKeys} from '@angular/cdk/testing';
 
 // Converts the SignalLike type to WritableSignalLike type for controlling test inputs.
@@ -111,21 +111,21 @@ describe('Accordion Pattern', () => {
     it('does not handle keyboard event if an accordion group is disabled.', () => {
       groupInputs.disabled.set(true);
       groupInputs.activeItem.set(triggerPatterns[0]);
-      groupPattern.onKeydown(space());
+      triggerPatterns[0].onKeydown(space());
       expect(triggerPatterns[0].expanded()).toBeFalse();
     });
 
     it('does not handle keyboard event if an accordion trigger is disabled.', () => {
       triggerInputs[0].disabled.set(true);
       groupInputs.activeItem.set(triggerPatterns[0]);
-      groupPattern.onKeydown(space());
+      triggerPatterns[0].onKeydown(space());
       expect(triggerPatterns[0].expanded()).toBeFalse();
     });
 
     it('navigates to first accordion trigger with home key.', () => {
       groupInputs.activeItem.set(triggerPatterns[2]);
       expect(triggerPatterns[2].active()).toBeTrue();
-      groupPattern.onKeydown(home());
+      triggerPatterns[2].onKeydown(home());
       expect(triggerPatterns[2].active()).toBeFalse();
       expect(triggerPatterns[0].active()).toBeTrue();
     });
@@ -133,7 +133,7 @@ describe('Accordion Pattern', () => {
     it('navigates to last accordion trigger with end key.', () => {
       groupInputs.activeItem.set(triggerPatterns[0]);
       expect(triggerPatterns[0].active()).toBeTrue();
-      groupPattern.onKeydown(end());
+      triggerPatterns[0].onKeydown(end());
       expect(triggerPatterns[0].active()).toBeFalse();
       expect(triggerPatterns[2].active()).toBeTrue();
     });
@@ -143,7 +143,7 @@ describe('Accordion Pattern', () => {
         groupInputs.activeItem.set(triggerPatterns[0]);
         expect(triggerPatterns[0].active()).toBeTrue();
         expect(triggerPatterns[1].active()).toBeFalse();
-        groupPattern.onKeydown(down());
+        triggerPatterns[0].onKeydown(down());
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
       });
@@ -152,7 +152,7 @@ describe('Accordion Pattern', () => {
         groupInputs.activeItem.set(triggerPatterns[1]);
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
-        groupPattern.onKeydown(up());
+        triggerPatterns[1].onKeydown(up());
         expect(triggerPatterns[1].active()).toBeFalse();
         expect(triggerPatterns[0].active()).toBeTrue();
       });
@@ -166,7 +166,7 @@ describe('Accordion Pattern', () => {
           groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
-          groupPattern.onKeydown(up());
+          triggerPatterns[0].onKeydown(up());
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
         });
@@ -175,7 +175,7 @@ describe('Accordion Pattern', () => {
           groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
-          groupPattern.onKeydown(down());
+          triggerPatterns[2].onKeydown(down());
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
         });
@@ -189,14 +189,14 @@ describe('Accordion Pattern', () => {
         it('stays on the first trigger with up key from first trigger.', () => {
           groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
-          groupPattern.onKeydown(up());
+          triggerPatterns[0].onKeydown(up());
           expect(triggerPatterns[0].active()).toBeTrue();
         });
 
         it('stays on the last trigger with down key from last trigger.', () => {
           groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
-          groupPattern.onKeydown(down());
+          triggerPatterns[2].onKeydown(down());
           expect(triggerPatterns[2].active()).toBeTrue();
         });
       });
@@ -211,7 +211,7 @@ describe('Accordion Pattern', () => {
         groupInputs.activeItem.set(triggerPatterns[0]);
         expect(triggerPatterns[0].active()).toBeTrue();
         expect(triggerPatterns[1].active()).toBeFalse();
-        groupPattern.onKeydown(right());
+        triggerPatterns[0].onKeydown(right());
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
       });
@@ -220,7 +220,7 @@ describe('Accordion Pattern', () => {
         groupInputs.activeItem.set(triggerPatterns[1]);
         expect(triggerPatterns[0].active()).toBeFalse();
         expect(triggerPatterns[1].active()).toBeTrue();
-        groupPattern.onKeydown(left());
+        triggerPatterns[1].onKeydown(left());
         expect(triggerPatterns[1].active()).toBeFalse();
         expect(triggerPatterns[0].active()).toBeTrue();
       });
@@ -234,7 +234,7 @@ describe('Accordion Pattern', () => {
           groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
           expect(triggerPatterns[2].active()).toBeFalse();
-          groupPattern.onKeydown(left());
+          triggerPatterns[0].onKeydown(left());
           expect(triggerPatterns[0].active()).toBeFalse();
           expect(triggerPatterns[2].active()).toBeTrue();
         });
@@ -243,7 +243,7 @@ describe('Accordion Pattern', () => {
           groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
           expect(triggerPatterns[0].active()).toBeFalse();
-          groupPattern.onKeydown(right());
+          triggerPatterns[2].onKeydown(right());
           expect(triggerPatterns[2].active()).toBeFalse();
           expect(triggerPatterns[0].active()).toBeTrue();
         });
@@ -257,14 +257,14 @@ describe('Accordion Pattern', () => {
         it('stays on the first trigger with left key from first trigger.', () => {
           groupInputs.activeItem.set(triggerPatterns[0]);
           expect(triggerPatterns[0].active()).toBeTrue();
-          groupPattern.onKeydown(left());
+          triggerPatterns[0].onKeydown(left());
           expect(triggerPatterns[0].active()).toBeTrue();
         });
 
         it('stays on the last trigger with right key from last trigger.', () => {
           groupInputs.activeItem.set(triggerPatterns[2]);
           expect(triggerPatterns[2].active()).toBeTrue();
-          groupPattern.onKeydown(right());
+          triggerPatterns[2].onKeydown(right());
           expect(triggerPatterns[2].active()).toBeTrue();
         });
       });
@@ -280,7 +280,7 @@ describe('Accordion Pattern', () => {
         expect(triggerPatterns[0].expanded()).toBeFalse();
         expect(triggerPatterns[1].expanded()).toBeTrue();
 
-        groupPattern.onKeydown(space());
+        triggerPatterns[0].onKeydown(space());
         expect(triggerPatterns[0].expanded()).toBeTrue();
         expect(triggerPatterns[1].expanded()).toBeFalse();
       });
@@ -290,7 +290,7 @@ describe('Accordion Pattern', () => {
         expect(triggerPatterns[0].expanded()).toBeFalse();
         expect(triggerPatterns[1].expanded()).toBeTrue();
 
-        groupPattern.onKeydown(enter());
+        triggerPatterns[0].onKeydown(enter());
         expect(triggerPatterns[0].expanded()).toBeTrue();
         expect(triggerPatterns[1].expanded()).toBeFalse();
       });
@@ -306,7 +306,7 @@ describe('Accordion Pattern', () => {
         expect(triggerPatterns[0].expanded()).toBeFalse();
         expect(triggerPatterns[1].expanded()).toBeTrue();
 
-        groupPattern.onKeydown(enter());
+        triggerPatterns[0].onKeydown(enter());
         expect(triggerPatterns[0].expanded()).toBeTrue();
         expect(triggerPatterns[1].expanded()).toBeTrue();
       });
@@ -317,7 +317,7 @@ describe('Accordion Pattern', () => {
         expect(triggerPatterns[0].expanded()).toBeTrue();
         expect(triggerPatterns[1].expanded()).toBeTrue();
 
-        groupPattern.onKeydown(enter());
+        triggerPatterns[0].onKeydown(enter());
         expect(triggerPatterns[0].expanded()).toBeFalse();
         expect(triggerPatterns[1].expanded()).toBeTrue();
       });
@@ -344,6 +344,22 @@ describe('Accordion Pattern', () => {
 
         triggerPatterns[0].toggle();
         expect(triggerPatterns[0].expanded()).toBeFalse();
+      });
+
+      it('should focus and toggle via onClick()', () => {
+        expect(triggerPatterns[1].active()).toBeFalse();
+        expect(triggerPatterns[1].expanded()).toBeFalse();
+
+        triggerPatterns[1].onClick(createMouseEvent('click') as PointerEvent);
+        expect(triggerPatterns[1].active()).toBeTrue();
+        expect(triggerPatterns[1].expanded()).toBeTrue();
+      });
+
+      it('should update active item via onFocus()', () => {
+        expect(triggerPatterns[2].active()).toBeFalse();
+
+        triggerPatterns[2].onFocus();
+        expect(triggerPatterns[2].active()).toBeTrue();
       });
     });
 
