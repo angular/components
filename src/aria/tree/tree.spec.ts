@@ -1616,6 +1616,63 @@ describe('Tree', () => {
   });
 });
 
+describe('Tree destruction', () => {
+  it('should destroy a tree item without reading its required parent input', () => {
+    const fixture = TestBed.createComponent(StaticFlatTree);
+
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+
+  it('should destroy a nested tree without reading required inputs', () => {
+    const fixture = TestBed.createComponent(StaticNestedTree);
+
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+
+  it('should destroy an initialized tree item', async () => {
+    const fixture = TestBed.createComponent(StaticFlatTree);
+    await fixture.whenStable();
+
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+
+  it('should destroy an initialized nested tree', async () => {
+    const fixture = TestBed.createComponent(StaticNestedTree);
+    await fixture.whenStable();
+
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+});
+
+@Component({
+  template: `
+    <ul ngTree #tree="ngTree">
+      <li ngTreeItem [parent]="tree" value="item">Item</li>
+    </ul>
+  `,
+  imports: [Tree, TreeItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class StaticFlatTree {}
+
+@Component({
+  template: `
+    <ul ngTree #tree="ngTree">
+      <li ngTreeItem [parent]="tree" value="parent" #parentItem="ngTreeItem">
+        Parent
+        <ul role="group">
+          <ng-template ngTreeItemGroup [ownedBy]="parentItem" #group="ngTreeItemGroup">
+            <li ngTreeItem [parent]="group" value="child">Child</li>
+          </ng-template>
+        </ul>
+      </li>
+    </ul>
+  `,
+  imports: [Tree, TreeItem, TreeItemGroup],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class StaticNestedTree {}
+
 interface TestTreeNode<V = string> {
   value: V;
   label: string;

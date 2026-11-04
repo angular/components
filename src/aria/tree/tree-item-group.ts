@@ -54,6 +54,9 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
   /** The DeferredContent host directive. */
   private readonly _deferredContent = inject(DeferredContent);
 
+  /** The tree item that this group was registered with. */
+  private _registeredOwner: TreeItem<V> | undefined;
+
   /** All groupable items that are descendants of the group. */
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
 
@@ -66,12 +69,13 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
   readonly ownedBy = input.required<TreeItem<V>>();
 
   ngOnInit() {
-    this._deferredContent.deferredContentAware.set(this.ownedBy());
-    this.ownedBy()._register(this);
+    this._registeredOwner = this.ownedBy();
+    this._deferredContent.deferredContentAware.set(this._registeredOwner);
+    this._registeredOwner._register(this);
   }
 
   ngOnDestroy() {
-    this.ownedBy()._unregister();
+    this._registeredOwner?._unregister();
   }
 
   _register(child: TreeItem<V>) {
