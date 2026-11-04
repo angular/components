@@ -1,3 +1,26 @@
+<a name="22.3.0-next.5"></a>
+# 22.3.0-next.5 "zinc-zucchini" (2026-11-04)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c66561740](https://github.com/angular/components/commit/c665617406365a2d76e0606e2df82ddccf3657a7) | fix | **accordion:** move listeners to trigger ([#34053](https://github.com/angular/components/pull/34053)) |
+| [9512d87ce](https://github.com/angular/components/commit/9512d87cef2c7f54380c069d15bde1e6157fab50) | fix | **combobox:** prevent selecting filtered-out options on Enter ([#34045](https://github.com/angular/components/pull/34045)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2163de0fe](https://github.com/angular/components/commit/2163de0fe01658260e0e40668574abf10181b999) | fix | **observers:** do not replay other element entries ([#34050](https://github.com/angular/components/pull/34050)) |
+| [e59fce84b](https://github.com/angular/components/commit/e59fce84bf725602ca237e3c55019c2942227248) | fix | **portal:** insert DOM portal in right location ([#34055](https://github.com/angular/components/pull/34055)) |
+| [315a77571](https://github.com/angular/components/commit/315a7757111111c62573b01526d091e39d7bf82d) | fix | **testing:** enable bubbling for input-related events ([#34020](https://github.com/angular/components/pull/34020)) |
+| [da32d4f64](https://github.com/angular/components/commit/da32d4f646a18adf1befaf5f0b844951c1694f58) | fix | **testing:** option selection with latest angular version ([#34040](https://github.com/angular/components/pull/34040)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [c60928437](https://github.com/angular/components/commit/c60928437494e8338f185788fa0c744a3c0c0149) | feat | **chips:** add leading icon support ([#34028](https://github.com/angular/components/pull/34028)) |
+| [8239d0445](https://github.com/angular/components/commit/8239d0445b5849205f07574c7e46e8b2e28dab37) | fix | **schematics:** remove waitForAsync from generated tests |
+| [52264e481](https://github.com/angular/components/commit/52264e481bcefa05dd177f7eb06a144eea8f40fb) | fix | **slider:** prevent out of memory errors from tick marks on the server ([#34037](https://github.com/angular/components/pull/34037)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.6"></a>
 # 22.2.6 "zinc-zoologist" (2026-11-04)
 ### aria
