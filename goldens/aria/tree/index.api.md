@@ -42,7 +42,7 @@ export class Tree<V> implements OnDestroy {
 }
 
 // @public
-export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
+export class TreeItem<V> extends DeferredContentAware implements OnInit, HasElement {
     constructor();
     readonly active: Signal<boolean>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -52,8 +52,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
     readonly id: _angular_core.InputSignal<string>;
     readonly label: _angular_core.InputSignal<string | undefined>;
     readonly level: Signal<number>;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     readonly parent: _angular_core.InputSignal<Tree<V> | TreeItemGroup<V>>;
@@ -75,13 +73,10 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 }
 
 // @public
-export class TreeItemGroup<V> implements OnInit, OnDestroy {
+export class TreeItemGroup<V> {
+    constructor();
     readonly _childPatterns: _angular_core.Signal<TreeItemPattern<V>[]>;
     readonly element: HTMLElement;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     readonly ownedBy: _angular_core.InputSignal<TreeItem<V>>;
     // (undocumented)
     _register(child: TreeItem<V>): void;

@@ -13,8 +13,8 @@ import {
   inject,
   input,
   signal,
-  OnInit,
-  OnDestroy,
+  effect,
+  untracked,
 } from '@angular/core';
 import {TreeItemPattern, DeferredContent, sortDirectives} from '../private';
 import type {TreeItem} from './tree-item';
@@ -44,7 +44,7 @@ import type {TreeItem} from './tree-item';
   exportAs: 'ngTreeItemGroup',
   hostDirectives: [DeferredContent],
 })
-export class TreeItemGroup<V> implements OnInit, OnDestroy {
+export class TreeItemGroup<V> {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -53,9 +53,6 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
 
   /** The DeferredContent host directive. */
   private readonly _deferredContent = inject(DeferredContent);
-
-  /** The tree item that this group was registered with. */
-  private _registeredOwner: TreeItem<V> | undefined;
 
   /** All groupable items that are descendants of the group. */
   private readonly _unorderedItems = signal(new Set<TreeItem<V>>());
@@ -68,14 +65,15 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
   /** Tree item that owns the group. */
   readonly ownedBy = input.required<TreeItem<V>>();
 
-  ngOnInit() {
-    this._registeredOwner = this.ownedBy();
-    this._deferredContent.deferredContentAware.set(this._registeredOwner);
-    this._registeredOwner._register(this);
-  }
-
-  ngOnDestroy() {
-    this._registeredOwner?._unregister();
+  constructor() {
+    effect(onCleanup => {
+      const owner = this.ownedBy();
+      untracked(() => {
+        this._deferredContent.deferredContentAware.set(owner);
+        owner._register(this);
+      });
+      onCleanup(() => owner._unregister());
+    });
   }
 
   _register(child: TreeItem<V>) {

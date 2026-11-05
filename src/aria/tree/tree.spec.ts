@@ -1617,6 +1617,51 @@ describe('Tree', () => {
 });
 
 describe('Tree destruction', () => {
+  it('should move an item to its new tree and unregister it on destruction', async () => {
+    const fixture = TestBed.createComponent(TreeWithChangingParent);
+    await fixture.whenStable();
+    const trees = fixture.debugElement
+      .queryAll(By.directive(Tree))
+      .map(el => el.injector.get(Tree));
+    const item = fixture.debugElement.query(By.directive(TreeItem)).injector.get(TreeItem);
+
+    expect(trees[0]._collection.orderedItems()).toEqual([item]);
+    expect(trees[1]._collection.orderedItems()).toEqual([]);
+
+    fixture.componentInstance.parent.set(trees[1]);
+    await fixture.whenStable();
+
+    expect(trees[0]._collection.orderedItems()).toEqual([]);
+    expect(trees[1]._collection.orderedItems()).toEqual([item]);
+
+    fixture.destroy();
+    expect(trees[1]._collection.orderedItems()).toEqual([]);
+  });
+
+  it('should move a group to its new owner and unregister it on destruction', async () => {
+    const fixture = TestBed.createComponent(TreeWithChangingOwner);
+    await fixture.whenStable();
+    const items = fixture.debugElement
+      .queryAll(By.directive(TreeItem))
+      .map(el => el.injector.get(TreeItem));
+    const group = fixture.debugElement
+      .queryAllNodes(By.directive(TreeItemGroup))[0]
+      .injector.get(TreeItemGroup);
+    const unregisterFirst = spyOn(items[0], '_unregister').and.callThrough();
+    const registerSecond = spyOn(items[1], '_register').and.callThrough();
+    const unregisterSecond = spyOn(items[1], '_unregister').and.callThrough();
+
+    fixture.componentInstance.owner.set(items[1]);
+    await fixture.whenStable();
+
+    expect(unregisterFirst).toHaveBeenCalledTimes(1);
+    expect(registerSecond).toHaveBeenCalledOnceWith(group);
+
+    fixture.destroy();
+    expect(unregisterFirst).toHaveBeenCalledTimes(1);
+    expect(unregisterSecond).toHaveBeenCalledTimes(1);
+  });
+
   it('should destroy a tree item without reading its required parent input', () => {
     const fixture = TestBed.createComponent(StaticFlatTree);
 
@@ -1672,6 +1717,35 @@ class StaticFlatTree {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class StaticNestedTree {}
+
+@Component({
+  template: `
+    <ul ngTree #first="ngTree">
+      <li ngTreeItem [parent]="parent() || first" value="item">Item</li>
+    </ul>
+    <ul ngTree #second="ngTree"></ul>
+  `,
+  imports: [Tree, TreeItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TreeWithChangingParent {
+  parent = signal<Tree<unknown> | undefined>(undefined);
+}
+
+@Component({
+  template: `
+    <ul ngTree #tree="ngTree">
+      <li ngTreeItem [parent]="tree" value="first" #first="ngTreeItem">First</li>
+      <li ngTreeItem [parent]="tree" value="second">Second</li>
+      <ng-template ngTreeItemGroup [ownedBy]="owner() || first"></ng-template>
+    </ul>
+  `,
+  imports: [Tree, TreeItem, TreeItemGroup],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TreeWithChangingOwner {
+  owner = signal<TreeItem<unknown> | undefined>(undefined);
+}
 
 interface TestTreeNode<V = string> {
   value: V;

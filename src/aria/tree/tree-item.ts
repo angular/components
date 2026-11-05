@@ -18,7 +18,8 @@ import {
   signal,
   Signal,
   OnInit,
-  OnDestroy,
+  effect,
+  untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {TreeItemPattern, DeferredContentAware, HasElement} from '../private';
@@ -55,7 +56,7 @@ import {TreeItemGroup} from './tree-item-group';
     '[attr.tabindex]': '_pattern.tabIndex()',
   },
 })
-export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
+export class TreeItem<V> extends DeferredContentAware implements OnInit, HasElement {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -64,12 +65,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   /** The owned tree item group. */
   private readonly _group = signal<TreeItemGroup<V> | undefined>(undefined);
-
-  /** The parent group that this item was registered with. */
-  private _registeredParentGroup: TreeItemGroup<V> | undefined;
-
-  /** The tree that this item was registered with. */
-  private _registeredTree: Tree<V> | undefined;
 
   /** A unique identifier for the tree item. */
   readonly id = input(inject(_IdGenerator).getId('ng-tree-item-', true));
@@ -125,6 +120,22 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   constructor() {
     super();
+    effect(onCleanup => {
+      const parent = this.parent();
+      const tree = this.tree();
+      untracked(() => {
+        if (parent instanceof TreeItemGroup) {
+          parent._register(this);
+        }
+        tree._collection.register(this);
+      });
+      onCleanup(() => {
+        if (parent instanceof TreeItemGroup) {
+          parent._unregister(this);
+        }
+        tree._collection.unregister(this);
+      });
+    });
     afterRenderEffect({
       write: () => {
         this.contentVisible.set(this._pattern.expanded());
@@ -133,14 +144,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnInit() {
-    const parent = this.parent();
-    if (parent instanceof TreeItemGroup) {
-      this._registeredParentGroup = parent;
-      parent._register(this);
-    }
-    this._registeredTree = this.tree();
-    this._registeredTree._collection.register(this);
-
     const treePattern = computed(() => this.tree()._pattern);
     const parentPattern = computed(() => {
       if (this.parent() instanceof Tree) {
@@ -157,11 +160,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       element: () => this.element,
       searchTerm: () => this.searchTerm() ?? '',
     });
-  }
-
-  ngOnDestroy() {
-    this._registeredParentGroup?._unregister(this);
-    this._registeredTree?._collection.unregister(this);
   }
 
   _register(group: TreeItemGroup<V>) {
