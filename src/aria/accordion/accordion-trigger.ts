@@ -9,8 +9,8 @@
 import {
   Directive,
   ElementRef,
-  OnDestroy,
-  OnInit,
+  effect,
+  untracked,
   booleanAttribute,
   computed,
   inject,
@@ -60,7 +60,7 @@ import {AccordionPanel} from './accordion-panel';
     'ngAccordionTrigger': '',
   },
 })
-export class AccordionTrigger implements OnInit, OnDestroy {
+export class AccordionTrigger {
   /** A reference to the trigger element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -69,9 +69,6 @@ export class AccordionTrigger implements OnInit, OnDestroy {
 
   /** The parent AccordionGroup. */
   private readonly _accordionGroup = inject(ACCORDION_GROUP);
-
-  /** The panel that this trigger was registered with. */
-  private _registeredPanel: AccordionPanel | undefined;
 
   /** The associated AccordionPanel. */
   readonly panel = input.required<AccordionPanel>();
@@ -100,6 +97,18 @@ export class AccordionTrigger implements OnInit, OnDestroy {
   readonly active = computed(() => this._pattern.active());
 
   constructor() {
+    effect(onCleanup => {
+      const panel = this.panel();
+      untracked(() => {
+        panel._pattern = this._pattern;
+        this._accordionGroup._collection.register(this);
+      });
+      onCleanup(() => {
+        panel._pattern = undefined;
+        this._accordionGroup._collection.unregister(this);
+      });
+    });
+
     // Automatically prevent form submission.
     if (this.element.tagName === 'BUTTON' && !this.element.hasAttribute('type')) {
       this.element.setAttribute('type', 'button');
@@ -126,21 +135,6 @@ export class AccordionTrigger implements OnInit, OnDestroy {
         },
       });
     }
-  }
-
-  ngOnInit() {
-    this._registeredPanel = this.panel();
-    this._registeredPanel._pattern = this._pattern;
-
-    this._accordionGroup._collection.register(this);
-  }
-
-  ngOnDestroy() {
-    if (this._registeredPanel) {
-      this._registeredPanel._pattern = undefined;
-    }
-
-    this._accordionGroup._collection.unregister(this);
   }
 
   /** Expands this item. */
