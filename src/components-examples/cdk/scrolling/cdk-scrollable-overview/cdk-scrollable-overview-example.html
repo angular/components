@@ -1,0 +1,11 @@
+<p>Scrolled {{scrollOffset()}}px from the top</p>
+
+<div class="example-container" cdkScrollable>
+  @for (item of items; track item) {
+    <div class="example-item">{{item}}</div>
+  }
+</div>
+
+<button type="button" (click)="scrollToTop()" [disabled]="scrollOffset() === 0">
+  Back to top
+</button>
