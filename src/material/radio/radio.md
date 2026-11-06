@@ -26,7 +26,9 @@ Individual radio-buttons inside of a radio-group will inherit the `name` of the 
 
 ### Use with Angular Forms
 `<mat-radio-group>` is compatible with `@angular/forms` and supports `FormField`, `FormsModule`, 
-and `ReactiveFormsModule`.
+and `ReactiveFormsModule`. In addition, `<mat-radio-group>` supports a `compareWith` function to customize
+how option values are compared with the form value (for example, when using complex objects). Additional
+information can be found in the [Angular forms documentation](https://angular.dev/api/forms/SelectControlValueAccessor#compareWith).
 
 ### Accessibility
 
