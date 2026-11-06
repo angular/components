@@ -20,7 +20,7 @@
   <mat-label>Choose one</mat-label>
   <select matNativeControl [formField]="nativeSelectFormField" [errorStateMatcher]="matcher">
     <option value=""></option>
-    <option value="valid" selectFormField>Valid option</option>
+    <option value="valid">Valid option</option>
     <option value="invalid">Invalid option</option>
   </select>
   @if (nativeSelectFormField().getError('required')) {
