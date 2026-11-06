@@ -42,7 +42,7 @@ import type {Menu} from './menu';
   selector: '[ngMenuTrigger]',
   exportAs: 'ngMenuTrigger',
   host: {
-    '[attr.tabindex]': '_pattern.tabIndex()',
+    '[attr.tabindex]': 'tabIndex()',
     '[attr.disabled]': '!softDisabled() && _pattern.disabled() ? true : null',
     '[attr.aria-disabled]': '_pattern.disabled()',
     '[attr.aria-haspopup]': 'hasPopup()',
@@ -78,6 +78,9 @@ export class MenuTrigger<V> {
 
   /** Whether the menu trigger is soft disabled. */
   readonly softDisabled = input(true, {transform: booleanAttribute});
+
+  /** Tab index of the menu trigger. */
+  readonly tabIndex = computed(() => this._pattern.tabIndex());
 
   /** The menu trigger ui pattern instance. */
   readonly _pattern: MenuTriggerPattern<V> = new MenuTriggerPattern({
