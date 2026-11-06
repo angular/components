@@ -206,6 +206,42 @@ describe('Combobox', () => {
           options[options.length - 1].id,
         );
       });
+
+      it('should handle multiple navigation keys pressed back to back in the same render', async () => {
+        await down(); // Open popup (focuses options[0]: Alabama)
+
+        dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown');
+        dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown');
+        dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown');
+        await fixture.whenStable();
+
+        const options = getOptions();
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[3].id);
+      });
+
+      it('should handle navigation keys pressed in the same render that opens the popup', async () => {
+        await focus();
+
+        dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown'); // Open (focuses options[0])
+        dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown'); // Move to options[1]
+        await fixture.whenStable();
+
+        const options = getOptions();
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(options[1].id);
+      });
+
+      it('should relay back-to-back typeahead characters in order on a non-editable combobox', async () => {
+        await setupCombobox(ComboboxSelectOnlyListboxExample);
+        await down(); // Open popup (focuses options[0]: Alabama)
+
+        for (const char of 'new y') {
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, char);
+        }
+        await fixture.whenStable();
+
+        const newYork = getOption('New York')!;
+        expect(inputElement.getAttribute('aria-activedescendant')).toBe(newYork.id);
+      });
     });
 
     describe('Expansion', () => {
@@ -345,6 +381,18 @@ describe('Combobox', () => {
           await fixture.whenStable();
 
           expect(fixture.componentInstance.valueChanges).toEqual([]);
+        });
+
+        it('should select the target option when navigation keys and Enter are pressed in the same render', async () => {
+          await down(); // Open popup (focuses Alabama)
+
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown');
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'ArrowDown');
+          dispatchKeyboardEvent(inputElement, 'keydown', undefined, 'Enter');
+          await fixture.whenStable();
+
+          expect(fixture.componentInstance.value()).toEqual(['Arizona']);
+          expect(inputElement.value).toBe('Arizona');
         });
       });
 
@@ -1936,4 +1984,35 @@ class ComboboxDialogCustomIdExample {
 class ComboboxListboxGeneratedIdExample {
   popupExpanded = signal(false);
   options = ['Apple', 'Banana'];
+}
+
+@Component({
+  template: `
+<div>
+  <div
+    ngCombobox
+    #combobox="ngCombobox"
+    aria-label="State"
+    [(expanded)]="popupExpanded"
+  >Pick a state</div>
+
+  <ng-template ngComboboxPopup [combobox]="combobox">
+    <div
+      ngComboboxWidget
+      #listbox="ngListbox"
+      ngListbox
+      focusMode="activedescendant"
+      [activeDescendant]="listbox.activeDescendant()">
+      @for (option of options; track option) {
+        <div ngOption [value]="option" [label]="option">{{option}}</div>
+      }
+    </div>
+  </ng-template>
+</div>
+  `,
+  imports: [Combobox, ComboboxPopup, ComboboxWidget, Listbox, Option],
+})
+class ComboboxSelectOnlyListboxExample {
+  popupExpanded = signal(false);
+  options = states;
 }
