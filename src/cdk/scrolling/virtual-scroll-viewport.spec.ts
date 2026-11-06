@@ -1076,15 +1076,26 @@ describe('CdkVirtualScrollViewport', () => {
         .toBe(50);
     });
 
-    it('should measure scroll offset with custom scrolling element', async () => {
+    it('should scroll to offset relative to scrolling container', async () => {
       await finishInit(fixture);
-      await triggerScroll(viewport, 100);
+      await triggerScroll(viewport, 100, 'scrollingContainer');
       fixture.detectChanges();
       await fixture.whenStable();
 
       expect(viewport.measureScrollOffset('top'))
-        .withContext('should be 50 (actual scroll offset - viewport offset)')
+        .withContext('should be 50 (scrolling container offset)')
         .toBe(50);
+    });
+
+    it('should scroll to offset relative to viewport', async () => {
+      await finishInit(fixture);
+      await triggerScroll(viewport, 100, 'viewport');
+      fixture.detectChanges();
+      await fixture.whenStable();
+
+      expect(viewport.measureScrollOffset('top'))
+        .withContext('should be 100 (viewport offset)')
+        .toBe(100);
     });
   });
 
@@ -1138,9 +1149,13 @@ async function finishInit(fixture: ComponentFixture<any>) {
 }
 
 /** Trigger a scroll event on the viewport (optionally setting a new scroll offset). */
-async function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
+async function triggerScroll(
+  viewport: CdkVirtualScrollViewport,
+  offset?: number,
+  relativeTo?: 'viewport' | 'scrollingContainer',
+) {
   if (offset !== undefined) {
-    viewport.scrollToOffset(offset);
+    viewport.scrollToOffset(offset, 'auto', relativeTo);
   }
   dispatchFakeEvent(viewport.scrollable!.getElementRef().nativeElement, 'scroll');
   await new Promise(resolve => setTimeout(resolve, 50));
