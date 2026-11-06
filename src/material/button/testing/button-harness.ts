@@ -148,6 +148,14 @@ export class MatButtonHarness extends ContentContainerComponentHarness {
   async getAppearance(): Promise<ButtonAppearance | null> {
     const host = await this.host();
 
+    if (await host.hasClass('mat-mdc-icon-button-filled')) {
+      return 'filled';
+    }
+
+    if (await host.hasClass('mat-mdc-icon-button-tonal')) {
+      return 'tonal';
+    }
+
     if (await host.hasClass('mat-mdc-outlined-button')) {
       return 'outlined';
     }
