@@ -604,6 +604,18 @@ describe('Menu Trigger Pattern', () => {
       expect(menu.visible()).toBe(false);
     });
 
+    it('should only close the submenu on escape from a submenu', () => {
+      trigger.onKeydown(down());
+      menu.onKeydown(right());
+      expect(submenu?.visible()).toBe(true);
+
+      submenu?.onKeydown(escape());
+      expect(submenu?.visible()).toBe(false);
+      expect(menu.visible()).toBe(true);
+      expect(trigger.expanded()).toBe(true);
+      expect(menu.inputs.activeItem()).toBe(menu.inputs.items()[0]);
+    });
+
     it('should close the triggered menu on selecting an item on click', () => {
       trigger.onClick();
       expect(trigger.expanded()).toBe(true);
@@ -834,6 +846,21 @@ describe('Menu Bar Pattern', () => {
 
       expect(menubarItems[0].expanded()).toBe(false);
       expect(menuA.visible()).toBe(false);
+    });
+
+    it('should only close the nested submenu on escape from a nested submenu', () => {
+      const menubarItems = menubar.inputs.items();
+      const nested = getMenuPattern(menuA.inputs.items()[0], ['apricot']);
+      menubar.onClick(clickMenuItem(menubarItems, 0));
+      menuA.onKeydown(right());
+      expect(nested.visible()).toBe(true);
+
+      nested.onKeydown(escape());
+
+      expect(nested.visible()).toBe(false);
+      expect(menuA.visible()).toBe(true);
+      expect(menubarItems[0].expanded()).toBe(true);
+      expect(menuA.inputs.activeItem()).toBe(menuA.inputs.items()[0]);
     });
 
     it('should close the menubar menu on selecting an item on click', () => {
