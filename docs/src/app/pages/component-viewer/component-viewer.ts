@@ -7,25 +7,23 @@
  */
 
 import {BreakpointObserver} from '@angular/cdk/layout';
-import {AsyncPipe} from '@angular/common';
 import {
-  ChangeDetectorRef,
   Component,
   Directive,
-  OnInit,
   ViewEncapsulation,
+  afterRenderEffect,
   computed,
   effect,
   input,
+  untracked,
   viewChild,
   viewChildren,
   inject,
-  DestroyRef,
 } from '@angular/core';
-import {takeUntilDestroyed, toObservable} from '@angular/core/rxjs-interop';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {RouterLinkActive, RouterLink, RouterOutlet} from '@angular/router';
 import {Observable} from 'rxjs';
-import {map, skip} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {DocItem} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
 
@@ -87,43 +85,42 @@ export class ComponentViewer {
  * the table of contents headers.
  */
 @Directive()
-export class ComponentBaseView implements OnInit {
+export class ComponentBaseView {
   componentViewer = inject(ComponentViewer);
-  private _changeDetectorRef = inject(ChangeDetectorRef);
-  private readonly _destroyRef = inject(DestroyRef);
 
   readonly tableOfContents = viewChild<TableOfContents>('toc');
   readonly viewers = viewChildren(DocViewer);
 
-  showToc: Observable<boolean>;
+  /** Whether the table of contents should be shown. It's hidden on small screens. */
+  readonly showToc = toSignal(
+    inject(BreakpointObserver)
+      .observe('(max-width: 1200px)')
+      .pipe(map(result => !result.matches)),
+    {requireSync: true},
+  );
 
   constructor() {
-    const breakpointObserver = inject(BreakpointObserver);
+    // Reset the table of contents when the doc item changes.
+    effect(() => {
+      this.componentViewer.docItem();
+      untracked(() => this.tableOfContents()?.resetHeaders());
+    });
 
-    this.showToc = breakpointObserver.observe('(max-width: 1200px)').pipe(
-      map(result => {
-        this._changeDetectorRef.detectChanges();
-        return !result.matches;
-      }),
-    );
-  }
+    // The table of contents is removed on small screens. When it's shown again, re-emit
+    // `contentRendered` for the documents that are already rendered so it picks up their headers.
+    let hadTableOfContents: boolean | undefined;
+    afterRenderEffect(() => {
+      const hasTableOfContents = !!this.tableOfContents();
 
-  ngOnInit() {
-    this.componentViewer.componentDocItem
-      .pipe(takeUntilDestroyed(this._destroyRef))
-      .subscribe(() => {
-        const tableOfContents = this.tableOfContents();
-        if (tableOfContents) {
-          tableOfContents.resetHeaders();
-        }
-      });
-
-    this.showToc.pipe(skip(1), takeUntilDestroyed(this._destroyRef)).subscribe(() => {
-      if (this.tableOfContents()) {
-        this.viewers().forEach(viewer => {
-          viewer.contentRendered.emit(viewer._elementRef.nativeElement);
-        });
+      if (hadTableOfContents === false && hasTableOfContents) {
+        untracked(() =>
+          this.viewers().forEach(viewer => {
+            viewer.contentRendered.emit(viewer._elementRef.nativeElement);
+          }),
+        );
       }
+
+      hadTableOfContents = hasTableOfContents;
     });
   }
 
@@ -140,7 +137,7 @@ export class ComponentBaseView implements OnInit {
   selector: 'component-overview',
   templateUrl: './component-overview.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [DocViewer, TableOfContents, AsyncPipe],
+  imports: [DocViewer, TableOfContents],
 })
 export class ComponentOverview extends ComponentBaseView {
   getOverviewDocumentUrl(doc: DocItem) {
@@ -159,7 +156,7 @@ export class ComponentOverview extends ComponentBaseView {
   templateUrl: './component-api.html',
   styleUrls: ['./component-api.scss'],
   encapsulation: ViewEncapsulation.None,
-  imports: [DocViewer, TableOfContents, AsyncPipe],
+  imports: [DocViewer, TableOfContents],
 })
 export class ComponentApi extends ComponentBaseView {
   getApiDocumentUrl(doc: DocItem) {
@@ -172,6 +169,6 @@ export class ComponentApi extends ComponentBaseView {
   selector: 'component-examples',
   templateUrl: './component-examples.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [ExampleViewer, AsyncPipe],
+  imports: [ExampleViewer],
 })
 export class ComponentExamples extends ComponentBaseView {}
