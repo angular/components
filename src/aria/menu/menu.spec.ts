@@ -556,6 +556,46 @@ describe('Standalone Menu Pattern', () => {
     });
   });
 
+  describe('disabled attribute', () => {
+    it('should treat a bare disabled attribute as disabled', () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuItemDisabledAttributeExample],
+      });
+      const disabledFixture = TestBed.createComponent(MenuItemDisabledAttributeExample);
+      disabledFixture.detectChanges();
+
+      const items = disabledFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map(debugEl => debugEl.nativeElement as HTMLElement);
+
+      expect(items[0].getAttribute('aria-disabled')).toBe('false');
+      expect(items[1].getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should keep a disabled button item soft-disabled and focusable', async () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuItemDisabledButtonExample],
+      });
+      const disabledFixture = TestBed.createComponent(MenuItemDisabledButtonExample);
+      await disabledFixture.whenStable();
+
+      const items = disabledFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map(debugEl => debugEl.nativeElement as HTMLButtonElement);
+
+      expect(items[1].hasAttribute('disabled')).toBe(false);
+      expect(items[1].disabled).toBe(false);
+      expect(items[1].getAttribute('aria-disabled')).toBe('true');
+
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}));
+      await disabledFixture.whenStable();
+      expect(document.activeElement).toBe(items[1]);
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -1486,3 +1526,28 @@ class CdkOverlayMenuExample {
 class MenuItemRoleOverrideExample {
   customRole = signal<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>('menuitemcheckbox');
 }
+
+@Component({
+  template: `
+    <div ngMenu>
+      <div ngMenuItem value="item0">Item 0</div>
+      <div ngMenuItem value="item1" disabled>Item 1</div>
+    </div>
+  `,
+  imports: [Menu, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuItemDisabledAttributeExample {}
+
+@Component({
+  template: `
+    <div ngMenu>
+      <button ngMenuItem value="item0">Item 0</button>
+      <button ngMenuItem value="item1" disabled>Item 1</button>
+      <button ngMenuItem value="item2">Item 2</button>
+    </div>
+  `,
+  imports: [Menu, MenuItem],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuItemDisabledButtonExample {}
