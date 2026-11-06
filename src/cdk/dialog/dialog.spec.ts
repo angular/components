@@ -1309,6 +1309,43 @@ describe('Dialog with a parent Dialog', () => {
       .toContain('Pizza');
   });
 
+  it('should restore `aria-hidden` after closing dialogs of a parent and child', async () => {
+    const wrapper = document.createElement('div');
+    const sibling = document.createElement('div');
+    wrapper.appendChild(sibling);
+    wrapper.appendChild(overlayContainerElement);
+    document.body.appendChild(wrapper);
+
+    const childDialogRef = childDialog.open(PizzaMsg);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const parentDialogRef = parentDialog.open(PizzaMsg);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(sibling.getAttribute('aria-hidden'))
+      .withContext('Expected sibling to be hidden')
+      .toBe('true');
+
+    childDialogRef.close();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(sibling.getAttribute('aria-hidden'))
+      .withContext('Expected sibling to remain hidden while a dialog is open')
+      .toBe('true');
+
+    parentDialogRef.close();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(sibling.hasAttribute('aria-hidden'))
+      .withContext('Expected sibling to no longer be hidden')
+      .toBe(false);
+    wrapper.remove();
+  });
+
   it('should close the top dialog via the escape key', () => {
     childDialog.open(PizzaMsg);
     fixture.detectChanges();
