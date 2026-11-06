@@ -1,0 +1,23 @@
+<form>
+  <h4>mat-select</h4>
+  <mat-form-field>
+    <mat-label>Favorite food</mat-label>
+    <mat-select [formField]="selectedValue">
+      @for (food of foods; track food) {
+        <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <p> Selected food: {{selectedValue().value()}} </p>
+  <h4>native html select</h4>
+  <mat-form-field>
+    <mat-label>Favorite car</mat-label>
+    <select matNativeControl [formField]="selectedCar">
+      <option value="" selected></option>
+      @for (car of cars; track car) {
+        <option [value]="car.value">{{car.viewValue}}</option>
+      }
+    </select>
+  </mat-form-field>
+  <p> Selected car: {{selectedCar().value()}} </p>
+</form>
