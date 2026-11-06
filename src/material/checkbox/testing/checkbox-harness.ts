@@ -19,7 +19,7 @@ export class MatCheckboxHarness extends ComponentHarness {
   static hostSelector = '.mat-mdc-checkbox';
 
   _input = this.locatorFor('input');
-  private _label = this.locatorFor('label');
+  private _label = this.locatorFor('.mat-internal-form-field-label');
   private _inputContainer = this.locatorFor('.mdc-checkbox');
 
   /**
