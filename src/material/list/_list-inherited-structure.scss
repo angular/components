@@ -332,10 +332,13 @@ $fallbacks: m3-list.get-tokens();
 
   .mdc-list-item--with-trailing-icon {
     &.mdc-list-item {
-      // This is the same in RTL, but we need the specificity.
-      &, [dir='rtl'] & {
-        padding-left: 0;
+      & {
         padding-right: 0;
+      }
+      
+      [dir='rtl'] & {
+        padding-left: 0;
+        padding-right: 16px;
       }
     }
 
