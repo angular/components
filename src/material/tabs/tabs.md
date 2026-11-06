@@ -100,6 +100,14 @@ The `mat-tab-group` component can be integrated with the `@angular/cdk/drag-drop
 
 <!-- example(tab-group-drag-drop) -->
 
+### Theming
+
+The `background-color` and `foreground-color` tokens of the `mat.tabs-overrides` mixin only take
+effect when the `backgroundColor` input is set, which is supported in M2 themes only. In M3 themes,
+the label and indicator colors can be customized through tokens such as `active-label-text-color`,
+`inactive-label-text-color` and `active-indicator-color`. See the
+[styling page](https://material.angular.dev/components/tabs/styling) for the full list of tokens.
+
 ### Accessibility
 `MatTabGroup` and `MatTabNavBar` both implement the
 [ARIA Tabs design pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/). Both components
