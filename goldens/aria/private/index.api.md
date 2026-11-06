@@ -87,7 +87,7 @@ export class ComboboxPattern {
     readonly isEditable: _angular_core.Signal<boolean>;
     readonly isExpanded: _angular_core.Signal<boolean>;
     readonly isFocused: _angular_core.WritableSignal<boolean>;
-    readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent | undefined>;
+    readonly keyboardEventRelay: _angular_core.WritableSignal<KeyboardEvent[]>;
     keyboardEventRelayEffect(): void;
     keydown: _angular_core.Signal<KeyboardEventManager<KeyboardEvent>>;
     readonly nativeDisabled: _angular_core.Signal<"" | null>;

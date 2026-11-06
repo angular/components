@@ -88,8 +88,8 @@ export class ComboboxPattern {
     return 'none';
   });
 
-  /** A relay for keyboard events to the popup. */
-  readonly keyboardEventRelay = signal<KeyboardEvent | undefined>(undefined);
+  /** A relay queue for keyboard events to the popup. */
+  readonly keyboardEventRelay = signal<KeyboardEvent[]>([]);
 
   /** Whether the combobox is focused. */
   readonly isFocused = signal(false);
@@ -137,44 +137,43 @@ export class ComboboxPattern {
       .on(
         'ArrowLeft',
         e => {
-          this.keyboardEventRelay.set(e);
+          this._relayKeydown(e);
         },
         {preventDefault: this.popupType() !== 'listbox', ignoreRepeat: false},
       )
       .on(
         'ArrowRight',
         e => {
-          this.keyboardEventRelay.set(e);
+          this._relayKeydown(e);
         },
         {preventDefault: this.popupType() !== 'listbox', ignoreRepeat: false},
       )
-      .on('ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on('ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on(Modifier.Shift, 'ArrowUp', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on(Modifier.Shift, 'ArrowDown', e => this.keyboardEventRelay.set(e), {ignoreRepeat: false})
-      .on('Home', e => this.keyboardEventRelay.set(e))
-      .on('End', e => this.keyboardEventRelay.set(e))
-      .on('PageUp', e => this.keyboardEventRelay.set(e))
-      .on('PageDown', e => this.keyboardEventRelay.set(e))
+      .on('ArrowUp', e => this._relayKeydown(e), {ignoreRepeat: false})
+      .on('ArrowDown', e => this._relayKeydown(e), {ignoreRepeat: false})
+      .on(Modifier.Shift, 'ArrowUp', e => this._relayKeydown(e), {ignoreRepeat: false})
+      .on(Modifier.Shift, 'ArrowDown', e => this._relayKeydown(e), {ignoreRepeat: false})
+      .on('Home', e => this._relayKeydown(e))
+      .on('End', e => this._relayKeydown(e))
+      .on('PageUp', e => this._relayKeydown(e))
+      .on('PageDown', e => this._relayKeydown(e))
       .on('Escape', () => {
         if (!this.inputs.alwaysExpanded()) {
           this.inputs.expanded.set(false);
+          this.keyboardEventRelay.set([]);
         }
       });
 
     if (!this.readonly()) {
-      manager.on('Enter', e => this.keyboardEventRelay.set(e));
+      manager.on('Enter', e => this._relayKeydown(e));
     }
 
     if (!this.isEditable() && !this.readonly()) {
       manager
-        .on(' ', e => this.keyboardEventRelay.set(e))
-        .on([Modifier.Ctrl, Modifier.Meta], 'a', e => this.keyboardEventRelay.set(e))
-        .on([Modifier.Ctrl, Modifier.Meta], 'A', e => this.keyboardEventRelay.set(e))
-        .on(Modifier.Shift, 'Home', e => this.keyboardEventRelay.set(e))
-        .on(Modifier.Shift, 'End', e => this.keyboardEventRelay.set(e))
+        .on([Modifier.Ctrl, Modifier.Meta], 'A', e => this._relayKeydown(e))
+        .on(Modifier.Shift, 'Home', e => this._relayKeydown(e))
+        .on(Modifier.Shift, 'End', e => this._relayKeydown(e))
         .on(/^.$/, e => {
-          this.keyboardEventRelay.set(e);
+          this._relayKeydown(e);
         });
     }
 
@@ -194,6 +193,11 @@ export class ComboboxPattern {
 
   constructor(readonly inputs: ComboboxInputs) {
     this.value = inputs.value;
+  }
+
+  /** Queues a keyboard event to be relayed to the popup. */
+  private _relayKeydown(event: KeyboardEvent) {
+    this.keyboardEventRelay.update(events => [...events, event]);
   }
 
   /** Handles keydown events for the combobox. */
@@ -266,19 +270,24 @@ export class ComboboxPattern {
 
   /** Relays keyboard events to the popup. */
   keyboardEventRelayEffect() {
-    const event = this.keyboardEventRelay();
-    if (event === undefined) return;
+    const events = this.keyboardEventRelay();
+    if (events.length === 0) return;
 
     // Reset isDeleting when the user navigates, so that the highlight effect can run again.
     this.isDeleting.set(false);
 
-    untracked(() => {
-      const popup = this.inputs.popup();
-      if (this.isExpanded()) {
-        const relayedEvent = new KeyboardEvent(event.type, event);
-        popup?.controlTarget()?.dispatchEvent(relayedEvent);
-      }
-    });
+    if (!untracked(() => this.isExpanded())) {
+      this.keyboardEventRelay.set([]);
+      return;
+    }
+
+    const target = this.inputs.popup()?.controlTarget();
+    if (!target) return;
+
+    this.keyboardEventRelay.set([]);
+    for (const event of events) {
+      target.dispatchEvent(new KeyboardEvent(event.type, event));
+    }
   }
 }
 

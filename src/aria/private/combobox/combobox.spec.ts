@@ -273,12 +273,12 @@ describe('ComboboxPattern', () => {
       const shiftUp = createKeyboardEvent('keydown', 38, 'ArrowUp');
       Object.defineProperty(shiftUp, 'shiftKey', {value: true});
       pattern.onKeydown(shiftUp);
-      expect(pattern.keyboardEventRelay()).toBe(shiftUp);
+      expect(pattern.keyboardEventRelay()).toEqual([shiftUp]);
 
       const shiftDown = createKeyboardEvent('keydown', 40, 'ArrowDown');
       Object.defineProperty(shiftDown, 'shiftKey', {value: true});
       pattern.onKeydown(shiftDown);
-      expect(pattern.keyboardEventRelay()).toBe(shiftDown);
+      expect(pattern.keyboardEventRelay()).toEqual([shiftUp, shiftDown]);
     });
 
     it('should NOT forward Ctrl+A or Shift+Home/End for editable inputs', () => {
@@ -288,12 +288,12 @@ describe('ComboboxPattern', () => {
       const ctrlA = createKeyboardEvent('keydown', 65, 'a');
       Object.defineProperty(ctrlA, 'ctrlKey', {value: true});
       pattern.onKeydown(ctrlA);
-      expect(pattern.keyboardEventRelay()).toBeUndefined();
+      expect(pattern.keyboardEventRelay()).toEqual([]);
 
       const shiftHome = createKeyboardEvent('keydown', 36, 'Home');
       Object.defineProperty(shiftHome, 'shiftKey', {value: true});
       pattern.onKeydown(shiftHome);
-      expect(pattern.keyboardEventRelay()).toBeUndefined();
+      expect(pattern.keyboardEventRelay()).toEqual([]);
     });
 
     it('should forward Ctrl+A and Shift+Home/End for select-only (non-editable) comboboxes', () => {
@@ -305,12 +305,23 @@ describe('ComboboxPattern', () => {
       const ctrlA = createKeyboardEvent('keydown', 65, 'a');
       Object.defineProperty(ctrlA, 'ctrlKey', {value: true});
       pattern.onKeydown(ctrlA);
-      expect(pattern.keyboardEventRelay()).toBe(ctrlA);
+      expect(pattern.keyboardEventRelay()).toEqual([ctrlA]);
 
       const shiftHome = createKeyboardEvent('keydown', 36, 'Home');
       Object.defineProperty(shiftHome, 'shiftKey', {value: true});
       pattern.onKeydown(shiftHome);
-      expect(pattern.keyboardEventRelay()).toBe(shiftHome);
+      expect(pattern.keyboardEventRelay()).toEqual([ctrlA, shiftHome]);
+    });
+
+    it('should only enqueue Space once on select-only (non-editable) comboboxes', () => {
+      const selectOnlyElement = document.createElement('div');
+      const {pattern, expanded} = setup();
+      pattern.inputs.element = signal(selectOnlyElement);
+      expanded.set(true);
+
+      const space = createKeyboardEvent('keydown', 32, ' ');
+      pattern.onKeydown(space);
+      expect(pattern.keyboardEventRelay()).toEqual([space]);
     });
   });
 
