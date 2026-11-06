@@ -114,6 +114,9 @@ export class MenuPattern<V> {
   /** Timeout used to close sub-menus on hover out. */
   private _closeTimeout: ReturnType<typeof setTimeout> | undefined;
 
+  /** Whether a menu item is being activated from the keyboard. */
+  private _activatingItem = false;
+
   /** The tab index of the menu. */
   readonly tabIndex = () => this.listBehavior.tabIndex();
 
@@ -322,6 +325,11 @@ export class MenuPattern<V> {
 
   /** Handles click events for the menu. */
   onClick(event: MouseEvent) {
+    // Clicks dispatched by `trigger` are submitted there, don't handle them twice.
+    if (this._activatingItem) {
+      return;
+    }
+
     const relatedTarget = _getEventTarget<Node>(event);
     const item = this.inputs.items().find(i => i.element()?.contains(relatedTarget));
 
@@ -395,9 +403,25 @@ export class MenuPattern<V> {
 
   /** Triggers the active menu item. */
   trigger() {
-    this.inputs.activeItem()?.hasPopup()
-      ? this.inputs.activeItem()?.open({first: true})
-      : this.submit();
+    const item = this.inputs.activeItem();
+
+    if (item?.hasPopup()) {
+      item.open({first: true});
+      return;
+    }
+
+    // The keydown is prevented, so the browser won't activate the item on its own. Click it
+    // so that links navigate and click listeners run, the same as with a pointer.
+    if (item && !item.disabled()) {
+      this._activatingItem = true;
+      try {
+        item.element()?.click();
+      } finally {
+        this._activatingItem = false;
+      }
+    }
+
+    this.submit(item);
   }
 
   /** Submits the menu. */

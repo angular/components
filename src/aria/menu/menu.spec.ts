@@ -798,6 +798,20 @@ describe('Menu Trigger Pattern', () => {
       await click(getItem('Apple')!);
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Apple');
     });
+
+    it('should activate the item element when it is selected with enter', async () => {
+      spyOn(fixture.componentInstance, 'itemSelected');
+      await keydown(getTrigger(), 'Enter');
+      const apple = getItem('Apple')!;
+      const clickSpy = jasmine.createSpy('click');
+      apple.addEventListener('click', clickSpy);
+
+      await keydown(apple, 'Enter');
+
+      expect(clickSpy).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.itemSelected).toHaveBeenCalledOnceWith('Apple');
+      expect(isExpanded()).toBe(false);
+    });
   });
 });
 
