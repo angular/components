@@ -95,3 +95,6 @@ allowBuilds:
   protobufjs: false
   re2: false
   utf-8-validate: false
+
+# Workaround as the default 'install' causes problems during pnpm ng-dev pr merge as the lockfile is updated.
+verifyDepsBeforeRun: warn
