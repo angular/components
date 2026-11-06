@@ -292,6 +292,43 @@ describe('Standalone Menu Pattern', () => {
       expect(menu.inputs.itemSelected).toHaveBeenCalledWith('b');
     });
 
+    it('should click the item element on enter and space', () => {
+      const items = menu.inputs.items();
+      const clickSpy = spyOn(items[1].element()!, 'click');
+      menu.inputs.activeItem.set(items[1]);
+
+      menu.onKeydown(enter());
+      expect(clickSpy).toHaveBeenCalledTimes(1);
+
+      menu.onKeydown(space());
+      expect(clickSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should only select once when the item click reaches the menu', () => {
+      const items = menu.inputs.items();
+      items[1].element()!.addEventListener('click', e => menu.onClick(e));
+      menu.inputs.activeItem.set(items[1]);
+      menu.inputs.itemSelected = jasmine.createSpy('itemSelected');
+
+      menu.onKeydown(enter());
+      expect(menu.inputs.itemSelected).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not click a disabled item or an item with a submenu on enter', () => {
+      const items = menu.inputs.items() as TestMenuItem[];
+      const submenuClickSpy = spyOn(items[0].element()!, 'click');
+      const disabledClickSpy = spyOn(items[1].element()!, 'click');
+      items[1].inputs.disabled.set(true);
+
+      menu.inputs.activeItem.set(items[0]);
+      menu.onKeydown(enter());
+      menu.inputs.activeItem.set(items[1]);
+      menu.onKeydown(enter());
+
+      expect(submenuClickSpy).not.toHaveBeenCalled();
+      expect(disabledClickSpy).not.toHaveBeenCalled();
+    });
+
     it('should not select a disabled item', () => {
       const items = menu.inputs.items() as TestMenuItem[];
       items[1].inputs.disabled.set(true);
