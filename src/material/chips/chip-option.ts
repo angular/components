@@ -92,6 +92,10 @@ export class MatChipOption extends MatChip implements OnInit {
   _chipListHideSingleSelectionIndicator: boolean =
     this._defaultOptions?.hideSingleSelectionIndicator ?? false;
 
+  /** Whether the chip list hides selection indicator for single and multiple selection. */
+  _chipListHideSelectionIndicator: boolean =
+    this._defaultOptions?.hideSelectionIndicator ?? false;
+
   /**
    * Whether or not the chip is selectable.
    *
@@ -185,6 +189,10 @@ export class MatChipOption extends MatChip implements OnInit {
   override _hasLeadingGraphic() {
     if (this.leadingIcon || this.avatar) {
       return true;
+    }
+
+    if (this._chipListHideSelectionIndicator) {
+      return false;
     }
 
     // The checkmark graphic communicates selected state for both single-select and multi-select.
