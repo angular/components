@@ -39,7 +39,7 @@ import {
   UP_ARROW,
 } from '../keycodes';
 import {_getEventTarget} from '../platform';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 import {CDK_MENU, Menu} from './menu-interface';
 import {PARENT_OR_NEW_MENU_STACK_PROVIDER} from './menu-stack';
 import {MENU_AIM} from './menu-aim';
@@ -96,6 +96,12 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
   /** The menu aim service used by this menu. */
   private readonly _menuAim = inject(MENU_AIM, {optional: true});
 
+  /** Whether a pointer is currently pressed down outside of the menu stack. */
+  private _pointerDownOutside = false;
+
+  /** Whether the menu should close once the current outside press is released. */
+  private _closeOnPointerUp = false;
+
   constructor() {
     super();
     this._setRole();
@@ -124,6 +130,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
       this.overlayRef.attach(this.getMenuContentPortal());
       this._changeDetectorRef.markForCheck();
       this._subscribeToOutsideClicks();
+      this._trackPointerDownOutside();
     }
   }
 
@@ -342,12 +349,74 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     }
   }
 
+  /**
+   * Keeps track of pointer presses outside of the menu stack while the menu is open. Pressing
+   * outside moves focus away from the menu, but the menu shouldn't close until the press is
+   * released, so that the user can still cancel it by moving back onto the menu.
+   */
+  private _trackPointerDownOutside() {
+    if (this._parentMenu) {
+      return;
+    }
+
+    const doc = this._elementRef.nativeElement.ownerDocument;
+    const options = {capture: true};
+    const reset = () => {
+      this._pointerDownOutside = this._closeOnPointerUp = false;
+    };
+    const cleanups = this._ngZone.runOutsideAngular(() => [
+      this._renderer.listen(
+        doc,
+        'pointerdown',
+        (event: PointerEvent) => {
+          this._pointerDownOutside = this._isOutsideMenu(_getEventTarget(event));
+        },
+        options,
+      ),
+      this._renderer.listen(
+        doc,
+        'pointerup',
+        (event: PointerEvent) => {
+          const shouldClose = this._closeOnPointerUp && this._isOutsideMenu(_getEventTarget(event));
+          reset();
+
+          if (shouldClose) {
+            this._ngZone.run(() => this.menuStack.closeAll());
+          }
+        },
+        options,
+      ),
+      this._renderer.listen(doc, 'pointercancel', reset, options),
+    ]);
+
+    this.stopOutsideClicksListener.pipe(take(1)).subscribe(() => {
+      cleanups.forEach(cleanup => cleanup());
+      reset();
+    });
+  }
+
+  /** Whether an event target is outside of both the trigger and the menu stack. */
+  private _isOutsideMenu(target: EventTarget | null): boolean {
+    const element = this._elementRef.nativeElement;
+    return (
+      target instanceof Element &&
+      target !== element &&
+      !element.contains(target) &&
+      !this.isElementInsideMenuStack(target)
+    );
+  }
+
   /** Subscribe to the MenuStack hasFocus events. */
   private _subscribeToMenuStackHasFocus() {
     if (!this._parentMenu) {
       this.menuStack.hasFocus.pipe(takeUntil(this.destroyed)).subscribe(hasFocus => {
         if (!hasFocus) {
-          this.menuStack.closeAll();
+          // If focus moved away because of a press outside the menu, wait for it to be released.
+          if (this._pointerDownOutside) {
+            this._closeOnPointerUp = true;
+          } else {
+            this.menuStack.closeAll();
+          }
         }
       });
     }
