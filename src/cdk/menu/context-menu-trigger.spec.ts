@@ -414,6 +414,30 @@ describe('CdkContextMenuTrigger', () => {
 
     expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
   });
+
+  it('should use the latest data when the menu is reopened', () => {
+    const fixture = TestBed.createComponent(ContextTriggerWithData);
+    fixture.componentInstance.menuData = {message: 'Hello!'};
+    fixture.detectChanges();
+    const trigger = fixture.componentInstance.triggerElement.nativeElement;
+    dispatchMouseEvent(trigger, 'contextmenu');
+    fixture.detectChanges();
+    expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
+
+    fixture.debugElement
+      .query(By.directive(CdkContextMenuTrigger))
+      .injector.get(CdkContextMenuTrigger)
+      .close();
+    fixture.detectChanges();
+    expect(document.querySelector('.test-menu')).toBeNull();
+
+    fixture.componentInstance.menuData = {message: 'Goodbye!'};
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    dispatchMouseEvent(trigger, 'contextmenu');
+    fixture.detectChanges();
+    expect(document.querySelector('.test-menu')?.textContent).toBe('Goodbye!');
+  });
 });
 
 @Component({

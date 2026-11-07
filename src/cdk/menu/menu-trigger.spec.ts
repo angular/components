@@ -486,6 +486,27 @@ describe('MenuTrigger', () => {
     expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
   });
 
+  it('should use the latest data when the menu is reopened', () => {
+    const fixture = TestBed.createComponent(TriggerWithData);
+    const button = fixture.nativeElement.querySelector('button');
+    fixture.componentInstance.menuData = {message: 'Hello!'};
+    fixture.detectChanges();
+    button.click();
+    fixture.detectChanges();
+    expect(document.querySelector('.test-menu')?.textContent).toBe('Hello!');
+
+    button.click();
+    fixture.detectChanges();
+    expect(document.querySelector('.test-menu')).toBeNull();
+
+    fixture.componentInstance.menuData = {message: 'Goodbye!'};
+    fixture.changeDetectorRef.markForCheck();
+    fixture.detectChanges();
+    button.click();
+    fixture.detectChanges();
+    expect(document.querySelector('.test-menu')?.textContent).toBe('Goodbye!');
+  });
+
   describe('null triggerFor', () => {
     let fixture: ComponentFixture<TriggerWithNullValue>;
     let nativeTrigger: HTMLElement;
