@@ -241,6 +241,69 @@ describe('Standalone Menu Pattern', () => {
     });
   });
 
+  describe('Interactive content', () => {
+    let interactiveFixture: ComponentFixture<MenuWithInteractiveContent>;
+
+    const pressKey = async (element: Element, key: string) => {
+      element.dispatchEvent(new KeyboardEvent('keydown', {key, bubbles: true}));
+      await interactiveFixture.whenStable();
+    };
+
+    const getItem = (text: string): HTMLElement | null => {
+      const items = interactiveFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map((debugEl: DebugElement) => debugEl.nativeElement as HTMLElement);
+      return items.find(item => item.textContent?.trim() === text) || null;
+    };
+
+    beforeEach(async () => {
+      TestBed.configureTestingModule({
+        providers: [provideFakeDirectionality('ltr')],
+      });
+      interactiveFixture = TestBed.createComponent(MenuWithInteractiveContent);
+      await interactiveFixture.whenStable();
+      interactiveFixture.componentInstance.reset();
+      getItem('Link')?.focus();
+    });
+
+    it('should activate a link inside a menu item on Enter', async () => {
+      await pressKey(getItem('Link')!, 'Enter');
+
+      expect(interactiveFixture.componentInstance.linkClicked()).toBe(true);
+    });
+
+    it('should still select the item when its link is activated', async () => {
+      await pressKey(getItem('Link')!, 'Enter');
+
+      // Mirrors a mouse click, where the click bubbles up to the menu.
+      expect(interactiveFixture.componentInstance.selectedValue()).toBe('Link Item');
+    });
+
+    it('should activate a link inside a menu item on Space', async () => {
+      await pressKey(getItem('Link')!, ' ');
+
+      expect(interactiveFixture.componentInstance.linkClicked()).toBe(true);
+    });
+
+    it('should activate a button inside a menu item on Enter', async () => {
+      await pressKey(getItem('Link')!, 'ArrowDown');
+      const buttonItem = getItem('Button');
+
+      await pressKey(buttonItem!, 'Enter');
+
+      expect(interactiveFixture.componentInstance.buttonClicked()).toBe(true);
+    });
+
+    it('should not activate any interactive content for a plain item', async () => {
+      await pressKey(getItem('Link')!, 'End');
+      await pressKey(getItem('Text Item')!, 'Enter');
+
+      expect(interactiveFixture.componentInstance.linkClicked()).toBe(false);
+      expect(interactiveFixture.componentInstance.buttonClicked()).toBe(false);
+      expect(interactiveFixture.componentInstance.selectedValue()).toBe('Text Item');
+    });
+  });
+
   describe('Expansion', () => {
     function getSubmenu(): HTMLElement | null {
       const menus = fixture.debugElement.queryAll(By.directive(Menu));
@@ -1485,4 +1548,43 @@ class CdkOverlayMenuExample {
 })
 class MenuItemRoleOverrideExample {
   customRole = signal<'menuitem' | 'menuitemradio' | 'menuitemcheckbox'>('menuitemcheckbox');
+}
+
+@Component({
+  template: `
+    <div ngMenu (itemSelected)="itemSelected($event)">
+      <ng-template ngMenuContent>
+        <div ngMenuItem value="Link Item">
+          <a href="#link" (click)="onLinkClick($event)">Link</a>
+        </div>
+        <div ngMenuItem value="Button Item">
+          <button (click)="buttonClicked.set(true)">Button</button>
+        </div>
+        <div ngMenuItem value="Text Item">Text Item</div>
+      </ng-template>
+    </div>
+  `,
+  imports: [Menu, MenuItem, MenuContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MenuWithInteractiveContent {
+  linkClicked = signal(false);
+  buttonClicked = signal(false);
+  selectedValue = signal<string | undefined>(undefined);
+
+  itemSelected(value: string) {
+    this.selectedValue.set(value);
+  }
+
+  onLinkClick(event: Event) {
+    // Prevent the test from navigating away from the test page.
+    event.preventDefault();
+    this.linkClicked.set(true);
+  }
+
+  reset() {
+    this.linkClicked.set(false);
+    this.buttonClicked.set(false);
+    this.selectedValue.set(undefined);
+  }
 }

@@ -11,6 +11,9 @@ import {KeyboardEventManager} from '../behaviors/event-manager';
 import {computed, signal, SignalLike} from '../behaviors/signal-like/signal-like';
 import {List, ListInputs, ListItem} from '../behaviors/list/list';
 
+/** Selector matching the elements that can be activated from inside a menu item. */
+const INTERACTIVE_CONTENT_SELECTOR = 'a[href], button, input, select, textarea, [role="button"]';
+
 /** The inputs for the MenuBarPattern class. */
 export interface MenuBarInputs<V> extends ListInputs<MenuItemPattern<V>, V | undefined> {
   /** The menu items contained in the menu. */
@@ -395,9 +398,20 @@ export class MenuPattern<V> {
 
   /** Triggers the active menu item. */
   trigger() {
-    this.inputs.activeItem()?.hasPopup()
-      ? this.inputs.activeItem()?.open({first: true})
-      : this.submit();
+    const activeItem = this.inputs.activeItem();
+
+    if (!activeItem) {
+      return;
+    }
+
+    if (activeItem.hasPopup()) {
+      activeItem.open({first: true});
+    } else if (!activeItem.clickInteractiveContent()) {
+      // If the item doesn't wrap an interactive element, fall back to selecting it.
+      // Otherwise the click bubbles up to the menu's click handler, which selects
+      // the item the same way a mouse click does.
+      this.submit();
+    }
   }
 
   /** Submits the menu. */
@@ -529,15 +543,33 @@ export class MenuBarPattern<V> {
       .on(this._previousKey, () => this.prev(), {ignoreRepeat: false})
       .on('End', () => this.listBehavior.last())
       .on('Home', () => this.listBehavior.first())
-      .on('Enter', () => this.inputs.activeItem()?.open({first: true}))
+      .on('Enter', () => this._activateActiveItem())
       .on('ArrowUp', () => this.inputs.activeItem()?.open({last: true}))
       .on('ArrowDown', () => this.inputs.activeItem()?.open({first: true}))
-      .on(this.dynamicSpaceKey, () => this.inputs.activeItem()?.open({first: true}))
+      .on(this.dynamicSpaceKey, () => this._activateActiveItem())
       .on(this.typeaheadRegexp, e => this.listBehavior.search(e.key));
   });
 
   constructor(readonly inputs: MenuBarInputs<V>) {
     this.listBehavior = new List<MenuItemPattern<V>, V | undefined>(inputs);
+  }
+
+  /**
+   * Activates the active menu bar item, either by opening its submenu or by
+   * clicking the interactive content that it wraps.
+   */
+  private _activateActiveItem() {
+    const item = this.inputs.activeItem();
+
+    if (!item) {
+      return;
+    }
+
+    if (item.hasPopup()) {
+      item.open({first: true});
+    } else {
+      item.clickInteractiveContent();
+    }
   }
 
   /** Sets the default state for the menubar. */
@@ -827,6 +859,15 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
   /** Whether the menu item is selectable. */
   readonly selectable: SignalLike<boolean>;
 
+  /** The interactive element rendered inside the menu item, if any. */
+  private readonly _interactiveContent = computed<HTMLElement | undefined>(() => {
+    const el = this.element();
+
+    return el
+      ? (el.querySelector<HTMLElement>(INTERACTIVE_CONTENT_SELECTOR) ?? undefined)
+      : undefined;
+  });
+
   constructor(readonly inputs: MenuItemInputs<V>) {
     this.id = inputs.id;
     this.value = inputs.value ?? signal(undefined);
@@ -874,6 +915,21 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
         parent._clearTimeouts();
       }
     }
+  }
+
+  /**
+   * Clicks the interactive content inside the menu item, if there is any.
+   * @returns Whether an interactive element was activated.
+   */
+  clickInteractiveContent(): boolean {
+    const interactiveEl = this._interactiveContent();
+
+    if (this.disabled() || !interactiveEl) {
+      return false;
+    }
+
+    interactiveEl.click();
+    return true;
   }
 
   /** Handles focusin events for the menu item. */
