@@ -53,6 +53,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "sort-header.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/material/core/focus-indicators",
