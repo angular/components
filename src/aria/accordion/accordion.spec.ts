@@ -825,3 +825,96 @@ class AccordionPanelWithoutTrigger {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class AccordionWithMultipleExpandedItems {}
+
+describe('Accordion destruction', () => {
+  it('should update the panel association when the panel input changes', async () => {
+    const fixture = TestBed.createComponent(AccordionWithChangingPanel);
+    await fixture.whenStable();
+    const panels = fixture.debugElement
+      .queryAll(By.directive(AccordionPanel))
+      .map(el => el.injector.get(AccordionPanel));
+    const trigger = fixture.debugElement
+      .query(By.directive(AccordionTrigger))
+      .injector.get(AccordionTrigger);
+    const group = fixture.debugElement
+      .query(By.directive(AccordionGroup))
+      .injector.get(AccordionGroup);
+
+    expect(panels[0]._pattern).toBe(trigger._pattern);
+    expect(panels[1]._pattern).toBeUndefined();
+    expect(group._collection.orderedItems()).toEqual([trigger]);
+
+    fixture.componentInstance.panel.set(panels[1]);
+    await fixture.whenStable();
+
+    expect(panels[0]._pattern).toBeUndefined();
+    expect(panels[1]._pattern).toBe(trigger._pattern);
+    expect(group._collection.orderedItems()).toEqual([trigger]);
+
+    trigger.expand();
+    await fixture.whenStable();
+    expect(trigger.expanded()).toBeTrue();
+    panels[1].collapse();
+    await fixture.whenStable();
+    expect(trigger.expanded()).toBeFalse();
+
+    fixture.destroy();
+    expect(panels[1]._pattern).toBeUndefined();
+    expect(group._collection.orderedItems()).toEqual([]);
+  });
+
+  it('should destroy a trigger before the first change detection', () => {
+    const fixture = TestBed.createComponent(StaticAccordion);
+
+    expect(() => fixture.destroy()).not.toThrow();
+  });
+
+  it('should clear the panel association when destroying an initialized trigger', async () => {
+    const fixture = TestBed.createComponent(StaticAccordion);
+    await fixture.whenStable();
+
+    const panel = fixture.debugElement
+      .query(By.directive(AccordionPanel))
+      .injector.get(AccordionPanel);
+    const trigger = fixture.debugElement
+      .query(By.directive(AccordionTrigger))
+      .injector.get(AccordionTrigger);
+    expect(panel._pattern).toBe(trigger._pattern);
+
+    expect(() => fixture.destroy()).not.toThrow();
+    expect(panel._pattern).toBeUndefined();
+  });
+});
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button ngAccordionTrigger [panel]="panel">Trigger</button>
+      <div ngAccordionPanel #panel="ngAccordionPanel">
+        <ng-template ngAccordionContent>Content</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class StaticAccordion {}
+
+@Component({
+  template: `
+    <div ngAccordionGroup>
+      <button ngAccordionTrigger [panel]="panel() || first">Trigger</button>
+      <div ngAccordionPanel #first="ngAccordionPanel">
+        <ng-template ngAccordionContent>First</ng-template>
+      </div>
+      <div ngAccordionPanel>
+        <ng-template ngAccordionContent>Second</ng-template>
+      </div>
+    </div>
+  `,
+  imports: [AccordionGroup, AccordionTrigger, AccordionPanel, AccordionContent],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AccordionWithChangingPanel {
+  panel = signal<AccordionPanel | undefined>(undefined);
+}

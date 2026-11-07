@@ -8,7 +8,6 @@ import * as _angular_cdk_bidi from '@angular/cdk/bidi';
 import * as _angular_core from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
@@ -60,7 +59,7 @@ export class AccordionPanel {
 }
 
 // @public
-export class AccordionTrigger implements OnInit, OnDestroy {
+export class AccordionTrigger {
     constructor();
     readonly active: _angular_core.Signal<boolean>;
     collapse(): void;
@@ -69,10 +68,6 @@ export class AccordionTrigger implements OnInit, OnDestroy {
     expand(): void;
     readonly expanded: _angular_core.ModelSignal<boolean>;
     readonly id: _angular_core.InputSignal<string>;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
     readonly panel: _angular_core.InputSignal<AccordionPanel>;
     readonly panelId: _angular_core.Signal<string>;
     readonly _pattern: AccordionTriggerPattern;
