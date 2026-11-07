@@ -212,6 +212,17 @@ describe('Standalone Menu Pattern', () => {
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
     });
 
+    it('should select the focused item on enter when focus was moved externally', async () => {
+      const cherry = getItem('Cherry')!;
+      spyOn(fixture.componentInstance, 'itemSelected');
+
+      cherry.focus();
+      await fixture.whenStable();
+      await keydown(cherry, 'Enter');
+
+      expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Cherry');
+    });
+
     it('should select an item on space', async () => {
       const banana = getItem('Banana');
       spyOn(fixture.componentInstance, 'itemSelected');
