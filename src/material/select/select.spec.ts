@@ -1932,6 +1932,22 @@ describe('MatSelect', () => {
         expect(trigger.textContent!.trim()).toBe('PIZZA');
       });
 
+      it('should not select an option when disabled while open', () => {
+        fixture.componentInstance.control.setValue('pizza-1');
+        fixture.detectChanges();
+        trigger.click();
+        fixture.detectChanges();
+        const selectionChange = jasmine.createSpy('selectionChange');
+        fixture.componentInstance.select.selectionChange.subscribe(selectionChange);
+        fixture.componentInstance.control.disable({emitEvent: false});
+        fixture.detectChanges();
+        const option = getOverlayHost(fixture)!.querySelector('mat-option') as HTMLElement;
+        option.click();
+        fixture.detectChanges();
+        expect(fixture.componentInstance.control.value).toBe('pizza-1');
+        expect(selectionChange).not.toHaveBeenCalled();
+      });
+
       it('should not select disabled options', () => {
         trigger.click();
         fixture.detectChanges();
