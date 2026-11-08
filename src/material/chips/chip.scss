@@ -440,7 +440,6 @@ $fallbacks: m3-chip.get-tokens();
 
 .mdc-evolution-chip__icon--primary {
   .mat-mdc-standard-chip & {
-    border-radius: token-utils.slot(chip-with-avatar-avatar-shape-radius, $fallbacks);
     width: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
     height: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
     font-size: token-utils.slot(chip-with-icon-icon-size, $fallbacks);
@@ -650,6 +649,10 @@ $fallbacks: m3-chip.get-tokens();
   // Technically the avatar is only supposed to have an image, but we also allow for icons.
   // Set the color so the icons inherit the correct color.
   color: var(--mat-chip-with-icon-icon-color, currentColor);
+
+  .mat-mdc-standard-chip & {
+    border-radius: token-utils.slot(chip-with-avatar-avatar-shape-radius, $fallbacks);
+  }
 }
 
 // Required for the strong focus indicator to fill the chip.
