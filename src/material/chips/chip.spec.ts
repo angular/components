@@ -170,6 +170,23 @@ describe('MatChip', () => {
       expect(chipNativeElement.querySelector('.mat-mdc-chip-graphic [matChipAvatar]')).toBeTruthy();
     });
 
+    it('should only apply the avatar shape to avatars', () => {
+      testComponent.showLeadingIcon = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const leadingIcon = chipNativeElement.querySelector('[matChipLeadingIcon]')!;
+      expect(getComputedStyle(leadingIcon).borderRadius).toBe('0px');
+
+      testComponent.showLeadingIcon = false;
+      testComponent.showAvatar = true;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const avatar = chipNativeElement.querySelector('[matChipAvatar]')!;
+      expect(getComputedStyle(avatar).borderRadius).not.toBe('0px');
+    });
+
     it('should support both leading and trailing icons', () => {
       testComponent.showLeadingIcon = true;
       testComponent.showTrailingIcon = true;
