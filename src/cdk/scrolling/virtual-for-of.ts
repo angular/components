@@ -37,6 +37,7 @@ import {Observable, Subject, of as observableOf, isObservable} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
 import {CDK_VIRTUAL_SCROLL_VIEWPORT} from './virtual-scroll-viewport';
+import {VIRTUAL_SCROLLABLE} from './virtual-scrollable';
 
 /** The context for an item rendered by `CdkVirtualForOf` */
 export type CdkVirtualForOfContext<T> = {
@@ -79,6 +80,13 @@ function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 
  */
 @Directive({
   selector: '[cdkVirtualFor][cdkVirtualForOf]',
+  providers: [
+    {
+      // Avoids the scrollable leaking into nested lists. See #34095.
+      provide: VIRTUAL_SCROLLABLE,
+      useValue: null,
+    },
+  ],
 })
 export class CdkVirtualForOf<T>
   implements CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy
