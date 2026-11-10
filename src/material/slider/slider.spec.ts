@@ -121,6 +121,12 @@ describe('MatSlider', () => {
       checkInput(input, {min: 0, max: 100, value: 0, step: 1, translateX: 0});
     });
 
+    it('should reset native appearance on the input element', () => {
+      const computed = getComputedStyle(input._hostElement);
+      const appearance = computed.appearance || (computed as any).webkitAppearance;
+      expect(appearance).toBe('none');
+    });
+
     it('should update by click', async () => {
       await setValueByClick(slider, input, 25);
       checkInput(input, {min: 0, max: 100, value: 25, step: 1, translateX: 75});
