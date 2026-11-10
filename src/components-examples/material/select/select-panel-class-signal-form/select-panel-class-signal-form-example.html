@@ -1,0 +1,9 @@
+<mat-form-field>
+  <mat-label>Panel color</mat-label>
+  <mat-select [formField]="panelColor"
+              panelClass="example-panel-{{panelColor().value()}}">
+    <mat-option value="red">Red</mat-option>
+    <mat-option value="green">Green</mat-option>
+    <mat-option value="blue">Blue</mat-option>
+  </mat-select>
+</mat-form-field>
