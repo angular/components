@@ -151,7 +151,9 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
    * content to change dynamically and be reflected in the application.
    */
   protected getMenuContentPortal() {
-    const hasMenuContentChanged = this.menuTemplateRef !== this._menuPortal?.templateRef;
+    const hasMenuContentChanged =
+      this.menuTemplateRef !== this._menuPortal?.templateRef ||
+      this.menuData !== this._menuPortal?.context;
     if (this.menuTemplateRef && (!this._menuPortal || hasMenuContentChanged)) {
       this._menuPortal = new TemplatePortal(
         this.menuTemplateRef,
