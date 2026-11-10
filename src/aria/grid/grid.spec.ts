@@ -1307,3 +1307,48 @@ class MyCustomRow extends GridRow {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SubclassGridTestComponent {}
+
+@Component({
+  selector: 'composed-focus-widget',
+  template: '<ng-content></ng-content>',
+  hostDirectives: [{directive: GridCellWidget, inputs: ['widgetType']}],
+})
+class ComposedFocusWidget {}
+
+@Component({
+  template: `
+    <div ngGrid>
+      <div ngGridRow>
+        <div ngGridCell>
+          <div ngGridCellWidget widgetType="complex"><input /></div>
+        </div>
+        <div ngGridCell>
+          <composed-focus-widget widgetType="complex"><input /></composed-focus-widget>
+        </div>
+      </div>
+    </div>
+  `,
+  imports: [Grid, GridRow, GridCell, GridCellWidget, ComposedFocusWidget],
+})
+class WidgetFocusReproduction {}
+
+describe('Grid widget child focus reproduction', () => {
+  for (const [name, index] of [
+    ['standard', 0],
+    ['composed', 1],
+  ] as const) {
+    it(`should activate the ${name} widget when its input receives focus`, async () => {
+      const fixture = TestBed.createComponent(WidgetFocusReproduction);
+      await fixture.whenStable();
+      const widgets = fixture.debugElement.queryAll(By.directive(GridCellWidget));
+      expect(widgets.length).toBe(2);
+      const widget = widgets[index].injector.get(GridCellWidget);
+      expect(widget.isActivated()).toBeFalse();
+      const input = widgets[index].nativeElement.querySelector('input') as HTMLInputElement;
+      input.focus();
+      await fixture.whenStable();
+      expect(document.activeElement).toBe(input);
+      expect(widget.isActivated()).toBeTrue();
+    });
+  }
+});

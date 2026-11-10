@@ -41,6 +41,8 @@ import {GRID_CELL} from './grid-tokens';
   selector: '[ngGridCellWidget]',
   exportAs: 'ngGridCellWidget',
   host: {
+    // Ensure the attribute is applied even when used as a host directive.
+    'ngGridCellWidget': '',
     '[attr.data-active]': 'active()',
     '[attr.data-active-control]': 'isActivated() ? "widget" : "cell"',
     '[tabindex]': '_tabIndex()',
