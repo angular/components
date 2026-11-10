@@ -798,6 +798,37 @@ describe('Menu Trigger Pattern', () => {
       await click(getItem('Apple')!);
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Apple');
     });
+
+    it('should not render deferred content on trigger focus and should destroy it when menu closes', async () => {
+      expect(getItem('Apple')).toBeNull();
+      await focusin(getTrigger());
+      expect(getItem('Apple')).toBeNull();
+
+      await click(getTrigger());
+      expect(isExpanded()).toBe(true);
+      expect(getItem('Apple')).not.toBeNull();
+
+      await keydown(getTrigger(), 'Escape');
+      expect(isExpanded()).toBe(false);
+      expect(getItem('Apple')).toBeNull();
+    });
+
+    it('should preserve content when preserveContent is true', async () => {
+      fixture.componentInstance.preserveContent.set(true);
+      await fixture.whenStable();
+
+      expect(getItem('Apple')).toBeNull();
+
+      // Open the menu
+      await click(getTrigger());
+      expect(isExpanded()).toBe(true);
+      expect(getItem('Apple')).not.toBeNull();
+
+      // Close the menu
+      await keydown(getTrigger(), 'Escape');
+      expect(isExpanded()).toBe(false);
+      expect(getItem('Apple')).not.toBeNull();
+    });
   });
 });
 
@@ -1293,7 +1324,13 @@ class StandaloneMenuExample {
   template: `
     <button ngMenuTrigger [menu]="menu">Open menu</button>
 
-    <div ngMenu [expansionDelay]="0" #menu="ngMenu" (itemSelected)="itemSelected($event)">
+    <div
+      ngMenu
+      [preserveContent]="preserveContent()"
+      [expansionDelay]="0"
+      #menu="ngMenu"
+      (itemSelected)="itemSelected($event)"
+    >
       <ng-template ngMenuContent>
         <div ngMenuItem value='Apple' searchTerm='Apple'>Apple</div>
         <div ngMenuItem value='Banana' searchTerm='Banana'>Banana</div>
@@ -1315,6 +1352,7 @@ class StandaloneMenuExample {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MenuTriggerExample {
+  preserveContent = signal(false);
   itemSelected(value: string) {}
 }
 
