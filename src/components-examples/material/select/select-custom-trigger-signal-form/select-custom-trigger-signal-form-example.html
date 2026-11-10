@@ -1,0 +1,17 @@
+<mat-form-field>
+  <mat-label>Toppings</mat-label>
+  <mat-select [formField]="toppingsField" multiple>
+    <mat-select-trigger>
+      @let toppings = toppingsField().value();
+      {{toppings[0] || ''}}
+      @if (toppings.length > 1) {
+        <span class="example-additional-selection">
+          (+{{toppings.length - 1}} {{toppings.length === 2 ? 'other' : 'others'}})
+        </span>
+      }
+    </mat-select-trigger>
+    @for (topping of toppingList; track topping) {
+      <mat-option [value]="topping">{{topping}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
