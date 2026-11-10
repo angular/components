@@ -9,8 +9,10 @@ import {
 import {
   Component,
   Directive,
+  QueryList,
   TrackByFunction,
   ViewChild,
+  ViewChildren,
   ViewContainerRef,
   ViewEncapsulation,
   inject,
@@ -1111,6 +1113,18 @@ describe('CdkVirtualScrollViewport', () => {
         .withContext('should be 50 (actual scroll offset - viewport offset)')
         .toBe(50);
     });
+
+    it('should not inherit outer scrollWindow in nested viewports', async () => {
+      const nestedFixture = TestBed.createComponent(NestedVirtualScrollWithScrollableWindow);
+      await finishInit(nestedFixture);
+
+      const viewports = nestedFixture.componentInstance.viewports.toArray();
+      expect(viewports.length).toBeGreaterThan(1);
+
+      const [outerViewport, innerViewport] = viewports;
+      expect(outerViewport.scrollable).not.toBe(outerViewport);
+      expect(innerViewport.scrollable).toBe(innerViewport);
+    });
   });
 
   it('should be able to query for a virtual scroll viewport as a CdkScrollable', () => {
@@ -1517,4 +1531,23 @@ class VirtualScrollWithScrollableWindow {
 })
 class VirtualScrollableQuery {
   @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
+}
+
+@Component({
+  template: `
+    <cdk-virtual-scroll-viewport scrollWindow itemSize="100">
+      <div *cdkVirtualFor="let row of rows" class="outer-row">
+        <cdk-virtual-scroll-viewport itemSize="25" class="inner-viewport">
+          <div *cdkVirtualFor="let item of items">{{item}}</div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  `,
+  imports: [ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class NestedVirtualScrollWithScrollableWindow {
+  @ViewChildren(CdkVirtualScrollViewport) viewports!: QueryList<CdkVirtualScrollViewport>;
+  rows = [1, 2, 3];
+  items = [1, 2, 3, 4, 5];
 }
