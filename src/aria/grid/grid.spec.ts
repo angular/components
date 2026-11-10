@@ -1307,3 +1307,85 @@ class MyCustomRow extends GridRow {}
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class SubclassGridTestComponent {}
+
+@Component({
+  selector: 'composed-grid-cell',
+  template: `<ng-content></ng-content>`,
+  hostDirectives: [GridCell],
+})
+class ComposedGridCell {}
+
+@Component({
+  template: `
+    <div ngGrid enableSelection selectionMode="explicit" multi>
+      <div ngGridRow>
+        <div ngGridCell><span>First</span></div>
+        <div ngGridCell><span>Second</span></div>
+      </div>
+    </div>
+  `,
+  imports: [Grid, GridRow, GridCell],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class StandardChildClickGrid {}
+
+@Component({
+  template: `
+    <div ngGrid enableSelection selectionMode="explicit" multi>
+      <div ngGridRow>
+        <composed-grid-cell><span>First</span></composed-grid-cell>
+        <composed-grid-cell><span>Second</span></composed-grid-cell>
+      </div>
+    </div>
+  `,
+  imports: [Grid, GridRow, ComposedGridCell],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class ComposedChildClickGrid {}
+
+@Component({
+  template: `
+    <div ngGrid enableSelection selectionMode="explicit" multi>
+      <div ngGridRow>
+        <my-custom-cell><span>First</span></my-custom-cell>
+        <my-custom-cell><span>Second</span></my-custom-cell>
+      </div>
+    </div>
+  `,
+  imports: [Grid, GridRow, MyCustomCell],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class SubclassChildClickGrid {}
+
+describe('Grid cell selection with composed and inherited directives', () => {
+  for (const [name, component] of [
+    ['standard directive', StandardChildClickGrid],
+    ['host directive', ComposedChildClickGrid],
+    ['subclass', SubclassChildClickGrid],
+  ] as const) {
+    for (const clickChild of [false, true]) {
+      it(`should select the second ${name} cell when clicking its ${clickChild ? 'child' : 'host'}`, async () => {
+        const fixture = TestBed.createComponent(component);
+        await fixture.whenStable();
+        const grid = fixture.debugElement.query(By.directive(Grid)).injector.get(Grid);
+        const cells = fixture.nativeElement.querySelectorAll(
+          '[role="gridcell"]',
+        ) as NodeListOf<HTMLElement>;
+        expect(cells.length).toBe(2);
+        expect(grid._pattern.activeCell()?.element()).toBe(cells[0]);
+
+        cells[1].focus();
+        await fixture.whenStable();
+        expect(grid._pattern.activeCell()?.element()).toBe(cells[1]);
+        expect(cells[1].getAttribute('aria-selected')).toBe('false');
+
+        const target = clickChild ? cells[1].querySelector('span')! : cells[1];
+        target.dispatchEvent(new PointerEvent('click', {bubbles: true}));
+        await fixture.whenStable();
+
+        expect(grid._pattern.activeCell()?.element()).toBe(cells[1]);
+        expect(cells[1].getAttribute('aria-selected')).toBe('true');
+      });
+    }
+  }
+});
