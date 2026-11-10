@@ -827,6 +827,9 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
   /** Whether the menu item is selectable. */
   readonly selectable: SignalLike<boolean>;
 
+  /** The pending focus target when the submenu is opened before the submenu instance is available. */
+  readonly pendingFocus = signal<'first' | 'last' | null>(null);
+
   constructor(readonly inputs: MenuItemInputs<V>) {
     this.id = inputs.id;
     this.value = inputs.value ?? signal(undefined);
@@ -834,6 +837,22 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
     this.submenu = this.inputs.submenu;
     this.searchTerm = inputs.searchTerm;
     this.selectable = computed(() => !this.submenu());
+  }
+
+  /** Flushes any pending focus when the submenu instance becomes available. */
+  pendingFocusEffect(): void {
+    const submenu = this.submenu();
+    const intent = this.pendingFocus();
+    const items = submenu?.items();
+
+    if (submenu && intent && items?.length) {
+      if (intent === 'first') {
+        submenu.first();
+      } else if (intent === 'last') {
+        submenu.last();
+      }
+      this.pendingFocus.set(null);
+    }
   }
 
   /** Opens the submenu. */
@@ -844,17 +863,26 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
 
     this._expanded.set(true);
 
-    if (opts?.first) {
-      this.submenu()?.first();
-    }
-    if (opts?.last) {
-      this.submenu()?.last();
+    const submenu = this.submenu();
+    const items = submenu?.items();
+
+    if (submenu && items?.length) {
+      if (opts?.first) {
+        submenu.first();
+      } else if (opts?.last) {
+        submenu.last();
+      }
+    } else if (opts?.first) {
+      this.pendingFocus.set('first');
+    } else if (opts?.last) {
+      this.pendingFocus.set('last');
     }
   }
 
   /** Closes the submenu. */
   close(opts: {refocus?: boolean} = {}) {
     this._expanded.set(false);
+    this.pendingFocus.set(null);
 
     if (opts.refocus) {
       this.inputs.parent()?.listBehavior.goto(this);
