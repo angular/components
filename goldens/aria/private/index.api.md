@@ -420,6 +420,8 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
         first?: boolean;
         last?: boolean;
     }): void;
+    readonly pendingFocus: WritableSignalLike<"first" | "last" | null>;
+    pendingFocusEffect(): void;
     readonly role: () => "menuitem" | "menuitemcheckbox" | "menuitemradio";
     readonly searchTerm: SignalLike<string>;
     readonly selectable: SignalLike<boolean>;

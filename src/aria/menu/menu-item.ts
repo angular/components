@@ -105,6 +105,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
 
   constructor() {
     effect(() => this.submenu()?.parent.set(this));
+    effect(() => this._pattern.pendingFocusEffect());
 
     // Check for any violations after the DOM has been updated.
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
