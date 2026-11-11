@@ -1,3 +1,26 @@
+<a name="22.3.0-rc.0"></a>
+# 22.3.0-rc.0 "thorium-telephone" (2026-11-11)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [17b4f1faa](https://github.com/angular/components/commit/17b4f1faa0a5cf57fc860a3d575602b6edf0c2cb) | fix | **accordion:** avoid errors when destroyed before initialization ([#34061](https://github.com/angular/components/pull/34061)) |
+| [249b3ee5c](https://github.com/angular/components/commit/249b3ee5c8b334dcb6b8d9e035380318e4438c2c) | fix | **combobox:** queue relayed keyboard events to prevent dropping back-to-back keys ([#34083](https://github.com/angular/components/pull/34083)) |
+| [577dba711](https://github.com/angular/components/commit/577dba711206c67f53a7f79e3312758296c8f4a9) | fix | **grid:** activate composed widgets when child inputs receive focus ([#34077](https://github.com/angular/components/pull/34077)) |
+| [7264bd0b5](https://github.com/angular/components/commit/7264bd0b5544a9d1ec10f3a27fdb2593604c7342) | fix | **menu:** expose trigger tab index ([#34084](https://github.com/angular/components/pull/34084)) |
+| [90f8fee60](https://github.com/angular/components/commit/90f8fee60a82ccc5237ded81c42e2ec40958d34a) | fix | **menu:** render content only when visible ([#34104](https://github.com/angular/components/pull/34104)) |
+| [e967ccd8a](https://github.com/angular/components/commit/e967ccd8a710514d14c2a9bff4a95cc38b70c191) | fix | **tree:** avoid errors when destroyed before initialization ([#34059](https://github.com/angular/components/pull/34059)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [94fc67886](https://github.com/angular/components/commit/94fc67886dc073c390a4fe310806771b6eabc73e) | fix | **menu:** use latest trigger data when menu is reopened ([#34096](https://github.com/angular/components/pull/34096)) |
+| [aa1afc744](https://github.com/angular/components/commit/aa1afc744ac9e50f331204d43058407b0329624a) | fix | **scrolling:** prevent scrollable from leaking into nested lists ([#34100](https://github.com/angular/components/pull/34100)) |
+### material
+| Commit | Type | Description |
+| -- | -- | -- |
+| [78e0484ef](https://github.com/angular/components/commit/78e0484efd4b2d71a9f78fa4d6077d47486ca97c) | fix | **chips:** do not apply avatar shape to leading icons ([#34099](https://github.com/angular/components/pull/34099)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.2.7"></a>
 # 22.2.7 "thorium-troll" (2026-11-11)
 ### aria
