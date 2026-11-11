@@ -63,7 +63,7 @@ import {MENU_COMPONENT} from './menu-tokens';
     '(keydown)': '_pattern.onKeydown($event)',
     '(mouseover)': '_pattern.onMouseOver($event)',
     '(click)': '_pattern.onClick($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn($event)',
     '(focusout)': '_pattern.onFocusOut($event)',
   },
   providers: [{provide: MENU_COMPONENT, useExisting: MenuBar}],

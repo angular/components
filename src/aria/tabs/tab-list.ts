@@ -54,7 +54,7 @@ import type {Tab} from './tab';
     '[attr.aria-activedescendant]': '_pattern.activeDescendant()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn($event)',
   },
   providers: [{provide: TAB_LIST, useExisting: TabList}],
 })

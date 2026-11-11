@@ -111,6 +111,15 @@ export class ListFocus<T extends ListFocusItem> {
     return true;
   }
 
+  /** Syncs `activeItem` to an externally focused item without moving DOM focus. */
+  sync(item: T | undefined): boolean {
+    if (!item || item === this.inputs.activeItem()) {
+      return false;
+    }
+
+    return this.focus(item, {focusElement: false});
+  }
+
   /** Returns true if the given item can be navigated to. */
   isFocusable(item: T): boolean {
     return !item.disabled() || this.inputs.softDisabled();

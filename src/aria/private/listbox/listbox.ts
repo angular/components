@@ -246,8 +246,12 @@ export class ListboxPattern<V> {
     }
   }
 
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.hasBeenInteracted.set(true);
+
+    if (event) {
+      this.listBehavior.sync(this._getItem(event));
+    }
   }
 
   /**
@@ -292,13 +296,13 @@ export class ListboxPattern<V> {
     this.setDefaultState();
   }
 
-  protected _getItem(e: PointerEvent) {
-    const target = _getEventTarget<Element>(e);
-    if (!target) {
+  protected _getItem(e: Event) {
+    const target = _getEventTarget(e);
+    if (!(target instanceof Element)) {
       return;
     }
 
     const element = target.closest('[role="option"]');
-    return this.inputs.items().find(i => i.element() === element);
+    return element ? this.inputs.items().find(i => i.element() === element) : undefined;
   }
 }

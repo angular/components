@@ -178,6 +178,16 @@ export class Tree<T extends TreeItem<V, T>, V> {
     this._navigate(opts, () => this.navigationBehavior.goto(item, opts));
   }
 
+  /**
+   * Syncs `activeItem` to an externally focused item without moving DOM focus.
+   *
+   * Leaves selection and the range anchor untouched: a pointer click focuses the item before
+   * the click handler runs, and that handler still needs the anchor from before the click.
+   */
+  sync(item: T | undefined) {
+    this.focusBehavior.sync(item);
+  }
+
   /** Removes focus from the tree. */
   unfocus() {
     this.inputs.activeItem.set(undefined);
