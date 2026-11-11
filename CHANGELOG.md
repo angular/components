@@ -1,3 +1,21 @@
+<a name="22.2.7"></a>
+# 22.2.7 "thorium-troll" (2026-11-11)
+### aria
+| Commit | Type | Description |
+| -- | -- | -- |
+| [1e2db5b4c](https://github.com/angular/components/commit/1e2db5b4cc0112cfea3a1b19683bf729f63ede60) | fix | **accordion:** avoid errors when destroyed before initialization ([#34061](https://github.com/angular/components/pull/34061)) |
+| [c00b72e17](https://github.com/angular/components/commit/c00b72e1789d129a80c0600ae15864903e5aed9c) | fix | **grid:** activate composed widgets when child inputs receive focus ([#34077](https://github.com/angular/components/pull/34077)) |
+| [53daf4a9d](https://github.com/angular/components/commit/53daf4a9d9e85cd0ec59634cfa0e02a8ca6dfab7) | fix | **menu:** expose trigger tab index ([#34084](https://github.com/angular/components/pull/34084)) |
+| [e2189c4d5](https://github.com/angular/components/commit/e2189c4d5e17d29c8d588f5f9602d85a035043c2) | fix | **menu:** render content only when visible ([#34104](https://github.com/angular/components/pull/34104)) |
+| [fdfca0b27](https://github.com/angular/components/commit/fdfca0b277dc6d08ba8ba163db2a0052133241b2) | fix | **tree:** avoid errors when destroyed before initialization ([#34059](https://github.com/angular/components/pull/34059)) |
+### cdk
+| Commit | Type | Description |
+| -- | -- | -- |
+| [2338ff5ff](https://github.com/angular/components/commit/2338ff5ff3a835ff8a7c57c600d77fb5b36c828a) | fix | **menu:** use latest trigger data when menu is reopened ([#34096](https://github.com/angular/components/pull/34096)) |
+| [050532529](https://github.com/angular/components/commit/050532529f80812ded86fca50475a57e73616b78) | fix | **scrolling:** prevent scrollable from leaking into nested lists ([#34100](https://github.com/angular/components/pull/34100)) |
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.3.0-next.5"></a>
 # 22.3.0-next.5 "zinc-zucchini" (2026-11-04)
 ### aria
