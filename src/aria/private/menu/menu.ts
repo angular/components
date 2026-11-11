@@ -333,9 +333,16 @@ export class MenuPattern<V> {
   }
 
   /** Handles focusin events for the menu. */
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.isFocused.set(true);
     this.hasBeenInteracted.set(true);
+
+    const item = event && _getMenuItem(event, this.inputs.items());
+    const prevItem = this.inputs.activeItem();
+    this.listBehavior.sync(item);
+    if (prevItem && prevItem !== this.inputs.activeItem()) {
+      prevItem.close();
+    }
   }
 
   /** Handles the focusout event for the menu. */
@@ -585,9 +592,16 @@ export class MenuBarPattern<V> {
   }
 
   /** Handles focusin events for the menu bar. */
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.isFocused.set(true);
     this.hasBeenInteracted.set(true);
+
+    const item = event && _getMenuItem(event, this.inputs.items());
+    const prevItem = this.inputs.activeItem();
+    this.listBehavior.sync(item);
+    if (prevItem?.expanded() && prevItem !== this.inputs.activeItem()) {
+      prevItem.close();
+    }
   }
 
   /** Handles focusout events for the menu bar. */
@@ -908,4 +922,17 @@ export class MenuItemPattern<V> implements ListItem<V | undefined> {
   onFocusIn() {
     this.hasBeenInteracted.set(true);
   }
+}
+
+/** Returns the menu item matching the given event target within `items`. */
+function _getMenuItem<V>(
+  event: Event,
+  items: MenuItemPattern<V>[],
+): MenuItemPattern<V> | undefined {
+  const target = _getEventTarget(event);
+  if (!(target instanceof Element)) {
+    return undefined;
+  }
+  const element = target.closest('[role^="menuitem"]');
+  return element ? items.find(i => i.element() === element) : undefined;
 }

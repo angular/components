@@ -79,7 +79,7 @@ import type {TreeItem} from './tree-item';
     '[tabindex]': 'tabIndex() !== undefined ? tabIndex() : _pattern.tabIndex()',
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn($event)',
   },
 })
 export class Tree<V> implements OnDestroy {

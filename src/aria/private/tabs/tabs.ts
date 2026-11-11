@@ -268,8 +268,12 @@ export class TabListPattern {
   }
 
   /** Handles focusin events for the tablist. */
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.hasBeenInteracted.set(true);
+
+    if (event) {
+      this.focusBehavior.sync(this._getItem(event));
+    }
   }
 
   /** Opens the given tab or the current active tab. */
@@ -295,14 +299,14 @@ export class TabListPattern {
     }
   }
 
-  /** Returns the tab item associated with the given pointer event. */
-  private _getItem(e: PointerEvent) {
-    const target = _getEventTarget<Element>(e);
-    if (!target) {
+  /** Returns the tab item associated with the given event. */
+  private _getItem(e: Event) {
+    const target = _getEventTarget(e);
+    if (!(target instanceof Element)) {
       return;
     }
 
     const element = target.closest('[role="tab"]');
-    return this.inputs.items().find(i => i.element() === element);
+    return element ? this.inputs.items().find(i => i.element() === element) : undefined;
   }
 }

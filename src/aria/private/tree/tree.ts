@@ -445,8 +445,12 @@ export class TreePattern<V> implements TreeInputs<V> {
   }
 
   /** Handles focusin events on the tree. */
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.hasBeenInteracted.set(true);
+
+    if (event) {
+      this.treeBehavior.sync(this._getItem(event));
+    }
   }
 
   /** Navigates to the given tree item in the tree. */
@@ -480,11 +484,11 @@ export class TreePattern<V> implements TreeInputs<V> {
 
   /** Retrieves the TreeItemPattern associated with a DOM event, if any. */
   protected _getItem(event: Event): TreeItemPattern<V> | undefined {
-    const target = _getEventTarget<Element>(event);
-    if (!target) {
+    const target = _getEventTarget(event);
+    if (!(target instanceof Element)) {
       return;
     }
     const element = target.closest('[role="treeitem"]');
-    return this.inputs.items().find(i => i.element() === element);
+    return element ? this.inputs.items().find(i => i.element() === element) : undefined;
   }
 }
