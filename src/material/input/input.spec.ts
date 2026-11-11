@@ -1,11 +1,17 @@
 import {getSupportedInputTypes} from '@angular/cdk/platform';
-import {dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing/private';
+import {Direction} from '@angular/cdk/bidi';
+import {
+  dispatchFakeEvent,
+  provideFakeDirectionality,
+  wrappedErrorMessage,
+} from '@angular/cdk/testing/private';
 import {
   ChangeDetectionStrategy,
   Component,
   Directive,
   ErrorHandler,
   ViewChild,
+  signal,
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {
@@ -1683,6 +1689,25 @@ describe('MatFormField default options', () => {
   });
 });
 
+describe('MatFormField outlined label offset', () => {
+  it('should update the label offset when the direction changes', async () => {
+    const dir = signal<Direction>('ltr');
+    TestBed.configureTestingModule({providers: [provideFakeDirectionality(dir)]});
+    const fixture = TestBed.createComponent(MatInputOutlineWithPrefix);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const label = fixture.nativeElement.querySelector('.mdc-floating-label') as HTMLElement;
+    expect(label.style.transform).toContain('translateX(calc(1 *');
+
+    dir.set('rtl');
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(label.style.transform).toContain('translateX(calc(-1 *');
+  });
+});
+
 describe('MatFormField without label', () => {
   it('should not float the label when no label is defined.', () => {
     const fixture = TestBed.createComponent(MatInputWithoutDefinedLabel);
@@ -2412,6 +2437,19 @@ class MatInputWithRequiredFormControl {
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 class MatInputSimple {}
+
+@Component({
+  template: `
+    <mat-form-field appearance="outline">
+      <mat-label>Label</mat-label>
+      <span matTextPrefix>$</span>
+      <input matInput>
+    </mat-form-field>
+  `,
+  imports: [MatInputModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MatInputOutlineWithPrefix {}
 
 @Component({
   template: `
