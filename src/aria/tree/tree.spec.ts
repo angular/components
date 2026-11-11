@@ -584,6 +584,52 @@ describe('Tree', () => {
             ]);
           });
 
+          it('should select a range with shift+click when the item is focused before the click', async () => {
+            const appleEl = getTreeItemElementByValue('apple')!;
+            const carrotEl = getTreeItemElementByValue('carrot')!;
+
+            appleEl.focus();
+            await fixture.whenStable();
+            await click(appleEl);
+            expect(treeInstance.value()).toEqual(['apple']);
+
+            carrotEl.focus();
+            await fixture.whenStable();
+            await shiftClick(carrotEl);
+            expect(treeInstance.value()).toEqual([
+              'apple',
+              'banana',
+              'berries',
+              'vegetables',
+              'carrot',
+            ]);
+          });
+
+          it('should select a range from the keyboard anchor with shift+click after focus', async () => {
+            const bananaEl = getTreeItemElementByValue('banana')!;
+            const carrotEl = getTreeItemElementByValue('carrot')!;
+
+            await click(bananaEl);
+            await click(bananaEl);
+            expect(treeInstance.value()).toEqual([]);
+            await down();
+            await shift();
+
+            carrotEl.focus();
+            await fixture.whenStable();
+            await shiftClick(carrotEl);
+            expect(treeInstance.value()).toEqual(['berries', 'vegetables', 'carrot']);
+          });
+
+          it('should start a shift+arrow range at an externally focused item', async () => {
+            const appleEl = getTreeItemElementByValue('apple')!;
+            appleEl.focus();
+            await fixture.whenStable();
+            await shift();
+            await down({shiftKey: true});
+            expect(treeInstance.value().sort()).toEqual(['apple', 'banana']);
+          });
+
           it('should toggle selection of an item on simple click, leaving other selections intact', async () => {
             const appleEl = getTreeItemElementByValue('apple')!;
             const bananaEl = getTreeItemElementByValue('banana')!;
@@ -756,6 +802,22 @@ describe('Tree', () => {
 
             await enter();
             expect(treeInstance.value()).toEqual(['grains']);
+          });
+
+          it('should select and navigate from a nested item focused externally', async () => {
+            await expandAll();
+            const appleEl = getTreeItemElementByValue('apple')!;
+            const bananaEl = getTreeItemElementByValue('banana')!;
+
+            appleEl.focus();
+            await fixture.whenStable();
+            expect(appleEl.getAttribute('tabindex')).toBe('0');
+
+            await enter();
+            expect(treeInstance.value()).toEqual(['apple']);
+
+            await down();
+            expect(document.activeElement).toBe(bananaEl);
           });
 
           describe('selectable=false', () => {

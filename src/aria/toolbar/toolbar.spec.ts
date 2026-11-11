@@ -225,6 +225,16 @@ describe('Toolbar', () => {
             expect(document.activeElement).toBe(getWidgetEl('item 1'));
           });
 
+          it('should update active widget and navigate from a widget focused externally', async () => {
+            const item2 = getWidgetEl('item 2')!;
+            item2.focus();
+            await fixture.whenStable();
+            expect(item2.getAttribute('tabindex')).toBe('0');
+
+            await right();
+            expect(document.activeElement).toBe(getWidgetEl('item 3'));
+          });
+
           it('should not skip disabled items when navigating prev', async () => {
             fixture.componentInstance.widgets[1].disabled.set(true);
             await fixture.whenStable();

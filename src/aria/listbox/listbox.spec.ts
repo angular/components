@@ -43,6 +43,13 @@ describe('Listbox', () => {
     await fixture.whenStable();
   };
 
+  /** Focuses the option before clicking it, in the order a real pointer click does. */
+  const focusAndClick = async (index: number, eventInit?: PointerEventInit) => {
+    optionElements[index].focus();
+    await fixture.whenStable();
+    await click(index, eventInit);
+  };
+
   const space = async (modifierKeys?: ModifierKeys) => await keydown(' ', modifierKeys);
   const enter = async (modifierKeys?: ModifierKeys) => await keydown('Enter', modifierKeys);
   const up = async (modifierKeys?: ModifierKeys) => await keydown('ArrowUp', modifierKeys);
@@ -387,9 +394,55 @@ describe('Listbox', () => {
             await click(2, {shiftKey: true});
             expect(listboxInstance.value()).toEqual([0, 2]);
           });
+
+          it('should select a range on shift + click when the option is focused before the click', async () => {
+            await setupListbox({multi: true, selectionMode: 'follow'});
+            await focusAndClick(1);
+            await focusAndClick(3, {shiftKey: true});
+            expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
+          });
+
+          it('should select an option on click when it is focused before the click', async () => {
+            await setupListbox({multi: false, selectionMode: 'follow', value: [0]});
+            await focusAndClick(2);
+            expect(listboxInstance.value()).toEqual([2]);
+          });
+
+          it('should activate and select a directly focused option in activedescendant mode', async () => {
+            await setupListbox({focusMode: 'activedescendant', multi: false, value: [0]});
+            optionElements[2].focus();
+            await fixture.whenStable();
+            expect(listboxElement.getAttribute('aria-activedescendant')).toBe(optionElements[2].id);
+            await click(2);
+            expect(listboxInstance.value()).toEqual([2]);
+          });
         });
 
         describe('explicit selection', () => {
+          it('should select a range on shift + click when the option is focused before the click', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await focusAndClick(1);
+            await focusAndClick(3, {shiftKey: true});
+            expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
+          });
+
+          it('should select a range from the keyboard anchor on shift + click after focus', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            await down();
+            await keydown('Shift', {shiftKey: true});
+            await focusAndClick(3, {shiftKey: true});
+            expect(listboxInstance.value().sort()).toEqual([1, 2, 3]);
+          });
+
+          it('should start a shift + arrow range at an externally focused option', async () => {
+            await setupListbox({multi: true, selectionMode: 'explicit'});
+            optionElements[2].focus();
+            await fixture.whenStable();
+            await keydown('Shift', {shiftKey: true});
+            await down({shiftKey: true});
+            expect(listboxInstance.value().sort()).toEqual([2, 3]);
+          });
+
           it('should toggle selection of the clicked option with a simple click', async () => {
             await setupListbox({multi: true, selectionMode: 'explicit', value: [0]});
             await click(1);
@@ -537,6 +590,19 @@ describe('Listbox', () => {
             await end();
             expect(listboxInstance.value()).toEqual([4]);
           });
+
+          it('should update active option without selecting when focus moves externally', async () => {
+            await setupListbox({multi: false, selectionMode: 'follow', value: [0]});
+
+            optionElements[2].focus();
+            await fixture.whenStable();
+            expect(optionElements[2].getAttribute('tabindex')).toBe('0');
+            expect(listboxInstance.value()).toEqual([0]);
+
+            await down();
+            expect(listboxInstance.value()).toEqual([3]);
+            expect(document.activeElement).toBe(optionElements[3]);
+          });
         });
 
         describe('explicit selection', () => {
@@ -570,6 +636,21 @@ describe('Listbox', () => {
             await enter();
             expect(listboxInstance.value()).toEqual([1]);
             expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
+          });
+
+          it('should select and navigate from an option focused externally', async () => {
+            await setupListbox({multi: false, selectionMode: 'explicit'});
+
+            optionElements[2].focus();
+            await fixture.whenStable();
+            expect(optionElements[2].getAttribute('tabindex')).toBe('0');
+
+            await enter();
+            expect(listboxInstance.value()).toEqual([2]);
+
+            await down();
+            expect(optionElements[3].getAttribute('tabindex')).toBe('0');
+            expect(document.activeElement).toBe(optionElements[3]);
           });
         });
       });

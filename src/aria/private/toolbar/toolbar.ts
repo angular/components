@@ -209,8 +209,13 @@ export class ToolbarPattern {
     this.hasBeenInteracted.set(true);
   }
 
-  onFocusIn() {
+  onFocusIn(event?: FocusEvent) {
     this.hasBeenInteracted.set(true);
+
+    const target = event && _getEventTarget(event);
+    if (target instanceof Element) {
+      this.focusManager.sync(this.inputs.getItem(target));
+    }
   }
 
   /** Handles click events for the toolbar. */

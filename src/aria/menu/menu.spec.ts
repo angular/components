@@ -147,6 +147,16 @@ describe('Standalone Menu Pattern', () => {
       expect(document.activeElement).toBe(banana);
     });
 
+    it('should navigate from the focused item when focus was moved externally', async () => {
+      const banana = getItem('Banana')!;
+      banana.focus();
+      await fixture.whenStable();
+
+      expect(banana.tabIndex).toBe(0);
+      await keydown(banana, 'ArrowDown');
+      expect(document.activeElement).toBe(getItem('Berries'));
+    });
+
     describe('Typeahead', () => {
       it('should move the active item to the next item that starts with the typed character', async () => {
         const apple = getItem('Apple');
@@ -209,6 +219,17 @@ describe('Standalone Menu Pattern', () => {
       expect(document.activeElement).toBe(banana);
 
       await keydown(banana!, 'Enter');
+      expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
+    });
+
+    it('should select the focused item on enter when focus was moved externally', async () => {
+      const banana = getItem('Banana')!;
+      spyOn(fixture.componentInstance, 'itemSelected');
+
+      banana.focus();
+      await fixture.whenStable();
+      await keydown(banana, 'Enter');
+
       expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
     });
 
@@ -291,6 +312,51 @@ describe('Standalone Menu Pattern', () => {
 
       expect(isSubmenuExpanded()).toBe(false);
       expect(document.activeElement).toBe(berries);
+    });
+
+    it('should close an open submenu when a sibling item is focused externally', async () => {
+      const apple = getItem('Apple');
+      const banana = getItem('Banana')!;
+      const berries = getItem('Berries');
+      spyOn(fixture.componentInstance, 'itemSelected');
+
+      await keydown(apple!, 'ArrowDown');
+      await keydown(banana, 'ArrowDown');
+      await keydown(berries!, 'ArrowRight');
+      expect(document.activeElement).toBe(getItem('Blueberry'));
+
+      banana.focus();
+      await fixture.whenStable();
+      expect(isSubmenuExpanded()).toBe(false);
+      expect(document.activeElement).toBe(banana);
+
+      await keydown(banana, 'Enter');
+      expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Banana');
+    });
+
+    it('should keep the submenu open when one of its items is focused externally', async () => {
+      const berries = getItem('Berries');
+      spyOn(fixture.componentInstance, 'itemSelected');
+
+      await click(berries!);
+      expect(isSubmenuExpanded()).toBe(true);
+
+      const blackberry = getItem('Blackberry')!;
+      blackberry.focus();
+      await fixture.whenStable();
+      expect(isSubmenuExpanded()).toBe(true);
+      expect(document.activeElement).toBe(blackberry);
+
+      await keydown(blackberry, 'Enter');
+      expect(fixture.componentInstance.itemSelected).toHaveBeenCalledWith('Blackberry');
+    });
+
+    it('should expand the submenu when the trigger is focused before the click', async () => {
+      const berries = getItem('Berries')!;
+      berries.focus();
+      await fixture.whenStable();
+      await click(berries);
+      expect(isSubmenuExpanded()).toBe(true);
     });
 
     it('should close submenu on click outside', async () => {
@@ -1067,6 +1133,16 @@ describe('Menu Bar Pattern', () => {
       const edit = getMenuBarItem('Edit');
       await mouseover(edit!);
       expect(document.activeElement).toBe(edit);
+    });
+
+    it('should act on and navigate from a menubar item focused externally', async () => {
+      const view = getMenuBarItem('View')!;
+      view.focus();
+      await fixture.whenStable();
+
+      expect(view.tabIndex).toBe(0);
+      await keydown(view, 'Enter');
+      expect(document.activeElement).toBe(getMenuItem('Zoom In'));
     });
 
     it('should focus the first item of the next menubar item on arrow right', async () => {
