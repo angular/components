@@ -18,7 +18,8 @@ import {
   signal,
   Signal,
   OnInit,
-  OnDestroy,
+  effect,
+  untracked,
 } from '@angular/core';
 import {_IdGenerator} from '@angular/cdk/a11y';
 import {TreeItemPattern, DeferredContentAware, HasElement} from '../private';
@@ -55,7 +56,7 @@ import {TreeItemGroup} from './tree-item-group';
     '[attr.tabindex]': '_pattern.tabIndex()',
   },
 })
-export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestroy, HasElement {
+export class TreeItem<V> extends DeferredContentAware implements OnInit, HasElement {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -119,6 +120,22 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
 
   constructor() {
     super();
+    effect(onCleanup => {
+      const parent = this.parent();
+      const tree = this.tree();
+      untracked(() => {
+        if (parent instanceof TreeItemGroup) {
+          parent._register(this);
+        }
+        tree._collection.register(this);
+      });
+      onCleanup(() => {
+        if (parent instanceof TreeItemGroup) {
+          parent._unregister(this);
+        }
+        tree._collection.unregister(this);
+      });
+    });
     afterRenderEffect({
       write: () => {
         this.contentVisible.set(this._pattern.expanded());
@@ -127,11 +144,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
   }
 
   ngOnInit() {
-    if (this.parent() instanceof TreeItemGroup) {
-      (this.parent() as TreeItemGroup<V>)._register(this);
-    }
-    this.tree()._collection.register(this);
-
     const treePattern = computed(() => this.tree()._pattern);
     const parentPattern = computed(() => {
       if (this.parent() instanceof Tree) {
@@ -148,13 +160,6 @@ export class TreeItem<V> extends DeferredContentAware implements OnInit, OnDestr
       element: () => this.element,
       searchTerm: () => this.searchTerm() ?? '',
     });
-  }
-
-  ngOnDestroy() {
-    if (this.parent() instanceof TreeItemGroup) {
-      (this.parent() as TreeItemGroup<V>)._unregister(this);
-    }
-    this.tree()._collection.unregister(this);
   }
 
   _register(group: TreeItemGroup<V>) {
