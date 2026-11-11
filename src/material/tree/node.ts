@@ -13,11 +13,8 @@ import {
   CdkTreeNodeDef,
 } from '@angular/cdk/tree';
 import {
-  AfterContentInit,
   Directive,
   Input,
-  OnDestroy,
-  OnInit,
   booleanAttribute,
   numberAttribute,
   inject,
@@ -52,7 +49,7 @@ function isNoopTreeKeyManager<T extends TreeKeyManagerItem>(
     '[tabindex]': '_getTabindexAttribute()',
   },
 })
-export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, OnDestroy {
+export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> {
   /**
    * The tabindex of the tree node.
    *
@@ -111,16 +108,6 @@ export class MatTreeNode<T, K = T> extends CdkTreeNode<T, K> implements OnInit, 
     const tabIndex = inject(new HostAttributeToken('tabindex'), {optional: true});
     this.tabIndexInputBinding = Number(tabIndex) || this.defaultTabIndex;
   }
-
-  // This is a workaround for https://github.com/angular/angular/issues/23091
-  // In aot mode, the lifecycle hooks from parent class are not called.
-  override ngOnInit() {
-    super.ngOnInit();
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-  }
 }
 
 /**
@@ -152,10 +139,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     'class': 'mat-nested-tree-node',
   },
 })
-export class MatNestedTreeNode<T, K = T>
-  extends CdkNestedTreeNode<T, K>
-  implements AfterContentInit, OnDestroy, OnInit
-{
+export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> {
   @Input('matNestedTreeNode') node!: T;
 
   /**
@@ -184,19 +168,4 @@ export class MatNestedTreeNode<T, K = T>
     this._tabIndex = value;
   }
   private _tabIndex!: number;
-
-  // This is a workaround for https://github.com/angular/angular/issues/19145
-  // In aot mode, the lifecycle hooks from parent class are not called.
-  // TODO(tinayuangao): Remove when the angular issue #19145 is fixed
-  override ngOnInit() {
-    super.ngOnInit();
-  }
-
-  override ngAfterContentInit() {
-    super.ngAfterContentInit();
-  }
-
-  override ngOnDestroy() {
-    super.ngOnDestroy();
-  }
 }
