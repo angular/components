@@ -55,6 +55,7 @@ sass_library(
 sass_binary(
     name = "slider-css",
     src = "slider.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
@@ -66,6 +67,7 @@ sass_binary(
 sass_binary(
     name = "slider-thumb-css",
     src = "slider-thumb.scss",
+    layer = "angular-material",
 )
 
 ng_project(

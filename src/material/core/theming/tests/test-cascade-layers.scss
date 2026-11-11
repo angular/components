@@ -1,0 +1,16 @@
+@use '../../../index' as mat;
+
+$theme: mat.define-theme();
+
+@include mat.theme-layer {
+  html {
+    @include mat.theme((
+      color: (
+        theme-type: light,
+        primary: mat.$violet-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+  }
+}

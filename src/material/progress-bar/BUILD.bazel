@@ -52,6 +52,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "progress-bar.scss",
+    layer = "angular-material",
     deps = [
         ":m2",
         "//src/cdk:sass_lib",
