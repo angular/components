@@ -13,8 +13,8 @@ import {
   inject,
   input,
   signal,
-  OnInit,
-  OnDestroy,
+  effect,
+  untracked,
 } from '@angular/core';
 import {TreeItemPattern, DeferredContent, sortDirectives} from '../private';
 import type {TreeItem} from './tree-item';
@@ -44,7 +44,7 @@ import type {TreeItem} from './tree-item';
   exportAs: 'ngTreeItemGroup',
   hostDirectives: [DeferredContent],
 })
-export class TreeItemGroup<V> implements OnInit, OnDestroy {
+export class TreeItemGroup<V> {
   /** A reference to the host element. */
   private readonly _elementRef = inject(ElementRef);
 
@@ -65,13 +65,15 @@ export class TreeItemGroup<V> implements OnInit, OnDestroy {
   /** Tree item that owns the group. */
   readonly ownedBy = input.required<TreeItem<V>>();
 
-  ngOnInit() {
-    this._deferredContent.deferredContentAware.set(this.ownedBy());
-    this.ownedBy()._register(this);
-  }
-
-  ngOnDestroy() {
-    this.ownedBy()._unregister();
+  constructor() {
+    effect(onCleanup => {
+      const owner = this.ownedBy();
+      untracked(() => {
+        this._deferredContent.deferredContentAware.set(owner);
+        owner._register(this);
+      });
+      onCleanup(() => owner._unregister());
+    });
   }
 
   _register(child: TreeItem<V>) {
