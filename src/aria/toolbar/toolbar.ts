@@ -53,7 +53,7 @@ import type {ToolbarWidget} from './toolbar-widget';
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(pointerdown)': '_pattern.onPointerdown($event)',
-    '(focusin)': '_pattern.onFocusIn()',
+    '(focusin)': '_pattern.onFocusIn($event)',
   },
 })
 export class Toolbar implements OnDestroy {

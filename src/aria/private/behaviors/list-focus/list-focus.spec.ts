@@ -136,4 +136,37 @@ describe('List Focus', () => {
       expect(focusManager.isFocusable(items[2])).toBeTrue();
     });
   });
+
+  describe('#sync', () => {
+    it('should update activeItem without calling element.focus()', () => {
+      const focusManager = getListFocus({focusMode: signal('roving')});
+      const items = focusManager.inputs.items() as TestItem[];
+      const focusSpy = spyOn(items[2].element()!, 'focus');
+
+      expect(focusManager.sync(items[2])).toBeTrue();
+      expect(focusManager.inputs.activeItem()).toBe(items[2]);
+      expect(focusManager.prevActiveItem()).toBe(items[0]);
+      expect(focusSpy).not.toHaveBeenCalled();
+    });
+
+    it('should return false and preserve prevActiveItem when syncing the already active item', () => {
+      const focusManager = getListFocus({focusMode: signal('roving')});
+      const items = focusManager.inputs.items() as TestItem[];
+      focusManager.focus(items[1]);
+      expect(focusManager.prevActiveItem()).toBe(items[0]);
+
+      expect(focusManager.sync(items[1])).toBeFalse();
+      expect(focusManager.sync(undefined)).toBeFalse();
+      expect(focusManager.prevActiveItem()).toBe(items[0]);
+    });
+
+    it('should return false when the item is not focusable', () => {
+      const focusManager = getListFocus({softDisabled: signal(false)});
+      const items = focusManager.inputs.items() as TestItem[];
+      items[2].disabled.set(true);
+
+      expect(focusManager.sync(items[2])).toBeFalse();
+      expect(focusManager.inputs.activeItem()).toBe(items[0]);
+    });
+  });
 });

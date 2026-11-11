@@ -318,7 +318,7 @@ export class ListboxPattern<V> {
     readonly dynamicSpaceKey: SignalLike<"" | " ">;
     readonly followFocus: SignalLike<boolean>;
     // (undocumented)
-    protected _getItem(e: PointerEvent): OptionPattern<V> | undefined;
+    protected _getItem(e: Event): OptionPattern<V> | undefined;
     readonly hasBeenInteracted: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: ListboxInputs<V>;
@@ -330,7 +330,7 @@ export class ListboxPattern<V> {
     // (undocumented)
     onClick(event: PointerEvent): void;
     // (undocumented)
-    onFocusIn(): void;
+    onFocusIn(event?: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
     readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
@@ -368,7 +368,7 @@ export class MenuBarPattern<V> {
     readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
     next(): void;
     onClick(event: MouseEvent): void;
-    onFocusIn(): void;
+    onFocusIn(event?: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onMouseOver(event: MouseEvent): void;
@@ -455,7 +455,7 @@ export class MenuPattern<V> {
     readonly listBehavior: List<MenuItemPattern<V>, V | undefined>;
     next(): void;
     onClick(event: MouseEvent): void;
-    onFocusIn(): void;
+    onFocusIn(event?: FocusEvent): void;
     onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     onMouseOut(event: MouseEvent): void;
@@ -593,7 +593,7 @@ export class TabListPattern {
     readonly navigationBehavior: ListNavigation<TabPattern>;
     readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
-    onFocusIn(): void;
+    onFocusIn(event?: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
@@ -665,7 +665,7 @@ export class ToolbarPattern {
     readonly navigationBehavior: ListNavigation<ToolbarWidgetPattern>;
     onClick(event: MouseEvent): void;
     // (undocumented)
-    onFocusIn(): void;
+    onFocusIn(event?: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     // (undocumented)
     onPointerdown(event: PointerEvent): void;
@@ -790,7 +790,7 @@ export class TreePattern<V> implements TreeInputs<V> {
     readonly nav: SignalLike<boolean>;
     readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
-    onFocusIn(): void;
+    onFocusIn(event?: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
     readonly prevKey: SignalLike<"ArrowLeft" | "ArrowRight" | "ArrowUp">;
