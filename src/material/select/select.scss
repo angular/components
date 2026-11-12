@@ -151,7 +151,7 @@ div.mat-mdc-select-panel {
 // DOM for the Gmat versions to work. We need to bump up the specificity here
 // so that it's higher than MDC's styles.
 div.mat-mdc-select-panel {
-  $border-radius: 4px;
+  $border-radius: token-utils.slot(select-container-shape, $fallbacks, 4px);
   width: 100%; // Ensures that the panel matches the overlay width.
   max-height: $mat-select-panel-max-height;
   outline: 0;
