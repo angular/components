@@ -2056,6 +2056,35 @@ describe('CdkTable', () => {
       await new Promise(resolve => setTimeout(resolve, 50));
     }
 
+    it('should render ordinary tables inside virtual scroll items without attaching them to the viewport', async () => {
+      const {fixture} = await createVirtualScroll(TablesInsideVirtualScrollItems);
+      const viewport = fixture.componentInstance.viewport;
+      const checkRenderedTables = () => {
+        const groups: HTMLElement[] = Array.from(
+          fixture.nativeElement.querySelectorAll('.table-group'),
+        );
+
+        expect(groups.length).toBeGreaterThan(0);
+        expect(groups.length).toBeLessThan(fixture.componentInstance.groups.length);
+        expect(viewport.getDataLength()).toBe(fixture.componentInstance.groups.length);
+
+        for (const group of groups) {
+          const table = group.querySelector('table')!;
+          const data = fixture.componentInstance.groups[Number(group.getAttribute('data-group'))];
+          expect(getRows(table).map(row => row.textContent!.trim())).toEqual(data.rows);
+          expect(table.classList).not.toContain('cdk-table-fixed-layout');
+        }
+      };
+
+      checkRenderedTables();
+      await triggerScroll(fixture, 1000);
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(viewport.getRenderedRange().start).toBeGreaterThan(0);
+      checkRenderedTables();
+    });
+
     it('should not render the full data set when using virtual scrolling', async () => {
       const {fixture, table} = await createVirtualScroll(TableWithVirtualScroll);
       expect(fixture.componentInstance.dataSource.data.length).toBeGreaterThan(2000);
@@ -3454,6 +3483,34 @@ class TableWithVirtualScroll {
 })
 class TableWithVirtualScrollAndMultipleDefinitions extends TableWithVirtualScroll {
   predicate = () => true;
+}
+
+@Component({
+  template: `
+    <cdk-virtual-scroll-viewport itemSize="100" style="height: 200px; width: 400px">
+      <div
+        *cdkVirtualFor="let group of groups"
+        class="table-group"
+        style="height: 100px"
+        [attr.data-group]="group.id">
+        <table cdk-table [dataSource]="group.rows">
+          <ng-container cdkColumnDef="value">
+            <td cdk-cell *cdkCellDef="let row">{{row}}</td>
+          </ng-container>
+          <tr cdk-row *cdkRowDef="let row; columns: ['value']"></tr>
+        </table>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  `,
+  imports: [CdkTableModule, ScrollingModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class TablesInsideVirtualScrollItems {
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+  groups = Array.from({length: 100}, (_, id) => ({
+    id,
+    rows: Array.from({length: 3}, (_, row) => `group ${id}, row ${row}`),
+  }));
 }
 
 function getElements(element: Element, query: string): HTMLElement[] {
