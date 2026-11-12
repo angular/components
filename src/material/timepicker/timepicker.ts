@@ -214,6 +214,12 @@ export class MatTimepicker<D> implements OnDestroy, MatOptionParentComponent {
   readonly panelClass = input<string | string[]>();
 
   constructor() {
+    effect(() => {
+      if (this.disabled()) {
+        untracked(() => this.close());
+      }
+    });
+
     if (typeof ngDevMode === 'undefined' || ngDevMode) {
       validateAdapter(this._dateAdapter, this._dateFormats);
 

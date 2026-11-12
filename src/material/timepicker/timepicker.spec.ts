@@ -1175,6 +1175,21 @@ describe('MatTimepicker', () => {
       expect(fixture.componentInstance.input.disabled()).toBe(true);
     });
 
+    it('should close the open timepicker when its form control is disabled', () => {
+      const fixture = TestBed.createComponent(TimepickerWithForms);
+      fixture.detectChanges();
+      const {control, timepicker} = fixture.componentInstance;
+
+      timepicker.open();
+      fixture.detectChanges();
+      expect(timepicker.isOpen()).toBe(true);
+
+      control.disable();
+      fixture.detectChanges();
+
+      expect(timepicker.isOpen()).toBe(false);
+    });
+
     it('should emit to valueChange before assigning control value when typing', () => {
       const fixture = TestBed.createComponent(TimepickerWithForms);
       const control = fixture.componentInstance.control;
