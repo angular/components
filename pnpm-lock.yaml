@@ -573,7 +573,7 @@ importers:
     devDependencies:
       '@angular-devkit/build-angular':
         specifier: 'catalog:'
-        version: 22.3.0-next.5(a5ed5efd6177ae98054c12c1f7565010)
+        version: 22.3.0-next.5(1a8a9e83bef22094553f68676ccfa728)
       '@angular/cli':
         specifier: 'catalog:'
         version: 22.3.0-next.5(@types/node@22.20.5)(chokidar@6.0.0)
@@ -635,8 +635,8 @@ importers:
         specifier: ^25.0.0
         version: 25.16.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
       sass:
-        specifier: 1.107.1
-        version: 1.107.1
+        specifier: 1.108.2
+        version: 1.108.2
       selenium-webdriver:
         specifier: ^3.6.0
         version: 3.6.0
@@ -8938,13 +8938,13 @@ packages:
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  sass@1.107.1:
-    resolution: {integrity: sha512-aJ1/LvxOOb04YhmiBjzZn3jVwdHKol+OVhoMV6fFl02fF9T3i+5Mg9l/CnzqtM+NX5Jn5o3lAbs/ZJivTCLHfQ==}
+  sass@1.108.1:
+    resolution: {integrity: sha512-sIYgSvOPeD9wABwDS/ofNjHASSck+7h3jLkk7wG1NPFL3XeS6vOQjBlAFSmRV09kZr1yt/Tuayt6kKtBbLjHNQ==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  sass@1.108.1:
-    resolution: {integrity: sha512-sIYgSvOPeD9wABwDS/ofNjHASSck+7h3jLkk7wG1NPFL3XeS6vOQjBlAFSmRV09kZr1yt/Tuayt6kKtBbLjHNQ==}
+  sass@1.108.2:
+    resolution: {integrity: sha512-kugK8djotnG9HQRPTOf36asKYlxg8rWWsNLYHOgWDIVOiZQqlRfKBgF4XXM6kfw146kIDMvm57B4GIkvDSyTzA==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -10334,7 +10334,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@angular-devkit/build-angular@22.3.0-next.5(a5ed5efd6177ae98054c12c1f7565010)':
+  '@angular-devkit/build-angular@22.3.0-next.5(1a8a9e83bef22094553f68676ccfa728)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@angular-devkit/architect': 0.2203.0-next.5(chokidar@6.0.0)
@@ -10377,7 +10377,7 @@ snapshots:
       postcss-loader: 8.2.1(postcss@8.5.32)(typescript@6.0.2)(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3))
       resolve-url-loader: 5.0.0
       rxjs: 7.8.2
-      sass-loader: 17.1.0(sass-embedded@1.106.1)(sass@1.107.1)(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3))
+      sass-loader: 17.1.0(sass-embedded@1.106.1)(sass@1.108.2)(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3))
       semver: 7.8.5
       source-map-loader: 5.0.0(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3))
       source-map-support: 0.5.21
@@ -19172,9 +19172,9 @@ snapshots:
       sass-embedded-win32-arm64: 1.106.1
       sass-embedded-win32-x64: 1.106.1
 
-  sass-loader@17.1.0(sass-embedded@1.106.1)(sass@1.107.1)(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3)):
+  sass-loader@17.1.0(sass-embedded@1.106.1)(sass@1.108.2)(webpack@5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3)):
     optionalDependencies:
-      sass: 1.107.1
+      sass: 1.108.2
       sass-embedded: 1.106.1
       webpack: 5.112.2(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.32)(uglify-js@3.19.3)
 
@@ -19186,7 +19186,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.6.0
 
-  sass@1.107.1:
+  sass@1.108.1:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
@@ -19194,7 +19194,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.6.0
 
-  sass@1.108.1:
+  sass@1.108.2:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.9
