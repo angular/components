@@ -194,6 +194,14 @@ export class MatSortHeader implements MatSortable, OnDestroy, OnInit, AfterViewI
     );
   }
 
+  /**
+   * Gets the arrow direction for this sort header. Uses the active sort direction
+   * when this header is sorted, otherwise falls back to its initial sort direction.
+   */
+  _getArrowDirection(): SortDirection {
+    return this._isSorted() ? this._sort.direction : this.start || this._sort.start;
+  }
+
   _isDisabled() {
     return this._sort.disabled || this.disabled;
   }
