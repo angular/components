@@ -534,6 +534,26 @@ describe('MatAutocomplete', () => {
         .toBe(false);
     });
 
+    for (const disabledBy of ['form control', 'autocomplete input']) {
+      it(`should close the panel when disabled by the ${disabledBy} while open`, () => {
+        const {trigger, stateCtrl} = fixture.componentInstance;
+        dispatchFakeEvent(input, 'focusin');
+        fixture.detectChanges();
+        expect(trigger.panelOpen).toBe(true);
+
+        if (disabledBy === 'form control') {
+          stateCtrl.disable();
+        } else {
+          fixture.componentInstance.autocompleteDisabled = true;
+          fixture.changeDetectorRef.markForCheck();
+        }
+        fixture.detectChanges();
+
+        expect(trigger.panelOpen).toBe(false);
+        expect(stateCtrl.value).toBeNull();
+      });
+    }
+
     it('should continue to update the model if the autocomplete is disabled', () => {
       fixture.componentInstance.autocompleteDisabled = true;
       fixture.changeDetectorRef.markForCheck();

@@ -238,7 +238,7 @@ export class MatAutocompleteTrigger
 
   /**
    * Whether the autocomplete is disabled. When disabled, the element will
-   * act as a regular input and the user won't be able to open the panel.
+   * act as a regular input. The panel closes if open and cannot be reopened while disabled.
    */
   @Input({alias: 'matAutocompleteDisabled', transform: booleanAttribute})
   autocompleteDisabled: boolean = false;
@@ -253,6 +253,10 @@ export class MatAutocompleteTrigger
   }
 
   ngOnChanges(changes: SimpleChanges<this>) {
+    if (changes['autocompleteDisabled'] && this.autocompleteDisabled && this._overlayAttached) {
+      this.closePanel();
+    }
+
     if (changes['position'] && this._positionStrategy) {
       this._setStrategyPositions(this._positionStrategy);
 
@@ -441,6 +445,9 @@ export class MatAutocompleteTrigger
   // Implemented as part of ControlValueAccessor.
   setDisabledState(isDisabled: boolean) {
     this._element.nativeElement.disabled = isDisabled;
+    if (isDisabled && this._overlayAttached) {
+      this.closePanel();
+    }
   }
 
   _handleKeydown(e: Event): void {
