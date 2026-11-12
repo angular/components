@@ -1013,6 +1013,30 @@ describe('MatDatepicker', () => {
         expect(inputEl.disabled).toBe(true);
       });
 
+      it('should close the open calendar when its form control is disabled', async () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        expect(testComponent.datepicker.opened).toBe(true);
+
+        testComponent.formControl.disable();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(testComponent.datepicker.opened).toBe(false);
+      });
+
+      it('should close the open calendar when the datepicker is disabled', async () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        expect(testComponent.datepicker.opened).toBe(true);
+
+        testComponent.datepicker.disabled = true;
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(testComponent.datepicker.opened).toBe(false);
+      });
+
       it('should disable toggle when form control disabled', () => {
         expect(testComponent.datepickerToggle.disabled).toBe(false);
 

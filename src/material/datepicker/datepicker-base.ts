@@ -434,6 +434,9 @@ export abstract class MatDatepickerBase<
   set disabled(value: boolean) {
     if (value !== this._disabled) {
       this._disabled = value;
+      if (value) {
+        this.close();
+      }
       this.stateChanges.next(undefined);
     }
   }
@@ -613,7 +616,12 @@ export abstract class MatDatepickerBase<
     }
     this._inputStateChanges.unsubscribe();
     this.datepickerInput = input;
-    this._inputStateChanges = input.stateChanges.subscribe(() => this.stateChanges.next(undefined));
+    this._inputStateChanges = input.stateChanges.subscribe(() => {
+      if (this.disabled) {
+        this.close();
+      }
+      this.stateChanges.next(undefined);
+    });
     return this._model;
   }
 
