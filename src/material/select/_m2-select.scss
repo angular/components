@@ -11,6 +11,7 @@
   @return (
     base: (
       select-container-elevation-shadow: elevation.get-box-shadow(8),
+      select-container-shape: 4px,
     ),
     color: private-get-color-palette-color-tokens($theme, primary),
     typography: (
