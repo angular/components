@@ -21,7 +21,7 @@
     on-secondary-fixed: map.get($palettes, secondary, 10),
     on-secondary-fixed-variant: map.get($palettes, secondary, 30),
     on-surface: map.get($palettes, neutral, 90),
-    on-surface-variant: map.get($palettes, neutral-variant, 90),
+    on-surface-variant: map.get($palettes, neutral-variant, 80),
     on-tertiary: map.get($palettes, tertiary, 20),
     on-tertiary-container: map.get($palettes, tertiary, 90),
     on-tertiary-fixed: map.get($palettes, tertiary, 10),
