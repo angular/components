@@ -98,6 +98,12 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
   /** Whether the item should close the menu if triggered by the spacebar. */
   protected closeOnSpacebarTrigger = true;
 
+  /**
+   * Whether the click that the browser dispatches for the last keydown should keep the menu open.
+   * Native buttons turn space and enter into a click, so the keydown handler can't trigger them.
+   */
+  private _keepOpenOnKeyboardClick = false;
+
   /** Emits when the menu item is destroyed. */
   protected readonly destroyed = new Subject<void>();
 
@@ -188,8 +194,12 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
       event.preventDefault();
       event.stopPropagation();
     } else {
-      this.trigger();
+      // Clicks dispatched by the browser for a keydown have a `detail` of 0.
+      const keepOpen = this._keepOpenOnKeyboardClick && event.detail === 0;
+      this.trigger({keepOpen});
     }
+
+    this._keepOpenOnKeyboardClick = false;
   }
 
   /**
@@ -202,8 +212,16 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     switch (event.keyCode) {
       case SPACE:
       case ENTER:
-        // Skip events that will trigger clicks so the handler doesn't get triggered twice.
-        if (!hasModifierKey(event) && !eventDispatchesNativeClick(this._elementRef, event)) {
+        if (!hasModifierKey(event)) {
+          const keepOpen = event.keyCode === SPACE && !this.closeOnSpacebarTrigger;
+
+          // Skip events that will trigger clicks so the handler doesn't get triggered twice.
+          // The click handler needs to know whether to keep the menu open though.
+          if (eventDispatchesNativeClick(this._elementRef, event)) {
+            this._keepOpenOnKeyboardClick = keepOpen;
+            break;
+          }
+
           const nodeName = this._elementRef.nativeElement.nodeName;
 
           // Avoid repeat events on non-native elements (see #30250). Note that we don't do this
@@ -212,7 +230,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
             event.preventDefault();
           }
 
-          this.trigger({keepOpen: event.keyCode === SPACE && !this.closeOnSpacebarTrigger});
+          this.trigger({keepOpen});
         }
         break;
 
