@@ -15,6 +15,7 @@ $prefix: (mat, progress-bar);
 
   @return (
     base: (
+      progress-bar-active-indicator-shape: map.get($system, corner-none),
       progress-bar-active-indicator-height: 4px,
       progress-bar-track-height: 4px,
       progress-bar-track-shape: map.get($system, corner-none)
