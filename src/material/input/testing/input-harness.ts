@@ -136,5 +136,9 @@ export class MatInputHarness extends MatFormFieldControlHarnessBase {
     // value is set, we also set the property after the keyboard sequence. Note that we don't
     // want to do it before, because it can cause the value to be entered twice.
     await inputEl.setInputValue(newValue);
+
+    // Dispatch a `change` event so that listeners bound to it are notified, similarly
+    // to what happens when the user commits a value by blurring the input.
+    await inputEl.dispatchEvent('change');
   }
 }
