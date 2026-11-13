@@ -828,6 +828,21 @@ describe('Menu Trigger Pattern', () => {
       expect(document.activeElement).toBe(trigger);
     });
 
+    it('should only close the submenu on escape from a submenu', async () => {
+      await keydown(getTrigger(), 'Enter');
+      await keydown(getItem('Apple')!, 'ArrowDown');
+      await keydown(getItem('Banana')!, 'ArrowDown');
+      const berries = getItem('Berries')!;
+      await keydown(berries, 'ArrowRight');
+      expect(berries.getAttribute('aria-expanded')).toBe('true');
+
+      await keydown(getItem('Blueberry')!, 'Escape');
+
+      expect(berries.getAttribute('aria-expanded')).toBe('false');
+      expect(isExpanded()).toBe(true);
+      expect(document.activeElement).toBe(berries);
+    });
+
     it('should close on selecting an item on click', async () => {
       await click(getTrigger());
       await click(getItem('Apple')!);
