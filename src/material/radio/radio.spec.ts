@@ -1055,6 +1055,43 @@ describe('MatRadioDefaultOverrides', () => {
       expect(radioDebugElement.nativeElement.classList).toContain('mat-warn');
     });
   });
+
+  describe('using compareWith', () => {
+    let fixture: ComponentFixture<RadioGroupWithCompareWith>;
+    let instance: RadioGroupWithCompareWith;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(RadioGroupWithCompareWith);
+      fixture.detectChanges();
+      instance = fixture.componentInstance;
+    });
+
+    it('should select radio button matching the comparator', () => {
+      const buttons = instance.buttons.toArray();
+      expect(buttons[0].checked).toBe(false);
+      expect(buttons[1].checked).toBe(true);
+      expect(buttons[2].checked).toBe(false);
+      expect(instance.group.selected).toBe(buttons[1]);
+    });
+
+    it('should update selection when comparator is changed', () => {
+      instance.compareFn = (a: any, b: any) => a === b;
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      const buttons = instance.buttons.toArray();
+      expect(buttons[1].checked).toBe(false);
+      expect(instance.group.selected).toBeNull();
+    });
+
+    it('should throw an error when compareWith is not a function', () => {
+      expect(() => {
+        instance.compareFn = 'invalid' as any;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+      }).toThrowError(/`compareWith` must be a function\./);
+    });
+  });
 });
 
 @Component({
@@ -1291,4 +1328,30 @@ class PreselectedRadioWithStaticValueAndNgIf {
     predecessor: new FormControl('predecessor'),
     target: new FormControl('b'),
   };
+}
+
+@Component({
+  template: `
+    <mat-radio-group [compareWith]="compareFn" [(ngModel)]="selected">
+      @for (item of items; track item.id) {
+        <mat-radio-button [value]="item">{{ item.name }}</mat-radio-button>
+      }
+    </mat-radio-group>
+  `,
+  imports: [MatRadioModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class RadioGroupWithCompareWith {
+  @ViewChild(MatRadioGroup) group!: MatRadioGroup;
+  @ViewChildren(MatRadioButton) buttons!: QueryList<MatRadioButton>;
+
+  items = [
+    {id: 1, name: 'Option 1'},
+    {id: 2, name: 'Option 2'},
+    {id: 3, name: 'Option 3'},
+  ];
+
+  selected = {id: 2, name: 'Option 2 (different reference)'};
+
+  compareFn: any = (a: any, b: any) => (a && b ? a.id === b.id : a === b);
 }
