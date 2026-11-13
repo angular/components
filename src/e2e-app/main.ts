@@ -9,6 +9,9 @@ import {Home} from './components/home';
 import {SliderE2e} from './components/slider-e2e';
 import {VirtualScrollE2E} from './components/virtual-scroll/virtual-scroll-e2e';
 
+// Required since some framework code references it.
+(window as any).ngServerMode = false;
+
 enableProdMode();
 
 bootstrapApplication(E2eApp, {
