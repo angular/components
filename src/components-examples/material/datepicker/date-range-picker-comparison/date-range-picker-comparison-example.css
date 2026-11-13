@@ -1,3 +1,11 @@
 .example-form-field {
   margin: 0 8px 16px 0;
 }
+
+/* The calendar renders in an overlay outside of this component, so the override has to target
+   the panel class. It gives the comparison range a colour that is clearly different from the
+   primary range, which the default M3 themes don't always do. */
+.example-comparison-panel {
+  --mat-datepicker-calendar-date-in-comparison-range-state-background-color: rgba(249, 171, 0, 0.3);
+  --mat-datepicker-calendar-date-in-overlap-range-state-background-color: rgba(249, 171, 0, 0.6);
+}
