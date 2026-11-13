@@ -58,23 +58,23 @@ use_repo(rules_ts_ext, **{"npm_typescript": "components_npm_typescript"})
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(
     node_repositories = {
-        "22.23.4-darwin_arm64": ("node-v22.23.4-darwin-arm64.tar.gz", "node-v22.23.4-darwin-arm64", "c9e1dbc748b33ed2d14f42445191ecaf14c56259c7a9a26d0042c49ec2b66428"),
-        "22.23.4-darwin_amd64": ("node-v22.23.4-darwin-x64.tar.gz", "node-v22.23.4-darwin-x64", "efcc2b0db6f94bf53eddb038fe2b370277a042bd29e4f19b8f8e23598795b819"),
-        "22.23.4-linux_arm64": ("node-v22.23.4-linux-arm64.tar.xz", "node-v22.23.4-linux-arm64", "6287aa46b6c375d816e63ae66d024fbbfd70404825aabdfdf898a970871d2f4b"),
-        "22.23.4-linux_ppc64le": ("node-v22.23.4-linux-ppc64le.tar.xz", "node-v22.23.4-linux-ppc64le", "e4732f45e0cad787d6ba70c4eb6db45dbdb3f286f67dee429dbc6b4ff36eac43"),
-        "22.23.4-linux_s390x": ("node-v22.23.4-linux-s390x.tar.xz", "node-v22.23.4-linux-s390x", "07ae074fc218fc42e24c939df0dc0209443fb08eb5b2ed6d26b1bf6757781fff"),
-        "22.23.4-linux_amd64": ("node-v22.23.4-linux-x64.tar.xz", "node-v22.23.4-linux-x64", "1805bcd35e6815559bd2eb97db438d3fdb0eb3a5e6a977b7c1badca76337e9ce"),
-        "22.23.4-windows_amd64": ("node-v22.23.4-win-x64.zip", "node-v22.23.4-win-x64", "cbc74b5e0982c9dbb41525fd8fb5dcd32fbee237863f7829072f4639a1ce5f20"),
+        "22.23.5-darwin_arm64": ("node-v22.23.5-darwin-arm64.tar.gz", "node-v22.23.5-darwin-arm64", "e7131995759b61a0170b646010d2ad35a5d37b4cb0d471f3e8317eac6f742f3d"),
+        "22.23.5-darwin_amd64": ("node-v22.23.5-darwin-x64.tar.gz", "node-v22.23.5-darwin-x64", "c53383238206b9ae4db23c5d8a63645e2e753bec8ab51a49cc81939aa64e9422"),
+        "22.23.5-linux_arm64": ("node-v22.23.5-linux-arm64.tar.xz", "node-v22.23.5-linux-arm64", "2babb9eb5264860d540849f4b064a6fbdebcdc323657d9d382ce23d313fd5e09"),
+        "22.23.5-linux_ppc64le": ("node-v22.23.5-linux-ppc64le.tar.xz", "node-v22.23.5-linux-ppc64le", "578bc696ade54f85439f6fdd5bd7695c2dea40d307565f573b9ea6ad7b1e5615"),
+        "22.23.5-linux_s390x": ("node-v22.23.5-linux-s390x.tar.xz", "node-v22.23.5-linux-s390x", "210232af4b947a70880b985207cb307a8fb310b62c1925bdd971b0eaab96bde0"),
+        "22.23.5-linux_amd64": ("node-v22.23.5-linux-x64.tar.xz", "node-v22.23.5-linux-x64", "cdeb8670a0c81f51b4dc4ac61919f9b1ad917b304bf8221eb939570663d240f8"),
+        "22.23.5-windows_amd64": ("node-v22.23.5-win-x64.zip", "node-v22.23.5-win-x64", "4a191082e9706866830379d577d2cc8a50c776fcd9436a8d061b063ed0d9a0e3"),
     },
-    node_version = "22.23.4",
+    node_version = "22.23.5",
 )
 use_repo(node, "nodejs_toolchains")
 
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
     name = "pnpm",
-    pnpm_version = "11.28.6",
-    pnpm_version_integrity = "sha512-VdkDkMOzkELxUFoml3ifAlbG2Vuyi918tzGvGIfJ8mKe9YGsufTk7HcgJMggPCrtIqAymblxA/3PMmaOkF0AJA==",
+    pnpm_version = "11.28.11",
+    pnpm_version_integrity = "sha512-dAGE0Q+B9dWxZb6IVg7numJAbEE0iWq8J6WAEJ7sL0fB5B2RJRyUTCyrq8scIkYXmeu3LeLsYlryAwsONsc1ow==",
 )
 use_repo(pnpm, "pnpm")
 
