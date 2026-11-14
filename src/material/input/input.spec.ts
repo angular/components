@@ -1,3 +1,4 @@
+import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {getSupportedInputTypes} from '@angular/cdk/platform';
 import {dispatchFakeEvent, wrappedErrorMessage} from '@angular/cdk/testing/private';
 import {
@@ -2454,3 +2455,26 @@ class MatInputWithRequiredAssignableFormControl {
     this.formControl.updateValueAndValidity();
   }
 }
+
+@Component({
+  template: `
+    <mat-form-field>
+      <textarea matInput cdkTextareaAutosize cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5"></textarea>
+    </mat-form-field>
+  `,
+  styles: [`mat-form-field { font-size: 40px; line-height: 50px; }`],
+  imports: [MatFormField, MatInputModule, CdkTextareaAutosize],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AutosizeMatInput {}
+
+describe('MatInput with autosize', () => {
+  it('should use the inherited line height for the initial row limits', () => {
+    const fixture = TestBed.createComponent(AutosizeMatInput);
+    fixture.detectChanges();
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    expect(getComputedStyle(textarea).lineHeight).toBe('50px');
+    expect(textarea.style.minHeight).toBe('100px');
+    expect(textarea.style.maxHeight).toBe('250px');
+  });
+});
