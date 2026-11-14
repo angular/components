@@ -11,12 +11,13 @@ import {
   MenuBarExample,
   MenuBarRTLExample,
   MenuBarDisabledExample,
+  MenuBarTypeaheadExample,
 } from '@angular/components-examples/aria/menubar';
 
 @Component({
   templateUrl: 'menubar-demo.html',
   styleUrl: 'menubar-demo.css',
   encapsulation: ViewEncapsulation.None,
-  imports: [MenuBarExample, MenuBarRTLExample, MenuBarDisabledExample],
+  imports: [MenuBarExample, MenuBarRTLExample, MenuBarDisabledExample, MenuBarTypeaheadExample],
 })
 export class MenubarDemo {}
