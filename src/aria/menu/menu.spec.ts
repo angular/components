@@ -594,6 +594,30 @@ describe('Standalone Menu Pattern', () => {
       await disabledFixture.whenStable();
       expect(document.activeElement).toBe(items[1]);
     });
+
+    it('should natively disable a disabled button item when softDisabled is false', async () => {
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [MenuItemDisabledButtonExample],
+      });
+      const disabledFixture = TestBed.createComponent(MenuItemDisabledButtonExample);
+      disabledFixture.componentInstance.softDisabled.set(false);
+      await disabledFixture.whenStable();
+
+      const items = disabledFixture.debugElement
+        .queryAll(By.directive(MenuItem))
+        .map(debugEl => debugEl.nativeElement as HTMLButtonElement);
+
+      expect(items[0].hasAttribute('disabled')).toBe(false);
+      expect(items[1].hasAttribute('disabled')).toBe(true);
+      expect(items[1].disabled).toBe(true);
+      expect(items[1].getAttribute('aria-disabled')).toBe('true');
+
+      items[0].focus();
+      items[0].dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}));
+      await disabledFixture.whenStable();
+      expect(document.activeElement).toBe(items[2]);
+    });
   });
 
   describe('structural validations', () => {
@@ -1541,7 +1565,7 @@ class MenuItemDisabledAttributeExample {}
 
 @Component({
   template: `
-    <div ngMenu>
+    <div ngMenu [softDisabled]="softDisabled()">
       <button ngMenuItem value="item0">Item 0</button>
       <button ngMenuItem value="item1" disabled>Item 1</button>
       <button ngMenuItem value="item2">Item 2</button>
@@ -1550,4 +1574,6 @@ class MenuItemDisabledAttributeExample {}
   imports: [Menu, MenuItem],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-class MenuItemDisabledButtonExample {}
+class MenuItemDisabledButtonExample {
+  softDisabled = signal(true);
+}

@@ -52,9 +52,10 @@ import type {MenuBar} from './menu-bar';
     '[attr.aria-haspopup]': 'hasPopup()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
-    // Menu items are only ever soft-disabled. Clear the native attribute so a bare
-    // `disabled` on a `<button>` host doesn't make the item unfocusable.
-    '[attr.disabled]': 'null',
+    // Follow the parent's `softDisabled`, as MenuBar and MenuTrigger do. When soft-disabled
+    // (the default), clear the native attribute so a bare `disabled` on a `<button>` host
+    // doesn't make the item unfocusable. When not, keep the item natively disabled.
+    '[attr.disabled]': 'parent?.softDisabled() === false && _pattern.disabled() ? true : null',
     '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
 })
