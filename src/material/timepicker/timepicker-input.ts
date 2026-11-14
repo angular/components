@@ -145,6 +145,18 @@ export class MatTimepickerInput<D>
   });
 
   /**
+   * Whether the input should display unavailable option items (if any), rather then filtering
+   * them out.
+   */
+  readonly shouldDisplayUnavailableItems: InputSignalWithTransform<boolean, unknown> = input(
+    false,
+    {
+      alias: 'matDisplayUnavailableItems',
+      transform: booleanAttribute,
+    },
+  );
+
+  /**
    * Whether to open the timepicker overlay when clicking on the input. Enabled by default.
    * Note that when disabling this option, you'll have to provide your own logic for opening
    * the overlay.
