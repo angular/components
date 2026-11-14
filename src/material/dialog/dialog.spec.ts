@@ -2298,6 +2298,25 @@ describe('MatDialog with animations enabled', () => {
 
     expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
   });
+
+  it('should not remove the open class before adding the closing class', async () => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    viewContainerFixture.detectChanges();
+    await wait(OPEN_ANIMATION_DURATION);
+
+    const containerElement = document.querySelector('mat-dialog-container')!;
+    expect(containerElement.classList.contains('mdc-dialog--open')).toBe(true);
+
+    dialogRef.close();
+    viewContainerFixture.detectChanges();
+
+    // The open class should not be removed synchronously before the closing class is added
+    // in requestAnimationFrame, preventing an intermediate class-less state that causes visual jumps.
+    expect(containerElement.classList.contains('mdc-dialog--open')).toBe(true);
+
+    await wait(CLOSE_ANIMATION_DURATION);
+    expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
+  });
 });
 
 describe('MatDialog with explicit injector provided', () => {
