@@ -193,8 +193,8 @@ export class MatRadioButtonHarness extends ComponentHarness {
       );
   }
 
-  protected _textLabel = this.locatorFor('label');
-  protected _clickLabel = this._textLabel;
+  protected _textLabel = this.locatorFor('.mat-internal-form-field-label');
+  protected _clickLabel = this.locatorFor('label');
   private _input = this.locatorFor('input');
 
   /** Whether the radio-button is checked. */
