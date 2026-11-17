@@ -1233,26 +1233,95 @@ describe('CdkTree', () => {
   });
 
   describe('accessibility', () => {
-    let fixture: ComponentFixture<StaticNestedCdkTreeApp>;
     let component: StaticNestedCdkTreeApp;
     let nodes: HTMLElement[];
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
-      fixture.detectChanges();
-
-      component = fixture.componentInstance;
-      dataSource = component.dataSource as FakeDataSource;
-      tree = component.tree;
-      treeElement = fixture.nativeElement.querySelector('cdk-tree');
-      nodes = getNodes(treeElement);
-    });
-
     describe('focus management', () => {
-      beforeEach(() => {
-        fixture.destroy();
+      it('the tree does not have tabindex attribute', () => {
+        createFocusTestComponent();
+        expect(treeElement.hasAttribute('tabindex')).toBeFalse();
+      });
 
-        fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
+      it('the tree does not have a tabindex when an element is active', () => {
+        const fixture = createFocusTestComponent();
+        // activate the second child by clicking on it
+        nodes[1].click();
+        fixture.detectChanges();
+
+        expect(treeElement.hasAttribute('tabindex')).toBeFalse();
+      });
+
+      it('sets the tabindex to the first item by default', () => {
+        createFocusTestComponent();
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+      });
+
+      it('sets tabindex on the latest activated item, with all others "-1"', () => {
+        const fixture = createFocusTestComponent();
+        // activate the second child by clicking on it
+        nodes[1].click();
+        fixture.detectChanges();
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
+      });
+
+      it('maintains tabindex when a node is programatically focused', () => {
+        const fixture = createFocusTestComponent();
+        // activate the second child by programatically focusing it
+        nodes[1].focus();
+        fixture.detectChanges();
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
+
+        // activate the first child by programatically focusing it
+        nodes[0].focus();
+        fixture.detectChanges();
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+      });
+
+      it('should ensure that at least one item is focusable when the items are swapped out', () => {
+        const fixture = createFocusTestComponent();
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+
+        dataSource.data = [new TestData('foo'), new TestData('bar'), new TestData('baz')];
+        fixture.detectChanges();
+        nodes = getNodes(treeElement);
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+      });
+
+      it('maintains tabindex when component is blurred', () => {
+        const fixture = createFocusTestComponent();
+        // activate the second child by clicking on it
+        nodes[1].click();
+        nodes[1].focus();
+        fixture.detectChanges();
+
+        expect(document.activeElement).toBe(nodes[1]);
+        // blur the currently active element (which we just checked is the above node)
+        nodes[1].blur();
+        fixture.detectChanges();
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
+      });
+
+      it('ignores clicks on disabled items', () => {
+        const fixture = createFocusTestComponent();
+        dataSource.data[1].isDisabled = true;
+        fixture.changeDetectorRef.markForCheck();
+        fixture.detectChanges();
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+
+        // attempt to click on the first child
+        nodes[1].click();
+        fixture.detectChanges();
+
+        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
+      });
+
+      function createFocusTestComponent(): ComponentFixture<StaticNestedCdkTreeApp> {
+        const fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
@@ -1270,90 +1339,18 @@ describe('CdkTree', () => {
 
         fixture.detectChanges();
         nodes = getNodes(treeElement);
-      });
-
-      it('the tree does not have tabindex attribute', () => {
-        expect(treeElement.hasAttribute('tabindex')).toBeFalse();
-      });
-
-      it('the tree does not have a tabindex when an element is active', () => {
-        // activate the second child by clicking on it
-        nodes[1].click();
-        fixture.detectChanges();
-
-        expect(treeElement.hasAttribute('tabindex')).toBeFalse();
-      });
-
-      it('sets the tabindex to the first item by default', () => {
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
-      });
-
-      it('sets tabindex on the latest activated item, with all others "-1"', () => {
-        // activate the second child by clicking on it
-        nodes[1].click();
-        fixture.detectChanges();
-
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
-      });
-
-      it('maintains tabindex when a node is programatically focused', () => {
-        // activate the second child by programatically focusing it
-        nodes[1].focus();
-        fixture.detectChanges();
-
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
-
-        // activate the first child by programatically focusing it
-        nodes[0].focus();
-        fixture.detectChanges();
-
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
-      });
-
-      it('should ensure that at least one item is focusable when the items are swapped out', () => {
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
-
-        dataSource.data = [new TestData('foo'), new TestData('bar'), new TestData('baz')];
-        fixture.detectChanges();
-        nodes = getNodes(treeElement);
-
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
-      });
-
-      it('maintains tabindex when component is blurred', () => {
-        // activate the second child by clicking on it
-        nodes[1].click();
-        nodes[1].focus();
-        fixture.detectChanges();
-
-        expect(document.activeElement).toBe(nodes[1]);
-        // blur the currently active element (which we just checked is the above node)
-        nodes[1].blur();
-        fixture.detectChanges();
-
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('-1, 0, -1');
-      });
-
-      it('ignores clicks on disabled items', () => {
-        dataSource.data[1].isDisabled = true;
-        fixture.changeDetectorRef.markForCheck();
-        fixture.detectChanges();
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
-
-        // attempt to click on the first child
-        nodes[1].click();
-        fixture.detectChanges();
-
-        expect(nodes.map(x => x.getAttribute('tabindex')).join(', ')).toEqual('0, -1, -1');
-      });
+        return fixture;
+      }
     });
 
     describe('tree role & attributes', () => {
       it('sets the tree role on the tree element', () => {
+        createComponent();
         expect(treeElement.getAttribute('role')).toBe('tree');
       });
 
       it('sets the treeitem role on all nodes', () => {
+        createComponent();
         expect(nodes.map(x => x.getAttribute('role'))).toEqual([
           'treeitem',
           'treeitem',
@@ -1365,6 +1362,7 @@ describe('CdkTree', () => {
       });
 
       it('sets aria attributes for tree nodes', () => {
+        createComponent();
         expect(nodes.map(x => x.getAttribute('aria-expanded')))
           .withContext('aria-expanded attributes')
           .toEqual([null, 'false', 'false', null, null, null]);
@@ -1380,6 +1378,7 @@ describe('CdkTree', () => {
       });
 
       it('changes aria-expanded status when expanded or collapsed', () => {
+        const fixture = createComponent();
         tree.expand(dataSource.data[1]);
         fixture.detectChanges();
         expect(nodes.map(x => x.getAttribute('aria-expanded')))
@@ -1393,6 +1392,18 @@ describe('CdkTree', () => {
           .toEqual([null, 'false', 'false', null, null, null]);
       });
     });
+
+    function createComponent(): ComponentFixture<StaticNestedCdkTreeApp> {
+      const fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
+      fixture.detectChanges();
+
+      component = fixture.componentInstance;
+      dataSource = component.dataSource as FakeDataSource;
+      tree = component.tree;
+      treeElement = fixture.nativeElement.querySelector('cdk-tree');
+      nodes = getNodes(treeElement);
+      return fixture;
+    }
   });
 
   describe('typeahead', () => {

@@ -44,36 +44,29 @@ describe('CdkTable', () => {
   let component: any;
   let tableElement: HTMLElement;
 
-  function setupTableTestApp(componentType: Type<any>) {
+  function setupTableTestApp<T>(componentType: Type<T>): ComponentFixture<T> {
     fixture = TestBed.createComponent(componentType);
     component = fixture.componentInstance;
     fixture.detectChanges();
 
     tableElement = fixture.nativeElement.querySelector('.cdk-table');
+    return fixture;
   }
 
   describe('in a typical simple use case', () => {
     let dataSource: FakeDataSource;
     let table: CdkTable<TestData>;
 
-    beforeEach(() => {
-      setupTableTestApp(SimpleCdkTableApp);
-
-      component = fixture.componentInstance as SimpleCdkTableApp;
-      dataSource = component.dataSource;
-      table = component.table;
-
-      fixture.detectChanges();
-    });
-
     describe('should initialize', () => {
       it('with a connected data source', () => {
+        createComponent();
         expect(table.dataSource).toBe(dataSource);
         expect(dataSource.isConnected).toBe(true);
         expect(component.contentChangedCount).toBe(1);
       });
 
       it('with a rendered header with the right number of header cells', () => {
+        createComponent();
         const header = getHeaderRows(tableElement)[0];
 
         expect(header).toBeTruthy();
@@ -82,6 +75,7 @@ describe('CdkTable', () => {
       });
 
       it('with rendered rows with right number of row cells', () => {
+        createComponent();
         const rows = getRows(tableElement);
 
         expect(rows.length).toBe(dataSource.data.length);
@@ -92,6 +86,7 @@ describe('CdkTable', () => {
       });
 
       it('with column class names provided to header and data row cells', () => {
+        createComponent();
         const header = getHeaderRows(tableElement)[0];
         getHeaderCells(header).forEach((headerCell, index) => {
           expect(headerCell.classList).toContain(`cdk-column-${component.columnsToRender[index]}`);
@@ -105,6 +100,7 @@ describe('CdkTable', () => {
       });
 
       it('with the right accessibility roles', () => {
+        createComponent();
         expect(tableElement.getAttribute('role')).toBe('table');
 
         expect(getHeaderRows(tableElement)[0].getAttribute('role')).toBe('row');
@@ -123,6 +119,7 @@ describe('CdkTable', () => {
     });
 
     it('should disconnect the data source when table is destroyed', () => {
+      const fixture = createComponent();
       expect(dataSource.isConnected).toBe(true);
 
       fixture.destroy();
@@ -130,6 +127,7 @@ describe('CdkTable', () => {
     });
 
     it('should re-render the rows when the data changes', () => {
+      const fixture = createComponent();
       dataSource.addData();
       fixture.detectChanges();
 
@@ -145,6 +143,7 @@ describe('CdkTable', () => {
     });
 
     it('should clear the `mostRecentCellOutlet` on destroy', () => {
+      const fixture = createComponent();
       // Note: we cast the assertions here to booleans, because they may
       // contain circular objects which will throw Jasmine into an infinite
       // when its tries to stringify them to show a test failure.
@@ -170,6 +169,7 @@ describe('CdkTable', () => {
       }
 
       it('when the data is heterogeneous', () => {
+        createComponent();
         addInitialIndexAttribute();
 
         // Swap first and second data in data array
@@ -194,6 +194,7 @@ describe('CdkTable', () => {
       });
 
       it('when the data contains multiple occurrences of the same object instance', () => {
+        createComponent();
         const obj = {value: true};
         component.dataSource!.data = [obj, obj, obj];
         addInitialIndexAttribute();
@@ -222,6 +223,7 @@ describe('CdkTable', () => {
     });
 
     it('should clear the row view containers on destroy', () => {
+      const fixture = createComponent();
       const rowOutlet = fixture.componentInstance.table._rowOutlet.viewContainer;
       const headerPlaceholder = fixture.componentInstance.table._headerRowOutlet.viewContainer;
 
@@ -235,6 +237,7 @@ describe('CdkTable', () => {
     });
 
     it('should match the right table content with dynamic data', () => {
+      const fixture = createComponent();
       const initialDataLength = dataSource.data.length;
       expect(dataSource.data.length).toBe(3);
 
@@ -264,6 +267,7 @@ describe('CdkTable', () => {
     });
 
     it('should be able to dynamically change the columns for header and rows', () => {
+      const fixture = createComponent();
       expect(dataSource.data.length).toBe(3);
 
       let data = dataSource.data;
@@ -294,6 +298,7 @@ describe('CdkTable', () => {
     });
 
     it('should be able to show a message when no data is being displayed', () => {
+      const fixture = createComponent();
       expect(tableElement.querySelector('.cdk-no-data-row')).toBeFalsy();
 
       const originalData = dataSource.data;
@@ -314,14 +319,24 @@ describe('CdkTable', () => {
     });
 
     it('should show the no data row if there is no data on init', () => {
-      fixture.destroy();
-      fixture = TestBed.createComponent(SimpleCdkTableApp);
+      const fixture = TestBed.createComponent(SimpleCdkTableApp);
       fixture.componentInstance.dataSource.data = [];
       fixture.detectChanges();
-      tableElement = fixture.nativeElement.querySelector('.cdk-table');
+      const tableElement = fixture.nativeElement.querySelector('.cdk-table');
       expect(tableElement.querySelector('.cdk-no-data-row')).toBeTruthy();
-      expect(component.contentChangedCount).toBe(1);
+      expect(fixture.componentInstance.contentChangedCount).toBe(1);
     });
+
+    function createComponent(): ComponentFixture<SimpleCdkTableApp> {
+      const fixture = setupTableTestApp(SimpleCdkTableApp);
+
+      component = fixture.componentInstance;
+      dataSource = component.dataSource;
+      table = component.table;
+
+      fixture.detectChanges();
+      return fixture;
+    }
   });
 
   it('should render no rows when the data is null', () => {

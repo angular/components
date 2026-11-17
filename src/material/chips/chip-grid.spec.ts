@@ -690,23 +690,12 @@ describe('MatChipGrid', () => {
   });
 
   describe('chip grid with chip input', () => {
-    let fixture: ComponentFixture<InputChipGrid>;
     let nativeChips: HTMLElement[];
     let nativeInput: HTMLInputElement;
     let nativeChipGrid: HTMLElement;
 
-    beforeEach(() => {
-      fixture = createComponent(InputChipGrid);
-
-      nativeChips = fixture.debugElement
-        .queryAll(By.css('mat-chip-row'))
-        .map(chip => chip.nativeElement);
-
-      nativeChipGrid = fixture.debugElement.query(By.css('mat-chip-grid'))!.nativeElement;
-      nativeInput = fixture.nativeElement.querySelector('input');
-    });
-
     it('should take an initial view value with reactive forms', () => {
+      const fixture = createInputChipGrid();
       fixture.componentInstance.control = new FormControl('[pizza-1]');
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -715,6 +704,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should set the view value from the form', () => {
+      const fixture = createInputChipGrid();
       const chipGrid = fixture.componentInstance.chipGrid;
 
       expect(chipGrid.value).withContext('Expect chip grid to have no initial value').toBeFalsy();
@@ -726,6 +716,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should update the form value when the view changes', async () => {
+      const fixture = createInputChipGrid();
       expect(fixture.componentInstance.control.value)
         .withContext(`Expected the control's value to be empty initially.`)
         .toEqual(null);
@@ -744,6 +735,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should clear the value when the control is reset', () => {
+      const fixture = createInputChipGrid();
       fixture.componentInstance.control.setValue('pizza-1');
       fixture.detectChanges();
 
@@ -754,6 +746,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should set the control to touched when the chip grid is touched', async () => {
+      const fixture = createInputChipGrid();
       expect(fixture.componentInstance.control.touched)
         .withContext('Expected the control to start off as untouched.')
         .toBe(false);
@@ -767,6 +760,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should not set touched when a disabled chip grid is touched', async () => {
+      const fixture = createInputChipGrid();
       expect(fixture.componentInstance.control.touched)
         .withContext('Expected the control to start off as untouched.')
         .toBe(false);
@@ -781,6 +775,7 @@ describe('MatChipGrid', () => {
     });
 
     it("should set the control to dirty when the chip grid's value changes in the DOM", async () => {
+      const fixture = createInputChipGrid();
       expect(fixture.componentInstance.control.dirty)
         .withContext(`Expected control to start out pristine.`)
         .toEqual(false);
@@ -801,6 +796,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should not set the control to dirty when the value changes programmatically', () => {
+      const fixture = createInputChipGrid();
       expect(fixture.componentInstance.control.dirty)
         .withContext(`Expected control to start out pristine.`)
         .toEqual(false);
@@ -813,6 +809,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should set an asterisk after the placeholder if the control is required', () => {
+      const fixture = createInputChipGrid();
       let requiredMarker = fixture.debugElement.query(
         By.css('.mat-mdc-form-field-required-marker'),
       )!;
@@ -830,8 +827,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should mark the component as required if the control has a required validator', () => {
-      fixture.destroy();
-      fixture = TestBed.createComponent(InputChipGrid);
+      const fixture = TestBed.createComponent(InputChipGrid);
       fixture.componentInstance.control = new FormControl('', [Validators.required]);
       fixture.detectChanges();
 
@@ -841,6 +837,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should blur the form field when the active chip is blurred', async () => {
+      const fixture = createInputChipGrid();
       const formField: HTMLElement = fixture.nativeElement.querySelector('.mat-mdc-form-field');
       const firstAction = nativeChips[0].querySelector('.mat-mdc-chip-action') as HTMLElement;
 
@@ -860,6 +857,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should keep focus on the input after adding the first chip', () => {
+      const fixture = createInputChipGrid();
       const chipEls = Array.from<HTMLElement>(
         fixture.nativeElement.querySelectorAll('mat-chip-row'),
       ).reverse();
@@ -888,6 +886,7 @@ describe('MatChipGrid', () => {
     });
 
     it('should set aria-invalid if the form field is invalid', async () => {
+      const fixture = createInputChipGrid();
       fixture.componentInstance.control = new FormControl('', [Validators.required]);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -910,6 +909,7 @@ describe('MatChipGrid', () => {
 
     describe('when the input has focus', () => {
       beforeEach(() => {
+        createInputChipGrid();
         nativeInput.focus();
         expectNoCellFocused();
       });
@@ -945,6 +945,19 @@ describe('MatChipGrid', () => {
         expectLastCellFocused();
       });
     });
+
+    function createInputChipGrid(): ComponentFixture<InputChipGrid> {
+      const fixture = createComponent(InputChipGrid);
+
+      nativeChips = fixture.debugElement
+        .queryAll(By.css('mat-chip-row'))
+        .map(chip => chip.nativeElement);
+
+      nativeChipGrid = fixture.debugElement.query(By.css('mat-chip-grid'))!.nativeElement;
+      nativeInput = fixture.nativeElement.querySelector('input');
+
+      return fixture;
+    }
   });
 
   describe('error messages', () => {
