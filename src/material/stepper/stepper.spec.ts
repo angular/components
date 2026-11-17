@@ -66,18 +66,13 @@ describe('MatStepper', () => {
   });
 
   describe('basic stepper', () => {
-    let fixture: ComponentFixture<SimpleMatVerticalStepperApp>;
-
-    beforeEach(() => {
-      fixture = createComponent(SimpleMatVerticalStepperApp);
-      fixture.detectChanges();
-    });
-
     it('should default to the first step', () => {
+      const fixture = createBasicStepper();
       expect(fixture.componentInstance.stepper.selectedIndex).toBe(0);
     });
 
     it('should throw when a negative `selectedIndex` is assigned', () => {
+      const fixture = createBasicStepper();
       expect(() => {
         fixture.componentInstance.stepper.selectedIndex = -10;
         fixture.detectChanges();
@@ -85,6 +80,7 @@ describe('MatStepper', () => {
     });
 
     it('should throw when an out-of-bounds `selectedIndex` is assigned', () => {
+      const fixture = createBasicStepper();
       expect(() => {
         fixture.componentInstance.stepper.selectedIndex = 1337;
         fixture.detectChanges();
@@ -92,6 +88,7 @@ describe('MatStepper', () => {
     });
 
     it('should change selected index on header click', () => {
+      const fixture = createBasicStepper();
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
       const stepper = fixture.componentInstance.stepper;
 
@@ -116,6 +113,7 @@ describe('MatStepper', () => {
     });
 
     it('should display the correct label', () => {
+      const fixture = createBasicStepper();
       let selectedLabel = fixture.nativeElement.querySelector('[aria-current="step"]');
       expect(selectedLabel.textContent).toMatch('Step 1');
 
@@ -133,6 +131,7 @@ describe('MatStepper', () => {
     });
 
     it('should go to next available step when the next button is clicked', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
 
       expect(stepper.selectedIndex).toBe(0);
@@ -160,6 +159,7 @@ describe('MatStepper', () => {
     });
 
     it('should set the next stepper button type to "submit"', () => {
+      const fixture = createBasicStepper();
       const button = fixture.debugElement.query(By.directive(MatStepperNext))!.nativeElement;
       expect(button.type)
         .withContext(`Expected the button to have "submit" set as type.`)
@@ -167,6 +167,7 @@ describe('MatStepper', () => {
     });
 
     it('should go to previous available step when the previous button is clicked', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
 
       expect(stepper.selectedIndex).toBe(0);
@@ -196,6 +197,7 @@ describe('MatStepper', () => {
     });
 
     it('should set the previous stepper button type to "button"', () => {
+      const fixture = createBasicStepper();
       const button = fixture.debugElement.query(By.directive(MatStepperPrevious))!.nativeElement;
       expect(button.type)
         .withContext(`Expected the button to have "button" set as type.`)
@@ -203,6 +205,7 @@ describe('MatStepper', () => {
     });
 
     it('should set the correct step position for animation', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
 
       expect(stepper._getAnimationDirection(0)).toBe('current');
@@ -225,6 +228,7 @@ describe('MatStepper', () => {
     });
 
     it('should not set focus on header of selected step if header is not clicked', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
       const stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1]
         .nativeElement;
@@ -239,6 +243,7 @@ describe('MatStepper', () => {
     });
 
     it('should focus next step header if focus is inside the stepper', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
       const stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1]
         .nativeElement;
@@ -258,10 +263,7 @@ describe('MatStepper', () => {
         return;
       }
 
-      fixture.destroy();
-      TestBed.resetTestingModule();
-      fixture = createComponent(SimpleMatVerticalStepperApp, [], ViewEncapsulation.ShadowDom);
-      fixture.detectChanges();
+      const fixture = createBasicStepper(ViewEncapsulation.ShadowDom);
 
       const stepper = fixture.componentInstance.stepper;
       const stepHeaderEl = fixture.debugElement.queryAll(By.css('mat-step-header'))[1]
@@ -278,6 +280,7 @@ describe('MatStepper', () => {
     });
 
     it('should only be able to return to a previous step if it is editable', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
 
       stepper.selectedIndex = 1;
@@ -298,6 +301,7 @@ describe('MatStepper', () => {
     });
 
     it('should set create icon if step is editable and completed', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
       const nextButtonNativeEl = fixture.debugElement.queryAll(By.directive(MatStepperNext))[0]
         .nativeElement;
@@ -310,6 +314,7 @@ describe('MatStepper', () => {
     });
 
     it('should set done icon if step is not editable and is completed', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
       const nextButtonNativeEl = fixture.debugElement.queryAll(By.directive(MatStepperNext))[0]
         .nativeElement;
@@ -322,6 +327,7 @@ describe('MatStepper', () => {
     });
 
     it('should emit an event when the enter animation is done', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
       const selectionChangeSpy = jasmine.createSpy('selectionChange spy');
       const animationDoneSpy = jasmine.createSpy('animationDone spy');
@@ -339,6 +345,7 @@ describe('MatStepper', () => {
     });
 
     it('should adjust the index when removing a step before the current one', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
 
       stepper.selectedIndex = 2;
@@ -356,16 +363,19 @@ describe('MatStepper', () => {
     });
 
     it('should not do anything when pressing the ENTER key with a modifier', () => {
+      const fixture = createBasicStepper();
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
       assertSelectKeyWithModifierInteraction(fixture, stepHeaders, 'vertical', ENTER);
     });
 
     it('should not do anything when pressing the SPACE key with a modifier', () => {
+      const fixture = createBasicStepper();
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
       assertSelectKeyWithModifierInteraction(fixture, stepHeaders, 'vertical', SPACE);
     });
 
     it('should have a focus indicator', () => {
+      const fixture = createBasicStepper();
       const stepHeaderNativeElements = [
         ...fixture.debugElement.nativeElement.querySelectorAll('.mat-vertical-stepper-header'),
       ];
@@ -376,15 +386,23 @@ describe('MatStepper', () => {
     });
 
     it('should hide the header icons from assistive technology', () => {
+      const fixture = createBasicStepper();
       const icon = fixture.nativeElement.querySelector('.mat-step-icon span');
       expect(icon.getAttribute('aria-hidden')).toBe('true');
     });
 
     it('should add units to unit-less values passed in to animationDuration', () => {
+      const fixture = createBasicStepper();
       const stepper = fixture.componentInstance.stepper;
       stepper.animationDuration = '1337';
       expect(stepper.animationDuration).toBe('1337ms');
     });
+
+    function createBasicStepper(encapsulation?: ViewEncapsulation) {
+      const fixture = createComponent(SimpleMatVerticalStepperApp, [], encapsulation);
+      fixture.detectChanges();
+      return fixture;
+    }
   });
 
   describe('basic stepper when attempting to get the selected step too early', () => {

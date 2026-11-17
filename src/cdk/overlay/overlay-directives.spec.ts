@@ -34,7 +34,6 @@ import {
 
 describe('Overlay directives', () => {
   let overlayContainerElement: HTMLElement;
-  let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
   let dir: WritableSignal<Direction>;
   let scrolledSubject = new Subject();
 
@@ -54,8 +53,6 @@ describe('Overlay directives', () => {
     });
 
     overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
-    fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
-    fixture.detectChanges();
   });
 
   /** Returns the current open overlay pane element. */
@@ -64,6 +61,7 @@ describe('Overlay directives', () => {
   }
 
   it(`should attach the overlay based on the open property`, () => {
+    const fixture = createComponent();
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -78,6 +76,7 @@ describe('Overlay directives', () => {
   });
 
   it('can change positionStrategy via input', () => {
+    const fixture = createComponent();
     const expectedPositionStrategy = createFlexibleConnectedPositionStrategy(
       TestBed.inject(Injector),
       document.body,
@@ -98,6 +97,7 @@ describe('Overlay directives', () => {
   });
 
   it('should destroy the overlay when the directive is destroyed', () => {
+    const fixture = createComponent();
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -110,6 +110,7 @@ describe('Overlay directives', () => {
   });
 
   it('should use a connected position strategy with a default set of positions', () => {
+    const fixture = createComponent();
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -124,6 +125,7 @@ describe('Overlay directives', () => {
   });
 
   it('should set and update the `dir` attribute', () => {
+    const fixture = createComponent();
     dir.set('rtl');
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
@@ -152,6 +154,7 @@ describe('Overlay directives', () => {
   });
 
   it('should close when pressing escape', () => {
+    const fixture = createComponent();
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -166,6 +169,7 @@ describe('Overlay directives', () => {
   });
 
   it('should not close when pressing escape with a modifier', () => {
+    const fixture = createComponent();
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
     fixture.detectChanges();
@@ -179,6 +183,7 @@ describe('Overlay directives', () => {
   });
 
   it('should prevent closing via clicks on the backdrop by default', () => {
+    const fixture = createComponent();
     fixture.componentInstance.hasBackdrop = true;
     fixture.componentInstance.isOpen = true;
     fixture.changeDetectorRef.markForCheck();
@@ -192,6 +197,7 @@ describe('Overlay directives', () => {
   });
 
   it('should prevent closing via the escape key with disableClose option', () => {
+    const fixture = createComponent();
     fixture.componentInstance.isOpen = true;
     fixture.componentInstance.disableClose = true;
     fixture.changeDetectorRef.markForCheck();
@@ -205,8 +211,6 @@ describe('Overlay directives', () => {
   });
 
   it('should not depend on the order in which the `origin` and `open` are set', () => {
-    fixture.destroy();
-
     const propOrderFixture = TestBed.createComponent(ConnectedOverlayPropertyInitOrder);
     propOrderFixture.detectChanges();
 
@@ -221,6 +225,7 @@ describe('Overlay directives', () => {
 
   describe('inputs', () => {
     it('should set the width', () => {
+      const fixture = createComponent();
       fixture.componentInstance.width = 250;
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -242,6 +247,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the height', () => {
+      const fixture = createComponent();
       fixture.componentInstance.height = '100vh';
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -263,6 +269,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the min width', () => {
+      const fixture = createComponent();
       fixture.componentInstance.minWidth = 250;
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -284,6 +291,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the min height', () => {
+      const fixture = createComponent();
       fixture.componentInstance.minHeight = '500px';
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -305,6 +313,7 @@ describe('Overlay directives', () => {
     });
 
     it('should create the backdrop if designated', () => {
+      const fixture = createComponent();
       fixture.componentInstance.hasBackdrop = true;
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -314,6 +323,7 @@ describe('Overlay directives', () => {
     });
 
     it('should not create the backdrop by default', () => {
+      const fixture = createComponent();
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -322,6 +332,7 @@ describe('Overlay directives', () => {
     });
 
     it('should be able to change hasBackdrop after the overlay has been initialized', async () => {
+      const fixture = createComponent();
       // Open once with a backdrop
       fixture.componentInstance.hasBackdrop = true;
       fixture.componentInstance.isOpen = true;
@@ -345,6 +356,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the custom backdrop class', () => {
+      const fixture = createComponent();
       fixture.componentInstance.hasBackdrop = true;
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -357,6 +369,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the custom panel class', () => {
+      const fixture = createComponent();
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -366,6 +379,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the offsetX', () => {
+      const fixture = createComponent();
       fixture.componentInstance.offsetX = 5;
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -388,6 +402,7 @@ describe('Overlay directives', () => {
     });
 
     it('should set the offsetY', () => {
+      const fixture = createComponent();
       const trigger = fixture.nativeElement.querySelector('button');
       trigger.style.position = 'absolute';
       trigger.style.top = '30px';
@@ -414,6 +429,7 @@ describe('Overlay directives', () => {
     });
 
     it('should be able to update the origin after init', () => {
+      const fixture = createComponent();
       const testComponent = fixture.componentInstance;
 
       testComponent.isOpen = true;
@@ -438,6 +454,7 @@ describe('Overlay directives', () => {
     });
 
     it('should be able to use non-directive origin', () => {
+      const fixture = createComponent();
       const testComponent = fixture.componentInstance;
 
       testComponent.triggerOverride = testComponent.nonDirectiveTrigger;
@@ -455,6 +472,7 @@ describe('Overlay directives', () => {
     });
 
     it('should update the positions if they change after init', () => {
+      const fixture = createComponent();
       const trigger = fixture.nativeElement.querySelector('#trigger');
 
       trigger.style.position = 'fixed';
@@ -500,6 +518,7 @@ describe('Overlay directives', () => {
     });
 
     it('should take the offset from the position', () => {
+      const fixture = createComponent();
       const trigger = fixture.nativeElement.querySelector('#trigger');
 
       trigger.style.position = 'fixed';
@@ -530,6 +549,7 @@ describe('Overlay directives', () => {
     });
 
     it('should apply the panelClass from the position', () => {
+      const fixture = createComponent();
       fixture.componentInstance.positionOverrides = [
         {
           originX: 'start',
@@ -550,6 +570,7 @@ describe('Overlay directives', () => {
     });
 
     it('should be able to set the viewport margin', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.connectedOverlayDirective.viewportMargin).not.toBe(10);
 
       fixture.componentInstance.viewportMargin = 10;
@@ -560,6 +581,7 @@ describe('Overlay directives', () => {
     });
 
     it('should allow for flexible positioning to be enabled', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.connectedOverlayDirective.flexibleDimensions).not.toBe(true);
 
       fixture.componentInstance.flexibleDimensions = true;
@@ -570,6 +592,7 @@ describe('Overlay directives', () => {
     });
 
     it('should allow for growing after open to be enabled', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.connectedOverlayDirective.growAfterOpen).not.toBe(true);
 
       fixture.componentInstance.growAfterOpen = true;
@@ -580,6 +603,7 @@ describe('Overlay directives', () => {
     });
 
     it('should allow for pushing to be enabled', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.connectedOverlayDirective.push).not.toBe(true);
 
       fixture.componentInstance.push = true;
@@ -590,6 +614,7 @@ describe('Overlay directives', () => {
     });
 
     it('should update the element size if it changes while open', () => {
+      const fixture = createComponent();
       fixture.componentInstance.width = 250;
       fixture.componentInstance.height = 250;
       fixture.componentInstance.isOpen = true;
@@ -610,6 +635,7 @@ describe('Overlay directives', () => {
     });
 
     it('should be able to set transform origin selector', () => {
+      const fixture = createComponent();
       const trigger = fixture.nativeElement.querySelector('#trigger');
 
       trigger.style.position = 'fixed';
@@ -636,6 +662,7 @@ describe('Overlay directives', () => {
     });
 
     it('should match the trigger width', () => {
+      const fixture = createComponent();
       const trigger = fixture.nativeElement.querySelector('#trigger') as HTMLElement;
       trigger.style.width = '128px';
 
@@ -651,6 +678,7 @@ describe('Overlay directives', () => {
 
   describe('outputs', () => {
     it('should emit when the backdrop was clicked', () => {
+      const fixture = createComponent();
       fixture.componentInstance.hasBackdrop = true;
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -668,6 +696,7 @@ describe('Overlay directives', () => {
     });
 
     it('should emit when the position has changed', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.positionChangeHandler).not.toHaveBeenCalled();
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -683,6 +712,7 @@ describe('Overlay directives', () => {
     });
 
     it('should emit when attached', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.attachHandler).not.toHaveBeenCalled();
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -699,6 +729,7 @@ describe('Overlay directives', () => {
     });
 
     it('should emit when detached', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
       fixture.componentInstance.isOpen = true;
       fixture.changeDetectorRef.markForCheck();
@@ -713,6 +744,7 @@ describe('Overlay directives', () => {
     });
 
     it('should emit the keydown events from the overlay', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.keydownHandler).not.toHaveBeenCalled();
 
       fixture.componentInstance.isOpen = true;
@@ -726,6 +758,7 @@ describe('Overlay directives', () => {
     });
 
     it('should emit when detached externally', () => {
+      const fixture = createComponent();
       expect(fixture.componentInstance.detachHandler).not.toHaveBeenCalled();
       fixture.componentInstance.scrollStrategy = createCloseScrollStrategy(
         TestBed.inject(Injector),
@@ -746,6 +779,7 @@ describe('Overlay directives', () => {
     // these events shouldn't invoke their listeners after destruction anyway, but in some
     // tests it can happen. For more context: https://github.com/crisbeto/material2/pull/10
     it('should not emit after the directive is destroyed', () => {
+      const fixture = createComponent();
       const spy = jasmine.createSpy('detach spy');
       const subscription =
         fixture.componentInstance.connectedOverlayDirective.detach.subscribe(spy);
@@ -759,6 +793,12 @@ describe('Overlay directives', () => {
       subscription.unsubscribe();
     });
   });
+
+  function createComponent(): ComponentFixture<ConnectedOverlayDirectiveTest> {
+    const fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
+    fixture.detectChanges();
+    return fixture;
+  }
 });
 
 @Component({

@@ -315,21 +315,12 @@ describe('MatCalendar', () => {
   });
 
   describe('calendar with min and max date', () => {
-    let fixture: ComponentFixture<CalendarWithMinMax>;
     let testComponent: CalendarWithMinMax;
     let calendarElement: HTMLElement;
     let calendarInstance: MatCalendar<Date>;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(CalendarWithMinMax);
-
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
-      calendarElement = calendarDebugElement.nativeElement;
-      calendarInstance = calendarDebugElement.componentInstance;
-      testComponent = fixture.componentInstance;
-    });
-
     it('should clamp startAt value below min date', () => {
+      const fixture = createComponent();
       testComponent.startAt = new Date(2000, JAN, 1);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -338,6 +329,7 @@ describe('MatCalendar', () => {
     });
 
     it('should clamp startAt value above max date', () => {
+      const fixture = createComponent();
       testComponent.startAt = new Date(2020, JAN, 1);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -346,6 +338,7 @@ describe('MatCalendar', () => {
     });
 
     it('should not go back past min date', () => {
+      const fixture = createComponent();
       testComponent.startAt = new Date(2016, FEB, 1);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -374,6 +367,7 @@ describe('MatCalendar', () => {
     });
 
     it('should not go forward past max date', () => {
+      const fixture = createComponent();
       testComponent.startAt = new Date(2017, DEC, 1);
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -402,6 +396,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render the month view when the minDate changes', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
@@ -413,6 +408,7 @@ describe('MatCalendar', () => {
     });
 
     it('should not re-render the month view when the minDate changes to the same day at a different time', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
@@ -424,6 +420,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render the month view when the maxDate changes', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       spyOn(calendarInstance.monthView, '_init').and.callThrough();
 
@@ -435,6 +432,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render the year view when the minDate changes', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       const periodButton = calendarElement.querySelector(
         '.mat-calendar-period-button',
@@ -455,6 +453,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render the year view when the maxDate changes', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       const periodButton = calendarElement.querySelector(
         '.mat-calendar-period-button',
@@ -475,6 +474,7 @@ describe('MatCalendar', () => {
     });
 
     it('should not re-render the year view when the maxDate changes to the same day at a different time', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       const periodButton = calendarElement.querySelector(
         '.mat-calendar-period-button',
@@ -495,6 +495,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render the multi-year view when the minDate changes', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       const periodButton = calendarElement.querySelector(
         '.mat-calendar-period-button',
@@ -512,6 +513,7 @@ describe('MatCalendar', () => {
     });
 
     it('should re-render the multi-year view when the maxDate changes', () => {
+      const fixture = createComponent();
       fixture.detectChanges();
       const periodButton = calendarElement.querySelector(
         '.mat-calendar-period-button',
@@ -529,15 +531,12 @@ describe('MatCalendar', () => {
     });
 
     it('should update the minDate in the child view if it changed after an interaction', () => {
-      fixture.destroy();
-
       const dynamicFixture = TestBed.createComponent(CalendarWithSelectableMinDate);
       dynamicFixture.detectChanges();
 
       const calendarDebugElement = dynamicFixture.debugElement.query(By.directive(MatCalendar))!;
       const disabledClass = 'mat-calendar-body-disabled';
-      calendarElement = calendarDebugElement.nativeElement;
-      calendarInstance = calendarDebugElement.componentInstance;
+      const calendarElement: HTMLElement = calendarDebugElement.nativeElement;
 
       let cells = Array.from(calendarElement.querySelectorAll('.mat-calendar-body-cell'));
 
@@ -561,6 +560,17 @@ describe('MatCalendar', () => {
         .withContext('Expected dates after the 14th to be enabled.')
         .toBe(false);
     });
+
+    function createComponent(): ComponentFixture<CalendarWithMinMax> {
+      const fixture = TestBed.createComponent(CalendarWithMinMax);
+
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
+      calendarElement = calendarDebugElement.nativeElement;
+      calendarInstance = calendarDebugElement.componentInstance;
+      testComponent = fixture.componentInstance;
+
+      return fixture;
+    }
   });
 
   describe('calendar with date filter', () => {

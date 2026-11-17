@@ -1118,20 +1118,12 @@ describe('MatInput without forms', () => {
 
 describe('MatInput with forms', () => {
   describe('error messages', () => {
-    let fixture: ComponentFixture<MatInputWithFormErrorMessages>;
     let testComponent: MatInputWithFormErrorMessages;
     let containerEl: HTMLElement;
     let inputEl: HTMLInputElement;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
-      fixture.detectChanges();
-      testComponent = fixture.componentInstance;
-      containerEl = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
-      inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
-    });
-
     it('should not show any errors if the user has not interacted', () => {
+      createComponent();
       expect(testComponent.formControl.untouched)
         .withContext('Expected untouched form control')
         .toBe(true);
@@ -1144,6 +1136,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should display an error message when the input is touched and invalid', () => {
+      const fixture = createComponent();
       expect(testComponent.formControl.invalid)
         .withContext('Expected form control to be invalid')
         .toBe(true);
@@ -1167,6 +1160,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should not reset text-field validity if focus changes for an invalid input', () => {
+      const fixture = createComponent();
       // Mark the control as touched, so that the form-field displays as invalid.
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
@@ -1180,6 +1174,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should display an error message when the parent form is submitted', () => {
+      const fixture = createComponent();
       expect(testComponent.form.submitted)
         .withContext('Expected form not to have been submitted')
         .toBe(false);
@@ -1209,9 +1204,6 @@ describe('MatInput with forms', () => {
     });
 
     it('should display an error message when the parent form group is submitted', () => {
-      fixture.destroy();
-      TestBed.resetTestingModule();
-
       let groupFixture = TestBed.createComponent(MatInputWithFormGroupErrorMessages);
       let component: MatInputWithFormGroupErrorMessages;
 
@@ -1252,6 +1244,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should hide the errors and show the hints once the input becomes valid', () => {
+      const fixture = createComponent();
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
@@ -1281,6 +1274,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should not hide the hint if there are no error messages', () => {
+      const fixture = createComponent();
       testComponent.renderError = false;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -1298,6 +1292,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should be in a parent element with the an aria-live attribute to announce the error', () => {
+      const fixture = createComponent();
       testComponent.formControl.markAsTouched();
       fixture.detectChanges();
 
@@ -1307,6 +1302,7 @@ describe('MatInput with forms', () => {
     });
 
     it('sets the aria-describedby to reference errors when in error state', () => {
+      const fixture = createComponent();
       let hintId = fixture.debugElement
         .query(By.css('.mat-mdc-form-field-hint'))!
         .nativeElement.getAttribute('id');
@@ -1329,6 +1325,7 @@ describe('MatInput with forms', () => {
     });
 
     it('should set `aria-invalid` to true if the input is empty', () => {
+      const fixture = createComponent();
       // Submit the form since it's the one that triggers the default error state matcher.
       dispatchFakeEvent(fixture.nativeElement.querySelector('form'), 'submit');
       fixture.detectChanges();
@@ -1351,6 +1348,15 @@ describe('MatInput with forms', () => {
         .withContext('Expected aria-invalid to be set to "true".')
         .toBe('true');
     });
+
+    function createComponent(): ComponentFixture<MatInputWithFormErrorMessages> {
+      const fixture = TestBed.createComponent(MatInputWithFormErrorMessages);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+      containerEl = fixture.debugElement.query(By.css('.mat-mdc-form-field'))!.nativeElement;
+      inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
+      return fixture;
+    }
   });
 
   describe('custom error behavior', () => {

@@ -39,33 +39,20 @@ describe('MatTabHeader', () => {
   describe('focusing', () => {
     let tabListContainer: HTMLElement;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(SimpleTabHeaderApp);
-      fixture.detectChanges();
-
-      appComponent = fixture.componentInstance;
-      tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
-    });
-
     it('should initialize to the selected index', () => {
-      // Recreate the fixture so we can test that it works with a non-default selected index
-      fixture.destroy();
-      fixture = TestBed.createComponent(SimpleTabHeaderApp);
-      fixture.componentInstance.selectedIndex = 1;
-      fixture.detectChanges();
-      appComponent = fixture.componentInstance;
-      tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
-
+      createComponent(1);
       expect(appComponent.tabHeader.focusIndex).toBe(1);
     });
 
     it('should send focus change event', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 2;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(2);
     });
 
     it('should be able to focus a disabled tab', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -76,6 +63,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should move focus right including over disabled tabs', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -91,6 +79,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should move focus left including over disabled tabs', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 3;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(3);
@@ -107,6 +96,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should support key down events to move and select focus', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -154,6 +144,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should not prevent the default space/enter action if the current is selected', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = appComponent.tabHeader.selectedIndex = 0;
       fixture.detectChanges();
 
@@ -167,6 +158,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should move focus to the first tab when pressing HOME', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 3;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(3);
@@ -179,6 +171,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should focus disabled items when moving focus using HOME', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 3;
       appComponent.tabs[0].disabled = true;
       fixture.detectChanges();
@@ -191,6 +184,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should move focus to the last tab when pressing END', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();
       expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -203,6 +197,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should focus disabled items when moving focus using END', () => {
+      const fixture = createComponent();
       appComponent.tabHeader.focusIndex = 0;
       appComponent.tabs[3].disabled = true;
       fixture.changeDetectorRef.markForCheck();
@@ -216,6 +211,7 @@ describe('MatTabHeader', () => {
     });
 
     it('should not do anything if a modifier key is pressed', () => {
+      const fixture = createComponent();
       const rightArrowEvent = createKeyboardEvent('keydown', RIGHT_ARROW, undefined, {shift: true});
       const enterEvent = createKeyboardEvent('keydown', ENTER, undefined, {shift: true});
 
@@ -234,6 +230,19 @@ describe('MatTabHeader', () => {
       expect(appComponent.selectedIndex).toBe(0);
       expect(enterEvent.defaultPrevented).toBe(false);
     });
+
+    function createComponent(selectedIndex?: number) {
+      const fixture = TestBed.createComponent(SimpleTabHeaderApp);
+
+      if (selectedIndex !== undefined) {
+        fixture.componentInstance.selectedIndex = selectedIndex;
+      }
+
+      fixture.detectChanges();
+      appComponent = fixture.componentInstance;
+      tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
+      return fixture;
+    }
   });
 
   describe('pagination', () => {

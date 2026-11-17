@@ -522,23 +522,13 @@ describe('MatDrawer', () => {
   });
 
   describe('focus trapping behavior', () => {
-    let fixture: ComponentFixture<DrawerWithFocusableElements>;
     let testComponent: DrawerWithFocusableElements;
     let drawer: MatDrawer;
     let firstFocusableElement: HTMLElement;
     let lastFocusableElement: HTMLElement;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(DrawerWithFocusableElements);
-      fixture.detectChanges();
-      testComponent = fixture.debugElement.componentInstance;
-      drawer = fixture.debugElement.query(By.directive(MatDrawer))!.componentInstance;
-      firstFocusableElement = fixture.debugElement.query(By.css('.input1'))!.nativeElement;
-      lastFocusableElement = fixture.debugElement.query(By.css('.input2'))!.nativeElement;
-      lastFocusableElement.focus();
-    });
-
     it('should trap focus when opened in "over" mode', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'over';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -553,6 +543,7 @@ describe('MatDrawer', () => {
     });
 
     it('should trap focus when opened in "push" mode', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'push';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -567,6 +558,7 @@ describe('MatDrawer', () => {
     });
 
     it('should trap focus when opened in "side" mode if backdrop is explicitly enabled', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'push';
       testComponent.hasBackdrop = true;
       fixture.changeDetectorRef.markForCheck();
@@ -582,6 +574,7 @@ describe('MatDrawer', () => {
     });
 
     it('should not auto-focus by default when opened in "side" mode', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'side';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -595,6 +588,7 @@ describe('MatDrawer', () => {
     });
 
     it('should auto-focus to first tabbable element when opened in "side" mode when enabled explicitly', async () => {
+      const fixture = createComponent();
       drawer.autoFocus = 'first-tabbable';
       testComponent.mode = 'side';
       fixture.changeDetectorRef.markForCheck();
@@ -610,6 +604,7 @@ describe('MatDrawer', () => {
     });
 
     it('should auto-focus to first tabbable element when opened in "push" mode when backdrop is enabled explicitly', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'push';
       testComponent.hasBackdrop = true;
       fixture.changeDetectorRef.markForCheck();
@@ -625,8 +620,6 @@ describe('MatDrawer', () => {
     });
 
     it('should focus the drawer if there are no focusable elements', async () => {
-      fixture.destroy();
-
       const nonFocusableFixture = TestBed.createComponent(DrawerWithoutFocusableElements);
       const drawerEl = nonFocusableFixture.debugElement.query(By.directive(MatDrawer))!;
       nonFocusableFixture.detectChanges();
@@ -640,6 +633,7 @@ describe('MatDrawer', () => {
     });
 
     it('should be able to disable auto focus', async () => {
+      const fixture = createComponent();
       drawer.autoFocus = 'dialog';
       testComponent.mode = 'push';
       fixture.changeDetectorRef.markForCheck();
@@ -654,6 +648,7 @@ describe('MatDrawer', () => {
     });
 
     it('should update the focus trap enable state if the mode changes while open', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'side';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -680,6 +675,7 @@ describe('MatDrawer', () => {
     });
 
     it('should disable the focus trap while closed', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'over';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -703,11 +699,9 @@ describe('MatDrawer', () => {
     });
 
     it('should not trap focus if the drawer container has a backdrop, but is not showing it', async () => {
-      fixture.destroy();
-
       const hiddenBackdropFixture = TestBed.createComponent(DrawerWithSideAndHiddenBackdrop);
       hiddenBackdropFixture.detectChanges();
-      await fixture.whenStable();
+      await hiddenBackdropFixture.whenStable();
       hiddenBackdropFixture.detectChanges();
 
       const anchors = Array.from<HTMLElement>(
@@ -719,6 +713,7 @@ describe('MatDrawer', () => {
     });
 
     it('should mark the content as `inert` in `over` mode', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'over';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -736,6 +731,7 @@ describe('MatDrawer', () => {
     });
 
     it('should not mark the content as `inert` in `side` mode', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'side';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -753,6 +749,7 @@ describe('MatDrawer', () => {
     });
 
     it('should toggle `inert` on the content if the `mode` changes', async () => {
+      const fixture = createComponent();
       testComponent.mode = 'over';
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -777,6 +774,17 @@ describe('MatDrawer', () => {
       fixture.detectChanges();
       expect(content.getAttribute('inert')).toBe('true');
     });
+
+    function createComponent(): ComponentFixture<DrawerWithFocusableElements> {
+      const fixture = TestBed.createComponent(DrawerWithFocusableElements);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      drawer = fixture.debugElement.query(By.directive(MatDrawer))!.componentInstance;
+      firstFocusableElement = fixture.debugElement.query(By.css('.input1'))!.nativeElement;
+      lastFocusableElement = fixture.debugElement.query(By.css('.input2'))!.nativeElement;
+      lastFocusableElement.focus();
+      return fixture;
+    }
   });
 
   it('should mark the drawer content as scrollable', () => {

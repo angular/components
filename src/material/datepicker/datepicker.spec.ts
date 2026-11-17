@@ -1146,22 +1146,14 @@ describe('MatDatepicker', () => {
     });
 
     describe('datepicker with mat-datepicker-toggle', () => {
-      let fixture: ComponentFixture<DatepickerWithToggle>;
       let testComponent: DatepickerWithToggle;
-
-      beforeEach(() => {
-        fixture = createComponent(DatepickerWithToggle, [provideNativeDateAdapter()]);
-        fixture.detectChanges();
-
-        testComponent = fixture.componentInstance;
-      });
 
       afterEach(() => {
         testComponent.datepicker.close();
-        fixture.detectChanges();
       });
 
       it('should set `aria-haspopup` on the toggle button', () => {
+        const fixture = createToggleComponent();
         const button = fixture.debugElement.query(By.css('button'))!;
 
         expect(button).toBeTruthy();
@@ -1169,6 +1161,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should set a default `aria-label` on the toggle button', () => {
+        const fixture = createToggleComponent();
         const button = fixture.debugElement.query(By.css('button'))!;
 
         expect(button).toBeTruthy();
@@ -1176,6 +1169,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should be able to change the button `aria-label`', () => {
+        const fixture = createToggleComponent();
         fixture.componentInstance.ariaLabel = 'Toggle the datepicker';
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1186,6 +1180,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should open calendar when toggle clicked', () => {
+        const fixture = createToggleComponent();
         expect(document.querySelector('.mat-datepicker-dialog')).toBeNull();
 
         let toggle = fixture.debugElement.query(By.css('button'))!;
@@ -1196,6 +1191,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should not open calendar when toggle clicked if datepicker is disabled', () => {
+        const fixture = createToggleComponent();
         testComponent.datepicker.disabled = true;
         fixture.changeDetectorRef.markForCheck();
         fixture.detectChanges();
@@ -1211,6 +1207,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should not open calendar when toggle clicked if input is disabled', () => {
+        const fixture = createToggleComponent();
         expect(testComponent.datepicker.disabled).toBe(false);
 
         testComponent.input.disabled = true;
@@ -1228,16 +1225,19 @@ describe('MatDatepicker', () => {
       });
 
       it('should set the `button` type on the trigger to prevent form submissions', () => {
+        const fixture = createToggleComponent();
         let toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
         expect(toggle.getAttribute('type')).toBe('button');
       });
 
       it('should remove the underlying SVG icon from the tab order', () => {
+        const fixture = createToggleComponent();
         const icon = fixture.debugElement.nativeElement.querySelector('svg');
         expect(icon.getAttribute('focusable')).toBe('false');
       });
 
       it('should restore focus to the toggle after the calendar is closed', async () => {
+        const fixture = createToggleComponent();
         let toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
 
         fixture.componentInstance.touchUI = false;
@@ -1269,11 +1269,7 @@ describe('MatDatepicker', () => {
           return;
         }
 
-        fixture.destroy();
-        TestBed.resetTestingModule();
-        fixture = createComponent(DatepickerWithToggleInShadowDom, [provideNativeDateAdapter()]);
-        fixture.detectChanges();
-        testComponent = fixture.componentInstance;
+        const fixture = createToggleComponent(DatepickerWithToggleInShadowDom);
 
         const toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
         fixture.componentInstance.touchUI = false;
@@ -1293,6 +1289,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should allow for focus restoration to be disabled', async () => {
+        const fixture = createToggleComponent();
         let toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
 
         fixture.componentInstance.touchUI = false;
@@ -1324,6 +1321,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should not override focus if it was moved inside the closed event in touchUI mode', async () => {
+        const fixture = createToggleComponent();
         const focusTarget = document.createElement('button');
         const datepicker = fixture.componentInstance.datepicker;
         const subscription = datepicker.closedStream.subscribe(() => focusTarget.focus());
@@ -1368,6 +1366,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should re-render when the i18n labels change', () => {
+        const fixture = createToggleComponent();
         const intl = TestBed.inject(MatDatepickerIntl);
         const toggle = fixture.debugElement.query(By.css('button'))!.nativeElement;
 
@@ -1379,6 +1378,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should toggle the active state of the datepicker toggle', () => {
+        const fixture = createToggleComponent();
         const toggle = fixture.debugElement.query(By.css('mat-datepicker-toggle'))!.nativeElement;
 
         expect(toggle.classList).not.toContain('mat-datepicker-toggle-active');
@@ -1395,6 +1395,7 @@ describe('MatDatepicker', () => {
       });
 
       it('should set aria-expanded on the toggle', () => {
+        const fixture = createToggleComponent();
         const button = fixture.nativeElement.querySelector('mat-datepicker-toggle button');
 
         expect(button.getAttribute('aria-expanded')).toBe('false');
@@ -1409,6 +1410,16 @@ describe('MatDatepicker', () => {
 
         expect(button.getAttribute('aria-expanded')).toBe('false');
       });
+
+      function createToggleComponent(
+        component: Type<DatepickerWithToggle> = DatepickerWithToggle,
+      ): ComponentFixture<DatepickerWithToggle> {
+        const fixture = createComponent(component, [provideNativeDateAdapter()]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+        return fixture;
+      }
     });
 
     describe('datepicker with custom mat-datepicker-toggle icon', () => {
