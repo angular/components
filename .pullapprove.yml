@@ -77,7 +77,6 @@ groups:
     reviewers:
       users:
         - crisbeto
-        - devversion
         - andrewseguin
         - josephperrott
 
@@ -100,5 +99,4 @@ groups:
         - andrewseguin
         - tjshiu
         - ok7sai
-        - ~devversion
         - ~josephperrott
