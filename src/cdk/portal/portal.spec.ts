@@ -26,14 +26,8 @@ import {CdkPortal, CdkPortalOutlet, PortalModule} from './portal-directives';
 
 describe('Portals', () => {
   describe('CdkPortalOutlet', () => {
-    let fixture: ComponentFixture<PortalTestApp>;
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(PortalTestApp);
-      fixture.detectChanges();
-    });
-
     it('should load a component into the portal', () => {
+      const fixture = createPortalTestApp();
       // Set the selectedHost to be a ComponentPortal.
       let testAppComponent = fixture.componentInstance;
       let componentPortal = new ComponentPortal(PizzaMsg);
@@ -53,6 +47,7 @@ describe('Portals', () => {
     });
 
     it('should load a template into the portal outlet', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
       let hostContainer = fixture.nativeElement.querySelector('.portal-container');
       let templatePortal = new TemplatePortal(testAppComponent.templateRef, null!);
@@ -77,6 +72,7 @@ describe('Portals', () => {
     });
 
     it('should load a template with a custom injector into the portal outlet', () => {
+      const fixture = createPortalTestApp();
       const testAppComponent = fixture.componentInstance;
       const hostContainer = fixture.nativeElement.querySelector('.portal-container');
       const templatePortal = new TemplatePortal(
@@ -106,6 +102,7 @@ describe('Portals', () => {
     });
 
     it('should load a DOM portal', () => {
+      const fixture = createPortalTestApp();
       const testAppComponent = fixture.componentInstance;
       const hostContainer = fixture.nativeElement.querySelector('.portal-container');
       const innerContent = fixture.nativeElement.querySelector('.dom-portal-inner-content');
@@ -179,6 +176,7 @@ describe('Portals', () => {
     });
 
     it('should throw when trying to load an element without a parent into a DOM portal via a CdkPortalOutlet', () => {
+      const fixture = createPortalTestApp();
       const testAppComponent = fixture.componentInstance;
       const element = document.createElement('div');
       const domPortal = new DomPortal(element);
@@ -191,6 +189,7 @@ describe('Portals', () => {
     });
 
     it('should not throw when restoring if the CdkPortalOutlet element was cleared', () => {
+      const fixture = createPortalTestApp();
       const testAppComponent = fixture.componentInstance;
       const parent = fixture.nativeElement.querySelector('.dom-portal-parent');
       const domPortal = new DomPortal(testAppComponent.domPortalContent);
@@ -209,6 +208,7 @@ describe('Portals', () => {
     });
 
     it('should project template context bindings in the portal', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
       let hostContainer = fixture.nativeElement.querySelector('.portal-container');
 
@@ -254,6 +254,7 @@ describe('Portals', () => {
     });
 
     it('should dispose the host when destroyed', () => {
+      const fixture = createPortalTestApp();
       // Set the selectedHost to be a ComponentPortal.
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
@@ -267,6 +268,7 @@ describe('Portals', () => {
     });
 
     it('should load a component into the portal with a given injector', () => {
+      const fixture = createPortalTestApp();
       // Create a custom injector for the component.
       let chocolateInjector = new ChocolateInjector(fixture.componentInstance.injector);
 
@@ -283,6 +285,7 @@ describe('Portals', () => {
     });
 
     it('should load a <ng-template> portal', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -299,6 +302,7 @@ describe('Portals', () => {
     });
 
     it('should load a <ng-template> portal with the `*` sugar', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -315,6 +319,7 @@ describe('Portals', () => {
     });
 
     it('should load a <ng-template> portal with a binding', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -341,6 +346,7 @@ describe('Portals', () => {
     });
 
     it('should load a <ng-template> portal with an inner template', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -365,6 +371,7 @@ describe('Portals', () => {
     });
 
     it('should change the attached portal in a CdkPortalOutlet', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
 
       // Detect changes initially so that the component's ViewChildren are resolved.
@@ -387,6 +394,7 @@ describe('Portals', () => {
     });
 
     it('should detach the portal when it is set to null', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
       fixture.changeDetectorRef.markForCheck();
@@ -404,6 +412,7 @@ describe('Portals', () => {
     });
 
     it('should set the `portal` when attaching a component portal programmatically', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
       let portal = new ComponentPortal(PizzaMsg);
 
@@ -413,6 +422,7 @@ describe('Portals', () => {
     });
 
     it('should set the `portal` when attaching a template portal programmatically', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
       fixture.detectChanges();
 
@@ -422,6 +432,7 @@ describe('Portals', () => {
     });
 
     it('should clear the portal reference on destroy', () => {
+      const fixture = createPortalTestApp();
       let testAppComponent = fixture.componentInstance;
 
       testAppComponent.selectedPortal = new ComponentPortal(PizzaMsg);
@@ -436,8 +447,6 @@ describe('Portals', () => {
     });
 
     it('should not clear programmatically-attached portals on init', () => {
-      fixture.destroy();
-
       const unboundFixture = TestBed.createComponent(UnboundPortalTestApp);
       unboundFixture.detectChanges();
 
@@ -452,18 +461,21 @@ describe('Portals', () => {
     });
 
     it('should be considered attached when attaching using `attach`', () => {
+      const fixture = createPortalTestApp();
       expect(fixture.componentInstance.portalOutlet.hasAttached()).toBe(false);
       fixture.componentInstance.portalOutlet.attach(new ComponentPortal(PizzaMsg));
       expect(fixture.componentInstance.portalOutlet.hasAttached()).toBe(true);
     });
 
     it('should be considered attached when attaching using `attachComponentPortal`', () => {
+      const fixture = createPortalTestApp();
       expect(fixture.componentInstance.portalOutlet.hasAttached()).toBe(false);
       fixture.componentInstance.portalOutlet.attachComponentPortal(new ComponentPortal(PizzaMsg));
       expect(fixture.componentInstance.portalOutlet.hasAttached()).toBe(true);
     });
 
     it('should be considered attached when attaching using `attachTemplatePortal`', () => {
+      const fixture = createPortalTestApp();
       const instance = fixture.componentInstance;
       expect(instance.portalOutlet.hasAttached()).toBe(false);
       instance.portalOutlet.attachTemplatePortal(new TemplatePortal(instance.templateRef, null!));
@@ -471,6 +483,7 @@ describe('Portals', () => {
     });
 
     it('should render inside outlet when component portal specifies view container ref', () => {
+      const fixture = createPortalTestApp();
       const hostContainer = fixture.nativeElement.querySelector('.portal-container');
       const portal = new ComponentPortal(PizzaMsg, fixture.componentInstance.alternateContainer);
 
@@ -482,6 +495,7 @@ describe('Portals', () => {
     });
 
     it('should be able to pass projectable nodes to portal', () => {
+      const fixture = createPortalTestApp();
       // Set the selectedHost to be a ComponentPortal.
       const testAppComponent = fixture.componentInstance;
       const componentPortal = new ComponentPortal(PizzaMsg, undefined, undefined, [
@@ -496,6 +510,7 @@ describe('Portals', () => {
     });
 
     it('should be able to pass bindings to the component via a CdkPortalOutlet', () => {
+      const fixture = createPortalTestApp();
       let flavor = 'pepperoni';
       const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, [
         inputBinding('flavor', () => flavor),
@@ -515,6 +530,7 @@ describe('Portals', () => {
     });
 
     it('should be able to pass directives to the component via a CdkPortalOutlet', () => {
+      const fixture = createPortalTestApp();
       const componentPortal = new ComponentPortal(PizzaMsg, null, null, null, undefined, [
         HighlightDirective,
       ]);
@@ -527,6 +543,12 @@ describe('Portals', () => {
       const hostElement = ref.location.nativeElement as HTMLElement;
       expect(hostElement.style.background).toBe('yellow');
     });
+
+    function createPortalTestApp(): ComponentFixture<PortalTestApp> {
+      const fixture = TestBed.createComponent(PortalTestApp);
+      fixture.detectChanges();
+      return fixture;
+    }
   });
 
   describe('DomPortalOutlet', () => {

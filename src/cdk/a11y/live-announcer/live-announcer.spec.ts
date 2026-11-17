@@ -16,20 +16,14 @@ import {createOverlayRef} from '@angular/cdk/overlay';
 describe('LiveAnnouncer', () => {
   let announcer: LiveAnnouncer;
   let ariaLiveElement: Element;
-  let fixture: ComponentFixture<TestApp>;
 
   function wait(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   describe('with default element', () => {
-    beforeEach(async () => {
-      announcer = TestBed.inject(LiveAnnouncer);
-      ariaLiveElement = getLiveElement();
-      fixture = TestBed.createComponent(TestApp);
-    });
-
     it('should correctly update the announce text', async () => {
+      const fixture = createComponent();
       let buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
       buttonElement.click();
 
@@ -40,6 +34,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should correctly update the politeness attribute', async () => {
+      createComponent();
       announcer.announce('Hey Google', 'assertive');
 
       // This flushes our 100ms timeout for the screenreaders.
@@ -50,6 +45,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should apply the aria-live value polite by default', async () => {
+      createComponent();
       announcer.announce('Hey Google');
 
       // This flushes our 100ms timeout for the screenreaders.
@@ -60,6 +56,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should be able to clear out the aria-live element manually', async () => {
+      createComponent();
       announcer.announce('Hey Google');
       await wait(110);
       expect(ariaLiveElement.textContent).toBe('Hey Google');
@@ -69,6 +66,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should be able to clear out the aria-live element by setting a duration', async () => {
+      createComponent();
       announcer.announce('Hey Google', 2000);
       await wait(110);
       expect(ariaLiveElement.textContent).toBe('Hey Google');
@@ -78,6 +76,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should clear the duration of previous messages when announcing a new one', async () => {
+      createComponent();
       announcer.announce('Hey Google', 2000);
       await wait(100);
       expect(ariaLiveElement.textContent).toBe('Hey Google');
@@ -88,6 +87,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should remove the aria-live element from the DOM on destroy', async () => {
+      createComponent();
       announcer.announce('Hey Google');
 
       // This flushes our 100ms timeout for the screenreaders.
@@ -102,6 +102,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should return a promise that resolves after the text has been announced', async () => {
+      createComponent();
       const spy = jasmine.createSpy('announce spy');
       announcer.announce('something').then(spy);
 
@@ -111,6 +112,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should resolve the returned promise if another announcement is made before the timeout has expired', async () => {
+      createComponent();
       const spy = jasmine.createSpy('announce spy');
       announcer.announce('something').then(spy);
       await wait(10);
@@ -121,15 +123,10 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should ensure that there is only one live element at a time', async () => {
-      fixture.destroy();
-      TestBed.resetTestingModule().configureTestingModule({});
-
       const extraElement = document.createElement('div');
       extraElement.classList.add('cdk-live-announcer-element');
       document.body.appendChild(extraElement);
-      announcer = TestBed.inject(LiveAnnouncer);
-      ariaLiveElement = getLiveElement();
-      fixture = TestBed.createComponent(TestApp);
+      createComponent();
 
       announcer.announce('Hey Google');
       await wait(110);
@@ -141,6 +138,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should clear any previous timers when a new one is started', async () => {
+      createComponent();
       expect(ariaLiveElement.textContent).toBeFalsy();
 
       announcer.announce('One');
@@ -157,6 +155,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should clear pending timeouts on destroy', async () => {
+      createComponent();
       announcer.announce('Hey Google');
       announcer.ngOnDestroy();
 
@@ -165,6 +164,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should add aria-owns to open aria-modal elements', async () => {
+      const fixture = createComponent();
       const portal = new ComponentPortal(TestModal);
       const overlayRef = createOverlayRef(TestBed.inject(Injector));
       const componentRef = overlayRef.attach(portal);
@@ -185,6 +185,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should expand aria-owns of open aria-modal elements', async () => {
+      const fixture = createComponent();
       const portal = new ComponentPortal(TestModal);
       const overlayRef = createOverlayRef(TestBed.inject(Injector));
       const componentRef = overlayRef.attach(portal);
@@ -208,6 +209,7 @@ describe('LiveAnnouncer', () => {
     });
 
     it('should be able to announce safe HTML', async () => {
+      const fixture = createComponent();
       const sanitizer = TestBed.inject(DomSanitizer);
       const message = sanitizer.bypassSecurityTrustHtml(
         '<span class="message" lang="fr">Bonjour</span>',
@@ -219,6 +221,12 @@ describe('LiveAnnouncer', () => {
 
       expect(ariaLiveElement.querySelector('.message')?.textContent).toBe('Bonjour');
     });
+
+    function createComponent(): ComponentFixture<TestApp> {
+      announcer = TestBed.inject(LiveAnnouncer);
+      ariaLiveElement = getLiveElement();
+      return TestBed.createComponent(TestApp);
+    }
   });
 
   describe('with a custom element', () => {

@@ -940,26 +940,15 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
     let ngModel: NgModel;
 
-    beforeEach(() => {
-      fixture = TestBed.createComponent(CheckboxWithNgModel);
-
-      fixture.componentInstance.isRequired = false;
-      fixture.detectChanges();
-
-      checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
-      checkboxNativeElement = checkboxDebugElement.nativeElement;
-      checkboxInstance = checkboxDebugElement.componentInstance;
-      inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
-      ngModel = checkboxDebugElement.injector.get<NgModel>(NgModel);
-    });
-
     it('should be pristine, untouched, and valid initially', () => {
+      createComponent();
       expect(ngModel.valid).toBe(true);
       expect(ngModel.pristine).toBe(true);
       expect(ngModel.touched).toBe(false);
     });
 
     it('should have correct control states after interaction', async () => {
+      const fixture = createComponent();
       inputElement.click();
       fixture.detectChanges();
 
@@ -983,9 +972,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should mark the element as touched on blur when inside an OnPush parent', async () => {
-      fixture.destroy();
-      TestBed.resetTestingModule();
-      fixture = TestBed.createComponent(CheckboxWithNgModelAndOnPush);
+      const fixture = TestBed.createComponent(CheckboxWithNgModelAndOnPush);
       fixture.detectChanges();
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
@@ -1008,6 +995,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should not throw an error when disabling while focused', () => {
+      const fixture = createComponent();
       expect(() => {
         // Focus the input element because after disabling, the `blur` event should automatically
         // fire and not result in a changed after checked exception. Related: #12323
@@ -1019,6 +1007,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should toggle checked state on click', () => {
+      const fixture = createComponent();
       expect(checkboxInstance.checked).toBe(false);
 
       inputElement.click();
@@ -1033,6 +1022,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should validate with RequiredTrue validator', () => {
+      const fixture = createComponent();
       fixture.componentInstance.isRequired = true;
       inputElement.click();
       fixture.detectChanges();
@@ -1048,6 +1038,7 @@ describe('MatCheckbox', () => {
     });
 
     it('should update the ngModel value when using the `toggle` method', () => {
+      const fixture = createComponent();
       const checkbox = fixture.debugElement.query(By.directive(MatCheckbox)).componentInstance;
 
       expect(fixture.componentInstance.isGood).toBe(false);
@@ -1057,6 +1048,21 @@ describe('MatCheckbox', () => {
 
       expect(fixture.componentInstance.isGood).toBe(true);
     });
+
+    function createComponent(): ComponentFixture<CheckboxWithNgModel> {
+      const fixture = TestBed.createComponent(CheckboxWithNgModel);
+
+      fixture.componentInstance.isRequired = false;
+      fixture.detectChanges();
+
+      checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
+      checkboxNativeElement = checkboxDebugElement.nativeElement;
+      checkboxInstance = checkboxDebugElement.componentInstance;
+      inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+      ngModel = checkboxDebugElement.injector.get<NgModel>(NgModel);
+
+      return fixture;
+    }
   });
 
   describe('with name attribute', () => {

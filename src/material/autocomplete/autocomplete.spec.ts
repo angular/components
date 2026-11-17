@@ -726,17 +726,10 @@ describe('MatAutocomplete', () => {
   });
 
   describe('forms integration', () => {
-    let fixture: ComponentFixture<SimpleAutocomplete>;
     let input: HTMLInputElement;
 
-    beforeEach(() => {
-      fixture = createComponent(SimpleAutocomplete);
-      fixture.detectChanges();
-
-      input = fixture.debugElement.query(By.css('input'))!.nativeElement;
-    });
-
     it('should update control value as user types with input value', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -756,6 +749,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should update control value when autofilling', () => {
+      const fixture = createSimpleAutocomplete();
       // Simulate the browser autofilling the input by setting a value and
       // dispatching an `input` event while the input is out of focus.
       expect(document.activeElement).not.toBe(input, 'Expected input not to have focus.');
@@ -769,6 +763,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should update control value when option is selected with option value', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -784,6 +779,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should update the control back to a string if user types after an option is selected', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -803,6 +799,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should fill the text field with display value when an option is selected', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -818,6 +815,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should fill the text field with value if displayWith is not set', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -838,6 +836,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should fill the text field correctly if value is set to obj programmatically', async () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.stateCtrl.setValue({code: 'AL', name: 'Alabama'});
       fixture.detectChanges();
       await fixture.whenStable();
@@ -849,6 +848,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should clear the text field if value is reset programmatically', async () => {
+      const fixture = createSimpleAutocomplete();
       typeInElement(input, 'Alabama');
       fixture.detectChanges();
 
@@ -862,6 +862,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should clear the previous selection when reactive form field is reset programmatically', async () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       await fixture.whenStable();
@@ -889,6 +890,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should disable input in view when disabled programmatically', () => {
+      const fixture = createSimpleAutocomplete();
       const formFieldElement = fixture.debugElement.query(
         By.css('.mat-mdc-form-field'),
       )!.nativeElement;
@@ -912,6 +914,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should mark the autocomplete control as dirty as user types', () => {
+      const fixture = createSimpleAutocomplete();
       expect(fixture.componentInstance.stateCtrl.dirty)
         .withContext(`Expected control to start out pristine.`)
         .toBe(false);
@@ -925,6 +928,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should mark the autocomplete control as dirty when an option is selected', () => {
+      const fixture = createSimpleAutocomplete();
       expect(fixture.componentInstance.stateCtrl.dirty)
         .withContext(`Expected control to start out pristine.`)
         .toBe(false);
@@ -944,6 +948,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should not mark the control dirty when the value is set programmatically', () => {
+      const fixture = createSimpleAutocomplete();
       expect(fixture.componentInstance.stateCtrl.dirty)
         .withContext(`Expected control to start out pristine.`)
         .toBe(false);
@@ -957,6 +962,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should mark the autocomplete control as touched on blur', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       expect(fixture.componentInstance.stateCtrl.touched)
@@ -972,9 +978,6 @@ describe('MatAutocomplete', () => {
     });
 
     it('should disable the input when used with a value accessor and without `matInput`', () => {
-      fixture.destroy();
-      TestBed.resetTestingModule();
-
       const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
       plainFixture.detectChanges();
       input = plainFixture.nativeElement.querySelector('input');
@@ -986,6 +989,14 @@ describe('MatAutocomplete', () => {
 
       expect(input.disabled).toBe(true);
     });
+
+    function createSimpleAutocomplete(): ComponentFixture<SimpleAutocomplete> {
+      const fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+
+      input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+      return fixture;
+    }
   });
 
   describe('with theming', () => {
@@ -2237,14 +2248,8 @@ describe('MatAutocomplete', () => {
   });
 
   describe('Option selection', () => {
-    let fixture: ComponentFixture<SimpleAutocomplete>;
-
-    beforeEach(() => {
-      fixture = createComponent(SimpleAutocomplete);
-      fixture.detectChanges();
-    });
-
     it('should deselect any other selected option', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -2276,6 +2281,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should call deselect only on the previous selected option', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -2305,6 +2311,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should be able to preselect the first option', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
       fixture.changeDetectorRef.markForCheck();
       fixture.componentInstance.trigger.openPanel();
@@ -2320,6 +2327,7 @@ describe('MatAutocomplete', () => {
       'should skip to the next enabled option if the first one is disabled ' +
         'when using `autoActiveFirstOption`',
       async () => {
+        const fixture = createSimpleAutocomplete();
         const testComponent = fixture.componentInstance;
         testComponent.trigger.autocomplete.autoActiveFirstOption = true;
         testComponent.states[0].disabled = true;
@@ -2335,6 +2343,7 @@ describe('MatAutocomplete', () => {
     );
 
     it('should not activate any option if all options are disabled', () => {
+      const fixture = createSimpleAutocomplete();
       const testComponent = fixture.componentInstance;
       testComponent.trigger.autocomplete.autoActiveFirstOption = true;
       for (const state of testComponent.states) {
@@ -2351,6 +2360,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should remove aria-activedescendant when panel is closed with autoActiveFirstOption', () => {
+      const fixture = createSimpleAutocomplete();
       const input: HTMLElement = fixture.nativeElement.querySelector('input');
 
       expect(input.hasAttribute('aria-activedescendant'))
@@ -2376,6 +2386,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should be able to preselect the first option when the floating label is disabled', () => {
+      const fixture = createSimpleAutocomplete();
       // TODO(crisbeto): this test likely doesn't make sense anymore.
       fixture.componentInstance.floatLabel = 'never' as any;
       fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
@@ -2393,9 +2404,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should be able to configure preselecting the first option globally', () => {
-      fixture.destroy();
-      TestBed.resetTestingModule();
-      fixture = createComponent(SimpleAutocomplete, [
+      const fixture = createComponent(SimpleAutocomplete, [
         {provide: MAT_AUTOCOMPLETE_DEFAULT_OPTIONS, useValue: {autoActiveFirstOption: true}},
       ]);
 
@@ -2410,8 +2419,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should handle `optionSelections` being accessed too early', () => {
-      fixture.destroy();
-      fixture = TestBed.createComponent(SimpleAutocomplete);
+      const fixture = createComponent(SimpleAutocomplete);
 
       let spy = jasmine.createSpy('option selection spy');
       let subscription: Subscription;
@@ -2435,6 +2443,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should emit to `optionSelections` if the list of options changes', async () => {
+      const fixture = createSimpleAutocomplete();
       const spy = jasmine.createSpy('option selection spy');
       const subscription = fixture.componentInstance.trigger.optionSelections.subscribe(spy);
       const openAndSelectFirstOption = async () => {
@@ -2463,6 +2472,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should reposition the panel when the amount of options changes', async () => {
+      const fixture = createSimpleAutocomplete();
       const flushPosition = async () => {
         fixture.detectChanges();
         await wait(0);
@@ -2512,6 +2522,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should clear the selected option when the input value is cleared', () => {
+      const fixture = createSimpleAutocomplete();
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
@@ -2539,6 +2550,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should accept the user selection if they click on an option while selection is required', async () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2572,6 +2584,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should accept the user selection if they press enter on an option while selection is required', async () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2605,6 +2618,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should accept the user selection if autoSelectActiveOption is enabled', async () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2635,6 +2649,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should clear the value if selection is required and the user interacted with the panel without selecting anything', async () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2674,6 +2689,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should preserve the value if a selection is required, but the user opened and closed the panel without interacting with it', async () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2703,6 +2719,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should preserve the value if a selection is required, and there are no options', async () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger, states} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2736,6 +2753,7 @@ describe('MatAutocomplete', () => {
     });
 
     it('should clear the value if requireSelection is enabled and the user edits the input before clicking away', () => {
+      const fixture = createSimpleAutocomplete();
       const input = fixture.nativeElement.querySelector('input');
       const {stateCtrl, trigger} = fixture.componentInstance;
       fixture.componentInstance.requireSelection = true;
@@ -2772,6 +2790,12 @@ describe('MatAutocomplete', () => {
       expect(input.value).toBe('');
       expect(stateCtrl.value).toBe(null);
     });
+
+    function createSimpleAutocomplete(): ComponentFixture<SimpleAutocomplete> {
+      const fixture = createComponent(SimpleAutocomplete);
+      fixture.detectChanges();
+      return fixture;
+    }
   });
 
   describe('panel closing', () => {
