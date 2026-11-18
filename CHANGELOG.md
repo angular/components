@@ -1,3 +1,9 @@
+<a name="22.4.0-next.0"></a>
+# 22.4.0-next.0 "nitrogen-nightstand" (2026-11-18)
+No user facing changes in this release
+
+<!-- CHANGELOG SPLIT MARKER -->
+
 <a name="22.3.0"></a>
 # 22.3.0 "nitrogen-nail" (2026-11-18)
 ### aria
