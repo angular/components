@@ -1,23 +1,21 @@
-<a name="22.3.0-rc.0"></a>
-# 22.3.0-rc.0 "thorium-telephone" (2026-11-11)
+<a name="22.3.0"></a>
+# 22.3.0 "nitrogen-nail" (2026-11-18)
 ### aria
 | Commit | Type | Description |
 | -- | -- | -- |
-| [17b4f1faa](https://github.com/angular/components/commit/17b4f1faa0a5cf57fc860a3d575602b6edf0c2cb) | fix | **accordion:** avoid errors when destroyed before initialization ([#34061](https://github.com/angular/components/pull/34061)) |
 | [249b3ee5c](https://github.com/angular/components/commit/249b3ee5c8b334dcb6b8d9e035380318e4438c2c) | fix | **combobox:** queue relayed keyboard events to prevent dropping back-to-back keys ([#34083](https://github.com/angular/components/pull/34083)) |
-| [577dba711](https://github.com/angular/components/commit/577dba711206c67f53a7f79e3312758296c8f4a9) | fix | **grid:** activate composed widgets when child inputs receive focus ([#34077](https://github.com/angular/components/pull/34077)) |
-| [7264bd0b5](https://github.com/angular/components/commit/7264bd0b5544a9d1ec10f3a27fdb2593604c7342) | fix | **menu:** expose trigger tab index ([#34084](https://github.com/angular/components/pull/34084)) |
-| [90f8fee60](https://github.com/angular/components/commit/90f8fee60a82ccc5237ded81c42e2ec40958d34a) | fix | **menu:** render content only when visible ([#34104](https://github.com/angular/components/pull/34104)) |
-| [e967ccd8a](https://github.com/angular/components/commit/e967ccd8a710514d14c2a9bff4a95cc38b70c191) | fix | **tree:** avoid errors when destroyed before initialization ([#34059](https://github.com/angular/components/pull/34059)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [94fc67886](https://github.com/angular/components/commit/94fc67886dc073c390a4fe310806771b6eabc73e) | fix | **menu:** use latest trigger data when menu is reopened ([#34096](https://github.com/angular/components/pull/34096)) |
-| [aa1afc744](https://github.com/angular/components/commit/aa1afc744ac9e50f331204d43058407b0329624a) | fix | **scrolling:** prevent scrollable from leaking into nested lists ([#34100](https://github.com/angular/components/pull/34100)) |
 ### material
 | Commit | Type | Description |
 | -- | -- | -- |
+| [c60928437](https://github.com/angular/components/commit/c60928437494e8338f185788fa0c744a3c0c0149) | feat | **chips:** add leading icon support ([#34028](https://github.com/angular/components/pull/34028)) |
+| [9fb490792](https://github.com/angular/components/commit/9fb490792ecd2dc528c9c97769f71cbeb9a6b708) | feat | **stepper:** add a styling token for header icon shape ([#33963](https://github.com/angular/components/pull/33963)) |
+| [ea588da1e](https://github.com/angular/components/commit/ea588da1ece60b96f3bf2a942d1443d22422fd1a) | fix | **checkbox:** use correct selector for label |
 | [78e0484ef](https://github.com/angular/components/commit/78e0484efd4b2d71a9f78fa4d6077d47486ca97c) | fix | **chips:** do not apply avatar shape to leading icons ([#34099](https://github.com/angular/components/pull/34099)) |
+| [a8808e252](https://github.com/angular/components/commit/a8808e252a5f737c11b31010d5498daf89332fb0) | fix | **radio:** use correct selector for label |
+### multiple
+| Commit | Type | Description |
+| -- | -- | -- |
+| [35a61dbc5](https://github.com/angular/components/commit/35a61dbc5cf6fc780e639e74c27783783d224171) | fix | sync aria active item on external focus ([#34107](https://github.com/angular/components/pull/34107)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -36,29 +34,6 @@
 | -- | -- | -- |
 | [2338ff5ff](https://github.com/angular/components/commit/2338ff5ff3a835ff8a7c57c600d77fb5b36c828a) | fix | **menu:** use latest trigger data when menu is reopened ([#34096](https://github.com/angular/components/pull/34096)) |
 | [050532529](https://github.com/angular/components/commit/050532529f80812ded86fca50475a57e73616b78) | fix | **scrolling:** prevent scrollable from leaking into nested lists ([#34100](https://github.com/angular/components/pull/34100)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="22.3.0-next.5"></a>
-# 22.3.0-next.5 "zinc-zucchini" (2026-11-04)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c66561740](https://github.com/angular/components/commit/c665617406365a2d76e0606e2df82ddccf3657a7) | fix | **accordion:** move listeners to trigger ([#34053](https://github.com/angular/components/pull/34053)) |
-| [9512d87ce](https://github.com/angular/components/commit/9512d87cef2c7f54380c069d15bde1e6157fab50) | fix | **combobox:** prevent selecting filtered-out options on Enter ([#34045](https://github.com/angular/components/pull/34045)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [2163de0fe](https://github.com/angular/components/commit/2163de0fe01658260e0e40668574abf10181b999) | fix | **observers:** do not replay other element entries ([#34050](https://github.com/angular/components/pull/34050)) |
-| [e59fce84b](https://github.com/angular/components/commit/e59fce84bf725602ca237e3c55019c2942227248) | fix | **portal:** insert DOM portal in right location ([#34055](https://github.com/angular/components/pull/34055)) |
-| [315a77571](https://github.com/angular/components/commit/315a7757111111c62573b01526d091e39d7bf82d) | fix | **testing:** enable bubbling for input-related events ([#34020](https://github.com/angular/components/pull/34020)) |
-| [da32d4f64](https://github.com/angular/components/commit/da32d4f646a18adf1befaf5f0b844951c1694f58) | fix | **testing:** option selection with latest angular version ([#34040](https://github.com/angular/components/pull/34040)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c60928437](https://github.com/angular/components/commit/c60928437494e8338f185788fa0c744a3c0c0149) | feat | **chips:** add leading icon support ([#34028](https://github.com/angular/components/pull/34028)) |
-| [8239d0445](https://github.com/angular/components/commit/8239d0445b5849205f07574c7e46e8b2e28dab37) | fix | **schematics:** remove waitForAsync from generated tests |
-| [52264e481](https://github.com/angular/components/commit/52264e481bcefa05dd177f7eb06a144eea8f40fb) | fix | **slider:** prevent out of memory errors from tick marks on the server ([#34037](https://github.com/angular/components/pull/34037)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -84,24 +59,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="22.3.0-next.4"></a>
-# 22.3.0-next.4 "bromine-boomerang" (2026-10-28)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [8fc6eacef](https://github.com/angular/components/commit/8fc6eacef5a50c522458ccb61242b090ffaa84aa) | fix | **menu:** avoid re-rendering when unrelated elements are added ([#33996](https://github.com/angular/components/pull/33996)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [79af796a9](https://github.com/angular/components/commit/79af796a9aa6c9348a045cda76532c13798717db) | fix | **checkbox:** duplicate required error with signal forms |
-| [19c161027](https://github.com/angular/components/commit/19c1610274069dc8d40e7a947995027348acc752) | fix | **slide-toggle:** duplicate required error with signal forms |
-### multiple
-| Commit | Type | Description |
-| -- | -- | -- |
-| [14c794436](https://github.com/angular/components/commit/14c79443646df6ade944f421c97906bc10a1d55c) | fix | update fake event detection in aria ([#34004](https://github.com/angular/components/pull/34004)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="22.2.5"></a>
 # 22.2.5 "bromine-broom" (2026-10-28)
 ### aria
@@ -120,21 +77,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="22.3.0-next.3"></a>
-# 22.3.0-next.3 "titanium-tarantula" (2026-10-21)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [bbc575074](https://github.com/angular/components/commit/bbc575074e9395be8631e9e0545a7361f2b4383a) | fix | **combobox:** error when popup is destroyed before first change detection ([#33974](https://github.com/angular/components/pull/33974)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [9fb490792](https://github.com/angular/components/commit/9fb490792ecd2dc528c9c97769f71cbeb9a6b708) | feat | **stepper:** add a styling token for header icon shape ([#33963](https://github.com/angular/components/pull/33963)) |
-| [d1a4c23fd](https://github.com/angular/components/commit/d1a4c23fdd1efb9cf4f7aa79b296a0bda85e5bf3) | fix | **datepicker:** increse specificity of period button styles ([#33970](https://github.com/angular/components/pull/33970)) |
-| [3f9f22ba9](https://github.com/angular/components/commit/3f9f22ba985eb7f85e812aa66a75ec7b143fd756) | fix | **datepicker:** update parse error with signal forms when value stays null ([#33951](https://github.com/angular/components/pull/33951)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="22.2.4"></a>
 # 22.2.4 "titanium-trousers" (2026-10-21)
 ### aria
@@ -149,19 +91,6 @@
 
 <!-- CHANGELOG SPLIT MARKER -->
 
-<a name="22.3.0-next.2"></a>
-# 22.3.0-next.2 "rhenium-roundabout" (2026-10-14)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [92b97f6fb](https://github.com/angular/components/commit/92b97f6fb188fc2b686d027f50ae58dd8ff7812b) | fix | **a11y:** treat inert elements as non-focusable ([#33846](https://github.com/angular/components/pull/33846)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c0207b5d8](https://github.com/angular/components/commit/c0207b5d84a2903ed846b2ef82698f212bdf0b27) | fix | **chips:** implement touch-target pattern/styles on chip component ([#33614](https://github.com/angular/components/pull/33614)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="22.2.3"></a>
 # 22.2.3 "rhenium-rotor" (2026-10-14)
 ### cdk
@@ -172,25 +101,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [e0c2d4df7](https://github.com/angular/components/commit/e0c2d4df72a673d6bcab027aa4db78f2f7ec9af1) | fix | **chips:** implement touch-target pattern/styles on chip component ([#33614](https://github.com/angular/components/pull/33614)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="22.3.0-next.1"></a>
-# 22.3.0-next.1 "calcium-crown" (2026-10-07)
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [cc3829f62](https://github.com/angular/components/commit/cc3829f624b523d05397cf2d66c5e3d054070d0c) | fix | **drag-drop:** remove old prefixes for fullscreen elements |
-| [84a2366bb](https://github.com/angular/components/commit/84a2366bb1b0912dcdb6f767c9507a5ee1cc916f) | fix | **drag-drop:** use consistent touch coordinates for bounded dragging ([#33928](https://github.com/angular/components/pull/33928)) |
-| [f6c2a193e](https://github.com/angular/components/commit/f6c2a193ec4ad454beeafc74469103fecfc96a12) | fix | **overlay:** remove old prefixes for fullscreen elements |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [cffa9cfea](https://github.com/angular/components/commit/cffa9cfea89ec1f1ec32295a5d1670172db4b653) | fix | **icon:** do not copy event attributes ([#33929](https://github.com/angular/components/pull/33929)) |
-### google-maps
-| Commit | Type | Description |
-| -- | -- | -- |
-| [52a1ef36c](https://github.com/angular/components/commit/52a1ef36c68c763656aeb070bfa9b7fa24905894) | fix | use console.error instead of hard error ([#33917](https://github.com/angular/components/pull/33917)) |
 
 <!-- CHANGELOG SPLIT MARKER -->
 
@@ -210,12 +120,6 @@
 | Commit | Type | Description |
 | -- | -- | -- |
 | [5b8c5fd62](https://github.com/angular/components/commit/5b8c5fd6296291bafb801f9787f163a14b176724) | fix | use console.error instead of hard error ([#33917](https://github.com/angular/components/pull/33917)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
-<a name="22.3.0-next.0"></a>
-# 22.3.0-next.0 "tellurium-teleprompter" (2026-09-30)
-No user facing changes in this release
 
 <!-- CHANGELOG SPLIT MARKER -->
 
