@@ -187,6 +187,20 @@ describe('MatTable', () => {
     expect(stuckCellElement.classList).toContain('mat-mdc-table-sticky');
   });
 
+  it('should collapse borders on tables with a fixed layout', () => {
+    const fixture = TestBed.createComponent(MatTableFixedLayoutApp);
+    fixture.detectChanges();
+
+    const tableElement = fixture.nativeElement.querySelector('table')!;
+    expect(tableElement.classList).toContain('mat-table-fixed-layout');
+
+    // Collapsed borders keep the table height stable as rows are swapped in
+    // and out during virtual scrolling, otherwise the scrolling can jump
+    // around (see #32715). A fixed layout is forced on when virtual
+    // scrolling is enabled.
+    expect(getComputedStyle(tableElement).borderCollapse).toBe('collapse');
+  });
+
   it('should not throw when a row definition is on an ng-container', async () => {
     // Some of the table's logic runs asynchronously so we need to check for global errors.
     await jasmine.spyOnGlobalErrorsAsync(async globalErrorSpy => {
@@ -694,6 +708,26 @@ class MatTableApp {
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
   @ViewChild(MatTable) table!: MatTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table mat-table [dataSource]="dataSource" [fixedLayout]="true">
+      <ng-container matColumnDef="column_a">
+        <th mat-header-cell *matHeaderCellDef> Column A</th>
+        <td mat-cell *matCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToRender"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
+    </table>
+  `,
+  imports: [MatTableModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class MatTableFixedLayoutApp {
+  dataSource = new FakeDataSource();
+  columnsToRender = ['column_a'];
 }
 
 @Component({

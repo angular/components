@@ -37,6 +37,12 @@ $fallbacks: m3-table.get-tokens();
 // but the `.mat-mdc-table` styles override them.
 .mat-table-fixed-layout {
   table-layout: fixed;
+
+  // Collapses borders so the table height doesn't fluctuate as rows are swapped
+  // in and out during virtual scrolling, which otherwise throws off the scroll
+  // calculations and makes the content jump around. A fixed layout is forced
+  // on when virtual scrolling is enabled (see `fixedLayout` in `table.ts`).
+  border-collapse: collapse;
 }
 
 .mdc-data-table__cell {
