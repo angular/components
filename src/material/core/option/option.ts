@@ -241,7 +241,7 @@ export class MatOption<T = any> implements FocusableOption, AfterViewChecked, On
    * determine if the select's view -> model callback should be invoked.`
    */
   _selectViaInteraction(): void {
-    if (!this.disabled) {
+    if (!this.disabled && !this._parent?.disableOptions) {
       this._selected = this.multiple ? !this._selected : true;
       this._changeDetectorRef.markForCheck();
       this._emitSelectionChangeEvent(true);

@@ -15,6 +15,7 @@ import {InjectionToken, Signal} from '@angular/core';
  */
 export interface MatOptionParentComponent {
   disableRipple?: boolean | Signal<boolean>;
+  disableOptions?: boolean;
   multiple?: boolean;
   inertGroups?: boolean;
   hideSingleSelectionIndicator?: boolean;
