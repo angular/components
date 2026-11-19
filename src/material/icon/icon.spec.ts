@@ -1038,6 +1038,64 @@ describe('MatIcon', () => {
       );
     });
 
+    it('should not allow the path to terminate the `url()` string', () => {
+      fakePath = `/$fake-path'),url('https://$fake-host/collect`;
+      iconRegistry.addSvgIconLiteral(
+        'fido',
+        trustHtml(`
+        <svg>
+          <filter id="blur">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" />
+          </filter>
+
+          <circle cx="170" cy="60" r="50" fill="green" filter="url('#blur')" />
+        </svg>
+      `),
+      );
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      fixture.componentInstance.iconName = 'fido';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const circle = fixture.nativeElement.querySelector('mat-icon svg circle');
+      const value = circle.getAttribute('filter')!;
+
+      // A quote in the path must not be able to close the string and append another `url()`
+      // token, since `filter` accepts a list of references. Stripping the escape sequences has to
+      // leave a single quoted URL with no quotes of its own.
+      expect(value.replace(/\\./g, '')).toMatch(/^url\('[^']*'\)$/);
+      expect(value).toContain(`\\'`);
+    });
+
+    it('should escape backslashes in the path when prefixing the `url()` references', () => {
+      fakePath = `/$fake-path\\?q='x`;
+      iconRegistry.addSvgIconLiteral(
+        'fido',
+        trustHtml(`
+        <svg>
+          <mask id="cover">
+            <circle cx="170" cy="60" r="50" fill="white" />
+          </mask>
+
+          <circle cx="170" cy="60" r="50" fill="green" mask="url('#cover')" />
+        </svg>
+      `),
+      );
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      fixture.componentInstance.iconName = 'fido';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+      const circle = fixture.nativeElement.querySelector('mat-icon svg circle');
+      const value = circle.getAttribute('mask')!;
+
+      // A backslash must not be able to escape the closing quote of the string.
+      expect(value.replace(/\\./g, '')).toMatch(/^url\('[^']*'\)$/);
+      expect(value).toContain(`\\\\`);
+      expect(value).toContain(`\\'`);
+      expect(value.endsWith(`#cover')`)).toBe(true);
+    });
+
     it('should use latest path when prefixing the `url()` references', () => {
       iconRegistry.addSvgIconLiteral(
         'fido',

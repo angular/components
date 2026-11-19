@@ -96,6 +96,15 @@ const funcIriAttributeSelector = funcIriAttributes.map(attr => `[${attr}]`).join
 const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
 
 /**
+ * Escapes a value so that it can be interpolated into a single-quoted CSS string without being
+ * able to terminate it. Tabs and newlines are removed by the URL parser, so a backslash and a
+ * single quote are the only characters that need to be escaped here.
+ */
+function escapeCssStringValue(value: string): string {
+  return value.replace(/[\\']/g, '\\$&');
+}
+
+/**
  * Component to display an icon. It can be used in the following ways:
  *
  * - Specify the svgIcon input to load an SVG icon from a URL previously registered with the
@@ -408,11 +417,16 @@ export class MatIcon implements OnInit, AfterViewChecked, OnDestroy {
     // Prefix it with a dot segment so it stays on the current origin without changing the resolved
     // path.
     const normalizedPath = path.startsWith('//') ? `/.${path}` : path;
+    // The path is interpolated into a quoted CSS string below. Escape it so that a path
+    // containing a literal quote cannot close that string and append further URL tokens to the
+    // attribute, which some of these attributes (e.g. `mask` and `filter`) accept as a list.
+    const escapedPath = escapeCssStringValue(normalizedPath);
 
     if (elements) {
       elements.forEach((attrs, element) => {
         attrs.forEach(attr => {
-          element.setAttribute(attr.name, `url('${normalizedPath}#${attr.value}')`);
+          const escapedId = escapeCssStringValue(attr.value);
+          element.setAttribute(attr.name, `url('${escapedPath}#${escapedId}')`);
         });
       });
     }
