@@ -207,6 +207,21 @@ describe('MatTable', () => {
     }).not.toThrow();
   });
 
+  ['native', 'flex'].forEach(tableType => {
+    it(`should expand the footer row to fit tall cells in a ${tableType} table`, () => {
+      const fixture = TestBed.createComponent<MatTableApp | MatFlexTableApp>(
+        tableType === 'native' ? MatTableApp : MatFlexTableApp,
+      );
+      fixture.detectChanges();
+
+      const row: HTMLElement = fixture.nativeElement.querySelector('.mat-mdc-footer-row');
+      const cell: HTMLElement = row.querySelector('.mat-mdc-footer-cell')!;
+      cell.style.height = '100px';
+
+      expect(row.getBoundingClientRect().height).toBeGreaterThanOrEqual(100);
+    });
+  });
+
   describe('with MatTableDataSource and sort/pagination/filter', () => {
     let tableElement: HTMLElement;
     let fixture: ComponentFixture<ArrayDataSourceMatTableApp>;
