@@ -124,6 +124,15 @@ describe('MatInputHarness', () => {
     expect(await inputs[4].getValue()).toBe('new-value');
   });
 
+  it('should dispatch a change event when setting the value', async () => {
+    const input = await loader.getHarness(MatInputHarness.with({selector: '#myTextarea'}));
+    expect(fixture.componentInstance.textareaChangeCount).toBe(0);
+
+    await input.setValue('new-value');
+
+    expect(fixture.componentInstance.textareaChangeCount).toBe(1);
+  });
+
   it('should be able to get disabled state', async () => {
     const inputs = await loader.getAllHarnesses(MatInputHarness);
     expect(inputs.length).toBe(7);
@@ -267,6 +276,7 @@ describe('MatInputHarness', () => {
         matInput
         placeholder="Leave a comment"
         aria-label="Comment box"
+        (change)="textareaChangeCount = textareaChangeCount + 1"
       ></textarea>
     </mat-form-field>
 
@@ -307,4 +317,5 @@ class InputHarnessTest {
   required = signal(false);
   ngModelValue = '';
   ngModelName = 'has-ng-model';
+  textareaChangeCount = 0;
 }
