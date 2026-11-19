@@ -12,11 +12,6 @@ $_checkmark-size: 18px !default;
 $_checkmark-margin: 12px;
 $_checkmark-transition: 150ms 45ms cubic-bezier(0.4, 0, 0.2, 1);
 
-// TODO(crisbeto): these variables aren't used anymore and should be removed.
-$legacy-height: 36px !default;
-$standard-border-radius: 4px !default;
-$legacy-border-radius: 2px !default;
-
 $fallbacks: m3-button-toggle.get-tokens();
 
 .mat-button-toggle-standalone,
