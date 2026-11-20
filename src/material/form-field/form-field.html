@@ -46,6 +46,7 @@
   [class.mdc-text-field--disabled]="isDisabled"
   [class.mdc-text-field--invalid]="_unwrapMaybeSignal(_control.errorState)"
   (click)="_control.onContainerClick($event)"
+  tabindex="-1"
 >
   @if (!_hasOutline() && !isDisabled) {
     <div class="mat-mdc-form-field-focus-overlay"></div>
