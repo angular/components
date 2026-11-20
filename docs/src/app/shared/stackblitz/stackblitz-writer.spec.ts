@@ -1,4 +1,5 @@
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {provideHttpClient} from '@angular/common/http';
+import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {TestBed} from '@angular/core/testing';
 import {EXAMPLE_COMPONENTS, ExampleData, LiveExample} from '@angular/components-examples';
 import {StackBlitzWriter, TEMPLATE_FILES} from './stackblitz-writer';
@@ -32,8 +33,7 @@ describe('StackBlitzWriter', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [StackBlitzWriter],
+      providers: [StackBlitzWriter, provideHttpClient(), provideHttpClientTesting()],
     });
 
     http = TestBed.inject(HttpTestingController);
