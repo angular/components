@@ -87,7 +87,6 @@
     [attr.aria-setsize]="orientation === 'horizontal' ? steps.length : null"
     [attr.aria-selected]="orientation === 'horizontal' ? step.isSelected() : null"
     [attr.aria-current]="orientation === 'vertical' && step.isSelected() ? 'step' : null"
-    [attr.aria-disabled]="orientation === 'vertical' && step.isSelected() ? 'true' : null"
     [attr.aria-expanded]="orientation === 'vertical' ? step.isSelected() : null"
     [attr.aria-controls]="_getStepContentId(step.index())"
     [attr.aria-label]="step.ariaLabel || null"
