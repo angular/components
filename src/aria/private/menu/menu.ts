@@ -179,7 +179,7 @@ export class MenuPattern<V> {
       .on('Home', () => this.first())
       .on('End', () => this.last())
       .on('Enter', () => this.trigger())
-      .on('Escape', () => this.closeAll())
+      .on('Escape', () => this.closeCurrent())
       .on(this._expandKey, () => this.expand())
       .on(this._collapseKey, () => this.collapse())
       .on(this.dynamicSpaceKey, () => this.trigger())
@@ -454,6 +454,20 @@ export class MenuPattern<V> {
   /** Closes the menu. */
   close() {
     this.inputs.parent()?.close();
+  }
+
+  /**
+   * Closes the menu that currently has focus and moves focus back to the item that opened it.
+   * Top-level menus (opened from a trigger or a menubar) close the whole menu instead.
+   */
+  closeCurrent() {
+    const parent = this.inputs.parent();
+
+    if (parent instanceof MenuItemPattern && !(parent.inputs.parent() instanceof MenuBarPattern)) {
+      parent.close({refocus: true});
+    } else {
+      this.closeAll();
+    }
   }
 
   /** Closes the menu and all parent menus. */
