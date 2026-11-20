@@ -141,24 +141,23 @@ export class DomPortalOutlet extends BasePortalOutlet {
    */
   override attachDomPortal = (portal: DomPortal) => {
     const element = portal.element;
-    if (!element.parentNode && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error('DOM portal content must be attached to a parent node.');
+    if (element.parentNode) {
+      // Anchor used to save the element's previous position so
+      // that we can restore it when the portal is detached.
+      const anchorNode = this.outletElement.ownerDocument.createComment('dom-portal');
+  
+      element.parentNode!.insertBefore(anchorNode, element);
+  
+      super.setDisposeFn(() => {
+        // We can't use `replaceWith` here because IE doesn't support it.
+        if (anchorNode.parentNode) {
+          anchorNode.parentNode.replaceChild(element, anchorNode);
+        }
+      });
     }
 
-    // Anchor used to save the element's previous position so
-    // that we can restore it when the portal is detached.
-    const anchorNode = this.outletElement.ownerDocument.createComment('dom-portal');
-
-    element.parentNode!.insertBefore(anchorNode, element);
     this.outletElement.appendChild(element);
     this._attachedPortal = portal;
-
-    super.setDisposeFn(() => {
-      // We can't use `replaceWith` here because IE doesn't support it.
-      if (anchorNode.parentNode) {
-        anchorNode.parentNode.replaceChild(element, anchorNode);
-      }
-    });
   };
 
   /**
