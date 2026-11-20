@@ -71,5 +71,13 @@ describe('typography hierarchy', () => {
       const css = transpile(`@include mat.typography-hierarchy($theme, $selector: '.special')`);
       verifyFullSelector(css, '.mat-display-large, .special .mat-display-large, .special h1');
     });
+
+    it('should emit system CSS variables for typography levels', () => {
+      const css = transpile('@include mat.typography-hierarchy($theme)');
+      expect(css).toContain('font: var(--mat-sys-body-medium)');
+      expect(css).toContain('letter-spacing: var(--mat-sys-body-medium-tracking)');
+      expect(css).toContain('font: var(--mat-sys-body-small)');
+      expect(css).toContain('letter-spacing: var(--mat-sys-body-small-tracking)');
+    });
   });
 });
