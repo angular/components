@@ -32,7 +32,6 @@ import {MapAnchorPoint} from '../map-anchor-point';
 @Directive({
   selector: 'map-info-window',
   exportAs: 'mapInfoWindow',
-  host: {'style': 'display: none'},
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
   private readonly _googleMap = inject(GoogleMap);
@@ -103,6 +102,11 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   /** Event emitted when the info window is initialized. */
   @Output() readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow> =
     new EventEmitter<google.maps.InfoWindow>();
+
+  constructor() {
+    // Set through CSSOM rather than a host style attribute so it isn't blocked by a strict CSP `style-src`.
+    this._elementRef.nativeElement.style.display = 'none';
+  }
 
   ngOnInit() {
     if (this._googleMap._isBrowser) {
