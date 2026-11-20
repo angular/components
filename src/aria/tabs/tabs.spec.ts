@@ -835,6 +835,23 @@ describe('Tabs', () => {
     });
   });
 
+  describe('Eager content', () => {
+    let eagerFixture: ComponentFixture<PanelWithEagerContentComponent>;
+
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        providers: [provideFakeDirectionality('ltr')],
+      });
+      eagerFixture = TestBed.createComponent(PanelWithEagerContentComponent);
+      fixture = eagerFixture as any;
+      eagerFixture.detectChanges();
+    });
+
+    it('should render ngTabPanel content without ngTabContent', () => {
+      expect(eagerFixture.nativeElement.textContent).toContain('Content 1');
+    });
+  });
+
   describe('structural validations', () => {
     let consoleSpy: jasmine.Spy;
 
@@ -870,19 +887,6 @@ describe('Tabs', () => {
 
       expect(consoleSpy).toHaveBeenCalledWith(
         "ngTabPanel with value 'tab1' does not have a corresponding ngTab.",
-      );
-    });
-
-    it('should warn when ngTabPanel is missing ngTabContent structural directive', () => {
-      TestBed.resetTestingModule();
-      TestBed.configureTestingModule({
-        imports: [PanelWithoutContentComponent],
-      });
-      const noContentFixture = TestBed.createComponent(PanelWithoutContentComponent);
-      noContentFixture.detectChanges();
-
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'ngTabPanel must have an ngTabContent structural directive to render.',
       );
     });
 
@@ -1014,7 +1018,7 @@ class PanelWithoutTabComponent {}
   imports: [Tabs, TabList, Tab, TabPanel],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-class PanelWithoutContentComponent {}
+class PanelWithEagerContentComponent {}
 
 @Component({
   template: `
