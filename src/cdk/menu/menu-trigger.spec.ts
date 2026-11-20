@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {dispatchKeyboardEvent} from '../../cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '../../cdk/testing/private';
 import {CdkMenu} from './menu';
 import {Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
@@ -463,6 +463,71 @@ describe('MenuTrigger', () => {
       detectChanges();
 
       expect(nativeMenus.length).toBe(1);
+    });
+
+    describe('focus leaving the menu', () => {
+      /** Waits for the debounced focus state of the menu stack to settle. */
+      const flushFocusState = async () => {
+        await new Promise(resolve => setTimeout(resolve));
+        detectChanges();
+      };
+
+      /** Moves focus into the open submenu and then away from it. */
+      const moveFocusOutOfMenu = async () => {
+        const submenu = submenuNativeItem!.closest('[cdkMenu]')!;
+        dispatchFakeEvent(submenu, 'focusin', true);
+        await flushFocusState();
+        dispatchFakeEvent(submenu, 'focusout', true);
+        await flushFocusState();
+      };
+
+      it('should close the menu when focus moves out of it', async () => {
+        nativeTrigger.click();
+        detectChanges();
+        expect(nativeMenus.length).toBe(2);
+
+        await moveFocusOutOfMenu();
+
+        expect(nativeMenus.length).toBe(1);
+      });
+
+      it('should not close the menu until a press outside of it is completed', async () => {
+        nativeTrigger.click();
+        detectChanges();
+        expect(nativeMenus.length).toBe(2);
+
+        // Pressing down outside the menu blurs it.
+        document.body.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+        await moveFocusOutOfMenu();
+        expect(nativeMenus.length).toBe(2);
+
+        document.body.dispatchEvent(new PointerEvent('pointerup', {bubbles: true}));
+        detectChanges();
+        expect(nativeMenus.length).toBe(1);
+      });
+
+      it('should stay open if a press outside of the menu is released on the menu', async () => {
+        nativeTrigger.click();
+        detectChanges();
+
+        document.body.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+        await moveFocusOutOfMenu();
+        submenuNativeItem!.dispatchEvent(new PointerEvent('pointerup', {bubbles: true}));
+        detectChanges();
+
+        expect(nativeMenus.length).toBe(2);
+      });
+
+      it('should close the menu when focus moves out after an earlier press was released', async () => {
+        nativeTrigger.click();
+        detectChanges();
+
+        document.body.dispatchEvent(new PointerEvent('pointerdown', {bubbles: true}));
+        document.body.dispatchEvent(new PointerEvent('pointerup', {bubbles: true}));
+        await moveFocusOutOfMenu();
+
+        expect(nativeMenus.length).toBe(1);
+      });
     });
 
     it('should close the open menu when clicking on an inline menu item', () => {
