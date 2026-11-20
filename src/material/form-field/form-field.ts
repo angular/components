@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import {_IdGenerator} from '@angular/cdk/a11y';
-import {Direction, Directionality} from '@angular/cdk/bidi';
+import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {NgTemplateOutlet} from '@angular/common';
@@ -30,7 +30,6 @@ import {
   afterRenderEffect,
   computed,
   contentChild,
-  effect,
   inject,
   isSignal,
   signal,
@@ -191,13 +190,13 @@ export class MatFormField
 {
   _elementRef = inject(ElementRef);
   private _changeDetectorRef = inject(ChangeDetectorRef);
+  private _dir = inject(Directionality);
   private _platform = inject(Platform);
   private _idGenerator = inject(_IdGenerator);
   private _ngZone = inject(NgZone);
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
-  private _currentDirection!: Direction;
 
   protected _unwrapMaybeSignal<T>(value: T | Signal<T>) {
     return isSignal(value) ? value() : value;
@@ -349,7 +348,6 @@ export class MatFormField
 
   constructor() {
     const defaults = this._defaults;
-    const dir = inject(Directionality);
 
     if (defaults) {
       if (defaults.appearance) {
@@ -361,10 +359,6 @@ export class MatFormField
       }
     }
 
-    // We need this value inside a `afterRenderEffect`, however at the time of writing, reading the
-    // signal directly causes a memory leak (see https://github.com/angular/angular/issues/62980).
-    // TODO(crisbeto): clean this up once the framework issue is resolved.
-    effect(() => (this._currentDirection = dir.valueSignal()));
     this._syncOutlineLabelOffset();
   }
 
@@ -818,6 +812,7 @@ export class MatFormField
    * incorporate the horizontal offset into their default text-field styles.
    */
   private _getOutlinedLabelOffset(): OutlinedLabelStyles {
+    const dir = this._dir.valueSignal();
     if (!this._hasOutline() || !this._floatingLabel) {
       return null;
     }
@@ -841,7 +836,7 @@ export class MatFormField
     const textSuffixContainerWidth = textSuffixContainer?.getBoundingClientRect().width ?? 0;
     // If the directionality is RTL, the x-axis transform needs to be inverted. This
     // is because `transformX` does not change based on the page directionality.
-    const negate = this._currentDirection === 'rtl' ? '-1' : '1';
+    const negate = dir === 'rtl' ? '-1' : '1';
     const prefixWidth = `${iconPrefixContainerWidth + textPrefixContainerWidth}px`;
     const labelOffset = `var(--mat-mdc-form-field-label-offset-x, 0px)`;
     const labelHorizontalOffset = `calc(${negate} * (${prefixWidth} + ${labelOffset}))`;
