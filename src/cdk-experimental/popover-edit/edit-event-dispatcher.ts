@@ -317,9 +317,8 @@ function areMapEntriesEqual<K, V>(a: Map<K, V>, b: Map<K, V>): boolean {
     return false;
   }
 
-  // TODO: use Map.prototype.entries once we're off IE11.
-  for (const aKey of Array.from(a.keys())) {
-    if (b.get(aKey) !== a.get(aKey)) {
+  for (const [key, value] of a) {
+    if (b.get(key) !== value) {
       return false;
     }
   }
