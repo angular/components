@@ -4,6 +4,7 @@
 @use 'sass:string';
 @use './variables';
 @use './sass-utils';
+@use '../tokens/m3-utils';
 
 $_umbra-opacity: 0.2;
 $_penumbra-opacity: 0.14;
@@ -199,10 +200,20 @@ $prefix: 'mat-elevation-z';
 }
 
 @function _compute-color-opacity($color, $opacity) {
-  @if meta.type-of($color) == color and $opacity != null {
-    @return rgba($color, $opacity);
-  }
-  @else {
+  @if $opacity == null {
     @return $color;
   }
+
+  @if meta.type-of($color) == color {
+    @return rgba($color, $opacity);
+  }
+
+  // The color can also be the name of a CSS variable (e.g. `--mat-sys-shadow`) whose value isn't
+  // known at build time. Wrap it in `var()` and apply the opacity using `color-mix`, otherwise
+  // we'd interpolate the bare variable name into the shadow and produce invalid CSS.
+  @if sass-utils.is-css-var-name($color) {
+    @return m3-utils.color-with-opacity($color, $opacity);
+  }
+
+  @return $color;
 }
