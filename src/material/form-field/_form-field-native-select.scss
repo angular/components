@@ -55,7 +55,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
       border-right: math.div($mat-form-field-select-arrow-width, 2) solid transparent;
       border-top: $mat-form-field-select-arrow-height solid;
       position: absolute;
-      right: 0;
+      inset-inline-end: 0;
       top: 50%;
       margin-top: -#{math.div($mat-form-field-select-arrow-height, 2)};
 
@@ -64,10 +64,6 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
 
       color: token-utils.slot(form-field-enabled-select-arrow-color, $fallbacks);
 
-      [dir='rtl'] & {
-        right: auto;
-        left: 0;
-      }
     }
 
     &.mat-focused .mat-mdc-form-field-infix::after {
@@ -81,11 +77,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
     // Add padding on the end of the native select so that the content does not
     // overlap with the Material Design arrow.
     .mat-mdc-form-field-input-control {
-      padding-right: $mat-form-field-select-horizontal-end-padding;
-      [dir='rtl'] & {
-        padding-right: 0;
-        padding-left: $mat-form-field-select-horizontal-end-padding;
-      }
+      padding-inline-end: $mat-form-field-select-horizontal-end-padding;
     }
   }
 }
