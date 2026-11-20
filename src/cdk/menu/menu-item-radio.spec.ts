@@ -3,6 +3,8 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemRadio} from './menu-item-radio';
+import {MENU_STACK} from './menu-stack';
+import {SPACE} from '../keycodes';
 
 describe('MenuItemRadio', () => {
   let fixture: ComponentFixture<SimpleRadioButton>;
@@ -60,6 +62,24 @@ describe('MenuItemRadio', () => {
     radioButton.trigger();
 
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should keep the menu open when a native button is checked with space', () => {
+    const menuStack = fixture.debugElement
+      .query(By.directive(CdkMenuItemRadio))
+      .injector.get(MENU_STACK);
+    spyOn(menuStack, 'closeAll');
+
+    // The browser turns a trusted space keydown on a button into a click with a `detail` of 0.
+    radioButton._onKeydown({
+      keyCode: SPACE,
+      isTrusted: true,
+      preventDefault: () => {},
+    } as unknown as KeyboardEvent);
+    radioElement.dispatchEvent(new MouseEvent('click', {bubbles: true, detail: 0}));
+
+    expect(radioButton.checked).toBeTrue();
+    expect(menuStack.closeAll).not.toHaveBeenCalled();
   });
 
   it('should not emit on clicked emitter when disabled', () => {

@@ -3,6 +3,21 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
+import {MENU_STACK, MenuStack} from './menu-stack';
+import {ENTER, SPACE} from '../keycodes';
+
+/**
+ * Simulates what the browser does when a native button is activated from the keyboard: a trusted
+ * keydown that the item lets through, followed by a click with a `detail` of 0.
+ */
+function pressKeyOnNativeButton(item: CdkMenuItemCheckbox, element: HTMLElement, keyCode: number) {
+  item._onKeydown({
+    keyCode,
+    isTrusted: true,
+    preventDefault: () => {},
+  } as unknown as KeyboardEvent);
+  element.dispatchEvent(new MouseEvent('click', {bubbles: true, detail: 0}));
+}
 
 describe('MenuItemCheckbox', () => {
   let fixture: ComponentFixture<SingleCheckboxButton>;
@@ -70,6 +85,42 @@ describe('MenuItemCheckbox', () => {
     checkbox.trigger();
 
     expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  describe('keyboard activation of a native button', () => {
+    let menuStack: MenuStack;
+
+    beforeEach(() => {
+      menuStack = fixture.debugElement
+        .query(By.directive(CdkMenuItemCheckbox))
+        .injector.get(MENU_STACK);
+      spyOn(menuStack, 'closeAll');
+    });
+
+    it('should keep the menu open when toggled with space', () => {
+      pressKeyOnNativeButton(checkbox, checkboxElement, SPACE);
+
+      expect(checkbox.checked).toBeTrue();
+      expect(menuStack.closeAll).not.toHaveBeenCalled();
+    });
+
+    it('should close the menu when toggled with enter', () => {
+      pressKeyOnNativeButton(checkbox, checkboxElement, ENTER);
+
+      expect(checkbox.checked).toBeTrue();
+      expect(menuStack.closeAll).toHaveBeenCalled();
+    });
+
+    it('should close the menu on a mouse click after the space key was pressed', () => {
+      checkbox._onKeydown({
+        keyCode: SPACE,
+        isTrusted: true,
+        preventDefault: () => {},
+      } as unknown as KeyboardEvent);
+      checkboxElement.dispatchEvent(new MouseEvent('click', {bubbles: true, detail: 1}));
+
+      expect(menuStack.closeAll).toHaveBeenCalled();
+    });
   });
 
   it('should not emit on clicked emitter when disabled', () => {
