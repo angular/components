@@ -117,9 +117,12 @@ $fallbacks: m3-list.get-tokens();
       margin-right: 32px;
     }
 
+    // Icon font stylesheets (e.g. Material Icons/Symbols) set `direction: ltr` on the icon, so
+    // the logical margins from `list.scss` resolve as LTR inside an RTL list. Swap the token
+    // values here instead of hardcoding them, so that RTL mirrors LTR for any theme.
     [dir='rtl'] .mdc-list-item--with-leading-icon & {
-      margin-left: 32px;
-      margin-right: 16px;
+      margin-left: token-utils.slot(list-list-item-leading-icon-end-space, $fallbacks);
+      margin-right: token-utils.slot(list-list-item-leading-icon-start-space, $fallbacks);
     }
 
     .mdc-list-item--with-leading-icon:hover & {
