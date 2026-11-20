@@ -16,22 +16,29 @@ export function createTheme(userPaletteChoice: string): string {
   ]);
   return `
 // Include theming for Angular Material with \`mat.theme()\`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
+// \`@use\` must come before any other rules (including \`@layer\`).
 @use '@angular/material' as mat;
 
-html {
-  height: 100%;
-  @include mat.theme((
-    color: (
-      primary: mat.$${colorPalettes.get(userPaletteChoice)!.primary}-palette,
-      tertiary: mat.$${colorPalettes.get(userPaletteChoice)!.tertiary}-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+// Cascade layer ordering. Angular Material component styles ship in the
+// \`angular-material\` layer. Declaring layer order here makes overrides
+// predictable alongside CDK styles and utility frameworks.
+// Learn more: https://material.angular.dev/guide/theming#css-cascade-layers
+@layer base, cdk-resets, cdk-overlay, angular-material, components, utilities;
+
+// Wrapping \`mat.theme()\` in \`mat.theme-layer\` places generated CSS
+// custom properties in the same \`angular-material\` layer as component styles.
+@include mat.theme-layer {
+  html {
+    height: 100%;
+    @include mat.theme((
+      color: (
+        primary: mat.$${colorPalettes.get(userPaletteChoice)!.primary}-palette,
+        tertiary: mat.$${colorPalettes.get(userPaletteChoice)!.tertiary}-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+  }
 }
 
 body {

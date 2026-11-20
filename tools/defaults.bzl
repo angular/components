@@ -29,17 +29,61 @@ spec_bundle = _spec_bundle
 http_server = _http_server
 ng_examples_db = _ng_examples_db
 
-def sass_binary(sourcemap = False, include_paths = [], **kwargs):
-    _sass_binary(
-        sourcemap = sourcemap,
-        include_paths = include_paths,
-        module_mappings = {
-            "@angular/cdk": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/cdk",
-            "@angular/material": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/material",
-            "@angular/material-experimental": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/material-experimental",
-        },
-        **kwargs
-    )
+def sass_binary(sourcemap = False, include_paths = [], layer = None, **kwargs):
+    _module_mappings = {
+        "@angular/cdk": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/cdk",
+        "@angular/material": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/material",
+        "@angular/material-experimental": "/".join([".."] * (native.package_name().count("/") + 1)) + "/src/material-experimental",
+    }
+
+    if layer:
+        if sourcemap:
+            fail("sass_binary(layer=...) does not support sourcemap because wrapping the CSS in @layer invalidates the generated mappings.")
+        if kwargs.get("output_name") or kwargs.get("output_dir"):
+            fail("sass_binary(layer=...) does not support output_name or output_dir.")
+
+        name = kwargs.pop("name")
+        visibility = kwargs.pop("visibility", None)
+        testonly = kwargs.get("testonly", False)
+        src = kwargs.get("src", "")
+        out_css = src.rsplit(".", 1)[0] + ".css"
+
+        # Prefix only the filename to avoid creating spurious directories.
+        if "/" in out_css:
+            out_dir, out_file = out_css.rsplit("/", 1)
+            raw_css = out_dir + "/_layer_" + out_file
+        else:
+            raw_css = "_layer_" + out_css
+
+        # Compile to an intermediate CSS file, then wrap the compiled output in a named @layer
+        # while preserving the final filename expected by component `styleUrl`s.
+        _sass_binary(
+            name = name + "_pre_layer",
+            sourcemap = False,
+            include_paths = include_paths,
+            output_name = raw_css,
+            module_mappings = _module_mappings,
+            visibility = ["//visibility:private"],
+            **kwargs
+        )
+
+        native.genrule(
+            name = name,
+            srcs = [":" + name + "_pre_layer"],
+            outs = [out_css],
+            cmd = ("printf '@layer %s {\\n' > $@ " +
+                   "&& cat $< >> $@ " +
+                   "&& printf '\\n}\\n' >> $@") % layer,
+            testonly = testonly,
+            visibility = visibility,
+        )
+    else:
+        _sass_binary(
+            sourcemap = sourcemap,
+            include_paths = include_paths,
+            module_mappings = _module_mappings,
+            **kwargs
+        )
 
 def sass_library(**kwargs):
     _sass_library(**kwargs)
