@@ -60,10 +60,12 @@ mat-timepicker {
 }
 
 .mat-timepicker-panel-animations-enabled {
-  animation: _mat-timepicker-enter 120ms cubic-bezier(0, 0, 0.2, 1);
+  // Note: explicitly setting the fill mode avoids a glitchy
+  // animation if legacy animations are enabled. See #33851.
+  animation: _mat-timepicker-enter 120ms cubic-bezier(0, 0, 0.2, 1) forwards;
 
   &.mat-timepicker-panel-exit {
-    animation: _mat-timepicker-exit 100ms linear;
+    animation: _mat-timepicker-exit 100ms linear forwards;
   }
 }
 
