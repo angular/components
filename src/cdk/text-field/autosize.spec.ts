@@ -1,4 +1,4 @@
-import {Component, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Directive, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
@@ -419,3 +419,30 @@ class AutosizeTextareaWithNgModel {
 class AutosizeTextareaWithoutAutosize {
   content: string = '';
 }
+
+@Directive({
+  selector: '[largeLineHeight]',
+  host: {'[class.large-line-height]': 'true'},
+})
+class LargeLineHeight {}
+
+@Component({
+  template: `<textarea cdkTextareaAutosize largeLineHeight cdkAutosizeMinRows="2" cdkAutosizeMaxRows="5"></textarea>`,
+  styles: [`.large-line-height { font-size: 40px; line-height: 50px; padding: 0; border: 0; }`],
+  imports: [TextFieldModule, LargeLineHeight],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class AutosizeTextareaWithHostStyles {}
+
+describe('CdkTextareaAutosize with host binding styles', () => {
+  it('should base row limits on the rendered line height', async () => {
+    const fixture = TestBed.createComponent(AutosizeTextareaWithHostStyles);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const textarea = fixture.nativeElement.querySelector('textarea') as HTMLTextAreaElement;
+    const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight);
+    expect(lineHeight).toBe(50);
+    expect(parseFloat(textarea.style.minHeight)).toBe(lineHeight * 2);
+    expect(parseFloat(textarea.style.maxHeight)).toBe(lineHeight * 5);
+  });
+});

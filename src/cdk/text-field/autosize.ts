@@ -284,7 +284,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   };
 
   ngDoCheck() {
-    if (this._platform.isBrowser) {
+    if (this._platform.isBrowser && this._isViewInited) {
       this.resizeToFitContent();
     }
   }

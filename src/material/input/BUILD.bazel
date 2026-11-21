@@ -61,6 +61,7 @@ ng_project(
         "//:node_modules/@angular/platform-browser",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
+        "//src/cdk/text-field",
         "//src/material/core",
         "//src/material/form-field",
         "//src/material/icon",
