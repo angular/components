@@ -157,6 +157,42 @@ describe('MatSort', () => {
       expect(component.matSort.direction).toBe('asc');
     });
 
+    it('should use initial sort start direction on unsorted headers when another column is sorted', () => {
+      const containerA = fixture.nativeElement.querySelector(
+        '#defaultA .mat-sort-header-container',
+      );
+      const containerB = fixture.nativeElement.querySelector(
+        '#defaultB .mat-sort-header-container',
+      );
+      const containerOverride = fixture.nativeElement.querySelector(
+        '#overrideStart .mat-sort-header-container',
+      );
+
+      expect(containerA.classList.contains('mat-sort-header-ascending')).toBe(true);
+      expect(containerA.classList.contains('mat-sort-header-descending')).toBe(false);
+      expect(containerOverride.classList.contains('mat-sort-header-descending')).toBe(true);
+      expect(containerOverride.classList.contains('mat-sort-header-ascending')).toBe(false);
+
+      // Sort defaultA to desc (asc -> desc)
+      component.sort('defaultA');
+      component.sort('defaultA');
+      fixture.detectChanges();
+
+      expect(containerA.classList.contains('mat-sort-header-descending')).toBe(true);
+      expect(containerA.classList.contains('mat-sort-header-ascending')).toBe(false);
+      expect(containerB.classList.contains('mat-sort-header-ascending')).toBe(true);
+      expect(containerB.classList.contains('mat-sort-header-descending')).toBe(false);
+      expect(containerOverride.classList.contains('mat-sort-header-descending')).toBe(true);
+
+      // Unsorted headers should also reflect parent matSortStart changes
+      component.start = 'desc';
+      fixture.changeDetectorRef.markForCheck();
+      fixture.detectChanges();
+
+      expect(containerB.classList.contains('mat-sort-header-descending')).toBe(true);
+      expect(containerB.classList.contains('mat-sort-header-ascending')).toBe(false);
+    });
+
     it(
       'should throw an error if an MatSortable is not contained within an MatSort ' + 'directive',
       () => {
