@@ -7,6 +7,7 @@
  */
 
 import {
+  booleanAttribute,
   computed,
   Directive,
   effect,
@@ -51,6 +52,10 @@ import type {MenuBar} from './menu-bar';
     '[attr.aria-haspopup]': 'hasPopup()',
     '[attr.aria-expanded]': 'expanded()',
     '[attr.aria-disabled]': '_pattern.disabled()',
+    // Follow the parent's `softDisabled`, as MenuBar and MenuTrigger do. When soft-disabled
+    // (the default), clear the native attribute so a bare `disabled` on a `<button>` host
+    // doesn't make the item unfocusable. When not, keep the item natively disabled.
+    '[attr.disabled]': 'parent?.softDisabled() === false && _pattern.disabled() ? true : null',
     '[attr.aria-controls]': '_pattern.submenu()?.id()',
   },
 })
@@ -68,7 +73,7 @@ export class MenuItem<V> implements OnInit, OnDestroy {
   readonly value = input<V | undefined>(undefined);
 
   /** Whether the menu item is disabled. */
-  readonly disabled = input<boolean>(false);
+  readonly disabled = input(false, {transform: booleanAttribute});
 
   /** The search term associated with the menu item. */
   readonly searchTerm = model<string>('');
