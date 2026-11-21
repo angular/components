@@ -131,7 +131,6 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
    */
   _startExitAnimation(): void {
     this._animationStateChanged.emit({state: 'closing', totalTime: this._exitAnimationDuration});
-    this._hostElement.classList.remove(OPEN_CLASS);
 
     if (this._animationsEnabled) {
       this._hostElement.style.setProperty(
@@ -140,9 +139,16 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
       );
 
       // We need to give the `setProperty` call from above some time to be applied.
-      this._requestAnimationFrame(() => this._hostElement.classList.add(CLOSING_CLASS));
+      // Remove the open class and add the closing class together inside requestAnimationFrame
+      // so the container does not transition through a class-less state that causes visual jumps
+      // if close() is invoked from inside a requestAnimationFrame callback (e.g. in zoneless apps).
+      this._requestAnimationFrame(() => {
+        this._hostElement.classList.remove(OPEN_CLASS);
+        this._hostElement.classList.add(CLOSING_CLASS);
+      });
       this._waitForAnimationToComplete(this._exitAnimationDuration, this._finishDialogClose);
     } else {
+      this._hostElement.classList.remove(OPEN_CLASS);
       // This subscription to the `OverlayRef#backdropClick` observable in the `DialogRef` is
       // set up before any user can subscribe to the backdrop click. The subscription triggers
       // the dialog close and this method synchronously. If we'd synchronously emit the `CLOSED`
