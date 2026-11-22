@@ -18,6 +18,7 @@ import {
   OnInit,
   signal,
   Renderer2,
+  OnDestroy,
 } from '@angular/core';
 import {DeferredContentAware, ComboboxPattern, tabIndexTransform} from '../private';
 import type {ComboboxPopup} from './combobox-popup';
@@ -79,7 +80,7 @@ import type {ComboboxPopup} from './combobox-popup';
     '(input)': '_pattern.onInput($event)',
   },
 })
-export class Combobox extends DeferredContentAware implements OnInit {
+export class Combobox extends DeferredContentAware implements OnInit, OnDestroy {
   private readonly _renderer = inject(Renderer2);
 
   /** The element that the combobox is attached to. */
@@ -143,6 +144,10 @@ export class Combobox extends DeferredContentAware implements OnInit {
     if (this.alwaysExpanded()) {
       this.expanded.set(true);
     }
+  }
+
+  ngOnDestroy() {
+    this._pattern.destroy();
   }
 
   /** Registers a popup with the combobox. */

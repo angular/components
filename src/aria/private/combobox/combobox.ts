@@ -41,6 +41,8 @@ export interface ComboboxInputs extends ExpansionItem {
 
 /** Controls the state of a simple combobox. */
 export class ComboboxPattern {
+  private _focusoutTimeout: ReturnType<typeof setTimeout> | undefined;
+
   /** The expanded state of the combobox. */
   readonly isExpanded = computed(() => this.inputs.alwaysExpanded() || this.inputs.expanded());
 
@@ -228,7 +230,8 @@ export class ComboboxPattern {
   /** Closes the popup once focus has left both the combobox and the popup. */
   closePopupOnFocusout() {
     // Give focus some time to move before we check it.
-    setTimeout(() => {
+    clearTimeout(this._focusoutTimeout);
+    this._focusoutTimeout = setTimeout(() => {
       const comboboxFocused = this.isFocused();
       const popupFocused = !!this.inputs.popup()?.isFocused();
 
@@ -288,6 +291,12 @@ export class ComboboxPattern {
     for (const event of events) {
       target.dispatchEvent(new KeyboardEvent(event.type, event));
     }
+  }
+
+  /** Cleans up the pattern. */
+  destroy(): void {
+    clearTimeout(this._focusoutTimeout);
+    this._focusoutTimeout = undefined;
   }
 }
 
