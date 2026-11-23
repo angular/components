@@ -125,6 +125,7 @@ export class MatSliderVisualThumb implements _MatSliderVisualThumb, AfterViewIni
         renderer.listen(input, 'pointermove', this._onPointerMove),
         renderer.listen(input, 'pointerdown', this._onDragStart),
         renderer.listen(input, 'pointerup', this._onDragEnd),
+        renderer.listen(input, 'pointercancel', this._onDragEnd),
         renderer.listen(input, 'pointerleave', this._onMouseLeave),
         renderer.listen(input, 'focus', this._onFocus),
         renderer.listen(input, 'blur', this._onBlur),
