@@ -65,13 +65,13 @@ describe('StackBlitzWriter', () => {
 
 /**  Copyright ${year} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at https://angular.io/license */`);
+    can be found in the LICENSE file at https://angular.dev/license */`);
 
     expect(stackBlitzWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
 
 <!-- Copyright ${year} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at https://angular.io/license -->`);
+    can be found in the LICENSE file at https://angular.dev/license -->`);
   });
 
   it('should set tags for example stackblitz', async () => {
@@ -111,7 +111,7 @@ describe('StackBlitzWriter', () => {
 
 /**  Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at https://angular.io/license */`,
+    can be found in the LICENSE file at https://angular.dev/license */`,
     });
 
     expect(openProjectSpy).toHaveBeenCalledTimes(1);

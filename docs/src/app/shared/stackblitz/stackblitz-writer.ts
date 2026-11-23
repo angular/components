@@ -19,7 +19,7 @@ import {normalizePath} from '../normalize-path';
 
 const COPYRIGHT = `Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at https://angular.io/license`;
+    can be found in the LICENSE file at https://angular.dev/license`;
 
 /**
  * Path that refers to the docs-content from the "@angular/components-examples" package. The
