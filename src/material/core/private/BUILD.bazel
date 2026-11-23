@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_project")
+load("//tools:defaults.bzl", "ng_project", "ng_web_test_suite")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -16,4 +16,22 @@ ng_project(
         "//src/material/core:ripple",
         "//src/material/core/animation",
     ],
+)
+
+ng_project(
+    name = "unit_tests_lib",
+    testonly = True,
+    srcs = glob(["**/*.spec.ts"]),
+    deps = [
+        ":private",
+        "//:node_modules/@angular/core",
+        "//src/cdk/testing/private",
+        "//src/material/core:ripple",
+        "//src/material/core/animation",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_tests_lib"],
 )
