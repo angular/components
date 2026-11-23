@@ -77,6 +77,7 @@ export class ComboboxPattern {
     readonly autocomplete: _angular_core.Signal<"both" | "inline" | "list" | "none">;
     click: _angular_core.Signal<ClickEventManager<PointerEvent>>;
     closePopupOnFocusout(): void;
+    destroy(): void;
     readonly disabled: () => boolean;
     readonly element: () => HTMLElement;
     highlightEffect(): void;

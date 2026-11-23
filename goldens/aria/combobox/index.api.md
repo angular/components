@@ -10,13 +10,15 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
 // @public
-export class Combobox extends DeferredContentAware implements OnInit {
+export class Combobox extends DeferredContentAware implements OnInit, OnDestroy {
     constructor();
     readonly alwaysExpanded: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly element: HTMLElement;
     readonly expanded: _angular_core.ModelSignal<boolean>;
     readonly inlineSuggestion: _angular_core.InputSignal<string | undefined>;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     readonly _pattern: ComboboxPattern;
