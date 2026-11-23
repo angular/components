@@ -46,3 +46,13 @@ export function getTreeControlMissingError() {
 export function getMultipleTreeControlsError() {
   return Error(`More than one of tree control, levelAccessor, or childrenAccessor were provided.`);
 }
+
+/**
+ * Returns an error to be thrown when virtual scrolling is used with a nested tree.
+ * @docs-private
+ */
+export function getTreeVirtualScrollNestedError() {
+  return Error(
+    `Virtual scrolling is only supported for flat trees. Nested tree nodes render their children inside the parent node, which can't be virtualized.`,
+  );
+}

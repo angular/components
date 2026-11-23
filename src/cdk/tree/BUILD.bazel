@@ -22,6 +22,7 @@ ng_project(
         "//src/cdk/coercion/private",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
+        "//src/cdk/scrolling",
     ],
 )
 
@@ -41,6 +42,7 @@ ng_project(
         "//src/cdk/bidi",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
+        "//src/cdk/scrolling",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
     ],

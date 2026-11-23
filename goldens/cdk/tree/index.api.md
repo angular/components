@@ -317,6 +317,9 @@ export function getTreeMultipleDefaultNodeDefsError(): Error;
 // @public
 export function getTreeNoValidDataSourceError(): Error;
 
+// @public
+export function getTreeVirtualScrollNestedError(): Error;
+
 // @public @deprecated
 export class NestedTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     constructor(getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null, options?: NestedTreeControlOptions<T, K> | undefined);

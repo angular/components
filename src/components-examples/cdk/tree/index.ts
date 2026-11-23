@@ -6,3 +6,4 @@ export {CdkTreeNestedChildrenAccessorExample} from './cdk-tree-nested-children-a
 export {CdkTreeNestedExample} from './cdk-tree-nested/cdk-tree-nested-example';
 export {CdkTreeComplexExample} from './cdk-tree-complex/cdk-tree-complex-example';
 export {CdkTreeCustomKeyManagerExample} from './cdk-tree-custom-key-manager/cdk-tree-custom-key-manager-example';
+export {CdkTreeVirtualScrollExample} from './cdk-tree-virtual-scroll/cdk-tree-virtual-scroll-example';

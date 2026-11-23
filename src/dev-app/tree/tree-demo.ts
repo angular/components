@@ -15,6 +15,7 @@ import {
   CdkTreeFlatChildrenAccessorExample,
   CdkTreeComplexExample,
   CdkTreeCustomKeyManagerExample,
+  CdkTreeVirtualScrollExample,
 } from '@angular/components-examples/cdk/tree';
 import {
   TreeDynamicExample,
@@ -50,6 +51,7 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeNestedChildrenAccessorExample,
     CdkTreeNestedLevelAccessorExample,
     CdkTreeComplexExample,
+    CdkTreeVirtualScrollExample,
     FormsModule,
     TreeDynamicExample,
     TreeFlatChildAccessorOverviewExample,
