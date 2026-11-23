@@ -1394,6 +1394,81 @@ describe('Dialog with a parent Dialog', () => {
   });
 });
 
+describe('Dialog with OverlayContainer inside a ShadowRoot', () => {
+  let dialog: Dialog;
+  let shadowHost: HTMLElement;
+  let overlayContainerElement: HTMLElement;
+
+  beforeEach(() => {
+    if (!_supportsShadowDom()) {
+      return;
+    }
+
+    shadowHost = document.createElement('div');
+    const shadowRoot = shadowHost.attachShadow({mode: 'open'});
+    overlayContainerElement = document.createElement('div');
+    shadowRoot.appendChild(overlayContainerElement);
+    document.body.appendChild(shadowHost);
+
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: OverlayContainer,
+          useValue: {getContainerElement: () => overlayContainerElement},
+        },
+        {provide: Location, useClass: SpyLocation},
+      ],
+    });
+
+    dialog = TestBed.inject(Dialog);
+  });
+
+  afterEach(() => {
+    shadowHost?.remove();
+  });
+
+  it('should toggle `aria-hidden` on the shadow host siblings and restore on close', async () => {
+    if (!_supportsShadowDom()) {
+      return;
+    }
+
+    const fixture = TestBed.createComponent(ComponentWithChildViewContainer);
+    const sibling = document.createElement('div');
+    const preHiddenSibling = document.createElement('div');
+    preHiddenSibling.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(sibling);
+    document.body.appendChild(preHiddenSibling);
+
+    const dialogRef = dialog.open(PizzaMsg);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(sibling.getAttribute('aria-hidden'))
+      .withContext('Expected shadow host sibling to be hidden')
+      .toBe('true');
+    expect(preHiddenSibling.getAttribute('aria-hidden'))
+      .withContext('Expected pre-hidden sibling to stay hidden')
+      .toBe('true');
+    expect(shadowHost.hasAttribute('aria-hidden'))
+      .withContext('Expected shadow host not to be hidden')
+      .toBe(false);
+
+    dialogRef.close();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(sibling.hasAttribute('aria-hidden'))
+      .withContext('Expected shadow host sibling to no longer be hidden')
+      .toBe(false);
+    expect(preHiddenSibling.getAttribute('aria-hidden'))
+      .withContext('Expected pre-hidden sibling to remain hidden')
+      .toBe('true');
+
+    sibling.remove();
+    preHiddenSibling.remove();
+  });
+});
+
 @Directive({
   selector: 'dir-with-view-container',
 })
