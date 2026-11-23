@@ -127,9 +127,11 @@ export class MatRippleLoader implements OnDestroy {
 
     // If the ripple has already been instantiated, just disable it.
     if (ripple) {
-      ripple.target.rippleDisabled = disabled;
+      // Re-enabling the host should not bring back a ripple that is disabled for every host.
+      const rippleDisabled = disabled || this._isGloballyDisabled();
+      ripple.target.rippleDisabled = rippleDisabled;
 
-      if (!disabled && !ripple.hasSetUpEvents) {
+      if (!rippleDisabled && !ripple.hasSetUpEvents) {
         ripple.hasSetUpEvents = true;
         ripple.renderer.setupTriggerEvents(host);
       }
@@ -181,8 +183,7 @@ export class MatRippleLoader implements OnDestroy {
       ? 0
       : (globalOptions?.animation?.exitDuration ?? defaultRippleAnimationConfig.exitDuration);
     const target: RippleTarget = {
-      rippleDisabled:
-        this._animationsDisabled || globalOptions?.disabled || host.hasAttribute(matRippleDisabled),
+      rippleDisabled: this._isGloballyDisabled() || host.hasAttribute(matRippleDisabled),
       rippleConfig: {
         centered: host.hasAttribute(matRippleCentered),
         terminateOnPointerUp: globalOptions?.terminateOnPointerUp,
@@ -213,6 +214,10 @@ export class MatRippleLoader implements OnDestroy {
     });
 
     host.removeAttribute(matRippleUninitialized);
+  }
+
+  private _isGloballyDisabled(): boolean {
+    return this._animationsDisabled || !!this._globalRippleOptions?.disabled;
   }
 
   destroyRipple(host: HTMLElement): void {
