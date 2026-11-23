@@ -30,6 +30,7 @@ import {
   OverlayContainer,
   OverlayRef,
 } from '../overlay';
+import {_getShadowRoot} from '../platform';
 import {ComponentPortal, TemplatePortal} from '../portal';
 import {DialogConfig, DialogContainer} from './dialog-config';
 import {DialogRef} from './dialog-ref';
@@ -391,16 +392,25 @@ export class Dialog implements OnDestroy {
   }
 
   /** Hides all of the content that isn't an overlay from assistive technology. */
-  private _hideNonDialogContentFromAssistiveTechnology(overlayContainer: HTMLElement) {
-    // Ensure that the overlay container is attached to the DOM.
-    if (overlayContainer.parentElement) {
-      const siblings = overlayContainer.parentElement.children;
+  private _hideNonDialogContentFromAssistiveTechnology(overlayContainer: HTMLElement): void {
+    let target: Element = overlayContainer;
+
+    if (!target.parentElement) {
+      const shadowHost = _getShadowRoot(overlayContainer)?.host;
+
+      if (shadowHost) {
+        target = shadowHost;
+      }
+    }
+
+    if (target.parentElement) {
+      const siblings = target.parentElement.children;
 
       for (let i = siblings.length - 1; i > -1; i--) {
         const sibling = siblings[i];
 
         if (
-          sibling !== overlayContainer &&
+          sibling !== target &&
           sibling.nodeName !== 'SCRIPT' &&
           sibling.nodeName !== 'STYLE' &&
           !sibling.hasAttribute('aria-live') &&
