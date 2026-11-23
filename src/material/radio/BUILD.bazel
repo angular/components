@@ -124,6 +124,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/collections",
         "//src/cdk/testing/private",
         "//src/material/core",
     ],

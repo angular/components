@@ -101,10 +101,10 @@ export interface TreeDataNodeFlattener<T> {
 
 // @public
 export class UniqueSelectionDispatcher implements OnDestroy {
-    listen(listener: UniqueSelectionDispatcherListener): () => void;
+    listen(listener: UniqueSelectionDispatcherListener, acceptsScope?: (scope: object) => boolean): () => void;
     // (undocumented)
     ngOnDestroy(): void;
-    notify(id: string, name: string): void;
+    notify(id: string, name: string, scope?: object): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<UniqueSelectionDispatcher, never>;
     // (undocumented)

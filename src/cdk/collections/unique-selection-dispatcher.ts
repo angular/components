@@ -22,29 +22,40 @@ export type UniqueSelectionDispatcherListener = (id: string, name: string) => vo
  */
 @Service()
 export class UniqueSelectionDispatcher implements OnDestroy {
-  private _listeners: UniqueSelectionDispatcherListener[] = [];
+  private _listeners: {
+    listener: UniqueSelectionDispatcherListener;
+    acceptsScope?: (scope: object) => boolean;
+  }[] = [];
 
   /**
    * Notify other items that selection for the given name has been set.
    * @param id ID of the item.
    * @param name Name of the item.
+   * @param scope Optional group owner. Omitting it notifies every listener.
    */
-  notify(id: string, name: string) {
-    for (let listener of this._listeners) {
-      listener(id, name);
+  notify(id: string, name: string, scope?: object): void {
+    for (const {listener, acceptsScope} of this._listeners) {
+      if (scope === undefined || !acceptsScope || acceptsScope(scope)) {
+        listener(id, name);
+      }
     }
   }
 
   /**
    * Listen for future changes to item selection.
+   * @param listener Callback receiving the selected item's ID and name.
+   * @param acceptsScope Optional filter for scoped notifications. Unscoped notifications always pass.
    * @return Function used to deregister listener
    */
-  listen(listener: UniqueSelectionDispatcherListener): () => void {
-    this._listeners.push(listener);
+  listen(
+    listener: UniqueSelectionDispatcherListener,
+    acceptsScope?: (scope: object) => boolean,
+  ): () => void {
+    this._listeners.push({listener, acceptsScope});
     return () => {
-      this._listeners = this._listeners.filter((registered: UniqueSelectionDispatcherListener) => {
-        return listener !== registered;
-      });
+      this._listeners = this._listeners.filter(
+        registered => registered.listener !== listener || registered.acceptsScope !== acceptsScope,
+      );
     };
   }
 

@@ -1,3 +1,4 @@
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
@@ -669,6 +670,67 @@ describe('MatRadio', () => {
     });
   });
 
+  describe('selection across forms', () => {
+    let fixture: ComponentFixture<RadiosInSeparateForms>;
+    let forms: NodeListOf<HTMLFormElement>;
+
+    beforeEach(async () => {
+      fixture = TestBed.createComponent(RadiosInSeparateForms);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+      forms = (fixture.nativeElement as HTMLElement).querySelectorAll('form');
+    });
+
+    it('should keep both initial selections when groups in different forms share a name', () => {
+      expect(new FormData(forms[0]).get('season')).toBe('winter');
+      expect(new FormData(forms[1]).get('season')).toBe('summer');
+    });
+
+    it('should only change the selection in the form where the radio was clicked', () => {
+      forms[0].querySelector<HTMLInputElement>('input[value="summer"]')!.click();
+      fixture.detectChanges();
+      forms[1].querySelector<HTMLInputElement>('input[value="winter"]')!.click();
+      fixture.detectChanges();
+
+      expect(new FormData(forms[0]).get('season')).toBe('summer');
+      expect(new FormData(forms[1]).get('season')).toBe('winter');
+    });
+
+    it('should keep same-named radios mutually exclusive within one form', () => {
+      const firstRadio = fixture.debugElement.query(
+        By.directive(MatRadioButton),
+      )!.componentInstance;
+      forms[0].querySelector<HTMLInputElement>('input[value="winter"]')!.click();
+      fixture.detectChanges();
+      expect(firstRadio.checked).toBe(true);
+
+      forms[0].querySelector<HTMLInputElement>('input[value="spring"]')!.click();
+      fixture.detectChanges();
+
+      expect(firstRadio.checked).toBe(false);
+      expect(new FormData(forms[0]).get('season')).toBe('spring');
+    });
+
+    it('should continue to send and receive unfiltered selection notifications', () => {
+      const dispatcher = TestBed.inject(UniqueSelectionDispatcher);
+      const listener = jasmine.createSpy('listener');
+      const unregister = dispatcher.listen(listener);
+      const radio = fixture.debugElement.queryAll(By.directive(MatRadioButton))[1];
+      forms[0].querySelector<HTMLInputElement>('input[value="summer"]')!.click();
+      fixture.detectChanges();
+
+      expect(listener).toHaveBeenCalledWith(radio.componentInstance.id, 'season');
+
+      dispatcher.notify('external-radio', 'season');
+      fixture.detectChanges();
+
+      expect(new FormData(forms[0]).get('season')).toBeNull();
+      expect(new FormData(forms[1]).get('season')).toBeNull();
+      unregister();
+    });
+  });
+
   describe('disableable', () => {
     let fixture: ComponentFixture<DisableableRadioButton>;
     let radioInstance: MatRadioButton;
@@ -1199,6 +1261,23 @@ class FocusableRadioButton {
   tabIndex!: number;
   disabled = false;
 }
+
+@Component({
+  template: `
+    @for (season of ['winter', 'summer']; track season) {
+      <form>
+        <mat-radio-group name="season" [ngModel]="season">
+          <mat-radio-button value="winter">Winter</mat-radio-button>
+          <mat-radio-button value="summer">Summer</mat-radio-button>
+        </mat-radio-group>
+        <mat-radio-button name="season" value="spring">Spring</mat-radio-button>
+      </form>
+    }
+  `,
+  imports: [MatRadioModule, FormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class RadiosInSeparateForms {}
 
 @Component({
   selector: 'transcluding-wrapper',
