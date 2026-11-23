@@ -282,13 +282,15 @@ export class MatSliderThumb implements _MatSliderThumb, OnDestroy, ControlValueA
   protected _isControlInitialized = false;
 
   constructor() {
-    const renderer = inject(Renderer2);
-
     this._ngZone.runOutsideAngular(() => {
+      const renderer = inject(Renderer2);
+      const endListener = this._onPointerUp.bind(this);
+
       this._listenerCleanups = [
         renderer.listen(this._hostElement, 'pointerdown', this._onPointerDown.bind(this)),
         renderer.listen(this._hostElement, 'pointermove', this._onPointerMove.bind(this)),
-        renderer.listen(this._hostElement, 'pointerup', this._onPointerUp.bind(this)),
+        renderer.listen(this._hostElement, 'pointerup', endListener),
+        renderer.listen(this._hostElement, 'pointercancel', endListener),
       ];
     });
   }
