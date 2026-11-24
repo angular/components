@@ -127,7 +127,7 @@ export class MatExpansionPanel
   @Output() readonly afterCollapse = new EventEmitter<void>();
 
   /** Stream that emits for changes in `@Input` properties. */
-  readonly _inputChanges = new Subject<SimpleChanges<MatExpansionPanel>>();
+  readonly _inputChanges: Subject<SimpleChanges<MatExpansionPanel>> = new Subject();
 
   /** Optionally defined accordion the expansion panel belongs to. */
   override accordion = inject<MatAccordionBase>(MAT_ACCORDION, {optional: true, skipSelf: true})!;
