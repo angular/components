@@ -142,7 +142,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 }
 
 // @public (undocumented)
-export class MatTab implements OnInit, OnChanges, OnDestroy {
+export class MatTab implements OnInit, OnChanges, OnDestroy, AfterContentInit {
     constructor();
     ariaLabel: string;
     ariaLabelledby: string;
@@ -158,6 +158,8 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
     ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -170,7 +172,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     set templateLabel(value: MatTabLabel);
     textLabel: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, ["templateLabel", "_explicitContent"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatTab, "mat-tab", ["matTab"], { "disabled": { "alias": "disabled"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "labelClass": { "alias": "labelClass"; "required": false; }; "bodyClass": { "alias": "bodyClass"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, {}, ["_explicitContent", "_templateLabels"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTab, never>;
 }
