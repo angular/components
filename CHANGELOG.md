@@ -1,23 +1,3 @@
-<a name="22.3.1"></a>
-# 22.3.1 "platinum-puppy" (2026-11-25)
-### aria
-| Commit | Type | Description |
-| -- | -- | -- |
-| [53977db67](https://github.com/angular/components/commit/53977db67f8e4d075422d7360d659d78768e49ab) | fix | **combobox:** clear pending timeout on destroy ([#34167](https://github.com/angular/components/pull/34167)) |
-### cdk
-| Commit | Type | Description |
-| -- | -- | -- |
-| [1ffeeb982](https://github.com/angular/components/commit/1ffeeb982e5572d987b8f5546e76dcd9b5592d06) | fix | **dialog:** handle overlay container inside shadow dom ([#34172](https://github.com/angular/components/pull/34172)) |
-### material
-| Commit | Type | Description |
-| -- | -- | -- |
-| [c3c7ee5e6](https://github.com/angular/components/commit/c3c7ee5e6e02d9bd6d2d3fd00f1a44ab828b8b3c) | fix | **core:** keep globally disabled ripples off when a button is re-enabled ([#34170](https://github.com/angular/components/pull/34170)) |
-| [fc10f1402](https://github.com/angular/components/commit/fc10f14025d0c9464dc97422102c9d74cb2e42c1) | fix | **slider:** handle pointercancel events ([#34168](https://github.com/angular/components/pull/34168)) |
-| [bd769ffee](https://github.com/angular/components/commit/bd769ffee7c25d2f10b366752e67a22f98d78639) | fix | **stepper:** duplicate aria-disabled binding ([#34161](https://github.com/angular/components/pull/34161)) |
-| [abac53cb1](https://github.com/angular/components/commit/abac53cb14a660e28fd3d866d8030bd35b484cfd) | fix | **timepicker:** glitchy animation of legacy animations are enabled ([#34140](https://github.com/angular/components/pull/34140)) |
-
-<!-- CHANGELOG SPLIT MARKER -->
-
 <a name="22.3.0"></a>
 # 22.3.0 "nitrogen-nail" (2026-11-18)
 ### aria
