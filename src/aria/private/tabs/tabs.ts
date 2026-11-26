@@ -134,6 +134,9 @@ export class TabListPattern {
   /** Whether the tablist has been interacted with. */
   readonly hasBeenInteracted = signal(false);
 
+  /** Whether focus is currently inside the tablist. */
+  readonly isFocused = signal(false);
+
   /** The currently active tab. */
   readonly activeTab: SignalLike<TabPattern | undefined>; // set from inputs
 
@@ -270,9 +273,19 @@ export class TabListPattern {
   /** Handles focusin events for the tablist. */
   onFocusIn(event?: FocusEvent) {
     this.hasBeenInteracted.set(true);
+    this.isFocused.set(true);
 
     if (event) {
       this.focusBehavior.sync(this._getItem(event));
+    }
+  }
+
+  /** Handles focusout events for the tablist. */
+  onFocusOut(event: FocusEvent) {
+    const relatedTarget = event.relatedTarget as Node | null;
+
+    if (!this.inputs.element()?.contains(relatedTarget)) {
+      this.isFocused.set(false);
     }
   }
 

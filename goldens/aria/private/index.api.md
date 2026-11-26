@@ -590,11 +590,13 @@ export class TabListPattern {
     readonly hasBeenInteracted: WritableSignalLike<boolean>;
     // (undocumented)
     readonly inputs: TabListInputs;
+    readonly isFocused: WritableSignalLike<boolean>;
     readonly keydown: SignalLike<KeyboardEventManager<KeyboardEvent>>;
     readonly navigationBehavior: ListNavigation<TabPattern>;
     readonly nextKey: SignalLike<"ArrowDown" | "ArrowLeft" | "ArrowRight">;
     onClick(event: PointerEvent): void;
     onFocusIn(event?: FocusEvent): void;
+    onFocusOut(event: FocusEvent): void;
     onKeydown(event: KeyboardEvent): void;
     open(tab?: TabPattern): boolean;
     readonly orientation: SignalLike<'vertical' | 'horizontal'>;
