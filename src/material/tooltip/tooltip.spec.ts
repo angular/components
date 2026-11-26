@@ -1015,6 +1015,68 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     });
 
+    it('should not treat a nested popover overlay as part of the trigger', () => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
+      // Regression test for #32747: a trigger can have a popover-based overlay nested inside
+      // it (e.g. an open mat-select panel). Test-dispatched events aren't trusted, so they
+      // can't exercise the `mouseenter` guard end-to-end; verify the check it relies on.
+      const nestedPopover = document.createElement('div');
+      nestedPopover.setAttribute('popover', 'manual');
+      buttonElement.appendChild(nestedPopover);
+
+      const isPointerOverTrigger = (tooltipDirective as any)._isPointerOverTrigger.bind(
+        tooltipDirective,
+      );
+      const elementFromPointSpy = spyOn(document, 'elementFromPoint');
+
+      elementFromPointSpy.and.returnValue(buttonElement);
+      expect(isPointerOverTrigger(createMouseEvent('mouseenter')))
+        .withContext('hovering the trigger itself should count as over the trigger')
+        .toBe(true);
+
+      elementFromPointSpy.and.returnValue(nestedPopover);
+      expect(isPointerOverTrigger(createMouseEvent('mouseenter')))
+        .withContext(
+          'hovering inside a nested popover overlay should not count as over the trigger',
+        )
+        .toBe(false);
+
+      nestedPopover.remove();
+    });
+
+    it('should treat a nested element sticking out of the trigger bounds as part of it', () => {
+      // We don't bind mouse events on mobile devices.
+      if (platform.IOS || platform.ANDROID) {
+        return;
+      }
+
+      // Some trigger elements have children that intentionally render outside their own
+      // bounds, e.g. the `.mat-mdc-button-touch-target` span on buttons, which is positioned
+      // to extend past the visible button to provide a larger touch target. Those shouldn't be
+      // mistaken for a nested overlay (see the previous test).
+      const stickingOutChild = document.createElement('span');
+      stickingOutChild.style.position = 'absolute';
+      stickingOutChild.style.inset = '-20px';
+      buttonElement.appendChild(stickingOutChild);
+
+      const isPointerOverTrigger = (tooltipDirective as any)._isPointerOverTrigger.bind(
+        tooltipDirective,
+      );
+      spyOn(document, 'elementFromPoint').and.returnValue(stickingOutChild);
+
+      expect(isPointerOverTrigger(createMouseEvent('mouseenter')))
+        .withContext(
+          'a point over a child sticking out of the trigger should still count as over the trigger',
+        )
+        .toBe(true);
+
+      stickingOutChild.remove();
+    });
+
     it('should not hide on mouseleave if the pointer goes from the trigger to the tooltip', async () => {
       // We don't bind mouse events on mobile devices.
       if (platform.IOS || platform.ANDROID) {
