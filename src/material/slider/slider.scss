@@ -283,6 +283,50 @@ $fallbacks: m3-slider.get-tokens();
   // measurements. Explicitly set `content-box` to avoid issues like #26246.
   box-sizing: content-box;
 
+  // Reset the native appearance and pseudo-elements so that browser-specific range thumb
+  // metrics (especially Gecko/Firefox ::-moz-range-thumb) don't offset the drag coordinates
+  // from the visual slider thumb.
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+
+  &::-moz-range-track {
+    background: transparent;
+    border: none;
+    height: 100%;
+  }
+
+  &::-moz-range-thumb {
+    appearance: none;
+    -moz-appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+  }
+
+  &::-moz-range-progress {
+    background: transparent;
+  }
+
+  &::-webkit-slider-runnable-track {
+    background: transparent;
+    border: none;
+    height: 100%;
+  }
+
+  &::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    height: 16px;
+    width: 16px;
+  }
+
   &.mat-mdc-slider-input-no-pointer-events {
     pointer-events: none;
   }
