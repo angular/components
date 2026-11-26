@@ -86,6 +86,11 @@ function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 
       provide: VIRTUAL_SCROLLABLE,
       useValue: null,
     },
+    {
+      // Prevent nested tables from attaching to the viewport rendering these items.
+      provide: CDK_VIRTUAL_SCROLL_VIEWPORT,
+      useValue: null,
+    },
   ],
 })
 export class CdkVirtualForOf<T>
