@@ -231,6 +231,37 @@ describe('Tabs Pattern', () => {
       });
     });
 
+    describe('#onFocusOut', () => {
+      it('should clear isFocused when focus leaves the tablist', () => {
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        tabListPattern.selectedTab.set(tabPatterns[2]);
+        tabListPattern.onFocusIn();
+        expect(tabListPattern.isFocused()).toBeTrue();
+
+        tabListPattern.onFocusOut({
+          relatedTarget: document.createElement('button'),
+        } as unknown as FocusEvent);
+
+        expect(tabListPattern.isFocused()).toBeFalse();
+      });
+
+      it('should keep isFocused when focus stays inside the tablist', () => {
+        const listElement = tabListInputs.element()!;
+        listElement.appendChild(tabPatterns[1].element());
+
+        tabListInputs.activeItem.set(tabPatterns[1]);
+        tabListPattern.selectedTab.set(tabPatterns[2]);
+        tabListPattern.onFocusIn();
+        expect(tabListPattern.isFocused()).toBeTrue();
+
+        tabListPattern.onFocusOut({
+          relatedTarget: tabPatterns[1].element(),
+        } as unknown as FocusEvent);
+
+        expect(tabListPattern.isFocused()).toBeTrue();
+      });
+    });
+
     describe('Keyboard Navigation', () => {
       it('does not handle keyboard event if a tablist is disabled.', () => {
         expect(tabPatterns[1].active()).toBeFalse();

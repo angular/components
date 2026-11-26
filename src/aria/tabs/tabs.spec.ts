@@ -696,6 +696,100 @@ describe('Tabs', () => {
       expect(tabElements[1].getAttribute('aria-selected')).toBe('false');
     });
 
+    it('should update roving tabindex on programmatic selectedTab change after interaction', async () => {
+      await updateTabs({selectedTab: 'tab1'});
+
+      await click(tabElements[1]);
+      expect(testComponent.selectedTab()).toBe('tab2');
+      expect(isTabFocused(1)).toBe(true);
+
+      // Simulate focus moving outside the tablist (e.g. clicking an external button).
+      tabListElement.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: null}),
+      );
+      await fixture.whenStable();
+
+      await updateTabs({selectedTab: 'tab3'});
+      expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
+      expect(isTabFocused(2)).toBe(true);
+      expect(isTabFocused(1)).toBe(false);
+      expect(document.activeElement).not.toBe(tabElements[2]);
+    });
+
+    it('should update aria-activedescendant on programmatic selectedTab change after interaction', async () => {
+      await updateTabs({focusMode: 'activedescendant', selectedTab: 'tab1'});
+
+      await click(tabElements[1]);
+      expect(testComponent.selectedTab()).toBe('tab2');
+      expect(isTabFocused(1)).toBe(true);
+
+      tabListElement.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: null}),
+      );
+      await fixture.whenStable();
+
+      await updateTabs({selectedTab: 'tab3'});
+      expect(tabElements[2].getAttribute('aria-selected')).toBe('true');
+      expect(isTabFocused(2)).toBe(true);
+    });
+
+    it('should defer syncing active tab until focus leaves when selectedTab changes while focused', async () => {
+      await updateTabs({selectedTab: 'tab1', selectionMode: 'explicit'});
+
+      tabElements[0].focus();
+      await right();
+      expect(isTabFocused(1)).toBe(true);
+
+      await updateTabs({selectedTab: 'tab3'});
+      // Focus is still inside the tablist on tab2, so active item stays on tab2.
+      expect(isTabFocused(1)).toBe(true);
+
+      tabListElement.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: null}),
+      );
+      await fixture.whenStable();
+      expect(isTabFocused(2)).toBe(true);
+      expect(isTabFocused(1)).toBe(false);
+    });
+
+    it('should reset roving tabindex to the selected tab on focusout in explicit mode', async () => {
+      await updateTabs({selectedTab: 'tab1', selectionMode: 'explicit'});
+
+      tabElements[0].focus();
+      await right();
+      expect(isTabFocused(1)).toBe(true);
+      expect(testComponent.selectedTab()).toBe('tab1');
+
+      tabListElement.dispatchEvent(
+        new FocusEvent('focusout', {bubbles: true, relatedTarget: null}),
+      );
+      await fixture.whenStable();
+      expect(isTabFocused(0)).toBe(true);
+      expect(isTabFocused(1)).toBe(false);
+    });
+
+    it('should not throw NG0100 when removing a focused tab while switching selectedTab', async () => {
+      await updateTabs({selectedTab: 'tab1'});
+
+      await click(tabElements[1]);
+      expect(testComponent.selectedTab()).toBe('tab2');
+      expect(document.activeElement).toBe(tabElements[1]);
+
+      // Remove the focused tab and switch selectedTab back to tab1 in the same change detection.
+      testComponent.tabsData.set([
+        {value: 'tab1', label: 'Tab 1', content: 'Content 1'},
+        {value: 'tab3', label: 'Tab 3', content: 'Content 3'},
+      ]);
+      testComponent.selectedTab.set('tab1');
+
+      expect(() => fixture.detectChanges()).not.toThrow();
+      await fixture.whenStable();
+      defineTestVariables();
+
+      expect(testComponent.selectedTab()).toBe('tab1');
+      expect(isTabFocused(0)).toBe(true);
+    });
+
     it('should not select a disabled tab via click', async () => {
       await updateTabs({
         initialTabs: [

@@ -21,6 +21,7 @@ import {
   OnDestroy,
   afterNextRender,
   linkedSignal,
+  untracked,
   WritableSignal,
 } from '@angular/core';
 import {SortedCollection, TabListPattern, TabPattern, reportViolations} from '../private';
@@ -55,6 +56,7 @@ import type {Tab} from './tab';
     '(keydown)': '_pattern.onKeydown($event)',
     '(click)': '_pattern.onClick($event)',
     '(focusin)': '_pattern.onFocusIn($event)',
+    '(focusout)': '_pattern.onFocusOut($event)',
   },
   providers: [{provide: TAB_LIST, useExisting: TabList}],
 })
@@ -145,6 +147,33 @@ export class TabList implements OnInit, OnDestroy {
         const pattern = this._selectedTabPattern();
         const tab = this._collection.orderedItems().find(tab => tab._pattern == pattern);
         this.selectedTab.set(tab?.value());
+      },
+    });
+
+    // Keep the active item in sync when selection changes programmatically while unfocused,
+    // or when focus leaves the tablist.
+    afterRenderEffect({
+      write: () => {
+        const selectedTab = this._selectedTabPattern();
+        const isFocused = this._pattern.isFocused();
+        untracked(() => {
+          if (selectedTab && !isFocused) {
+            this._pattern.focusBehavior.sync(selectedTab);
+          }
+        });
+      },
+    });
+
+    // Ensure that if the active tab is removed from the list, the tablist updates its focus state.
+    afterRenderEffect({
+      write: () => {
+        const items = this._tabPatterns();
+        const activeItem = untracked(() => this._pattern.inputs.activeItem());
+
+        if (activeItem && !items.includes(activeItem)) {
+          this._pattern.isFocused.set(false);
+          this._pattern.setDefaultState();
+        }
       },
     });
 
