@@ -14,7 +14,7 @@ import {DeferredContent} from '../private';
  *
  * This structural directive should be applied to an `ng-template` within an `ngTabPanel`.
  * It enables lazy loading of the tab's content, meaning the content is only rendered
- * when the tab is activated for the first time.
+ * when the tab is activated.
  *
  * ```html
  * <div ngTabPanel value="myTabId">
