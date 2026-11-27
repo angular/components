@@ -8,6 +8,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  Directive,
   ElementRef,
   ErrorHandler,
   QueryList,
@@ -1406,6 +1407,144 @@ describe('CdkTree', () => {
     }
   });
 
+  describe('aria-posinset and aria-setsize', () => {
+    it('should update positions in a flat tree with a levelAccessor', () => {
+      const fixture = TestBed.createComponent(FlatPositionTreeWithLevelAccessor);
+      fixture.componentInstance.setData(createPositionTestData());
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['a 1/3', 'a1 1/2', 'a2 2/2', 'b 2/3', 'c 3/3']);
+
+      fixture.componentInstance.setData([
+        positionTestNode('c'),
+        positionTestNode('a', [positionTestNode('a2'), positionTestNode('a1')]),
+        positionTestNode('b'),
+      ]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['c 1/3', 'a 2/3', 'a2 1/2', 'a1 2/2', 'b 3/3']);
+
+      fixture.componentInstance.setData([
+        positionTestNode('b', [positionTestNode('b1')]),
+        positionTestNode('a', [positionTestNode('a1'), positionTestNode('a3')]),
+      ]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['b 1/2', 'b1 1/1', 'a 2/2', 'a1 1/2', 'a3 2/2']);
+    });
+
+    it('should update positions in a flat tree with a childrenAccessor', () => {
+      const fixture = TestBed.createComponent(FlatPositionTreeWithChildrenAccessor);
+      fixture.componentInstance.setData(createPositionTestData());
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['a 1/3', 'b 2/3', 'c 3/3']);
+
+      fixture.componentInstance.tree.expand(fixture.componentInstance.data()[0]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['a 1/3', 'a1 1/2', 'a2 2/2', 'b 2/3', 'c 3/3']);
+
+      // Nodes are matched by their expansion key, so `a` stays expanded with the new data.
+      fixture.componentInstance.setData([
+        positionTestNode('c'),
+        positionTestNode('a', [positionTestNode('a2'), positionTestNode('a1')]),
+        positionTestNode('b'),
+      ]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['c 1/3', 'a 2/3', 'a2 1/2', 'a1 2/2', 'b 3/3']);
+
+      fixture.componentInstance.tree.collapse(fixture.componentInstance.data()[1]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['c 1/3', 'a 2/3', 'b 3/3']);
+
+      fixture.componentInstance.setData([
+        positionTestNode('b', [positionTestNode('b1')]),
+        positionTestNode('a', [positionTestNode('a1'), positionTestNode('a3')]),
+      ]);
+      fixture.detectChanges();
+      fixture.componentInstance.tree.expandAll();
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['b 1/2', 'b1 1/1', 'a 2/2', 'a1 1/2', 'a3 2/2']);
+    });
+
+    it('should update positions in a nested tree with a childrenAccessor', () => {
+      const fixture = TestBed.createComponent(NestedPositionTreeWithChildrenAccessor);
+      fixture.componentInstance.setData(createPositionTestData());
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['a 1/3', 'a1 1/2', 'a2 2/2', 'b 2/3', 'c 3/3']);
+
+      fixture.componentInstance.setData([
+        positionTestNode('c'),
+        positionTestNode('a', [positionTestNode('a2'), positionTestNode('a1')]),
+        positionTestNode('b'),
+      ]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['c 1/3', 'a 2/3', 'a2 1/2', 'a1 2/2', 'b 3/3']);
+
+      fixture.componentInstance.setData([
+        positionTestNode('b', [positionTestNode('b1')]),
+        positionTestNode('a', [positionTestNode('a1'), positionTestNode('a3')]),
+      ]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['b 1/2', 'b1 1/1', 'a 2/2', 'a1 1/2', 'a3 2/2']);
+    });
+
+    it('should update positions in a nested tree with a levelAccessor', () => {
+      const fixture = TestBed.createComponent(NestedPositionTreeWithLevelAccessor);
+      fixture.componentInstance.setData(createPositionTestData());
+      fixture.detectChanges();
+      fixture.componentInstance.tree.expandAll();
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['a 1/3', 'a1 1/2', 'a2 2/2', 'b 2/3', 'c 3/3']);
+
+      fixture.componentInstance.setData([
+        positionTestNode('c'),
+        positionTestNode('a', [positionTestNode('a2'), positionTestNode('a1')]),
+        positionTestNode('b'),
+      ]);
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)).toEqual(['c 1/3', 'a 2/3', 'a2 1/2', 'a1 2/2', 'b 3/3']);
+    });
+
+    it('should not search through the set of a node to determine its position', () => {
+      const fixture = TestBed.createComponent(FlatPositionTreeWithChildrenAccessor);
+      const nodeCount = 200;
+      fixture.componentInstance.setData(
+        Array.from({length: nodeCount}, (_, index) => positionTestNode(`node ${index}`)),
+      );
+      fixture.detectChanges();
+
+      expect(getPositions(fixture)[nodeCount - 1]).toBe(`node ${nodeCount - 1} 200/200`);
+
+      fixture.componentInstance.expansionKeyCalls = 0;
+      fixture.detectChanges();
+
+      // Searching the set of each node calls `expansionKey` for each of the preceding
+      // nodes, which adds up to over 20,000 calls for 200 nodes. Looking up the
+      // position only needs a fixed number of calls per node.
+      expect(fixture.componentInstance.expansionKeyCalls).toBeGreaterThan(0);
+      expect(fixture.componentInstance.expansionKeyCalls).toBeLessThan(nodeCount * 20);
+    });
+
+    function getPositions(fixture: ComponentFixture<unknown>): string[] {
+      return getNodes(fixture.nativeElement).map(node => {
+        const name = node.querySelector('.position-test-name')!.textContent!.trim();
+        const position = node.getAttribute('aria-posinset');
+        const size = node.getAttribute('aria-setsize');
+        return `${name} ${position}/${size}`;
+      });
+    }
+  });
+
   describe('typeahead', () => {
     describe('Tree with default configuration', () => {
       let fixture: ComponentFixture<FlatTreeWithThreeNodes>;
@@ -2247,5 +2386,111 @@ class IsExpandableOrderingTest {
     data[0].children = children;
 
     this.dataSource = data;
+  }
+}
+
+interface PositionTestNode {
+  name: string;
+  level: number;
+  children: PositionTestNode[];
+}
+
+function positionTestNode(name: string, children: PositionTestNode[] = []): PositionTestNode {
+  return {name, level: 0, children};
+}
+
+/** Creates nodes `a` (with children `a1` and `a2`), `b` and `c`. */
+function createPositionTestData(): PositionTestNode[] {
+  return [
+    positionTestNode('a', [positionTestNode('a1'), positionTestNode('a2')]),
+    positionTestNode('b'),
+    positionTestNode('c'),
+  ];
+}
+
+/** Sets the level of each node and returns all of the nodes, in the order they're displayed. */
+function flattenPositionTestNodes(nodes: PositionTestNode[], level = 0): PositionTestNode[] {
+  return nodes.flatMap(node => {
+    node.level = level;
+    return [node, ...flattenPositionTestNodes(node.children, level + 1)];
+  });
+}
+
+@Directive()
+abstract class PositionTestTreeBase {
+  @ViewChild(CdkTree) tree!: CdkTree<PositionTestNode, string>;
+  expansionKeyCalls = 0;
+  data = signal<PositionTestNode[]>([]);
+  getChildren = (node: PositionTestNode) => node.children;
+  getLevel = (node: PositionTestNode) => node.level;
+  getKey = (node: PositionTestNode) => {
+    this.expansionKeyCalls++;
+    return node.name;
+  };
+
+  setData(nodes: PositionTestNode[]) {
+    this.data.set(nodes);
+  }
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="data()" [levelAccessor]="getLevel" [expansionKey]="getKey">
+      <cdk-tree-node *cdkTreeNodeDef="let node" [isExpandable]="node.children.length > 0">
+        <span class="position-test-name">{{node.name}}</span>
+      </cdk-tree-node>
+    </cdk-tree>
+  `,
+  imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class FlatPositionTreeWithLevelAccessor extends PositionTestTreeBase {
+  override setData(nodes: PositionTestNode[]) {
+    this.data.set(flattenPositionTestNodes(nodes));
+  }
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="data()" [childrenAccessor]="getChildren" [expansionKey]="getKey">
+      <cdk-tree-node *cdkTreeNodeDef="let node" [isExpandable]="node.children.length > 0">
+        <span class="position-test-name">{{node.name}}</span>
+      </cdk-tree-node>
+    </cdk-tree>
+  `,
+  imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class FlatPositionTreeWithChildrenAccessor extends PositionTestTreeBase {}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="data()" [childrenAccessor]="getChildren">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node" [isExpandable]="node.children.length > 0">
+        <span class="position-test-name">{{node.name}}</span>
+        <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `,
+  imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class NestedPositionTreeWithChildrenAccessor extends PositionTestTreeBase {}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="data()" [levelAccessor]="getLevel" [expansionKey]="getKey">
+      <cdk-nested-tree-node *cdkTreeNodeDef="let node" [isExpandable]="node.children.length > 0">
+        <span class="position-test-name">{{node.name}}</span>
+        <ng-template cdkTreeNodeOutlet></ng-template>
+      </cdk-nested-tree-node>
+    </cdk-tree>
+  `,
+  imports: [CdkTreeModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class NestedPositionTreeWithLevelAccessor extends PositionTestTreeBase {
+  override setData(nodes: PositionTestNode[]) {
+    this.data.set(flattenPositionTestNodes(nodes));
   }
 }
