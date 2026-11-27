@@ -1,0 +1,28 @@
+<cdk-virtual-scroll-viewport class="example-viewport" [itemSize]="itemSize">
+  <cdk-tree
+    #tree="cdkTree"
+    [dataSource]="dataSource"
+    [childrenAccessor]="childrenAccessor"
+    [expansionKey]="expansionKey"
+    [trackBy]="trackBy">
+    <cdk-tree-node
+      *cdkTreeNodeDef="let node"
+      class="example-tree-node"
+      cdkTreeNodePadding
+      [cdkTreeNodePaddingIndent]="24"
+      [style.height.px]="itemSize"
+      [isExpandable]="isExpandable(node)">
+      <!-- The node name doubles as the expand/collapse toggle. -->
+      <span
+        class="example-node-name"
+        cdkTreeNodeToggle
+        [class.example-node-name-expandable]="isExpandable(node)"
+        [attr.aria-label]="isExpandable(node) ? 'Toggle ' + node.name : null">
+        @if (isExpandable(node)) {
+          <span class="example-toggle-icon">{{ tree.isExpanded(node) ? '▾' : '▸' }}</span>
+        }
+        {{ node.name }}
+      </span>
+    </cdk-tree-node>
+  </cdk-tree>
+</cdk-virtual-scroll-viewport>

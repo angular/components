@@ -28,7 +28,8 @@ import {Direction} from '../bidi';
 import {CollectionViewer, DataSource} from '../collections';
 
 import {provideFakeDirectionality} from '../testing/private/fake-directionality';
-import {createKeyboardEvent} from '../testing/testbed/fake-events';
+import {createKeyboardEvent, dispatchFakeEvent} from '../testing/testbed/fake-events';
+import {CdkVirtualScrollViewport, ScrollingModule} from '../scrolling';
 import {CdkTreeModule, CdkTreeNodePadding} from './index';
 import {CdkTree, CdkTreeNode} from './tree';
 
@@ -1533,6 +1534,66 @@ describe('CdkTree', () => {
 
     expect(getNodes(treeElement).map(n => n.getAttribute('aria-expanded'))).toEqual(['false']);
   });
+
+  describe('virtual scrolling', () => {
+    it('should only render the nodes within the viewport range', async () => {
+      const fixture = TestBed.createComponent(FlatTreeWithVirtualScroll);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const component = fixture.componentInstance;
+      const rendered = getNodes(fixture.nativeElement.querySelector('cdk-tree'));
+
+      expect(rendered.length).toBeGreaterThan(0);
+      expect(rendered.length).toBeLessThan(component.dataSource.data.length);
+    });
+
+    it('should render different nodes as the user scrolls down', async () => {
+      const fixture = TestBed.createComponent(FlatTreeWithVirtualScroll);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const component = fixture.componentInstance;
+      const treeEl = fixture.nativeElement.querySelector('cdk-tree');
+      const initialFirstNode = getNodes(treeEl)[0].textContent;
+
+      component.viewport.scrollToIndex(500);
+      dispatchFakeEvent(component.viewport.scrollable!.getElementRef().nativeElement, 'scroll');
+      await new Promise(resolve => setTimeout(resolve, 50));
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      expect(getNodes(treeEl)[0].textContent).not.toBe(initialFirstNode);
+    });
+
+    it('should tell the viewport about the total number of nodes', async () => {
+      const fixture = TestBed.createComponent(FlatTreeWithVirtualScroll);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const component = fixture.componentInstance;
+      expect(component.viewport.getDataLength()).toBe(component.dataSource.data.length);
+    });
+
+    it('should throw when a nested node is rendered inside a virtual scroll viewport', async () => {
+      const fixture = TestBed.createComponent(FlatTreeWithVirtualScroll);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const tree = fixture.componentInstance.tree;
+
+      // The tree determines its node type from the first node that renders. Simulate a nested
+      // node being rendered after the tree has already been set up for virtual scrolling.
+      expect(() => tree._setNodeTypeIfUnset('nested')).toThrowError(
+        /Virtual scrolling is only supported/,
+      );
+    });
+  });
 });
 
 export class TestData {
@@ -2247,5 +2308,38 @@ class IsExpandableOrderingTest {
     data[0].children = children;
 
     this.dataSource = data;
+  }
+}
+
+@Component({
+  template: `
+    <cdk-virtual-scroll-viewport class="scroll-container" [itemSize]="20">
+      <cdk-tree [dataSource]="dataSource" [levelAccessor]="getLevel">
+        <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass">
+          {{node.pizzaTopping}}
+        </cdk-tree-node>
+      </cdk-tree>
+    </cdk-virtual-scroll-viewport>
+  `,
+  imports: [CdkTreeModule, ScrollingModule],
+  styles: `
+    .scroll-container {
+      height: 200px;
+      overflow: auto;
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.Eager,
+})
+class FlatTreeWithVirtualScroll {
+  getLevel = (node: TestData) => node.level;
+  dataSource = new FakeDataSource();
+
+  @ViewChild(CdkTree) tree!: CdkTree<TestData>;
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+
+  constructor() {
+    for (let i = 0; i < 1000; i++) {
+      this.dataSource.addData();
+    }
   }
 }

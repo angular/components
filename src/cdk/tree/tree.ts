@@ -17,9 +17,11 @@ import {
   CollectionViewer,
   DataSource,
   isDataSource,
+  ListRange,
   SelectionChange,
   SelectionModel,
 } from '../collections';
+import {CDK_VIRTUAL_SCROLL_VIEWPORT, type CdkVirtualScrollViewport} from '../scrolling';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -49,7 +51,10 @@ import {
   booleanAttribute,
 } from '@angular/core';
 import {coerceObservable} from '../coercion/private';
+import {DOWN_ARROW, END, HOME, UP_ARROW} from '../keycodes';
 import {
+  animationFrameScheduler,
+  asapScheduler,
   BehaviorSubject,
   combineLatest,
   concat,
@@ -61,6 +66,7 @@ import {
   of as observableOf,
 } from 'rxjs';
 import {
+  auditTime,
   distinctUntilChanged,
   concatMap,
   map,
@@ -77,6 +83,7 @@ import {CdkTreeNodeOutlet} from './outlet';
 import {
   getMultipleTreeControlsError,
   getTreeControlMissingError,
+  getTreeVirtualScrollNestedError,
   getTreeMissingMatchingNodeDefError,
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError,
@@ -129,6 +136,13 @@ export class CdkTree<T, K = T>
   private _elementRef = inject(ElementRef);
 
   private _dir = inject(Directionality);
+
+  private _virtualScrollViewport = inject(CDK_VIRTUAL_SCROLL_VIEWPORT, {
+    optional: true,
+    // Virtual scrolling can only be enabled by a viewport in
+    // the same host, don't try to resolve in parent components.
+    host: true,
+  });
 
   /** Subject that emits when the component has been destroyed. */
   private readonly _onDestroy = new Subject<void>();
@@ -212,6 +226,14 @@ export class CdkTree<T, K = T>
    */
   @Input() expansionKey?: (dataNode: T) => K;
 
+  /**
+   * Whether to explicitly disable virtual scrolling even if there is a virtual scroll viewport
+   * parent. This can't be changed externally, whereas internally it is turned into an input that
+   * we use to opt out existing apps that were implementing virtual scroll before we added support
+   * for it.
+   */
+  private readonly _disableVirtualScrolling = false;
+
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet!: CdkTreeNodeOutlet;
 
@@ -223,8 +245,6 @@ export class CdkTree<T, K = T>
   })
   _nodeDefs!: QueryList<CdkTreeNodeDef<T>>;
 
-  // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
-  //     Remove the MAX_VALUE in viewChange
   /**
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
@@ -267,8 +287,30 @@ export class CdkTree<T, K = T>
   _keyManager!: TreeKeyManagerStrategy<CdkTreeNode<T, K>>;
   private _viewInit = false;
 
+  /**
+   * Emits the full flattened list of nodes whenever it changes. Used to tell the virtual scroll
+   * viewport how many items there are in total.
+   */
+  private readonly _dataStream = new Subject<readonly T[]>();
+
+  /** The range of nodes that is currently rendered. Only used when virtual scrolling is enabled. */
+  private _renderedRange: ListRange | null = null;
+
+  /** Subscription to the rendered range of the virtual scroll viewport. */
+  private _virtualScrollSubscription: Subscription | undefined;
+
+  /**
+   * Index of a node that the user navigated to with the keyboard, but which isn't rendered yet.
+   * Once it enters the rendered range, we focus it.
+   */
+  private _pendingFocusIndex: number | null = null;
+
   ngAfterContentInit() {
     this._initializeKeyManager();
+
+    if (this._virtualScrollEnabled()) {
+      this._setupVirtualScrolling(this._virtualScrollViewport!);
+    }
   }
 
   ngAfterContentChecked() {
@@ -283,9 +325,13 @@ export class CdkTree<T, K = T>
     this._keyManagerNodes.complete();
     this._nodeType.complete();
     this._flattenedNodes.complete();
+    this._dataStream.complete();
     this.viewChange.complete();
     this._onDestroy.next();
     this._onDestroy.complete();
+
+    this._virtualScrollSubscription?.unsubscribe();
+    this._virtualScrollSubscription = undefined;
 
     if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
       (this.dataSource as DataSource<T>).disconnect(this);
@@ -324,6 +370,17 @@ export class CdkTree<T, K = T>
    */
   _setNodeTypeIfUnset(newType: 'flat' | 'nested') {
     const currentType = this._nodeType.value;
+
+    // Nested nodes render their children inside the parent, so there's no flat list to
+    // virtualize. Throw regardless of whether the type was already set, since a nested node
+    // can be rendered at any point.
+    if (
+      newType === 'nested' &&
+      this._virtualScrollEnabled() &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
+      throw getTreeVirtualScrollNestedError();
+    }
 
     if (currentType === null) {
       this._nodeType.next(newType);
@@ -412,6 +469,8 @@ export class CdkTree<T, K = T>
           this._emitExpansionChanges(expansionChanges);
         }),
       ),
+      // Only re-render when the rendered range changes if virtual scrolling is enabled.
+      this._virtualScrollEnabled() ? this.viewChange : observableOf(null),
     ]).pipe(
       switchMap(([data, nodeType]) => {
         if (nodeType === null) {
@@ -436,8 +495,25 @@ export class CdkTree<T, K = T>
     // If we're here, then we know what our node type is, and therefore can
     // perform our usual rendering pipeline.
     this._updateCachedData(data.flattenedNodes);
-    this.renderNodeChanges(data.renderNodes);
-    this._updateKeyManagerItems(data.flattenedNodes);
+
+    if (this._virtualScrollEnabled()) {
+      // Tell the viewport how many items there are in total. This has to be the full list,
+      // otherwise the scrollbar won't reflect the size of the data.
+      this._dataStream.next(data.flattenedNodes);
+
+      // Only render the nodes that are within the viewport's range.
+      const range = this._renderedRange;
+      const renderNodes = range
+        ? data.renderNodes.slice(range.start, Math.min(range.end, data.renderNodes.length))
+        : data.renderNodes;
+
+      this.renderNodeChanges(renderNodes);
+      // The key manager should only know about the nodes that are actually rendered.
+      this._updateKeyManagerItems(renderNodes);
+    } else {
+      this.renderNodeChanges(data.renderNodes);
+      this._updateKeyManagerItems(data.flattenedNodes);
+    }
   }
 
   private _emitExpansionChanges(expansionChanges: SelectionChange<K> | null) {
@@ -477,12 +553,154 @@ export class CdkTree<T, K = T>
     };
 
     this._keyManager = this._keyManagerFactory(items, keyManagerOptions);
+
+    if (this._virtualScrollEnabled()) {
+      // When the user navigates with the keyboard, the active node may be outside of the
+      // rendered range. Scroll it into view so that it becomes focusable.
+      this._keyManager.change.pipe(takeUntil(this._onDestroy)).subscribe(node => {
+        if (node) {
+          this._scrollNodeIntoView(node.data);
+        }
+      });
+    }
+  }
+
+  /** Scrolls the virtual scroll viewport so that the given node is rendered. */
+  private _scrollNodeIntoView(dataNode: T) {
+    const viewport = this._virtualScrollViewport;
+    if (!viewport) {
+      return;
+    }
+
+    const key = this._getExpansionKey(dataNode);
+    const index = this._flattenedNodes.value.findIndex(node => this._getExpansionKey(node) === key);
+
+    if (index > -1) {
+      const range = this._renderedRange;
+      // Only scroll if the node isn't already rendered, otherwise we'd fight the user's
+      // scrolling every time they move the focus.
+      if (!range || index < range.start || index >= range.end) {
+        this._pendingFocusIndex = index;
+        this._scrollToIndex(index);
+      }
+    }
+  }
+
+  /**
+   * Scrolls the viewport to the given index, if the current scroll strategy supports it.
+   *
+   * Some strategies (e.g. the `autosize` one) don't support scrolling to an index and throw
+   * when it's called, so we have to guard against that.
+   */
+  private _scrollToIndex(index: number) {
+    try {
+      this._virtualScrollViewport?.scrollToIndex(index);
+    } catch {
+      // The strategy doesn't support scrolling to an index. Nothing to do.
+    }
+  }
+
+  /** Focuses a node that the user navigated to, once it has been rendered. */
+  private _focusPendingNode() {
+    const index = this._pendingFocusIndex;
+    const range = this._renderedRange;
+
+    if (index === null || !range || index < range.start || index >= range.end) {
+      return;
+    }
+
+    this._pendingFocusIndex = null;
+    const dataNode = this._flattenedNodes.value[index];
+    const node = dataNode && this._nodes.value.get(this._getExpansionKey(dataNode));
+
+    if (node) {
+      this._keyManager.focusItem(node);
+    }
   }
 
   private _initializeDataDiffer() {
     // Provide a default trackBy based on `_getExpansionKey` if one isn't provided.
     const trackBy = this.trackBy ?? ((_index: number, item: T) => this._getExpansionKey(item));
     this._dataDiffer = this._differs.find([]).create(trackBy);
+  }
+
+  /** Whether virtual scrolling is currently active. */
+  private _virtualScrollEnabled(): boolean {
+    return !this._disableVirtualScrolling && this._virtualScrollViewport != null;
+  }
+
+  /** Connects the tree to the virtual scroll viewport. */
+  private _setupVirtualScrolling(viewport: CdkVirtualScrollViewport) {
+    const virtualScrollScheduler =
+      typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
+
+    // Render a single node until the viewport tells us what range to render. We can't render
+    // nothing, because the tree determines whether it's flat or nested by looking at the first
+    // node that gets rendered. Without that, the render pipeline would never start.
+    this._renderedRange = {start: 0, end: 1};
+    this.viewChange.next(this._renderedRange);
+
+    // Forward the range computed by the viewport to the tree. We need the scheduler here,
+    // because the virtual scrolling module uses an identical one for its scroll listeners.
+    // Without it the two go out of sync and the list starts jumping back to the beginning
+    // whenever it needs to re-render.
+    this._virtualScrollSubscription = viewport.renderedRangeStream
+      .pipe(auditTime(0, virtualScrollScheduler), takeUntil(this._onDestroy))
+      .subscribe(range => {
+        this._renderedRange = range;
+        this.viewChange.next(range);
+        this._focusPendingNode();
+      });
+
+    viewport.attach({
+      dataStream: this._dataStream,
+      measureRangeSize: (range, orientation) => this._measureRangeSize(range, orientation),
+    });
+  }
+
+  /**
+   * Measures the size of the rendered range in the tree.
+   * This is used for virtual scrolling when auto-sizing is enabled.
+   */
+  private _measureRangeSize(range: ListRange, orientation: 'horizontal' | 'vertical'): number {
+    if (range.start >= range.end || orientation !== 'vertical') {
+      return 0;
+    }
+
+    const renderedRange = this.viewChange.value;
+    const viewContainerRef = this._nodeOutlet.viewContainer;
+
+    if (
+      (range.start < renderedRange.start || range.end > renderedRange.end) &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)
+    ) {
+      throw Error(`Error: attempted to measure an item that isn't rendered.`);
+    }
+
+    const renderedStartIndex = range.start - renderedRange.start;
+    const rangeLen = range.end - range.start;
+    let firstNode: HTMLElement | undefined;
+    let lastNode: HTMLElement | undefined;
+
+    for (let i = 0; i < rangeLen; i++) {
+      const view = viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<unknown> | null;
+      if (view && view.rootNodes.length) {
+        firstNode = lastNode = view.rootNodes[0];
+        break;
+      }
+    }
+
+    for (let i = rangeLen - 1; i > -1; i--) {
+      const view = viewContainerRef.get(i + renderedStartIndex) as EmbeddedViewRef<unknown> | null;
+      if (view && view.rootNodes.length) {
+        lastNode = view.rootNodes[view.rootNodes.length - 1];
+        break;
+      }
+    }
+
+    const startRect = firstNode?.getBoundingClientRect?.();
+    const endRect = lastNode?.getBoundingClientRect?.();
+    return startRect && endRect ? endRect.bottom - startRect.top : 0;
   }
 
   private _checkTreeControlUsage() {
@@ -893,11 +1111,67 @@ export class CdkTree<T, K = T>
       const nodes = this._nodes.getValue();
       for (const [, node] of nodes) {
         if (event.target === node._elementRef.nativeElement) {
+          if (this._virtualScrollEnabled() && this._handleVirtualScrollKeydown(event, node)) {
+            break;
+          }
           this._keyManager.onKeydown(event);
           break;
         }
       }
     }
+  }
+
+  /**
+   * Handles keyboard navigation that moves past the edge of the rendered range. The key manager
+   * only knows about the nodes that are currently rendered, so without this the user would get
+   * stuck at the edge of the window.
+   *
+   * @returns Whether the event was handled.
+   */
+  private _handleVirtualScrollKeydown(event: KeyboardEvent, node: CdkTreeNode<T, K>): boolean {
+    const range = this._renderedRange;
+    const flattenedNodes = this._flattenedNodes.value;
+
+    if (!range || !flattenedNodes.length) {
+      return false;
+    }
+
+    const key = this._getExpansionKey(node.data);
+    const index = flattenedNodes.findIndex(data => this._getExpansionKey(data) === key);
+
+    if (index === -1) {
+      return false;
+    }
+
+    let targetIndex: number | null = null;
+
+    switch (event.keyCode) {
+      case DOWN_ARROW:
+        if (index === range.end - 1 && index < flattenedNodes.length - 1) {
+          targetIndex = index + 1;
+        }
+        break;
+      case UP_ARROW:
+        if (index === range.start && index > 0) {
+          targetIndex = index - 1;
+        }
+        break;
+      case HOME:
+        targetIndex = 0;
+        break;
+      case END:
+        targetIndex = flattenedNodes.length - 1;
+        break;
+    }
+
+    if (targetIndex === null) {
+      return false;
+    }
+
+    event.preventDefault();
+    this._pendingFocusIndex = targetIndex;
+    this._scrollToIndex(targetIndex);
+    return true;
   }
 
   /** Gets all nested descendants of a given node. */

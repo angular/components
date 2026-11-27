@@ -24,6 +24,29 @@ are rendered as siblings in sequence.
 Flat trees are generally easier to style and inspect. They are also more friendly to scrolling
 variations, such as infinite or virtual scrolling.
 
+#### Virtual scrolling
+
+Flat trees support virtual scrolling out of the box. To enable it, render the tree inside of a
+`<cdk-virtual-scroll-viewport>`:
+
+```html
+<cdk-virtual-scroll-viewport itemSize="48" class="example-viewport">
+  <cdk-tree [dataSource]="dataSource" [levelAccessor]="levelAccessor">
+    <cdk-tree-node *cdkTreeNodeDef="let node" class="example-tree-node">
+      {{node.name}}
+    </cdk-tree-node>
+  </cdk-tree>
+</cdk-virtual-scroll-viewport>
+```
+
+The tree will automatically detect the viewport and only render the nodes that are currently
+visible.
+
+**Note:**  Virtual scrolling is only supported for flat trees. Nested trees render their children inside
+  the parent node, so there is no flat list to virtualize.
+
+<!-- example(cdk-tree-virtual-scroll) -->
+
 
 #### Nested tree
 

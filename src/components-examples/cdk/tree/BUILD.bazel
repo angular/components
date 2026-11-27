@@ -13,6 +13,7 @@ ng_project(
         "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
+        "//src/cdk/scrolling",
         "//src/cdk/tree",
         "//src/material/button",
         "//src/material/icon",
