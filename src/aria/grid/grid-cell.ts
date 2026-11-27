@@ -44,6 +44,10 @@ import {GRID_CELL, GRID_ROW} from './grid-tokens';
   selector: '[ngGridCell]',
   exportAs: 'ngGridCell',
   providers: [{provide: GRID_CELL, useExisting: GridCell}],
+  host: {
+    // Ensure the attribute is applied even when used as a host directive.
+    'ngGridCell': '',
+  },
 })
 export class GridCell implements OnInit, OnDestroy {
   private readonly _elementRef = inject(ElementRef);
