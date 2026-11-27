@@ -104,7 +104,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
 
   protected readonly destroyed = new Subject<void>();
 
-  private _rowsRendered = new Subject();
+  private _rowsRendered = new Subject<void>();
 
   private _rowMutationObserver = globalThis.MutationObserver
     ? new globalThis.MutationObserver(mutations => {

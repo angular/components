@@ -205,7 +205,7 @@ export class MatSelect
   protected _defaultOptions = inject(MAT_SELECT_CONFIG, {optional: true});
   protected _animationsDisabled = _animationsDisabled();
   protected _popoverLocation: FlexibleOverlayPopoverLocation | null;
-  private _initialized = new Subject();
+  private _initialized = new Subject<void>();
   private _cleanupDetach: (() => void) | undefined;
 
   /** All of the defined select options. */
