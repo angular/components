@@ -2181,6 +2181,14 @@ describe('CdkTable', () => {
       expect(table.classList).toContain('cdk-table-fixed-layout');
     });
 
+    it('should collapse borders on tables with virtual scrolling', async () => {
+      const {table} = await createVirtualScroll(TableWithVirtualScroll);
+
+      // Collapsed borders keep the table height stable as rows are swapped in
+      // and out, otherwise the scrolling can jump around (see #32715).
+      expect(getComputedStyle(table).borderCollapse).toBe('collapse');
+    });
+
     it('should throw if multiple row templates are used with virtual scrolling', async () => {
       await expectAsync(
         createVirtualScroll(TableWithVirtualScrollAndMultipleDefinitions),
