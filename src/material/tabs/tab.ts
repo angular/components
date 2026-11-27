@@ -7,14 +7,17 @@
  */
 
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ContentChild,
+  ContentChildren,
   InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  QueryList,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -27,6 +30,7 @@ import {MatTabContent} from './tab-content';
 import {MAT_TAB, MatTabLabel} from './tab-label';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {Subject} from 'rxjs';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
 import {_StructuralStylesLoader} from '../core';
 
@@ -56,7 +60,7 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
     '[attr.id]': 'null',
   },
 })
-export class MatTab implements OnInit, OnChanges, OnDestroy {
+export class MatTab implements OnInit, OnChanges, OnDestroy, AfterContentInit {
   private _viewContainerRef = inject(ViewContainerRef);
   _closestTabGroup = inject(MAT_TAB_GROUP, {optional: true});
 
@@ -65,14 +69,18 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
   disabled: boolean = false;
 
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
-  @ContentChild(MatTabLabel)
   get templateLabel(): MatTabLabel {
     return this._templateLabel;
   }
   set templateLabel(value: MatTabLabel) {
-    this._setTemplateLabelInput(value);
+    if (value && value._closestTab === this) {
+      this._templateLabel = value;
+    }
   }
   private _templateLabel!: MatTabLabel;
+
+  @ContentChildren(MatTabLabel, {descendants: true})
+  private _templateLabels!: QueryList<MatTabLabel>;
 
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
@@ -158,19 +166,21 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  /**
-   * This has been extracted to a util because of TS 4 and VE.
-   * View Engine doesn't support property rename inheritance.
-   * TS 4.0 doesn't allow properties to override accessors or vice-versa.
-   * @docs-private
-   */
-  private _setTemplateLabelInput(value: MatTabLabel | undefined) {
-    // Only update the label if the query managed to find one. This works around an issue where a
-    // user may have manually set `templateLabel` during creation mode, which would then get
-    // clobbered by `undefined` when the query resolves. Also note that we check that the closest
-    // tab matches the current one so that we don't pick up labels from nested tabs.
-    if (value && value._closestTab === this) {
-      this._templateLabel = value;
-    }
+  ngAfterContentInit(): void {
+    const labels = this._templateLabels;
+
+    // A nested tab's label can appear before this tab's own label in the content query.
+    labels.changes
+      .pipe(
+        startWith(labels),
+        map(() => labels.find(label => label._closestTab === this)),
+        distinctUntilChanged(),
+      )
+      .subscribe(label => {
+        // Keep a manually assigned template label when the query doesn't find one.
+        if (label) {
+          this.templateLabel = label;
+        }
+      });
   }
 }

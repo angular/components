@@ -898,6 +898,26 @@ describe('MatTabGroup', () => {
         'Child 3',
       ]);
     });
+
+    it('should use the parent tab label when it follows a nested tab group', async () => {
+      const fixture = TestBed.createComponent(NestedTabGroupWithLabel);
+      fixture.componentInstance.showParentTemplateLabel = true;
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+
+      const labels = fixture.nativeElement.querySelectorAll('.mdc-tab__text-label');
+      const contents = Array.from<HTMLElement>(labels).map(label => label.textContent?.trim());
+
+      expect(contents).toEqual([
+        'Parent template',
+        'Parent 2',
+        'Parent 3',
+        'Child 1',
+        'Child 2',
+        'Child 3',
+      ]);
+    });
   });
 
   describe('nested tabs', () => {
@@ -1588,6 +1608,9 @@ class TabGroupWithSpaceAbove {
           </mat-tab>
           <mat-tab label="Child 3">Child 3</mat-tab>
         </mat-tab-group>
+        @if (showParentTemplateLabel) {
+          <ng-template mat-tab-label>Parent template</ng-template>
+        }
       </mat-tab>
       <mat-tab label="Parent 2">Parent 2</mat-tab>
       <mat-tab label="Parent 3">Parent 3</mat-tab>
@@ -1596,7 +1619,9 @@ class TabGroupWithSpaceAbove {
   imports: [MatTabsModule],
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-class NestedTabGroupWithLabel {}
+class NestedTabGroupWithLabel {
+  showParentTemplateLabel = false;
+}
 
 @Component({
   template: `
