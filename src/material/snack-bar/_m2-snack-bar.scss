@@ -1,3 +1,4 @@
+@use '../core/style/elevation';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
@@ -7,6 +8,7 @@
   @return (
     base: (
       snack-bar-container-shape: 4px,
+      snack-bar-container-elevation-shadow: elevation.get-box-shadow(6),
     ),
     color: (
       snack-bar-container-color: map.get($system, inverse-surface),

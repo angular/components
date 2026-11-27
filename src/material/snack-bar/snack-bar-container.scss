@@ -1,7 +1,6 @@
 @use '@angular/cdk';
 @use './m3-snack-bar';
 @use '../core/tokens/token-utils';
-@use '../core/style/elevation';
 
 $_side-padding: 8px;
 
@@ -60,7 +59,7 @@ $fallbacks: m3-snack-bar.get-tokens();
 }
 
 .mat-mdc-snackbar-surface {
-  @include elevation.elevation(6);
+  box-shadow: token-utils.slot(snack-bar-container-elevation-shadow, $fallbacks);
   display: flex;
   align-items: center;
   justify-content: flex-start;
