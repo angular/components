@@ -71,6 +71,13 @@ describe('MatCalendar', () => {
       expect(calendarInstance.activeDate).toEqual(new Date(2017, JAN, 31));
     });
 
+    it('should not show a redundant month label in the calendar body', () => {
+      expect(periodButton.textContent).toContain('JAN');
+
+      const labelEls = calendarElement.querySelectorAll('.mat-calendar-body-label');
+      expect(labelEls.length).toBe(0);
+    });
+
     it('should select date in month view', () => {
       let monthCells = calendarElement.querySelectorAll('.mat-calendar-body-cell');
       (monthCells[monthCells.length - 1] as HTMLElement).click();
