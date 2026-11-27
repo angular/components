@@ -131,18 +131,10 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
    */
   _startExitAnimation(): void {
     this._animationStateChanged.emit({state: 'closing', totalTime: this._exitAnimationDuration});
-    this._hostElement.classList.remove(OPEN_CLASS);
 
-    if (this._animationsEnabled) {
-      this._hostElement.style.setProperty(
-        TRANSITION_DURATION_PROPERTY,
-        `${this._exitAnimationDuration}ms`,
-      );
+    if (!this._animationsEnabled) {
+      this._hostElement.classList.remove(OPEN_CLASS);
 
-      // We need to give the `setProperty` call from above some time to be applied.
-      this._requestAnimationFrame(() => this._hostElement.classList.add(CLOSING_CLASS));
-      this._waitForAnimationToComplete(this._exitAnimationDuration, this._finishDialogClose);
-    } else {
       // This subscription to the `OverlayRef#backdropClick` observable in the `DialogRef` is
       // set up before any user can subscribe to the backdrop click. The subscription triggers
       // the dialog close and this method synchronously. If we'd synchronously emit the `CLOSED`
@@ -161,7 +153,21 @@ export class MatDialogContainer extends CdkDialogContainer<MatDialogConfig> impl
       // Based on the fact that this is specific to the MDC-based implementation of the dialog
       // animations, the defer is applied here.
       Promise.resolve().then(() => this._finishDialogClose());
+      return;
     }
+
+    this._hostElement.style.setProperty(
+      TRANSITION_DURATION_PROPERTY,
+      `${this._exitAnimationDuration}ms`,
+    );
+
+    // We need to give the `setProperty` call from above some time to be applied.
+    this._requestAnimationFrame(() => {
+      const classList = this._hostElement.classList;
+      classList.remove(OPEN_CLASS);
+      classList.add(CLOSING_CLASS);
+    });
+    this._waitForAnimationToComplete(this._exitAnimationDuration, this._finishDialogClose);
   }
 
   /**
