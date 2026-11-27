@@ -66,6 +66,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "pseudo-checkbox.scss",
+    layer = "angular-material",
     deps = [
         ":_pseudo_checkbox_common",
         "//src/material/core/style:checkbox_common",

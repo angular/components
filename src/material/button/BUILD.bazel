@@ -84,6 +84,7 @@ sass_library(
 sass_binary(
     name = "icon_button_css",
     src = "icon-button.scss",
+    layer = "angular-material",
     deps = [
         ":base_lib",
         ":m2",
@@ -96,6 +97,7 @@ sass_binary(
 sass_binary(
     name = "fab_css",
     src = "fab.scss",
+    layer = "angular-material",
     deps = [
         ":base_lib",
         ":m2",
@@ -109,6 +111,7 @@ sass_binary(
 sass_binary(
     name = "button_high_contrast",
     src = "button-high-contrast.scss",
+    layer = "angular-material",
     deps = [
         "//src/cdk:sass_lib",
     ],
@@ -128,6 +131,7 @@ sass_library(
 sass_binary(
     name = "css",
     src = "button.scss",
+    layer = "angular-material",
     deps = [
         ":base_lib",
         ":m2",
