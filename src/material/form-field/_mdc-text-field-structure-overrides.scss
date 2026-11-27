@@ -91,27 +91,13 @@ $_is-external-build: true;
   // an icon prefix or suffix. We can't rely on MDC's styles for this because we use a different
   // structure for our form-field in order to support arbitrary height input elements.
   .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
-    padding-left: 0;
+    padding-inline-start: 0;
     // Signal to the TypeScript label calculation code that the label should be offset 16px less
     // due to resetting the padding above.
     --mat-mdc-form-field-label-offset-x: -16px;
   }
   .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
-    padding-right: 0;
-  }
-  [dir='rtl'] {
-    // Undo the above padding removals which only apply in LTR languages.
-    .mat-mdc-text-field-wrapper {
-      padding-left: 16px;
-      padding-right: 16px;
-    }
-    // ...and apply the correct padding resets for RTL languages.
-    .mat-mdc-form-field-has-icon-suffix .mat-mdc-text-field-wrapper {
-      padding-left: 0;
-    }
-    .mat-mdc-form-field-has-icon-prefix .mat-mdc-text-field-wrapper {
-      padding-right: 0;
-    }
+    padding-inline-end: 0;
   }
 
   // Before the switch to the tokens MDC was setting a specific placeholder color when the input
@@ -172,14 +158,7 @@ $_is-external-build: true;
   // TODO(mmalerba): port this fix into MDC
   .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
     &.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
-      border-left: 1px solid transparent;
-    }
-  }
-
-  [dir='rtl'] .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field {
-    &.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
-      border-left: none;
-      border-right: 1px solid transparent;
+      border-inline-start: 1px solid transparent;
     }
   }
 }

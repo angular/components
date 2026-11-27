@@ -45,7 +45,7 @@ $_icon-prefix-infix-padding: 4px;
   // This allows the form-field to shrink down when used inside flex or grid layouts.
   min-width: 0;
   // To avoid problems with text-align.
-  text-align: left;
+  text-align: start;
 
   @include vendor-prefixes.smooth-font();
   font-family: token-utils.slot(form-field-container-text-font, $fallbacks);
@@ -66,10 +66,6 @@ $_icon-prefix-infix-padding: 4px;
     .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
       font-size: $token-value;
     }
-  }
-
-  [dir='rtl'] & {
-    text-align: right;
   }
 }
 
@@ -145,13 +141,13 @@ $_icon-prefix-infix-padding: 4px;
 // The prefix/suffix needs a little extra padding between the icon and the infix. Because we need to
 // support arbitrary height input elements, we use a different DOM structure for prefix and suffix
 // icons, and therefore can't rely on MDC for these styles.
-.mat-mdc-form-field-icon-prefix,
-[dir='rtl'] .mat-mdc-form-field-icon-suffix {
-  padding: 0 $_icon-prefix-infix-padding 0 0;
+.mat-mdc-form-field-icon-prefix {
+  padding: 0;
+  padding-inline-end: $_icon-prefix-infix-padding;
 }
-.mat-mdc-form-field-icon-suffix,
-[dir='rtl'] .mat-mdc-form-field-icon-prefix {
-  padding: 0 0 0 $_icon-prefix-infix-padding;
+.mat-mdc-form-field-icon-suffix {
+  padding: 0;
+  padding-inline-start: $_icon-prefix-infix-padding;
 }
 
 // Scale down icons in the subscript and floating label to be the same size
@@ -193,12 +189,12 @@ $_icon-prefix-infix-padding: 4px;
 // left border is completely hidden. (Though the border is transparent, it still creates a triangle
 // shaped artifact where it meets the top and bottom borders.)
 .mat-mdc-form-field .mdc-notched-outline__notch {
-  margin-left: -1px;
+  margin-inline-start: -1px;
   @include vendor-prefixes.clip-path(inset(-9em -999em -9em 1px));
 
-  [dir='rtl'] & {
-    margin-left: 0;
-    margin-right: -1px;
+  // `clip-path` has no logical equivalent. Use `:dir()` rather than `[dir='rtl']` so that the
+  // direction of the closest element with a `dir` attribute is used.
+  &:dir(rtl) {
     @include vendor-prefixes.clip-path(inset(-9em 1px -9em -999em));
   }
 }
