@@ -18,11 +18,6 @@
 @use '../option/option-theme';
 @use '../selection/pseudo-checkbox/pseudo-checkbox-theme';
 
-// We want to emit only the overrides, because the backwards compatibility styles are usually
-// emitted after all the tokens have been included once already. This allows us to save ~50kb
-// from the bundle.
-$_overrides-only: true;
-
 @mixin _color-variant-styles($theme, $color-variant) {
   $secondary-when-primary: $color-variant;
 
