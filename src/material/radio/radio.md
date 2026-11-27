@@ -3,7 +3,9 @@ Material Design styling and animations.
 
 <!-- example(radio-overview) -->
 
-All radio-buttons with the same `name` comprise a set from which only one may be selected at a time.
+Only one radio-button with a given `name` can be selected within a form. Separate forms can each
+have a selection under the same name. Radio-buttons outside a form are grouped by name within
+the same DOM tree.
 
 ### Radio-button label
 The radio-button label is provided as the content to the `<mat-radio-button>` element. The label can

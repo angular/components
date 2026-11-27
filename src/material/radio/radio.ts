@@ -456,8 +456,7 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
       }
 
       if (value) {
-        // Notify all radio buttons with the same name to un-check.
-        this._radioDispatcher.notify(this.id, this.name);
+        this._radioDispatcher.notify(this.id, this.name, this._getSelectionOwner());
       }
       this._changeDetector.markForCheck();
     }
@@ -642,11 +641,24 @@ export class MatRadioButton implements OnInit, AfterViewInit, DoCheck, OnDestroy
       this.name = this.radioGroup.name;
     }
 
-    this._removeUniqueSelectionListener = this._radioDispatcher.listen((id, name) => {
-      if (id !== this.id && name === this.name) {
-        this.checked = false;
-      }
-    });
+    this._removeUniqueSelectionListener = this._radioDispatcher.listen(
+      (id, name) => {
+        if (id !== this.id && name === this.name) {
+          this.checked = false;
+        }
+      },
+      scope => this.checked && this._getSelectionOwner() === scope,
+    );
+  }
+
+  /** The native input belongs to the nearest form, or to its tree when outside a form. */
+  private _getSelectionOwner(): Node {
+    // The host is available even when an initial checked binding runs before the input view query.
+    let node: Node = this._elementRef.nativeElement;
+    while (node.parentNode && node.nodeName !== 'FORM') {
+      node = node.parentNode;
+    }
+    return node;
   }
 
   ngDoCheck(): void {
