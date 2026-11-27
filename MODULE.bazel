@@ -73,8 +73,8 @@ use_repo(node, "nodejs_toolchains")
 pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm")
 pnpm.pnpm(
     name = "pnpm",
-    pnpm_version = "11.28.13",
-    pnpm_version_integrity = "sha512-1cqpzc1gZ6wpAvn0TaoAsSiKc7q/Hpj083Wzp1g7GJS01J91J9qPXhUwGYuxDgOtujIaHwFUKdwpRs6KepqMZQ==",
+    pnpm_version = "12.23.0",
+    pnpm_version_integrity = "sha512-AtqU/68TP0YHQyKv5VL5DUC19xriWa77zNrMUIWx1hfpjWXgEx9XSLm2dEWXjuUFXX1ZpHPx7vDVBIVP781ZdQ==",
 )
 use_repo(pnpm, "pnpm")
 
