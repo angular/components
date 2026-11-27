@@ -197,7 +197,7 @@ export class MatFormField
   private _defaults = inject<MatFormFieldDefaultOptions>(MAT_FORM_FIELD_DEFAULT_OPTIONS, {
     optional: true,
   });
-  private _currentDirection!: Direction;
+  private _currentDirection = signal<Direction>('ltr');
 
   protected _unwrapMaybeSignal<T>(value: T | Signal<T>) {
     return isSignal(value) ? value() : value;
@@ -364,7 +364,7 @@ export class MatFormField
     // We need this value inside a `afterRenderEffect`, however at the time of writing, reading the
     // signal directly causes a memory leak (see https://github.com/angular/angular/issues/62980).
     // TODO(crisbeto): clean this up once the framework issue is resolved.
-    effect(() => (this._currentDirection = dir.valueSignal()));
+    effect(() => this._currentDirection.set(dir.valueSignal()));
     this._syncOutlineLabelOffset();
   }
 
@@ -841,7 +841,7 @@ export class MatFormField
     const textSuffixContainerWidth = textSuffixContainer?.getBoundingClientRect().width ?? 0;
     // If the directionality is RTL, the x-axis transform needs to be inverted. This
     // is because `transformX` does not change based on the page directionality.
-    const negate = this._currentDirection === 'rtl' ? '-1' : '1';
+    const negate = this._currentDirection() === 'rtl' ? '-1' : '1';
     const prefixWidth = `${iconPrefixContainerWidth + textPrefixContainerWidth}px`;
     const labelOffset = `var(--mat-mdc-form-field-label-offset-x, 0px)`;
     const labelHorizontalOffset = `calc(${negate} * (${prefixWidth} + ${labelOffset}))`;

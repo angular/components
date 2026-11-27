@@ -59,6 +59,7 @@ ng_project(
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
+        "//src/cdk/bidi",
         "//src/cdk/platform",
         "//src/cdk/testing/private",
         "//src/material/core",
