@@ -35,10 +35,10 @@
 
 @mixin _m3-typography-level($theme, $selector-prefix, $level, $selectors, $margin: null) {
   #{_get-selector($selectors, $selector-prefix)} {
-    // TODO(mmalerba): When we expose system tokens as CSS vars, we should change this to emit token
-    //  slots.
-    font: inspection.get-theme-typography($theme, $level, font);
-    letter-spacing: inspection.get-theme-typography($theme, $level, letter-spacing);
+    // Use system CSS variables so `mat.theme-overrides` (and other runtime token changes)
+    // apply to typography hierarchy classes like `.mat-body-medium`.
+    font: var(--mat-sys-#{$level});
+    letter-spacing: var(--mat-sys-#{$level}-tracking);
     @if $margin != null {
       margin: 0 0 $margin;
     }
