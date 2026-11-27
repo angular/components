@@ -28,8 +28,8 @@ export const MAT_DRAWER_DEFAULT_AUTOSIZE: InjectionToken<boolean>;
 // @public
 export class MatDrawer implements AfterViewInit, OnDestroy {
     constructor();
-    readonly _animationEnd: Subject<unknown>;
-    readonly _animationStarted: Subject<unknown>;
+    readonly _animationEnd: Subject<void | TransitionEvent>;
+    readonly _animationStarted: Subject<void>;
     get autoFocus(): AutoFocusTarget | string | boolean;
     set autoFocus(value: AutoFocusTarget | string | BooleanInput);
     close(): Promise<MatDrawerToggleResult>;

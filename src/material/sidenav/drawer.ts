@@ -302,10 +302,10 @@ export class MatDrawer implements AfterViewInit, OnDestroy {
   private _openedVia: FocusOrigin | null = null;
 
   /** Emits whenever the drawer has started animating. */
-  readonly _animationStarted = new Subject();
+  readonly _animationStarted = new Subject<void>();
 
   /** Emits whenever the drawer is done animating. */
-  readonly _animationEnd = new Subject();
+  readonly _animationEnd = new Subject<TransitionEvent | void>();
 
   /** Event emitted when the drawer open state is changed. */
   @Output() readonly openedChange: EventEmitter<boolean> =

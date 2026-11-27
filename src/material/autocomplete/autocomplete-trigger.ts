@@ -143,7 +143,7 @@ export class MatAutocompleteTrigger
   private _overlayRef: OverlayRef | null = null;
   private _portal!: TemplatePortal;
   private _componentDestroyed = false;
-  private _initialized = new Subject();
+  private _initialized = new Subject<void>();
   private _keydownSubscription: Subscription | undefined;
   private _outsideClickSubscription: Subscription | undefined;
   private _cleanupWindowBlur: (() => void) | undefined;
