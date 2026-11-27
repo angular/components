@@ -1,5 +1,4 @@
 @use '@angular/cdk';
-@use '../core/style/elevation';
 @use './m3-bottom-sheet';
 @use '../core/tokens/token-utils';
 
@@ -33,7 +32,7 @@ $fallbacks: m3-bottom-sheet.get-tokens();
 }
 
 .mat-bottom-sheet-container {
-  @include elevation.elevation(16);
+  box-shadow: token-utils.slot(bottom-sheet-container-elevation-shadow, $fallbacks);
   padding: $container-vertical-padding
            $container-horizontal-padding;
   min-width: 100vw;

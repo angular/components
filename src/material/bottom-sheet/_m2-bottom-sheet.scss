@@ -1,3 +1,4 @@
+@use '../core/style/elevation';
 @use '../core/tokens/m2-utils';
 @use 'sass:map';
 
@@ -7,6 +8,7 @@
   @return (
     base: (
       bottom-sheet-container-shape: 4px,
+      bottom-sheet-container-elevation-shadow: elevation.get-box-shadow(16),
     ),
     color: (
       bottom-sheet-container-text-color: map.get($system, on-surface),
