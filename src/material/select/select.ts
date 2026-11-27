@@ -387,6 +387,11 @@ export class MatSelect
   @Input({transform: booleanAttribute})
   disabled: boolean = false;
 
+  /** Whether options are disabled by the select. */
+  get disableOptions(): boolean {
+    return this.disabled;
+  }
+
   /** Whether ripples in the select are disabled. */
   @Input({transform: booleanAttribute})
   get disableRipple() {
