@@ -101,6 +101,13 @@ export const MAT_RADIO_DEFAULT_OPTIONS = new InjectionToken<MatRadioDefaultOptio
 );
 
 /**
+ * Throws an exception when the compareWith input of mat-radio-group is not a function.
+ */
+export function getMatRadioNonFunctionValueError(): Error {
+  return Error('`compareWith` must be a function.');
+}
+
+/**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
  */
 @Directive({
@@ -197,6 +204,29 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
    * radio button, this value persists to be applied in case a new radio button is added with a
    * matching value.
    */
+  /** Comparison function to specify which radio button is displayed. Defaults to object equality. */
+  private _compareWith: (o1: any, o2: any) => boolean = (o1: any, o2: any) => o1 === o2;
+
+  /**
+   * Function to compare the option values with the selected values. The first argument
+   * is a value from an option. The second is a value from the selection. A boolean
+   * should be returned.
+   */
+  @Input()
+  get compareWith() {
+    return this._compareWith;
+  }
+  set compareWith(fn: (o1: any, o2: any) => boolean) {
+    if (typeof fn !== 'function' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+      throw getMatRadioNonFunctionValueError();
+    }
+    this._compareWith = fn;
+    if (this._isInitialized) {
+      this._updateSelectedRadioFromValue();
+      this._checkSelectedRadioButton();
+    }
+  }
+
   @Input()
   get value(): any {
     return this._value;
@@ -307,14 +337,27 @@ export class MatRadioGroup implements AfterContentInit, OnDestroy, ControlValueA
   }
 
   /** Updates the `selected` radio button from the internal _value state. */
+  private _checkValueEquality(a: any, b: any): boolean {
+    try {
+      return this._compareWith(a, b);
+    } catch (error) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.warn(error);
+      }
+      return false;
+    }
+  }
+
+  /** Updates the `selected` radio button from the internal _value state. */
   private _updateSelectedRadioFromValue(): void {
     // If the value already matches the selected radio, do nothing.
-    const isAlreadySelected = this._selected !== null && this._selected.value === this._value;
+    const isAlreadySelected =
+      this._selected !== null && this._checkValueEquality(this._selected.value, this._value);
 
     if (this._radios && !isAlreadySelected) {
       this._selected = null;
       this._radios.forEach(radio => {
-        radio.checked = this.value === radio.value;
+        radio.checked = this._checkValueEquality(this.value, radio.value);
         if (radio.checked) {
           this._selected = radio;
         }
