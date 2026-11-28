@@ -7,7 +7,7 @@
   margin: 20px auto;
 }
 
-.mat-radio-button {
+mat-radio-button {
   display: block;
   margin: 5px 0;
 }

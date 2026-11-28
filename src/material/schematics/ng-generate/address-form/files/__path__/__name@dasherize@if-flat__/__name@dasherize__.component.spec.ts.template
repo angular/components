@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';<% if(!standalone) { %>
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +16,8 @@ describe('<%= classify(name) %>Component', () => {
     TestBed.configureTestingModule({
       declarations: [<%= classify(name) %>Component],
       imports: [
-        ReactiveFormsModule,
+        FormField,
+        FormRoot,
         MatButtonModule,
         MatCardModule,
         MatInputModule,

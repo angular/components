@@ -48,7 +48,8 @@ function addFormModulesToModule(options: Schema) {
       addModuleImportToModule(host, modulePath, 'MatSelectModule', '@angular/material/select');
       addModuleImportToModule(host, modulePath, 'MatRadioModule', '@angular/material/radio');
       addModuleImportToModule(host, modulePath, 'MatCardModule', '@angular/material/card');
-      addModuleImportToModule(host, modulePath, 'ReactiveFormsModule', '@angular/forms');
+      addModuleImportToModule(host, modulePath, 'FormField', '@angular/forms/signals');
+      addModuleImportToModule(host, modulePath, 'FormRoot', '@angular/forms/signals');
     }
   };
 }

@@ -1,4 +1,4 @@
 .type-icon {
-  color: #757575;
+  color: var(--mat-sys-on-surface-variant);
   margin-right: 5px;
 }

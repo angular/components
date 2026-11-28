@@ -1,3 +1,7 @@
+.table-container {
+  box-shadow: var(--mat-sys-level2);
+}
+
 .full-width-table {
   width: 100%;
 }

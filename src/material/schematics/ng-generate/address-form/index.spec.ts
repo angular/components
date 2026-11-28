@@ -40,7 +40,8 @@ describe('Material address-form schematic', () => {
     expect(moduleContent).toContain('MatButtonModule');
     expect(moduleContent).toContain('MatSelectModule');
     expect(moduleContent).toContain('MatRadioModule');
-    expect(moduleContent).toContain('ReactiveFormsModule');
+    expect(moduleContent).toContain('FormField');
+    expect(moduleContent).toContain('FormRoot');
   });
 
   it('should throw if no name has been specified', async () => {
@@ -66,7 +67,8 @@ describe('Material address-form schematic', () => {
         'MatButtonModule',
         'MatSelectModule',
         'MatRadioModule',
-        'ReactiveFormsModule',
+        'FormField',
+        'FormRoot',
       ];
 
       requiredModules.forEach(name => {
@@ -92,7 +94,8 @@ describe('Material address-form schematic', () => {
         'MatButtonModule',
         'MatSelectModule',
         'MatRadioModule',
-        'ReactiveFormsModule',
+        'FormField',
+        'FormRoot',
       ];
 
       requiredModules.forEach(name => {

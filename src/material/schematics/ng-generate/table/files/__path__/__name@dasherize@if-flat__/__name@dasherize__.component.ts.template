@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { AfterViewInit, Component, viewChild<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { <% if(standalone) { %>MatTableModule, <% } %>MatTable } from '@angular/material/table';
 import { <% if(standalone) { %>MatPaginatorModule, <% } %>MatPaginator } from '@angular/material/paginator';
 import { <% if(standalone) { %>MatSortModule, <% } %>MatSort } from '@angular/material/sort';
@@ -20,17 +20,17 @@ import { <%= classify(name) %>DataSource, <%= classify(name) %>Item } from './<%
   standalone: false<% } %>
 })
 export class <%= classify(name) %>Component implements AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatTable) table!: MatTable<<%= classify(name) %>Item>;
-  dataSource = new <%= classify(name) %>DataSource();
+  readonly paginator = viewChild.required(MatPaginator);
+  readonly sort = viewChild.required(MatSort);
+  readonly table = viewChild.required<MatTable<<%= classify(name) %>Item>>(MatTable);
+  readonly dataSource = new <%= classify(name) %>DataSource();
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['id', 'name'];
+  readonly displayedColumns = ['id', 'name'];
 
   ngAfterViewInit(): void {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-    this.table.dataSource = this.dataSource;
+    this.dataSource.sort = this.sort();
+    this.dataSource.paginator = this.paginator();
+    this.table().dataSource = this.dataSource;
   }
 }
