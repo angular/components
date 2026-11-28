@@ -1,4 +1,4 @@
-<form [formGroup]="addressForm" novalidate (ngSubmit)="onSubmit()">
+<form [formRoot]="addressForm">
   <mat-card class="shipping-card">
     <mat-card-header>
       <mat-card-title>Shipping Information</mat-card-title>
@@ -7,23 +7,23 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Company" formControlName="company">
+            <input matInput placeholder="Company" [formField]="addressForm.company">
           </mat-form-field>
         </div>
       </div>
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="First name" formControlName="firstName">
-            @if (addressForm.controls['firstName'].hasError('required')) {
+            <input matInput placeholder="First name" [formField]="addressForm.firstName">
+            @if (addressForm.firstName().getError('required')) {
               <mat-error>First name is <strong>required</strong></mat-error>
             }
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="Last name" formControlName="lastName">
-            @if (addressForm.controls['lastName'].hasError('required')) {
+            <input matInput placeholder="Last name" [formField]="addressForm.lastName">
+            @if (addressForm.lastName().getError('required')) {
               <mat-error>Last name is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -32,8 +32,8 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <textarea matInput placeholder="Address" formControlName="address"></textarea>
-            @if (addressForm.controls['address'].hasError('required')) {
+            <textarea matInput placeholder="Address" [formField]="addressForm.address"></textarea>
+            @if (addressForm.address().getError('required')) {
               <mat-error>Address is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -41,12 +41,12 @@
       </div>
       <div class="row">
         <div class="col">
-          @if (hasUnitNumber) {
+          @if (hasUnitNumber()) {
             <mat-form-field class="full-width">
-              <textarea matInput placeholder="Address 2" formControlName="address2"></textarea>
+              <textarea matInput placeholder="Address 2" [formField]="addressForm.address2"></textarea>
             </mat-form-field>
           } @else {
-            <button matButton type="button" (click)="hasUnitNumber = !hasUnitNumber">
+            <button matButton type="button" (click)="hasUnitNumber.set(!hasUnitNumber())">
               + Add C/O, Apt, Suite, Unit
             </button>
           }
@@ -55,20 +55,20 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput placeholder="City" formControlName="city">
-            @if (addressForm.controls['city'].hasError('required')) {
+            <input matInput placeholder="City" [formField]="addressForm.city">
+            @if (addressForm.city().getError('required')) {
               <mat-error>City is <strong>required</strong></mat-error>
             }
           </mat-form-field>
         </div>
         <div class="col">
           <mat-form-field class="full-width">
-            <mat-select placeholder="State" formControlName="state">
+            <mat-select placeholder="State" [formField]="addressForm.state">
               @for (state of states; track state) {
                 <mat-option [value]="state.abbreviation">{{ state.name }}</mat-option>
               }
             </mat-select>
-            @if (addressForm.controls['state'].hasError('required')) {
+            @if (addressForm.state().getError('required')) {
               <mat-error>State is <strong>required</strong></mat-error>
             }
           </mat-form-field>
@@ -77,14 +77,14 @@
       <div class="row">
         <div class="col">
           <mat-form-field class="full-width">
-            <input matInput #postalCode maxlength="5" placeholder="Postal Code" type="number" formControlName="postalCode">
+            <input matInput #postalCode placeholder="Postal Code" [formField]="addressForm.postalCode">
             <mat-hint align="end">{{postalCode.value.length}} / 5</mat-hint>
           </mat-form-field>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <mat-radio-group formControlName="shipping">
+          <mat-radio-group [formField]="addressForm.shipping">
             <mat-radio-button value="free">Free Shipping</mat-radio-button>
             <mat-radio-button value="priority">Priority Shipping</mat-radio-button>
             <mat-radio-button value="nextday">Next Day Shipping</mat-radio-button>
@@ -93,7 +93,7 @@
       </div>
     </mat-card-content>
     <mat-card-actions>
-      <button matButton="elevated" color="primary" type="submit">Submit</button>
+      <button matButton="elevated" type="submit">Submit</button>
     </mat-card-actions>
   </mat-card>
 </form>

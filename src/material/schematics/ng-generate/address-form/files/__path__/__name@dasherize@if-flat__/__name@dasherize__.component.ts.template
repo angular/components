@@ -1,13 +1,13 @@
-import { Component, inject<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { Component, signal<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 <% if(standalone) { %>
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { form, FormField, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCardModule } from '@angular/material/card';
 <% } else { %>
-import { FormBuilder, Validators } from '@angular/forms';
+import { form, maxLength, minLength, required } from '@angular/forms/signals';
 <% } %>
 
 @Component({
@@ -28,29 +28,49 @@ import { FormBuilder, Validators } from '@angular/forms';
     MatSelectModule,
     MatRadioModule,
     MatCardModule,
-    ReactiveFormsModule
+    FormField,
+    FormRoot
   ]<% } else { %>,
   standalone: false<% } %>
 })
 export class <%= classify(name) %>Component {
-  private fb = inject(FormBuilder);
-  addressForm = this.fb.group({
-    company: null,
-    firstName: [null, Validators.required],
-    lastName: [null, Validators.required],
-    address: [null, Validators.required],
-    address2: null,
-    city: [null, Validators.required],
-    state: [null, Validators.required],
-    postalCode: [null, Validators.compose([
-      Validators.required, Validators.minLength(5), Validators.maxLength(5)])
-    ],
-    shipping: ['free', Validators.required]
+  private readonly addressModel = signal({
+    company: '',
+    firstName: '',
+    lastName: '',
+    address: '',
+    address2: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    shipping: 'free',
   });
 
-  hasUnitNumber = false;
+  readonly addressForm = form(
+    this.addressModel,
+    schemaPath => {
+      required(schemaPath.firstName);
+      required(schemaPath.lastName);
+      required(schemaPath.address);
+      required(schemaPath.city);
+      required(schemaPath.state);
+      required(schemaPath.postalCode);
+      minLength(schemaPath.postalCode, 5);
+      maxLength(schemaPath.postalCode, 5);
+      required(schemaPath.shipping);
+    },
+    {
+      submission: {
+        action: async () => {
+          alert('Thanks!');
+        },
+      },
+    },
+  );
 
-  states = [
+  readonly hasUnitNumber = signal(false);
+
+  readonly states = [
     {name: 'Alabama', abbreviation: 'AL'},
     {name: 'Alaska', abbreviation: 'AK'},
     {name: 'American Samoa', abbreviation: 'AS'},
@@ -111,8 +131,4 @@ export class <%= classify(name) %>Component {
     {name: 'Wisconsin', abbreviation: 'WI'},
     {name: 'Wyoming', abbreviation: 'WY'}
   ];
-
-  onSubmit(): void {
-    alert('Thanks!');
-  }
 }
